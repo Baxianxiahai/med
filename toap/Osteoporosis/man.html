@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chorme=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>用户信息收集</title>
+  <link rel="stylesheet" href="layui/css/layui.css">
+  
+	</head>
+	<body class="layui-bg-gray" >
+		<br><br>
+		<div align="center">
+			<label><h3>既往史调查（男性）</h3></label>
+		</div>
+		<br><br><br>
+		<form class="layui-form" id="man_form" action="">
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、您经常腹泻吗？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="man_answer1" value="1" title="是" checked="">
+				<input type="radio" name="man_answer1" value="2" title="否">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、您是否有阳痿或者缺乏性欲这些症状？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="man_answer2" value="1" title="是" checked="">
+				<input type="radio" name="man_answer2" value="2" title="否">
+			</div>
+			<br><br><br><br><br>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<button class="layui-btn" lay-submit="" lay-filter="man">继续</button>
+				</div>
+			</div>
+		</form>
+		<script src="layui/layui.js" charset="utf-8"></script>
+		<script src="layui/layui.all.js" charset="utf-8"></script>
+		<script src="js/app.js" charset="UTF-8"></script>
+	</body>
+</html>

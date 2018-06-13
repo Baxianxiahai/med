@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chorme=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>用户信息收集</title>
+  <link rel="stylesheet" href="layui/css/layui.css">
+  
+	</head>
+	<body class="layui-bg-gray" >
+		<br><br>
+		<div align="center">
+			<label><h3>既往史调查（女性）</h3></label>
+		</div>
+		<br><br><br>
+		<form class="layui-form" id="woman_form" action="">
+			<div class="layui-form-item">
+				<label class="layui-form-label">
+					绝经年龄：
+				</label>
+				<div class="layui-input-block">
+					<input type="text" name="age" lay-verify="age" autocomplete="off" placeholder="请输入年龄" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、您经常腹泻吗？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="woman_answer1" value="1" title="是" checked="">
+				<input type="radio" name="woman_answer1" value="2" title="否">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、您是否曾经有过连续12个月以上没有月经（除了怀孕期间）？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="woman_answer2" value="1" title="是" checked="">
+				<input type="radio" name="woman_answer2" value="2" title="否">
+			</div>
+			<br><br><br><br><br>
+			<div class="layui-form-item" >
+				<div class="layui-input-block">
+					<button class="layui-btn" lay-submit="" lay-filter="woman">继续</button>
+				</div>
+			</div>
+		</form>
+		<script src="layui/layui.js" charset="utf-8"></script>
+		<script src="layui/layui.all.js" charset="utf-8"></script>
+		<script src="js/app.js" charset="UTF-8"></script>
+	</body>
+</html>

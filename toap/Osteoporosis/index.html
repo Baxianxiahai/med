@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chorme=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>用户信息收集</title>
+  <link rel="stylesheet" href="layui/css/layui.css">
+  
+	</head>
+	<body class="layui-bg-gray" >
+		<br><br><br><br><br>
+		<form class="layui-form layui-form-pane" id="index_form" action="">
+			<div class="layui-form-item">
+				<label class="layui-form-label">
+					姓名：
+				</label>
+				<div class="layui-input-block">
+					<input type="text" name="name" lay-verify="name" autocomplete="off" placeholder="请输入姓名" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">
+					年龄：
+				</label>
+				<div class="layui-input-block">
+					<input type="text" name="age" lay-verify="age" autocomplete="off" placeholder="请输入年龄" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item" pane="">
+				<label class="layui-form-label">性别：</label>
+				<div class="layui-input-block">
+					<input type="radio" name="index_sex" value="男" title="男" checked="">
+					<input type="radio" name="index_sex" value="女" title="女">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">
+					联系电话：
+				</label>
+				<div class="layui-input-block">
+					<input type="text" name="telphone" lay-verify="telphone" autocomplete="off" placeholder="请输入联系电话" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">
+					居住地址：
+				</label>
+				<div class="layui-input-block">
+					<input type="text" name="address" lay-verify="address" autocomplete="off" placeholder="请输入详细地址" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">
+					身份证号：
+				</label>
+				<div class="layui-input-block">
+					<input type="text" name="IDcard" lay-verify="IDcard" autocomplete="off" placeholder="请输入身份证号" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">
+					社保卡号：
+				</label>
+				<div class="layui-input-block">
+					<input type="text" name="SocialCard" lay-verify="SocialCard" autocomplete="off" placeholder="请输入社保卡号" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">
+					身高(M)：
+				</label>
+				<div class="layui-input-block">
+					<input type="text" name="height" lay-verify="height" autocomplete="off" placeholder="请输入身高(M)" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">
+					体重(KG)：
+				</label>
+				<div class="layui-input-block">
+					<input type="text" name="weight" lay-verify="weight" autocomplete="off" placeholder="请输入体重(KG)" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">
+					文化程度：
+				</label>
+				<div class="layui-input-block">
+					<select name="education">
+						<option value="1" >小学及以下</option>
+						<option value="2">初中</option>
+						<option value="3">高中</option>
+						<option value="4">大学及以上</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">
+					职业：
+				</label>
+				<div class="layui-input-block">
+					<input type="text" name="career" lay-verify="career" autocomplete="off" placeholder="请输入职业"  class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<button class="layui-btn" lay-submit="" lay-filter="index">立即提交</button>
+				</div>
+			</div>
+		</form>
+		<script src="layui/layui.js" charset="utf-8"></script>
+		<script src="layui/layui.all.js" charset="utf-8"></script>
+		<script src="js/app.js" charset="UTF-8"></script>
+	</body>
+</html>

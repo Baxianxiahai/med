@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>用户信息收集</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="stylesheet" href="layui/css/layui.css"  media="all">
+	<!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body class="layui-bg-gray">
+	<br><br>
+	<div align="center">
+		<label><h2>历史病理资料图片</h2></label>
+	</div>
+	<br><br>
+	<div>
+		<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您需要上传的文件包括：</label>
+	</div>
+	<div>
+		<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、血液和尿液检查；</label>
+	</div>
+	<div>
+		<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、胸、腰椎侧位片（JPG）；</label>
+	</div>
+	<div>
+		<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3、骨密度DXA 报告（JPG）；</label>
+	</div>
+	<div>
+		<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4、其它影像学资料（JPG）；</label>
+	</div>
+	<div>
+		<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5、量表：OSTA评分</label>
+	</div>
+	<br><br>
+<div class="layui-upload">
+  <button type="button" class="layui-btn layui-btn-normal" id="testList">选择多文件</button> 
+  <div class="layui-upload-list">
+    <table class="layui-table">
+      <thead>
+        <tr><th>文件名</th>
+        <th>操作</th>
+      </tr></thead>
+      <tbody id="demoList"></tbody>
+    </table>
+  </div>
+  <button type="button" class="layui-btn" id="testListAction">开始上传</button>
+</div>        
+<script src="layui/layui.js" charset="utf-8"></script>
+<script src="js/app.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+</body>
+</html>

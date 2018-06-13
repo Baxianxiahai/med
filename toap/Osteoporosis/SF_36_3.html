@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chorme=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>用户信息收集</title>
+  <link rel="stylesheet" href="layui/css/layui.css">
+  
+	</head>
+	<body class="layui-bg-gray" >
+		<br><br>
+		<div align="center">
+			<label><h3>SF-36量表（3）</h3></label>
+		</div>
+		<br><br>
+		<form class="layui-form" id="SF_36_3_form" action="">
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5、在过去4个星期里，您的工作和日常活动有无因为情绪的原因（如压抑或忧虑）而出现以下这些问题？ </label>
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（1）减少了工作或活动时间：   </label>
+			</div>
+			<div>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer1" value="1" title="是 " checked="">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer1" value="2" title="否 ">
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（2）本来想要做的事情只能完成一部分： </label>
+			</div>
+			<div>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer2" value="1" title="是 " checked="">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer2" value="2" title="否 ">
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（3）干事情不如平时仔细：  </label>
+			</div>
+			<div>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer3" value="1" title="是 " checked="">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer3" value="2" title="否 ">
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6、在过去4个星期里，您的健康或情绪不好在多大程度上影响了您与家人、朋友、邻居或集体的正常社会交往？ </label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer4" value="5" title="完全没有影响 " checked=""></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer4" value="4" title="有一点影响 "></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer4" value="3" title="中等影响 "></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer4" value="2" title="影响很大 "></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer4" value="1" title="影响非常大 "></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7、在过去4个星期里，您有身体疼痛吗？ </label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer5" value="5" title="完全没有疼痛 " checked=""></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer5" value="4" title="有一点疼痛 "></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer5" value="3" title="中等疼痛 "></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer5" value="2" title="严重疼痛 "></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer5" value="1" title="很严重疼痛 "></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8、在过去4个星期里，您的身体疼痛影响了您的工作和家务吗？  </label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer6" value="5" title="完全没有影响  " checked=""></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer6" value="4" title="有一点影响  "></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer6" value="3" title="中等影响  "></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer6" value="2" title="影响很大  "></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_3_answer6" value="1" title="影响非常大  "></li>
+			</div>
+			<br>
+			<br><br><br>
+			<!--<div class="layui-form-item" >-->
+			<div align="center">
+				<!--<div class="layui-input-block">-->
+				<div align="center">
+					<button class="layui-btn" lay-submit="" lay-filter="SF_36_3">继续</button>
+				</div>
+			</div>
+		</form>
+		<script src="layui/layui.js" charset="utf-8"></script>
+		<script src="layui/layui.all.js" charset="utf-8"></script>
+		<script src="js/app.js" charset="UTF-8"></script>
+	</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<link rel="shortcut icon" href="favicon.ico" />
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chorme=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>用户信息收集</title>
+		<link rel="stylesheet" href="layui/css/layui.css">
+		<link rel="stylesheet" href="css/app.css">
+		
+		<script charset="UTF-8" src="js/jquery.min.js"></script>
+	</head>
+	<body class="layui-bg-gray">
+		<br><br>
+		<!--<div align="center">
+			<label><h3>慢性疾病及用药情况</h3></label>
+		</div>
+		<br><br><br>-->
+		<form class="layui-form" id="form" action="">
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在过去的4周里，或从您受伤开始（如果从受伤至今＜=4周，膝关节有过交锁现象吗？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_1" value="1" title="有" lay-filter="3_1_answer_1">
+				<input type="radio" name="3_1_answer_1" value="2" title="无" lay-filter="3_1_answer_1">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;跌倒病史(包括目前入院期间和过去12个月内)：</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_2" value="1" title="有" lay-filter="3_1_answer_2">
+				<input type="radio" name="3_1_answer_2" value="2" title="无" lay-filter="3_1_answer_2">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;有第二个诊断:如各种综合症、眼部疾患(单盲、双盲、弱视、白内障、青光眼、眼底病、复视等)，在6个月内有精神异常、复方用药(利尿剂、导泻剂、降压药、镇静剂、镇痛剂、降糖药、散瞳剂)或其它 (如果列出多于一种内科诊断)：</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_3" value="1" title="有" lay-filter="3_1_answer_3">
+				<input type="radio" name="3_1_answer_3" value="2" title="无" lay-filter="3_1_answer_3">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您最近有膝关节疼痛吗？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_4" value="1" title="有" lay-filter="3_1_answer_4">
+				<input type="radio" name="3_1_answer_4" value="2" title="无" lay-filter="3_1_answer_4">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您最近有腰痛吗？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_5" value="1" title="有" lay-filter="3_1_answer_5">
+				<input type="radio" name="3_1_answer_5" value="2" title="无" lay-filter="3_1_answer_5">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您是否需要频繁上厕所？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_6" value="1" title="有" lay-filter="3_1_answer_6">
+				<input type="radio" name="3_1_answer_6" value="2" title="无" lay-filter="3_1_answer_6">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您是否跌倒过？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_7" value="1" title="有" lay-filter="3_1_answer_7">
+				<input type="radio" name="3_1_answer_7" value="2" title="无" lay-filter="3_1_answer_7">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您近3个月是否跌倒过？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_8" value="1" title="有" lay-filter="3_1_answer_8">
+				<input type="radio" name="3_1_answer_8" value="2" title="无" lay-filter="3_1_answer_8">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您的视力是否影响您的日常生活？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_9" value="1" title="有" lay-filter="3_1_answer_9">
+				<input type="radio" name="3_1_answer_9" value="2" title="无" lay-filter="3_1_answer_9">
+			</div>
+
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您是否在服用安眠药？</label>
+			</div>
+			<div id="second_1" class="layui-input-block">
+				<input type="radio" name="3_1_answer_10" value="1" title="有" lay-filter="3_1_answer_10">
+				<input type="radio" name="3_1_answer_10" value="2" title="无" lay-filter="3_1_answer_10">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您是否需要频繁上厕所？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_11" value="1" title="有" lay-filter="3_1_answer_11">
+				<input type="radio" name="3_1_answer_11" value="2" title="无" lay-filter="3_1_answer_11">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您是否有抑郁症状？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_12" value="1" title="有" lay-filter="3_1_answer_12">
+				<input type="radio" name="3_1_answer_12" value="2" title="无" lay-filter="3_1_answer_12">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您是否意识模糊或定向力障碍？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_13" value="1" title="有" lay-filter="3_1_answer_13">
+				<input type="radio" name="3_1_answer_13" value="2" title="无" lay-filter="3_1_answer_13">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;你是否有头晕或眩晕？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_14" value="1" title="有" lay-filter="3_1_answer_14">
+				<input type="radio" name="3_1_answer_14" value="2" title="无" lay-filter="3_1_answer_14">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在过去4个星期里，您的工作和日常活动有无因为身体健康的原因而出现以下这些问题？</label>
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（1）减少了工作或其他活动时间：</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_15" value="1" title="是" lay-filter="3_1_answer_15">
+				<input type="radio" name="3_1_answer_15" value="2" title="不是" lay-filter="3_1_answer_15">
+			</div>
+			
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（2）本来想要做的事情只能完成一部分：</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_16" value="1" title="是" lay-filter="3_1_answer_16">
+				<input type="radio" name="3_1_answer_16" value="2" title="不是" lay-filter="3_1_answer_16">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（3）想要干的工作或活动种类受到限制：</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_17" value="1" title="是" lay-filter="3_1_answer_17">
+				<input type="radio" name="3_1_answer_17" value="2" title="不是" lay-filter="3_1_answer_17">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（4）完成工作或其他活动困难增多（比如需要额外的努力）：</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_18" value="1" title="是" lay-filter="3_1_answer_18">
+				<input type="radio" name="3_1_answer_18" value="2" title="不是" lay-filter="3_1_answer_18">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在过去4个星期里，您的工作和日常活动有无因为情绪的原因（如压抑或忧虑）而出现以下这些问题？</label>
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（1）减少了工作或活动时间：</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_19" value="1" title="是" lay-filter="3_1_answer_19">
+				<input type="radio" name="3_1_answer_19" value="2" title="不是" lay-filter="3_1_answer_19">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（2）本来想要做的事情只能完成一部分：</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_20" value="1" title="是" lay-filter="3_1_answer_20">
+				<input type="radio" name="3_1_answer_20" value="2" title="不是" lay-filter="3_1_answer_20">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（3）干事情不如平时仔细：</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_21" value="1" title="是" lay-filter="3_1_answer_21">
+				<input type="radio" name="3_1_answer_21" value="2" title="不是" lay-filter="3_1_answer_21">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;患者有静脉输液/肝素帽/监测器？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="3_1_answer_22" value="1" title="有" lay-filter="3_1_answer_22">
+				<input type="radio" name="3_1_answer_22" value="2" title="无" lay-filter="3_1_answer_22">
+			</div>
+			<br><br><br>
+			<div align="center">
+				<div align="center">
+					<button class="layui-btn" lay-submit="" lay-filter="third_1" style="width: 200px;">继续</button>
+				</div>
+			</div>
+			<br><br>
+		</form>
+		<script src="layui/layui.js" charset="utf-8"></script>
+		<script src="layui/layui.all.js" charset="utf-8"></script>
+		<script src="js/app.js" charset="UTF-8"></script>
+	</body>
+
+</html>

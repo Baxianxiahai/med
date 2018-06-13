@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chorme=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>用户信息收集</title>
+		<link rel="shortcut icon" href="favicon.ico" />
+		<link rel="stylesheet" href="layui/css/layui.css">
+		<link rel="stylesheet" href="css/app.css">
+		<script charset="UTF-8" src="js/jquery.min.js"></script>
+	</head>
+
+	<body class="layui-bg-gray">
+		<br><br>
+		<div align="center">
+			<label><h3>总体健康情况</h3></label>
+		</div>
+		<br><br>
+		<form class="layui-form" id="form" action="">
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我好象比别人容易生病：</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_1" value="1" title="绝对正确" lay-filter="3_5_answer_1">
+				<input type="radio" name="3_5_answer_1" value="2" title="大部分正确" lay-filter="3_5_answer_1"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_1" value="3" title="不能肯定" lay-filter="3_5_answer_1">
+				<input type="radio" name="3_5_answer_1" value="4" title="大部分错误" lay-filter="3_5_answer_1"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_1" value="5" title="绝对错误" lay-filter="3_5_answer_1">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我跟周围人一样健康：</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_2" value="1" title="绝对正确" lay-filter="3_5_answer_2">
+				<input type="radio" name="3_5_answer_2" value="2" title="大部分正确" lay-filter="3_5_answer_2"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_2" value="3" title="不能肯定" lay-filter="3_5_answer_2">
+				<input type="radio" name="3_5_answer_2" value="4" title="大部分错误" lay-filter="3_5_answer_2"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_2" value="5" title="绝对错误" lay-filter="3_5_answer_2">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我认为我的健康状况在变坏：</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_3" value="1" title="绝对正确" lay-filter="3_5_answer_3">
+				<input type="radio" name="3_5_answer_3" value="2" title="大部分正确" lay-filter="3_5_answer_3"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_3" value="3" title="不能肯定" lay-filter="3_5_answer_3">
+				<input type="radio" name="3_5_answer_3" value="4" title="大部分错误" lay-filter="3_5_answer_3"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_3" value="5" title="绝对错误" lay-filter="3_5_answer_3">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我的健康状况非常好：</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_4" value="1" title="绝对正确" lay-filter="3_5_answer_4">
+				<input type="radio" name="3_5_answer_4" value="2" title="大部分正确" lay-filter="3_5_answer_4"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_4" value="3" title="不能肯定" lay-filter="3_5_answer_4">
+				<input type="radio" name="3_5_answer_4" value="4" title="大部分错误" lay-filter="3_5_answer_4"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_4" value="5" title="绝对错误" lay-filter="3_5_answer_4">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;坐到站：尽量不用手支撑。</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_5" value="1" title="不用手扶持独立稳定地站起" lay-filter="3_5_answer_5"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_5" value="2" title="用手扶持独立地站起" lay-filter="3_5_answer_5"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_5" value="3" title="经过几次努力用手扶持站起" lay-filter="3_5_answer_5"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_5" value="4" title="需要较少的帮助站起" lay-filter="3_5_answer_5"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_5" value="5" title="需要中度或最大的帮助站起" lay-filter="3_5_answer_5">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;无支撑站立：没有扶持下站立2 分钟</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_6" value="1" title="安全站立2分钟" lay-filter="3_5_answer_6"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_6" value="2" title="监护下站立2分钟" lay-filter="3_5_answer_6"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_6" value="3" title="无扶持下站立30秒" lay-filter="3_5_answer_6"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_6" value="4" title="经过几次努力无扶持站立30秒" lay-filter="3_5_answer_6"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_6" value="5" title="无扶持不能站立30秒" lay-filter="3_5_answer_6">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;无靠背的坐位：双足稳定支撑于地板，手臂交叉<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;维持2 分钟</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_7" value="1" title="安全坐2分钟" lay-filter="3_5_answer_7"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_7" value="2" title="监护下坐2分钟" lay-filter="3_5_answer_7"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_7" value="3" title="坐30秒" lay-filter="3_5_answer_7"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_7" value="4" title="坐10秒" lay-filter="3_5_answer_7"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_7" value="5" title="没有支撑不能坐10秒" lay-filter="3_5_answer_7">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;站立到坐</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_8" value="1" title="少量用手帮助安全地坐下" lay-filter="3_5_answer_8"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_8" value="2" title="用手帮助控制身体下降" lay-filter="3_5_answer_8"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_8" value="3" title="后方的腿靠着椅子控制身体下降" lay-filter="3_5_answer_8"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_8" value="4" title="独立地坐但不能控制身体下降" lay-filter="3_5_answer_8"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_8" value="5" title="扶持下坐" lay-filter="3_5_answer_8">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;转移：从椅到椅或床到椅</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_9" value="1" title="少量用手帮助下安全转移" lay-filter="3_5_answer_9"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_9" value="2" title="大量用手帮助下安全转移" lay-filter="3_5_answer_9"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_9" value="3" title="口头提示或监护下转移" lay-filter="3_5_answer_9"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_9" value="4" title="需要一人帮助下转移" lay-filter="3_5_answer_9"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_9" value="5" title="需要二人帮助下转移" lay-filter="3_5_answer_9">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;闭眼无支撑下站立：站立10 秒</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_10" value="1" title="安全站立10秒" lay-filter="3_5_answer_10"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_10" value="2" title="监护下站立10秒" lay-filter="3_5_answer_10"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_10" value="3" title="站立3秒" lay-filter="3_5_answer_10"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_10" value="4" title="站立稳定但闭眼不超过3秒" lay-filter="3_5_answer_10"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_10" value="5" title="需要帮助以防摔倒" lay-filter="3_5_answer_10">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;双脚并拢无支撑站立</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_11" value="1" title="自己并拢双脚安全站立1分钟" lay-filter="3_5_answer_11"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_11" value="2" title="自己并拢双脚监护下站立1分钟" lay-filter="3_5_answer_11"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_11" value="3" title="自己并拢双脚站立不超过30秒" lay-filter="3_5_answer_11"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_11" value="4" title="帮助下并拢双脚站立15秒" lay-filter="3_5_answer_11"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_11" value="5" title="帮助下并拢双脚站立不超过15秒" lay-filter="3_5_answer_11">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;站立下向前伸手：双手向前抬高90度，尽可能<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;向前伸手指</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_12" value="1" title="向前伸超过25厘米" lay-filter="3_5_answer_12"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_12" value="2" title="向前伸超过12.5厘米" lay-filter="3_5_answer_12"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_12" value="3" title="向前伸超过5厘米" lay-filter="3_5_answer_12"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_12" value="4" title="监护下向前伸手" lay-filter="3_5_answer_12"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_12" value="5" title="尝试向前伸手时失去平衡" lay-filter="3_5_answer_12">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;站立时从地板捡起物体：物体放在双脚前方</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_13" value="1" title="轻松安全地捡起物体" lay-filter="3_5_answer_13"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_13" value="2" title="监护下捡起物体" lay-filter="3_5_answer_13"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_13" value="3" title="离物体3-5厘米，不能捡起但能独自保持平衡" lay-filter="3_5_answer_13"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_13" value="4" title="不能捡起物体，尝试时需要监护" lay-filter="3_5_answer_13"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_13" value="5" title="不能尝试或需要帮助维持平衡以防摔倒" lay-filter="3_5_answer_13">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;360度转身：顺时针、逆时针两个方向</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_14" value="1" title="安全地360度转身：4秒内两个方向" lay-filter="3_5_answer_14"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_14" value="2" title="安全地360度转身：4秒内一个方向" lay-filter="3_5_answer_14"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_14" value="3" title="安全地360度转身但速度较慢" lay-filter="3_5_answer_14"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_14" value="4" title="口头提示或监护下转身" lay-filter="3_5_answer_14"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_14" value="5" title="帮助下转身" lay-filter="3_5_answer_14">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;站立时交替抬腿置于小矮凳上：连续4次共8步</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_15" value="1" title="独立安全地站立，20秒内完成8步" lay-filter="3_5_answer_15"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_15" value="2" title="独立站立，超过20秒完成8步" lay-filter="3_5_answer_15"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_15" value="3" title="没有监护下完成4步" lay-filter="3_5_answer_15"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_15" value="4" title="少量帮助下完成2步或以上" lay-filter="3_5_answer_15"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_15" value="5" title="帮助下以防摔倒或不能尝试" lay-filter="3_5_answer_15">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一只脚放在另一脚前方站立：步长必须超过脚<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;的长度，步宽与该儿童平时步宽相似。</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_16" value="1" title="双脚一前一后独立保持30秒" lay-filter="3_5_answer_16"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_16" value="2" title="一只脚在另一脚稍前方独立保持30秒" lay-filter="3_5_answer_16"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_16" value="3" title="更小的步长独立保持30秒" lay-filter="3_5_answer_16"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_16" value="4" title="帮助下迈步保持15秒" lay-filter="3_5_answer_16"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_16" value="5" title="站立或迈步时失去平衡" lay-filter="3_5_answer_16">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单脚站立</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_16" value="1" title="独立单脚站立超过10秒" lay-filter="3_5_answer_16"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_16" value="2" title="独立单脚站立5-10秒" lay-filter="3_5_answer_16"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_16" value="3" title="独立单脚站立3秒或以上" lay-filter="3_5_answer_16"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_16" value="4" title="尝试抬腿不能保持3秒但能独立站立" lay-filter="3_5_answer_16"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_5_answer_16" value="5" title="不能尝试或帮助下防止摔倒" lay-filter="3_5_answer_16">
+			</div>
+			<br><br><br>
+			<div align="center">
+				<div align="center">
+					<button class="layui-btn" lay-submit="" lay-filter="third_5" style="width: 200px;">继续</button>
+				</div>
+			</div>
+			<br><br>
+		</form>
+		<script src="layui/layui.js" charset="utf-8"></script>
+		<script src="layui/layui.all.js" charset="utf-8"></script>
+		<script src="js/app.js" charset="UTF-8"></script>
+	</body>
+
+</html>

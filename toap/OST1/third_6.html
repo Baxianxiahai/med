@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chorme=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>用户信息收集</title>
+		<link rel="shortcut icon" href="favicon.ico" />
+		<link rel="stylesheet" href="layui/css/layui.css">
+		<link rel="stylesheet" href="css/app.css">
+		<link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+		<script src="//apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="js/slider.js"></script>
+	</head>
+
+	<body class="layui-bg-gray">
+		<br><br>
+		<div align="center">
+			<label><h3></h3></label>
+		</div>
+		<br><br>
+		<form class="layui-form" id="form" action="" >
+			<label style="padding-left: 25px">下面的题目将通过您的滑动来表示自己的感受程度</label>
+			<br><br>
+			<div style="padding-left: 25px">
+				<label>在平坦的地面上行走(疼痛分数)</label>
+				<p>
+					<input type="text" id="amount_1" style="border:0; color:#000000;" disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_1"></div>
+			</div>
+			<br><br>
+			<div style="padding-left: 25px">
+				<label>上楼梯或下楼梯(疼痛分数)</label>
+				<p>
+					<input type="text" id="amount_2" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_2"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>晚上，尤其影响睡眠的疼痛(疼痛分数)</label>
+				<p>
+					<input type="text" id="amount_3" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_3"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>坐着或躺着(疼痛分数)</label>
+				<p>
+					<input type="text" id="amount_4" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_4"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>早晨起床时僵硬情况有多严重(僵硬分数)</label>
+				<p>
+					<input type="text" id="amount_5" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_5"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>僵硬状况在某段时间内，坐、卧或休息之后有多严重</label>
+				<p>
+					<input type="text" id="amount_6" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_6"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>上楼梯(难度分数)</label>
+				<p>
+					<input type="text" id="amount_7" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_7"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>下楼梯(难度分数)</label>
+				<p>
+					<input type="text" id="amount_8" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_8"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>由坐着站起来(难度分数)</label>
+				<p>
+					<input type="text" id="amount_9" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_9"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>站着(难度分数)</label>
+				<p>
+					<input type="text" id="amount_10" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_10"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>向地面弯腰(难度分数)</label>
+				<p>
+					<input type="text" id="amount_11" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_11"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>在平坦的地面上行走(难度分数)</label>
+				<p>
+					<input type="text" id="amount_12" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_12"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>进出小轿车或上下公共汽车（难度分数)</label>
+				<p>
+					<input type="text" id="amount_13" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_13"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>出门购物（难度分数)</label>
+				<p>
+					<input type="text" id="amount_14" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_14"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>穿袜子（难度分数)</label>
+				<p>
+					<input type="text" id="amount_15" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_15"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>从床上站起来（难度分数)</label>
+				<p>
+					<input type="text" id="amount_16" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_16"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>脱掉袜子（难度分数)</label>
+				<p>
+					<input type="text" id="amount_17" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_17"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>躺在床上（难度分数)</label>
+				<p>
+					<input type="text" id="amount_18" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_18"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>进出浴缸（难度分数)</label>
+				<p>
+					<input type="text" id="amount_19" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_19"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>坐着的时候（难度分数)</label>
+				<p>
+					<input type="text" id="amount_20" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_20"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>在卫生间蹲下或起来时（难度分数)</label>
+				<p>
+					<input type="text" id="amount_21" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_21"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>做繁重的家务活（难度分数)</label>
+				<p>
+					<input type="text" id="amount_22" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_22"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>做轻松的家务活（难度分数)</label>
+				<p>
+					<input type="text" id="amount_23" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_23"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>4周内或受伤（4周内受伤）后疼痛的频率（无-->持续）</label>
+				<p>
+					<input type="text" id="amount_24" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_24"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>如果有疼痛，疼痛的程度有多严重？</label>
+				<p>
+					<input type="text" id="amount_25" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_25"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>受伤前的功能（膝关节功能)</label>
+				<p>
+					<input type="text" id="amount_27" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_27"></div>
+			</div><br>
+			<div style="padding-left: 25px">
+				<label>目前膝关节的功能（膝关节功能)</label>
+				<p>
+					<input type="text" id="amount_28" style="border:0; color:#000000;"disabled="disabled">
+				</p>
+				<br>
+				<div id="slider-range-max_28"></div>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="" style="padding-left: 25px">
+				<label>不安全的住院环境</label>
+			</div>
+			<div style="padding-left: 25px">
+				<input type="radio" name="3_5_answer_16" value="1" title="在走廊加床，床单位周围摆放物品不规范，造成病房、通道拥挤混乱。地面不平整,有潜在危险的障碍物" lay-filter="3_5_answer_16"><br />
+				<input type="radio" name="3_5_answer_16" value="2" title="走廊过道地面湿滑，工人拖地后未设防滑跌安全警示牌" lay-filter="3_5_answer_16"><br />
+				<input type="radio" name="3_5_answer_16" value="3" title="厕所、淋浴间无防滑垫、防滑跌警示牌" lay-filter="3_5_answer_16"><br />
+				<input type="radio" name="3_5_answer_16" value="4" title="呼叫装置失灵或呼叫后未及时采取措施" lay-filter="3_5_answer_16"><br />
+				<input type="radio" name="3_5_answer_16" value="5" title="灯光亮度不足或过于刺激" lay-filter="3_5_answer_16"><br />
+				<input type="radio" name="3_5_answer_16" value="6" title="床或轮椅的刹车未固定" lay-filter="3_5_answer_16"><br />
+			</div>
+			<br><br>
+			<div class="layui-form-item" pane="" style="padding-left: 25px">
+				<label>评估不到位</label>
+			</div>
+			<div style="padding-left: 25px">
+				<input type="radio" name="3_5_answer_16" value="1" title="对病人的基本情况不了解，未按要求进行防跌倒高危因素评估" lay-filter="3_5_answer_16"><br />
+				<input type="radio" name="3_5_answer_16" value="2" title="对患者是否有跌倒史、高龄体弱、视力下降、体位性低血压、药物反应的影响、某些疾病的影响、不良心理状态的影响等与跌倒相关联的因素评估不全" lay-filter="3_5_answer_16"><br />
+			</div>
+			<br><br>
+			<div class="layui-form-item" pane="" style="padding-left: 25px">
+				<label>缺乏安全防护意识</label>
+			</div>
+			<div style="padding-left: 25px">
+				<input type="radio" name="3_5_answer_16" value="1" title="有跌倒的潜在危险时，缺乏保护性预防措施 (如:约束带、床边护栏、助行器的使用)，无相应护理记录" lay-filter="3_5_answer_16"><br />
+				<input type="radio" name="3_5_answer_16" value="2" title="护士自身缺乏安全意识，未按时巡视病房，未及时发现潜在的跌倒危险因素" lay-filter="3_5_answer_16"><br />
+				<input type="radio" name="3_5_answer_16" value="3" title="不注重细节问题:如患者鞋子不合适;不使用楼梯、走廊的扶手;床垫过高，上床不方便，难以在床上坐稳 ;体位的改变和位置的移动过快，起床、站立、转头、弯腰等动作均应缓慢" lay-filter="3_5_answer_16"><br />
+			</div>
+			<br><br><br>
+			<div align="center">
+				<div align="center">
+					<button class="layui-btn" lay-submit="" lay-filter="third_6" style="width: 200px;">提交</button>
+				</div>
+			</div>
+			<br><br>
+		</form>
+		<script src="layui/layui.js" charset="utf-8"></script>
+		<script src="layui/layui.all.js" charset="utf-8"></script>
+		<script src="js/app.js" charset="UTF-8"></script>
+
+	</body>
+
+</html>

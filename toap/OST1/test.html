@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chorme=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>用户信息收集</title>
+  <link rel="stylesheet" href="layui/css/layui.css">
+  
+	</head>
+	<body class="layui-bg-gray" >
+<table class="layui-table" lay-even="" lay-skin="nob">
+	<colgroup>
+    <col width="160">
+    <col>
+  </colgroup>
+  
+  <tbody>
+  	<thead>
+    <tr>
+      <td>最后一次患病时间：</td>
+      <td>
+		<input type="text" name="date" id="date1" autocomplete="off" placeholder="yyyy-mm-dd" class="layui-input"></td>
+    </tr>
+    </thead>
+    <thead>
+    <tr>
+      <td>累积患病时长：</td>
+      <td>
+		<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入患病时长" class="layui-input">
+      </td>
+    </tr>
+    </thead>
+    <thead>
+    <tr>
+      <td>使用的治疗药物：</td>
+      <td>
+		<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入治疗药物" class="layui-input">
+      </td>
+    </tr>
+    </thead>
+  </tbody>
+</table> 
+		<script src="layui/layui.js" charset="utf-8"></script>
+		<script src="layui/layui.all.js" charset="utf-8"></script>
+		<script src="js/app.js" charset="UTF-8"></script>
+	</body>
+</html>

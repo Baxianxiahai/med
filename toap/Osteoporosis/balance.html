@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chorme=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>用户信息收集</title>
+  <link rel="stylesheet" href="layui/css/layui.css">
+  
+	</head>
+	<body class="layui-bg-gray" >
+		<br><br>
+		<div align="center">
+			<label><h3>平衡量表</h3></label>
+		</div>
+		<br>
+		<div align="center">
+			<label>以下数据请根据个人情况真实选择!</label>
+		</div>
+		<br><br>
+		<form class="layui-form" id="common_4_form" action="">
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、坐到站：尽量不用手支撑</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer1" value="4" title="不用手扶持独立稳定地站起" checked="">
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer1" value="3" title="用手扶持独立地站起"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer1" value="2" title="经过几次努力用手扶持站起"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer1" value="1" title="需要较少的帮助站起"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer1" value="0" title="需要中度或最大的帮助站起"></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、无支撑站立：没有扶持下站立2 分钟</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer2" value="4" title="安全站立2 分钟" checked="">
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer2" value="3" title="监护下站立2 分钟"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer2" value="2" title="无扶持下站立30 秒"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer2" value="1" title="经过几次努力无扶持站立30 秒"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer2" value="0" title="无扶持不能站立30 秒"></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3、无靠背的坐位：双足稳定支撑于地板，手臂交叉维持2 分钟</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer3" value="4" title="安全坐2 分钟" checked="">
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer3" value="3" title="监护下坐2 分钟"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer3" value="2" title="坐30 秒"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer3" value="1" title="坐10 秒"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer3" value="0" title="没有支撑不能坐10 秒"></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4、 站立到坐</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer4" value="4" title="少量用手帮助安全地坐下" checked="">
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer4" value="3" title="用手帮助控制身体下降"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer4" value="2" title="后方的腿靠着椅子控制身体下降"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer4" value="1" title="独立地坐但不能控制身体下降"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer4" value="0" title="扶持下坐"></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5、转移：从椅到椅或床到椅</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer5" value="4" title="少量用手帮助下安全转移" checked="">
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer5" value="3" title="大量用手帮助下安全转移"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer5" value="2" title="口头提示或监护下转移"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer5" value="1" title="需要一人帮助下转移"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer5" value="0" title="需要二人帮助下转移"></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6、 闭眼无支撑下站立：站立10 秒</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer6" value="4" title="安全站立10 秒" checked="">
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer6" value="3" title="监护下站立10 秒"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer6" value="2" title="站立3秒"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer6" value="1" title="站立稳定但闭眼不超过3秒"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer6" value="0" title="需要帮助以防摔倒"></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7、双脚并拢无支撑站立</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer7" value="4" title="自己并拢双脚安全站立1分钟" checked="">
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer7" value="3" title="自己并拢双脚监护下站立1分钟"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer7" value="2" title="自己并拢双脚站立不超过30秒"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer7" value="1" title="帮助下并拢双脚站立15秒"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer7" value="0" title="帮助下并拢双脚站立不超过15秒"></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8、 站立下向前伸手：双手向前抬高90度，尽可能向前伸手指</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer8" value="4" title="向前伸超过25厘米" checked="">
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer8" value="3" title="向前伸超过12.5厘米"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer8" value="2" title="向前伸超过5厘米"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer8" value="1" title="监护下向前伸手"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer8" value="0" title="尝试向前伸手时失去平衡"></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9、站立时从地板捡起物体：物体放在双脚前方</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer9" value="4" title="轻松安全地捡起物体" checked="">
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer9" value="3" title="监护下捡起物体"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer9" value="2" title="离物体3－5厘米不能捡起物体但能独自保持平衡"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer9" value="1" title="不能捡起物体，尝试时需要监护"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer9" value="0" title="不能尝试或需要帮助维持平衡以防摔倒"></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10、站立时转身往左、右肩后看</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer10" value="4" title="看到双侧后方，重心转移良好" checked="">
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer10" value="3" title="看到一侧后方，另一侧缺乏重心转移"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer10" value="2" title="只能轻微侧身，可维持平衡"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer10" value="1" title="监护下尝试侧身"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer10" value="0" title="帮助下尝试侧身"></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;11、360度转身：顺时针、逆时针两个方向</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer11" value="4" title="安全地360度转身：4秒内两个方向" checked="">
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer11" value="3" title="安全地360度转身：4秒内一个方向"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer11" value="2" title="安全地360度转身但速度较慢"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer11" value="1" title="口头提示或监护下转身"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer11" value="0" title="帮助下转身"></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;12、站立时交替抬腿置于小矮凳上：连续4 次共8 步</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer12" value="4" title="独立安全地站立，20 秒内完成8 步" checked="">
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer12" value="3" title=" 独立站立，超过20 秒完成8步"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer12" value="2" title="没有监护下完成4步"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer12" value="1" title="少量帮助下完成2步或以上"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer12" value="0" title="帮助下以防摔倒或不能尝试"></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;13、一只脚放在另一脚前方站立：步长必须超过脚的长度，步宽与该儿童平时步宽相似</label>
+			</div>
+			<div> 
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer13" value="4" title="双脚一前一后独立保持30秒" checked="">
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer13" value="3" title="一只脚在另一脚稍前方独立保持30秒"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer13" value="2" title="更小的步长独立保持30秒"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer13" value="1" title="帮助下迈步保持15秒"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer13" value="0" title="站立或迈步时失去平衡"></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;14、单脚站立</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer14" value="4" title="独立单脚站立超过10秒" checked="">
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer14" value="3" title="独立单脚站立5-10 秒 "></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer14" value="2" title="独立单脚站立3秒或以上"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer14" value="1" title="尝试抬腿不能保持3秒但能独立站立"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="balance_answer14" value="0" title="不能尝试或帮助下防止摔倒"></li>
+			</div>
+			<br><br><br><br><br>
+			<!--<div class="layui-form-item" >-->
+			<div align="center">
+				<!--<div class="layui-input-block">-->
+				<div align="center">
+					<button class="layui-btn" lay-submit="" lay-filter="balance">提交</button>
+				</div>
+			</div>
+			<br />
+		</form>
+		<script src="layui/layui.js" charset="utf-8"></script>
+		<script src="layui/layui.all.js" charset="utf-8"></script>
+		<script src="js/app.js" charset="UTF-8"></script>
+	</body>
+</html>

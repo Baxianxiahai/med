@@ -1,0 +1,13 @@
+<input type="text" name="username">
+<input type="text" name="sex">
+<input type="button" value="Post">
+<script language="javascript" >
+function Post()
+{
+//单个值 Read.htm?username=baobao;
+//多全值 Read.htm?username=baobao&sex=male;
+　　url = "test2.htm?username="+escape(document.all.username.value);
+　　url += "&sex=" + escape(document.all.sex.value);
+　　location.href=url;
+}
+</script>

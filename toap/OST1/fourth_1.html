@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<link rel="shortcut icon" href="favicon.ico" />
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chorme=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>用户信息收集</title>
+		<link rel="stylesheet" href="layui/css/layui.css">
+		<link rel="stylesheet" href="css/app.css">
+
+		<script charset="UTF-8" src="js/jquery.min.js"></script>
+	</head>
+
+	<body class="layui-bg-gray">
+		<br><br>
+		<!--<div align="center">
+			<label><h3>慢性疾病及用药情况</h3></label>
+		</div>
+		<br><br><br>-->
+		<form class="layui-form" id="form" action="">
+			<table class="layui-table" lay-skin="nob">
+				<colgroup>
+					<col width="217">
+					<col>
+				</colgroup>
+				<tbody>
+					<tr>
+						<td>您的年龄是</td>
+						<td><input type="text" name="age" lay-verify="age" autocomplete="off" placeholder="请输入年龄" class="layui-input"></td>
+					</tr>
+					<tr>
+						<td>您是否体重身高下降</td>
+						<td>
+							<input type="radio" name="4_answer_1" value="1" title="是" lay-filter="3_1_answer_1">
+							<input type="radio" name="4_answer_1" value="2" title="否" lay-filter="3_1_answer_1">
+						</td>
+					</tr>
+					<tr>
+						<td>您是否有骨质疏松症家族史</td>
+						<td>
+							<input type="radio" name="4_answer_2" value="1" title="是" lay-filter="3_1_answer_1">
+							<input type="radio" name="4_answer_2" value="2" title="否" lay-filter="3_1_answer_1">
+						</td>
+					</tr>
+					<tr>
+						<td>您是否绝经后女性</td>
+						<td>
+							<input type="radio" name="4_answer_3" value="1" title="是" lay-filter="3_1_answer_1">
+							<input type="radio" name="4_answer_3" value="2" title="否" lay-filter="3_1_answer_1">
+						</td>
+					</tr>
+					<tr>
+						<td>您是否体力活动少</td>
+						<td>
+							<input type="radio" name="4_answer_4" value="1" title="是" lay-filter="3_1_answer_1">
+							<input type="radio" name="4_answer_4" value="2" title="否" lay-filter="3_1_answer_1">
+						</td>
+					</tr>
+					<tr>
+						<td>您是否过量饮酒</td>
+						<td>
+							<input type="radio" name="4_answer_5" value="1" title="是" lay-filter="3_1_answer_1">
+							<input type="radio" name="4_answer_5" value="2" title="否" lay-filter="3_1_answer_1">
+						</td>
+					</tr>
+					<tr>
+						<td>您是否吸烟</td>
+						<td>
+							<input type="radio" name="4_answer_6" value="1" title="是" lay-filter="3_1_answer_1">
+							<input type="radio" name="4_answer_6" value="2" title="否" lay-filter="3_1_answer_1">
+						</td>
+					</tr>
+					<tr>
+						<td>您是否饮过多含咖啡因的饮料</td>
+						<td>
+							<input type="radio" name="4_answer_7" value="1" title="是" lay-filter="3_1_answer_1">
+							<input type="radio" name="4_answer_7" value="2" title="否" lay-filter="3_1_answer_1">
+						</td>
+					</tr>
+					<tr>
+						<td>您是否营养失衡</td>
+						<td>
+							<input type="radio" name="4_answer_8" value="1" title="是" lay-filter="3_1_answer_1">
+							<input type="radio" name="4_answer_8" value="2" title="否" lay-filter="3_1_answer_1">
+						</td>
+					</tr>
+					<tr>
+						<td>您是否蛋白质摄入不足</td>
+						<td>
+							<input type="radio" name="4_answer_9" value="1" title="是" lay-filter="3_1_answer_1">
+							<input type="radio" name="4_answer_9" value="2" title="否" lay-filter="3_1_answer_1">
+						</td>
+					</tr>
+					<tr>
+						<td>您是否钙和维生素D缺乏</td>
+						<td>
+							<input type="radio" name="4_answer_10" value="1" title="是" lay-filter="3_1_answer_1">
+							<input type="radio" name="4_answer_10" value="2" title="否" lay-filter="3_1_answer_1">
+						</td>
+					</tr>
+					<tr>
+						<td>您是否高钠饮食</td>
+						<td>
+							<input type="radio" name="4_answer_11" value="1" title="是" lay-filter="3_1_answer_1">
+							<input type="radio" name="4_answer_11" value="2" title="否" lay-filter="3_1_answer_1">
+						</td>
+					</tr>
+					<tr>
+						<td>您是否低体质量</td>
+						<td>
+							<input type="radio" name="4_answer_12" value="1" title="是" lay-filter="3_1_answer_1">
+							<input type="radio" name="4_answer_12" value="2" title="否" lay-filter="3_1_answer_1">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<br><br><br>
+			<div align="center">
+				<div align="center">
+					<button class="layui-btn" lay-submit="" lay-filter="fourth_1" style="width: 200px;">继续</button>
+				</div>
+			</div>
+			<br><br>
+		</form>
+		<script src="layui/layui.js" charset="utf-8"></script>
+		<script src="layui/layui.all.js" charset="utf-8"></script>
+		<script src="js/app.js" charset="UTF-8"></script>
+	</body>
+
+</html>

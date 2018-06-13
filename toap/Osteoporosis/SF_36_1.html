@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chorme=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>用户信息收集</title>
+  <link rel="stylesheet" href="layui/css/layui.css">
+  
+	</head>
+	<body class="layui-bg-gray" >
+		<br><br>
+		<div align="center">
+			<label><h3>SF-36量表（1）</h3></label>
+		</div>
+		<br><br><br>
+		<form class="layui-form" id="SF_36_1_form" action="">
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、总体来讲，您的健康状况是：</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer1" value="5" title="非常好" checked=""></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer1" value="4" title="很好"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer1" value="3" title="好"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer1" value="2" title="一般"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer1" value="1" title="差"></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、跟1年以前比您觉得自己的健康状况是：</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer2" value="5" title="比1年前好多了" checked=""></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer2" value="4" title="比1年前好一些"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer2" value="3" title="跟1年前差不多"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer2" value="2" title="比1年前差一些"></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer2" value="1" title="比1年前差多了"></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3、以下这些问题都和日常活动有关。请您想一想，您的健康状况是否限制了这些活动？如果有限制，程度如何？ </label>
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（1）重体力活动。如跑步举重、参加剧烈运动等：  </label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer3" value="1" title="限制很大 " checked=""></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer3" value="2" title="有些限制 "></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer3" value="3" title="毫无限制 "></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（2）适度的活动。如移动一张桌子、扫地、打太极拳、做简单体操等：  </label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer4" value="1" title="限制很大 " checked=""></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer4" value="2" title="有些限制 "></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer4" value="3" title="毫无限制 "></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（3）手提日用品。如买菜、购物等：</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer5" value="1" title="限制很大 " checked=""></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer5" value="2" title="有些限制 "></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer5" value="3" title="毫无限制 "></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（4）上几层楼梯：</label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer6" value="1" title="限制很大 " checked=""></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer6" value="2" title="有些限制 "></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer6" value="3" title="毫无限制 "></li>
+			</div>
+			<br>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（5）上一层楼梯： </label>
+			</div>
+			<div>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer7" value="1" title="限制很大 " checked=""></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer7" value="2" title="有些限制 "></li>
+				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="SF_36_1_answer7" value="3" title="毫无限制 "></li>
+			</div>
+			<br><br><br>
+			<!--<div class="layui-form-item" >-->
+			<div align="center">
+				<!--<div class="layui-input-block">-->
+				<div align="center">
+					<button class="layui-btn" lay-submit="" lay-filter="SF_36_1">继续</button>
+				</div>
+			</div>
+			<br><br>
+		</form>
+		<script src="layui/layui.js" charset="utf-8"></script>
+		<script src="layui/layui.all.js" charset="utf-8"></script>
+		<script src="js/app.js" charset="UTF-8"></script>
+	</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chorme=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>用户信息收集</title>
+		<link rel="shortcut icon" href="favicon.ico" />
+		<link rel="stylesheet" href="layui/css/layui.css">
+		<link rel="stylesheet" href="css/app.css">
+		<script charset="UTF-8" src="js/jquery.min.js"></script>
+	</head>
+
+	<body class="layui-bg-gray">
+		<br><br>
+		<!--<div align="center">
+			<label><h3>慢性疾病及用药情况</h3></label>
+		</div>
+		<br><br><br>-->
+		<form class="layui-form" id="form" action="">
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;起立-行走试验：从坐位起身</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_1" value="1" title="一次动作能起身" lay-filter="3_2_answer_1">
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_1" value="2" title="撑起，一次成功" lay-filter="3_2_answer_1">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_1" value="3" title="多次尝试，但成功" lay-filter="3_2_answer_1">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;你行走是膝关节有多痛？</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_2" value="1" title="严重" lay-filter="3_2_answer_2">
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_2" value="2" title="中度" lay-filter="3_2_answer_2">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_2" value="3" title="轻度或偶尔" lay-filter="3_2_answer_2">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_2" value="4" title="没有" lay-filter="3_2_answer_2">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;你上下楼梯时膝关节有多痛？</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_3" value="1" title="严重" lay-filter="3_2_answer_3">
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_3" value="2" title="中度" lay-filter="3_2_answer_3">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_3" value="3" title="轻度或偶尔" lay-filter="3_2_answer_3">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_3" value="4" title="没有" lay-filter="3_2_answer_3">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;下肢伸直受限（度）</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_4" value="1" title="0" lay-filter="3_2_answer_4">
+				<input type="radio" name="3_2_answer_4" value="2" title="<5" lay-filter="3_2_answer_4">
+				<input type="radio" name="3_2_answer_4" value="3" title="5~10" lay-filter="3_2_answer_4">
+				<input type="radio" name="3_2_answer_4" value="4" title=">10" lay-filter="3_2_answer_4">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;屈曲挛缩（度）</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_5" value="1" title="<5" lay-filter="3_2_answer_5">
+				<input type="radio" name="3_2_answer_5" value="2" title="6~10" lay-filter="3_2_answer_5">
+				<input type="radio" name="3_2_answer_5" value="3" title="11~20" lay-filter="3_2_answer_5">
+				<input type="radio" name="3_2_answer_5" value="4" title=">20" lay-filter="3_2_answer_5">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;下肢排列力线不佳（度）</label>
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_6" value="1" title="5~10" lay-filter="3_2_answer_6">
+				<input type="radio" name="3_2_answer_6" value="2" title=">10" lay-filter="3_2_answer_6">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;你休息时膝关节疼痛程度如何？</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_7" value="1" title="严重" lay-filter="3_2_answer_7">
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_7" value="2" title="中度" lay-filter="3_2_answer_7">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_7" value="3" title="轻度或偶尔" lay-filter="3_2_answer_7">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_7" value="4" title="没有" lay-filter="3_2_answer_7">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;侧方稳定性（mm）</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_8" value="1" title=">10" lay-filter="3_2_answer_8">
+				<input type="radio" name="3_2_answer_8" value="2" title="5~10" lay-filter="3_2_answer_8">
+				<input type="radio" name="3_2_answer_8" value="3" title="<5" lay-filter="3_2_answer_8">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;前后方稳定性（mm）</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_9" value="1" title=">10" lay-filter="3_2_answer_9">
+				<input type="radio" name="3_2_answer_9" value="2" title="5~10" lay-filter="3_2_answer_9">
+				<input type="radio" name="3_2_answer_9" value="3" title="<5" lay-filter="3_2_answer_9">
+			</div>
+
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;疼痛强度</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_10" value="1" title="我能忍受疼痛无须止痛药" lay-filter="3_2_answer_10">
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_10" value="2" title="疼痛较剧但可以控制不用止痛药" lay-filter="3_2_answer_10">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_10" value="3" title="服止痛药可完全止痛" lay-filter="3_2_answer_10">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_10" value="4" title="服止痛药稍可止痛" lay-filter="3_2_answer_10">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_10" value="5" title="服止痛药难于止痛" lay-filter="3_2_answer_10">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_10" value="6" title="止痛药无效我不用它" lay-filter="3_2_answer_10">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;生活情况（洗漱、穿着等）</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_11" value="1" title="我能正常地自理生活不引起特殊疼痛" lay-filter="3_2_answer_11">
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_11" value="2" title="我能正常地自理生活但引起特殊疼痛" lay-filter="3_2_answer_11">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_11" value="3" title="自理生活时有疼痛，因而须缓慢、小心" lay-filter="3_2_answer_11">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_11" value="4" title="生活大部分自理但需要帮忙" lay-filter="3_2_answer_11">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_11" value="5" title="生活每天都需要帮忙" lay-filter="3_2_answer_11">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_11" value="6" title="难于洗漱、穿着，因而需卧床" lay-filter="3_2_answer_11">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;提物</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_12" value="1" title="我可以提重物而不引起特别疼痛" lay-filter="3_2_answer_12">
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_12" value="2" title="我可以提重物但引起特别疼痛" lay-filter="3_2_answer_12">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_12" value="3" title="不能从地上提起重物，但放在台子上我可以移动" lay-filter="3_2_answer_12">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_12" value="4" title="不能提重物，但对轻、中等重物可以移动它" lay-filter="3_2_answer_12">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_12" value="5" title="我只能提很轻的物件" lay-filter="3_2_answer_12">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_12" value="6" title="我完全不能提举任何物件" lay-filter="3_2_answer_12">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;行走</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_13" value="1" title="疼痛对行走无妨碍" lay-filter="3_2_answer_13">
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_13" value="2" title="疼痛使我不能走1里以上的路" lay-filter="3_2_answer_13">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_13" value="3" title="疼痛使我不能走1/2里以上的路" lay-filter="3_2_answer_13">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_13" value="4" title="疼痛使我不能走1/4里以上的路" lay-filter="3_2_answer_13">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_13" value="5" title="我只能拄杖行走" lay-filter="3_2_answer_13">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_13" value="6" title="大部分时间卧床只能缓慢移动去上厕所" lay-filter="3_2_answer_13">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;坐位</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_14" value="1" title="我能长时间坐在任何椅子上" lay-filter="3_2_answer_14">
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_14" value="2" title="我只坐在合适的椅子上，时间不限" lay-filter="3_2_answer_14">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_14" value="3" title="疼痛使得我坐不上1h" lay-filter="3_2_answer_14">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_14" value="4" title="疼痛使得我坐不上0.5h" lay-filter="3_2_answer_14">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_14" value="5" title="疼痛使得我坐不上10min" lay-filter="3_2_answer_14">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_14" value="6" title="疼痛得简直不能坐" lay-filter="3_2_answer_14">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;站立</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_15" value="1" title="需要站多久就能站多久，不引起特殊疼痛" lay-filter="3_2_answer_15">
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_15" value="2" title="需要站多久就能站多久，但引起特殊疼痛" lay-filter="3_2_answer_15">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_15" value="3" title="疼痛使我站立不能超过1h" lay-filter="3_2_answer_15">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_15" value="4" title="疼痛使我站立不能超过0.5h" lay-filter="3_2_answer_15">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_15" value="5" title="疼痛使我站立不能超过10min" lay-filter="3_2_answer_15">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_15" value="6" title="疼痛使我简直不能站立" lay-filter="3_2_answer_15">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;睡眠</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_16" value="1" title="疼痛毫不影响睡眠" lay-filter="3_2_answer_16">
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_16" value="2" title="服药才能睡好" lay-filter="3_2_answer_16">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_16" value="3" title="即使服药也睡不到6h" lay-filter="3_2_answer_16">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_16" value="4" title="即使服药也睡不到4h" lay-filter="3_2_answer_16">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_16" value="5" title="即使服药也睡不到2h" lay-filter="3_2_answer_16">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_16" value="6" title="疼痛得完全不能睡眠" lay-filter="3_2_answer_16">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;性生活</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_17" value="1" title="性生活正常不引起特殊疼痛" lay-filter="3_2_answer_17">
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_17" value="2" title="性生活正常但引起特殊疼痛" lay-filter="3_2_answer_17">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_17" value="3" title="性生活近乎正常，但引起明显疼痛" lay-filter="3_2_answer_17">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_17" value="4" title="疼痛使性生活严重受限" lay-filter="3_2_answer_17">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_17" value="5" title="由于疼痛，基本没有性生活" lay-filter="3_2_answer_17">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_17" value="6" title="由于疼痛，根本没有性生活" lay-filter="3_2_answer_17">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;社会活动时腰痛</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_18" value="1" title="社会活动完全正常，不会因此疼痛加重" lay-filter="3_2_answer_18">
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_18" value="2" title="社会活动完全正常，但会加重疼痛" lay-filter="3_2_answer_18">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_18" value="3" title="疼痛限制剧烈活动，如运动，但对其他社会活动" lay-filter="3_2_answer_18"><br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;无明显影响
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_18" value="4" title="疼痛限制正常的社会活动，不能参加某些经" lay-filter="3_2_answer_18"><br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;常性活动
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_18" value="5" title="疼痛限制参加社会活动，只能在家从事一些" lay-filter="3_2_answer_18"><br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;社会活动
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_18" value="6" title="由于疼痛，根本无法从事任何社会活动" lay-filter="3_2_answer_18">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;旅行时腰痛</label>
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_19" value="1" title="能到任何地方去旅行，腰部或腿不会痛" lay-filter="3_2_answer_19">
+			</div>
+			<div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_19" value="2" title="能到任何地方去旅行，但疼痛会加重" lay-filter="3_2_answer_19">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_19" value="3" title="由于疼痛，外出郊游不超过2小时" lay-filter="3_2_answer_19">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_19" value="4" title="由于疼痛，外出郊游不超过1小时" lay-filter="3_2_answer_19">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_19" value="5" title="由于疼痛，外出郊游不超过30分钟。" lay-filter="3_2_answer_19">
+			</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="3_2_answer_19" value="6" title="由于疼痛，除了到医院，根本无法外出" lay-filter="3_2_answer_19">
+			</div>
+			<br><br><br>
+			<div align="center">
+				<div align="center">
+					<button class="layui-btn" lay-submit="" lay-filter="third_2" style="width: 200px;">继续</button>
+				</div>
+			</div>
+			<br><br>
+		</form>
+		<script src="layui/layui.js" charset="utf-8"></script>
+		<script src="layui/layui.all.js" charset="utf-8"></script>
+		<script src="js/app.js" charset="UTF-8"></script>
+	</body>
+
+</html>

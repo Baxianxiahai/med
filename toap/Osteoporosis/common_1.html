@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chorme=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>用户信息收集</title>
+  <link rel="stylesheet" href="layui/css/layui.css">
+  
+	</head>
+	<body class="layui-bg-gray" >
+		<br><br>
+		<div align="center">
+			<label><h3>现病史调查</h3></label>
+		</div>
+		<br><br><br>
+		<form class="layui-form" id="form" action="">
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、您是否曾经因为轻微度碰撞或者跌倒就会伤到自己的骨骼？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="answer1" value="1" title="是" checked="">
+				<input type="radio" name="answer1" value="2" title="否">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、您经常连续3个月以上服用强的松等激素类药物吗？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="answer2" value="1" title="是" checked="">
+				<input type="radio" name="answer2" value="2" title="否">
+			</div>
+			<div class="layui-form-item" pane="">
+				<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3、您的身高是否比年轻时降低超过3厘米？</label>
+			</div>
+			<div class="layui-input-block">
+				<input type="radio" name="answer3" value="1" title="是" checked="">
+				<input type="radio" name="answer3" value="2" title="否">
+			</div>
+			<br><br><br><br><br>
+			<!--<div class="layui-form-item" >
+				<div class="layui-input-block">-->
+			<div align="center">
+				<div align="center">
+					<button class="layui-btn" lay-submit="" lay-filter="common_1">继续</button>
+				</div>
+			</div>
+		</form>
+		<script src="layui/layui.js" charset="utf-8"></script>
+		<script src="layui/layui.all.js" charset="utf-8"></script>
+		<script src="js/app.js" charset="UTF-8"></script>
+	</body>
+</html>
