@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>cebsMainWindow</class>
+ <widget class="QMainWindow" name="cebsMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1202</width>
+    <height>546</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1202</width>
+    <height>546</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>CEBS SYSTEM</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTextEdit" name="textEdit_runProgress">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>40</y>
+      <width>761</width>
+      <height>401</height>
+     </rect>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+    <property name="tabletTracking">
+     <bool>true</bool>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="verticalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOn</enum>
+    </property>
+    <property name="horizontalScrollBarPolicy">
+     <enum>Qt::ScrollBarAsNeeded</enum>
+    </property>
+    <property name="sizeAdjustPolicy">
+     <enum>QAbstractScrollArea::AdjustToContents</enum>
+    </property>
+    <property name="autoFormatting">
+     <set>QTextEdit::AutoAll</set>
+    </property>
+    <property name="tabChangesFocus">
+     <bool>true</bool>
+    </property>
+    <property name="html">
+     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&amp;gt;&amp;gt; 2018/5/2 15:30:99 系统启动&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&amp;gt;&amp;gt; 2018/5/2 15:40:55 启动执行命令 &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_ctrl_start">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>161</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>启动拍照</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_runProgress">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>20</y>
+      <width>261</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>运行进展</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_ctrl_stop">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>20</y>
+      <width>161</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>停止拍照</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_runpg_test">
+    <property name="geometry">
+     <rect>
+      <x>980</x>
+      <y>450</y>
+      <width>71</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TEST</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_runpg_clear">
+    <property name="geometry">
+     <rect>
+      <x>1060</x>
+      <y>450</y>
+      <width>71</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>清除</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_ctrl_zero">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>110</y>
+      <width>341</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>位置归零</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_ctrl_calib">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>290</y>
+      <width>341</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>校准功能</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_ctrl_vclas_start">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>200</y>
+      <width>151</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>启动图像识别</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_ctrl_vclas_stop">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>200</y>
+      <width>161</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>停止图像识别</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1202</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>控制命令</string>
+    </property>
+    <addaction name="actionSTART"/>
+    <addaction name="actionSTOP"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>系统设置</string>
+    </property>
+    <addaction name="actionEXIT"/>
+    <addaction name="actionABOUT"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionSTART">
+   <property name="text">
+    <string>START</string>
+   </property>
+  </action>
+  <action name="actionSTOP">
+   <property name="text">
+    <string>STOP</string>
+   </property>
+  </action>
+  <action name="actionEXIT">
+   <property name="text">
+    <string>EXIT</string>
+   </property>
+  </action>
+  <action name="actionABOUT">
+   <property name="text">
+    <string>ABOUT</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButton_runpg_clear</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsMainWindow</receiver>
+   <slot>slot_runpg_clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1107</x>
+     <y>513</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>938</x>
+     <y>367</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_runpg_test</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsMainWindow</receiver>
+   <slot>slot_runpg_test()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1005</x>
+     <y>513</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>939</x>
+     <y>415</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_ctrl_stop</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsMainWindow</receiver>
+   <slot>slot_ctrl_stop()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>271</x>
+     <y>113</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>321</x>
+     <y>121</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_ctrl_start</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsMainWindow</receiver>
+   <slot>slot_ctrl_start()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>136</x>
+     <y>113</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>189</x>
+     <y>34</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_ctrl_zero</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsMainWindow</receiver>
+   <slot>slot_ctrl_zero()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>179</x>
+     <y>203</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>190</x>
+     <y>215</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_ctrl_calib</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsMainWindow</receiver>
+   <slot>slot_ctrl_calib()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>129</x>
+     <y>383</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>116</x>
+     <y>397</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_ctrl_vclas_start</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsMainWindow</receiver>
+   <slot>slot_ctrl_vclas_start()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>135</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>178</x>
+     <y>285</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_ctrl_vclas_stop</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsMainWindow</receiver>
+   <slot>slot_ctrl_vclas_stop()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>349</x>
+     <y>267</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>370</x>
+     <y>301</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>slot_runpg_test()</slot>
+  <slot>slot_runpg_clear()</slot>
+  <slot>slot_ctrl_stop()</slot>
+  <slot>slot_ctrl_start()</slot>
+  <slot>slot_print_trigger()</slot>
+  <slot>slot_ctrl_zero()</slot>
+  <slot>slot_ctrl_null()</slot>
+  <slot>slot_ctrl_calib()</slot>
+  <slot>slot_ctrl_vclas_start()</slot>
+  <slot>slot_ctrl_vclas_stop()</slot>
+ </slots>
+</ui>
