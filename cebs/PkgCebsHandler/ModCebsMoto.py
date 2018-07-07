@@ -1,5 +1,5 @@
 '''
-Created on 2018年5月8日
+Created on 2018骞�5鏈�8鏃�
 
 @author: Administrator
 '''
@@ -24,12 +24,16 @@ from PyQt5.QtCore import pyqtSlot
 from cebsMain import *
 from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
+from PkgCebsHandler import ModCebsMotorApi
 
-#约定移动的孔板位置使用： 0 =》 表示复位位置
-#               1-96 =》正常的板孔位置
+#绾﹀畾绉诲姩鐨勫瓟鏉夸綅缃娇鐢細 0 =銆� 琛ㄧず澶嶄綅浣嶇疆
+#               1-96 =銆嬫甯哥殑鏉垮瓟浣嶇疆
 class classMotoProcess(object):
+    ObjMotorApi = ModCebsMotorApi.MotorClass()
+    
     def __init__(self):
-        #先计算基础部分
+        #鍏堣绠楀熀纭�閮ㄥ垎
+        #ObjMotorApi = ModCebsMotorApi.MotorClass()
         if (ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE == 0 or ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE == 0 or ModCebsCom.GL_CEBS_HB_HOLE_X_NUM == 0 or ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM == 0):
             if (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD):
                 ModCebsCom.GL_CEBS_HB_HOLE_X_NUM = 12;
@@ -56,8 +60,8 @@ class classMotoProcess(object):
                 ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = 8;
                 ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_BOARD_X_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
                 ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_BOARD_Y_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
-        #再考虑真实情况下的覆盖
-        #真正的校准在校准过程中进行更新
+        #鍐嶈�冭檻鐪熷疄鎯呭喌涓嬬殑瑕嗙洊
+        #鐪熸鐨勬牎鍑嗗湪鏍″噯杩囩▼涓繘琛屾洿鏂�
         if (ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] !=0):
             xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[0];
             yHeight = ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[3];
@@ -126,7 +130,7 @@ class classMotoProcess(object):
 
     def funcMotoMove2Start(self):
         print("MOTO: Move to start!")
-        #注意：左上的X轴最小、Y最大。右下的X最大，而Y小
+        #娉ㄦ剰锛氬乏涓婄殑X杞存渶灏忋�乊鏈�澶с�傚彸涓嬬殑X鏈�澶э紝鑰孻灏�
         xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[0];
         yHeight = ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[3];
         if (xWidth <= 0 or yHeight <= 0):
@@ -135,32 +139,32 @@ class classMotoProcess(object):
         return self.funcMotoMove2HoleNbr(1);
         #print("MOTO: Running Start Position!")
 
-    #暂时不需要的过程
+    #鏆傛椂涓嶉渶瑕佺殑杩囩▼
     def funcMotoStop(self):
         #print("MOTO: Stop!")
         return 1;
     
-    #暂时不需要的过程
+    #鏆傛椂涓嶉渶瑕佺殑杩囩▼
     def funcMotoResume(self):
         print("MOTO: Resume action!")
         return 1;
     
     def funcMotoMove2HoleNbr(self, holeIndex):
         time.sleep(1)
-        #计算新的目标位置
+        #璁＄畻鏂扮殑鐩爣浣嶇疆
         if (holeIndex == 0):
             xTargetHoleNbr = 0;
             yTargetHoleNbr = 0;
             newPosX = 0;
             newPosY = 0;
         else:
-            #行（1-12）, 列（1-8）
+            #琛岋紙1-12锛�, 鍒楋紙1-8锛�
             xTargetHoleNbr = ((holeIndex-1) % ModCebsCom.GL_CEBS_HB_HOLE_X_NUM) + 1;
             yTargetHoleNbr = ((holeIndex-1) // ModCebsCom.GL_CEBS_HB_HOLE_X_NUM) + 1;
             newPosX = int(ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] + (xTargetHoleNbr-1)*ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE);
             newPosY = int(ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - (yTargetHoleNbr-1)*ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE);
         print("MOTO: Moving to working hole=%d, newPosX/Y=%d/%d." % (holeIndex, newPosX, newPosY))
-        #真实移动过程
+        #鐪熷疄绉诲姩杩囩▼
         if (self.funcMotoMove2AxisPos(ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1], newPosX, newPosY) > 0):
             ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] = newPosX;
             ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] = newPosY;
@@ -169,13 +173,9 @@ class classMotoProcess(object):
             return -2;
         print("MOTO: Finished once!")
 
-    #从当前一个坐标移动到另一个新坐标
-    #需要将坐标转换为脉冲数
+    #浠庡綋鍓嶄竴涓潗鏍囩Щ鍔ㄥ埌鍙︿竴涓柊鍧愭爣
+    #闇�瑕佸皢鍧愭爣杞崲涓鸿剦鍐叉暟
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy):
+        self.ObjMotorApi.moto_proc_move_to_axis_postion(curPx, curPy, newPx, newPy)
         return 1;
-    
-
-
-
-
         

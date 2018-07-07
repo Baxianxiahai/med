@@ -18,6 +18,8 @@ import http
 import socket
 import hashlib
 from ctypes import *
+import serial
+import serial.tools.list_ports
 
 #System lib
 from PyQt5 import QtWidgets, QtGui, QtCore
