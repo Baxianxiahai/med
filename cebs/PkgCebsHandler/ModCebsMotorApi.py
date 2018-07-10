@@ -27,8 +27,8 @@ MotorCmdStrReadStatus = 'Q03\r\n'
 
 ' Default parameters for motor '
 MOTOR_DISTANCE_MM_PER_ROUND = 5
-MOTOR_STEPS_PER_ROUND = 6400
-MOTOR_DEFAULT_SPEED = 100
+MOTOR_STEPS_PER_ROUND = 12800
+MOTOR_DEFAULT_SPEED = 300
 MOTOR_STEPS_PER_DISTANCE_MM = MOTOR_STEPS_PER_ROUND / MOTOR_DISTANCE_MM_PER_ROUND
 MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DISTANCE_MM_PER_ROUND / 1000
     
@@ -122,6 +122,8 @@ class MotorClass():
         if(self.IsSerialOpenOk == False):
             print("MOTOAPI: Serial is not opened, return")
             return
+        self.serialFd.reset_input_buffer()
+        self.serialFd.reset_output_buffer()
         self.serialFd.write(MotorCmdStrReadVersion.encode())
         #time.sleep(1)
         Version = self.serialFd.readline()
@@ -140,6 +142,8 @@ class MotorClass():
             print("MOTOAPI: Serial is not opened, return")
             return
         MotorStatusStr = ['0','0','0','0']
+        self.serialFd.reset_input_buffer()
+        self.serialFd.reset_output_buffer()
         self.serialFd.write(MotorCmdStrReadStatus.encode())
         #time.sleep(1)
         MotorStatusStrFull = self.serialFd.readline()
@@ -168,6 +172,8 @@ class MotorClass():
             return
         MotorCmdStringToSend = 'M03 ' + str(motor1) + ' ' + str(motor2) + ' '+ str(motor3) + ' '+ str(motor4) + ' ' + '\r\n'
         print("MotorCmdStringToSend = ", MotorCmdStringToSend)    
+        self.serialFd.reset_input_buffer()
+        self.serialFd.reset_output_buffer()
         self.serialFd.write(MotorCmdStringToSend.encode())
         #time.sleep(1)
         if motor1 == 1:        
@@ -190,6 +196,8 @@ class MotorClass():
         MotorStatusStr = ['0','0','0','0']
         MotorCmdStringToSend = 'M04 ' + str(motor1) + ' ' + str(motor2) + ' '+ str(motor3) + ' '+ str(motor4) + ' ' + '\r\n'
         print("MotorCmdStringToSend = ", MotorCmdStringToSend)    
+        self.serialFd.reset_input_buffer()
+        self.serialFd.reset_output_buffer()
         self.serialFd.write(MotorCmdStringToSend.encode())
         #time.sleep(1)
         if motor1 == 1:        
@@ -231,6 +239,8 @@ class MotorClass():
             return
         MotorCmdStringToSend = 'M01 ' + str(motor1_steps) + ' ' + str(motor2_steps) + ' '+ str(motor3_steps) + ' '+ str(motor4_steps) + ' ' + '\r\n'
         print("MotorCmdStringToSend = ", MotorCmdStringToSend)    
+        self.serialFd.reset_input_buffer()
+        self.serialFd.reset_output_buffer()        
         self.serialFd.write(MotorCmdStringToSend.encode())
         if int(motor1_steps) != 0:        
             MotorReturn = self.serialFd.readline()
@@ -251,6 +261,8 @@ class MotorClass():
             return
         MotorCmdStringToSend = 'M02 ' + str(motor1_speed) + ' ' + str(motor2_speed) + ' '+ str(motor3_speed) + ' '+ str(motor4_speed) + ' ' + '\r\n'
         print("MotorCmdStringToSend = ", MotorCmdStringToSend)    
+        self.serialFd.reset_input_buffer()
+        self.serialFd.reset_output_buffer()
         self.serialFd.write(MotorCmdStringToSend.encode())
         if int(motor1_speed) != 0:        
             MotorReturn = self.serialFd.readline()
@@ -272,6 +284,8 @@ class MotorClass():
         MotorStatusStr = ['0','0','0','0']
         MotorCmdStringToSend = 'M05 ' + str(motor1_speed) + ' ' + str(motor2_speed) + ' '+ str(motor3_speed) + ' '+ str(motor4_speed) + ' ' + '\r\n'
         print("MOTOAPI: MotorCmdStringToSend = ", MotorCmdStringToSend)    
+        self.serialFd.reset_input_buffer()
+        self.serialFd.reset_output_buffer()
         self.serialFd.write(MotorCmdStringToSend.encode())
         if int(motor1_speed) != 0:        
             MotorReturn = self.serialFd.readline()
@@ -295,23 +309,32 @@ class MotorClass():
             print("MotorReturn4 = ", MotorReturn)
         self.serialFd.write(MotorCmdStrReadStatus.encode())    
         MotorStatusStrFull = self.serialFd.readline()
-        MotorStatusStr[0] = MotorStatusStrFull.split()[0]
-        MotorStatusStr[1] = MotorStatusStrFull.split()[1]
-        MotorStatusStr[2] = MotorStatusStrFull.split()[2]
-        MotorStatusStr[3] = MotorStatusStrFull.split()[3]
+        print("MotorStatusStrFull=", MotorStatusStrFull)
+        if MotorStatusStrFull[0] == 48 or MotorStatusStrFull[0] == 49 :
+            MotorStatusStr[0] = MotorStatusStrFull.split()[0]
+            MotorStatusStr[1] = MotorStatusStrFull.split()[1]
+            MotorStatusStr[2] = MotorStatusStrFull.split()[2]
+            MotorStatusStr[3] = MotorStatusStrFull.split()[3]
+        else:
+            MotorStatusStrFull = self.serialFd.readline()
+            print("MotorStatusStrFull=", MotorStatusStrFull)
+            return
         wait_time = 0
         while (MotorStatusStr[0] != b'0' or MotorStatusStr[1] != b'0' or MotorStatusStr[2] != b'0' or MotorStatusStr[3] != b'0'):
             self.serialFd.write(MotorCmdStrReadStatus.encode())    
             MotorStatusStrFull = self.serialFd.readline()
-            print("(MotorStatusStrFull, wait_time, MotorStatusStrFull[0:2]) =", (MotorStatusStrFull, wait_time, MotorStatusStrFull[0:2]) )
-            if MotorStatusStrFull[0] != b'0' or MotorStatusStrFull[0] != b'1' :
+            print("(MotorStatusStrFull, wait_time, MotorStatusStrFull[0:2]) =", (MotorStatusStrFull, wait_time, MotorStatusStrFull[0:2]), MotorStatusStrFull[0], MotorStatusStrFull[1] )
+            if MotorStatusStrFull[0] == 48 or MotorStatusStrFull[0] == 49 :  #40 is b'0', 49 is b'1'
                 MotorStatusStr[0] = MotorStatusStrFull.split()[0]
                 MotorStatusStr[1] = MotorStatusStrFull.split()[1]
                 MotorStatusStr[2] = MotorStatusStrFull.split()[2]
                 MotorStatusStr[3] = MotorStatusStrFull.split()[3]
-            time.sleep(1)
+                print("MotorStatusStr[0:3]=", MotorStatusStr[0], MotorStatusStr[1], MotorStatusStr[2], MotorStatusStr[3])
+                time.sleep(0.5)
+            else:
+                time.sleep(0.2)
             wait_time = wait_time + 1
-            if wait_time > 30:
+            if wait_time > 60:
                 break
 
     def moto_proc_wait_for_stop(self, timeout_seconds):
@@ -335,17 +358,20 @@ class MotorClass():
                 MotorStatusStr[1] = MotorStatusStrFull.split()[1]
                 MotorStatusStr[2] = MotorStatusStrFull.split()[2]
                 MotorStatusStr[3] = MotorStatusStrFull.split()[3]
-            time.sleep(1)
+            time.sleep(0.2)
             wait_time = wait_time + 1
             if wait_time > timeout_seconds:
                 break
+            
+    def moto_proc_full_stop(self):
+        self.motor_api_emergency_stop(1, 1, 1, 1)
             
     def moto_proc_back_to_zero(self):
         if(self.IsSerialOpenOk == False):
             print("MOTOAPI: Serial is not opened, return")
             return
         print("MOTOAPI: motor_api_back_to_zero(self, MOTOR_DEFAULT_SPEED, MOTOR_DEFAULT_SPEED, 0, 0)")        
-        self.motor_api_back_to_zero(MOTOR_DEFAULT_SPEED, MOTOR_DEFAULT_SPEED, 0, 0)
+        self.motor_api_back_to_zero((-1)*MOTOR_DEFAULT_SPEED, (-1)*MOTOR_DEFAULT_SPEED, 0, 0)
 
     def moto_proc_move_delta_axis_postion(self, PxDelta, PyDelta):
         if(self.IsSerialOpenOk == False):
@@ -363,11 +389,16 @@ class MotorClass():
         if ((0 == newPx) and (0 == newPy)):
             pass
             self.moto_proc_back_to_zero()
-            return        
-        x_move_steps = int((newPx - curPx) / MOTOR_STEPS_PER_DISTANCE_MM)
-        y_move_steps = int((newPy - curPy) / MOTOR_STEPS_PER_DISTANCE_MM)  
-        self.motor_api_go_with_steps(x_move_steps, y_move_steps, 0, 0)
-        self.moto_proc_wait_for_stop(60)
+            return
+        print("MOTOAPI: moto_proc_move_to_axis_postion (mm)", curPx, curPy, newPx, newPy)        
+        x_move_steps = int((newPx - curPx) * MOTOR_STEPS_PER_DISTANCE_UM)
+        y_move_steps = int((newPy - curPy) * MOTOR_STEPS_PER_DISTANCE_UM)
+        if((0 == x_move_steps) and (0 == y_move_steps)):
+            print("MOTOAPI: moto_proc_move_to_axis_postion (steps), all zero return", y_move_steps, x_move_steps, 0, 0)
+            return  
+        print("MOTOAPI: moto_proc_move_to_axis_postion (steps)", y_move_steps, x_move_steps, 0, 0)        
+        self.motor_api_go_with_steps(y_move_steps, x_move_steps, 0, 0)
+        self.moto_proc_wait_for_stop(90)
 #SYSTEM ENTRY
 if __name__ == '__main__':
     print("[CEBS] ", time.asctime(), ", System starting...\n" );

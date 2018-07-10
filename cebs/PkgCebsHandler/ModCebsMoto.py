@@ -1,5 +1,5 @@
 '''
-Created on 2018骞�5鏈�8鏃�
+Created on 2018楠烇拷5閺堬拷8閺冿拷
 
 @author: Administrator
 '''
@@ -26,13 +26,13 @@ from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsMotorApi
 
-#绾﹀畾绉诲姩鐨勫瓟鏉夸綅缃娇鐢細 0 =銆� 琛ㄧず澶嶄綅浣嶇疆
-#               1-96 =銆嬫甯哥殑鏉垮瓟浣嶇疆
+#缁撅箑鐣剧粔璇插З閻ㄥ嫬鐡熼弶澶哥秴缂冾喕濞囬悽顭掔窗 0 =閵嗭拷 鐞涖劎銇氭径宥勭秴娴ｅ秶鐤�
+#               1-96 =閵嗗顒滅敮鍝ユ畱閺夊灝鐡熸担宥囩枂
 class classMotoProcess(object):
     ObjMotorApi = ModCebsMotorApi.MotorClass()
     
     def __init__(self):
-        #鍏堣绠楀熀纭�閮ㄥ垎
+        #閸忓牐顓哥粻妤�鐔�绾拷闁劌鍨�
         #ObjMotorApi = ModCebsMotorApi.MotorClass()
         if (ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE == 0 or ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE == 0 or ModCebsCom.GL_CEBS_HB_HOLE_X_NUM == 0 or ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM == 0):
             if (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD):
@@ -60,8 +60,8 @@ class classMotoProcess(object):
                 ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = 8;
                 ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_BOARD_X_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
                 ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_BOARD_Y_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
-        #鍐嶈�冭檻鐪熷疄鎯呭喌涓嬬殑瑕嗙洊
-        #鐪熸鐨勬牎鍑嗗湪鏍″噯杩囩▼涓繘琛屾洿鏂�
+        #閸愬秷锟藉啳妾婚惇鐔风杽閹懎鍠屾稉瀣畱鐟曞棛娲�
+        #閻喐顒滈惃鍕墡閸戝棗婀弽鈥冲櫙鏉╁洨鈻兼稉顓＄箻鐞涘本娲块弬锟�
         if (ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] !=0):
             xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[0];
             yHeight = ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[3];
@@ -83,6 +83,8 @@ class classMotoProcess(object):
             actualScale = 50000;
         else:
             actualScale = 0;
+        Old_Px = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] 
+        Old_Py = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]
         if (dir == 1):
             ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] += actualScale;
             if ((ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD) and (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] > ModCebsCom.GL_CEBS_HB_TARGET_96_SD_Y_MAX)):
@@ -121,7 +123,11 @@ class classMotoProcess(object):
                 pass
         else:
             pass
-        print("MOTO: Moving one step! Scale=%d, Dir=%d. New pos X/Y=%d/%d" % (scale, dir, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]));
+        print("MOTO: Moving one step! Scale=%d, Dir=%d. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (scale, dir, Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]));
+        if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]) > 0):
+            return 1;
+        else:
+            return -2;
         return 1;
     
     def funcMotoBackZero(self):
@@ -130,7 +136,7 @@ class classMotoProcess(object):
 
     def funcMotoMove2Start(self):
         print("MOTO: Move to start!")
-        #娉ㄦ剰锛氬乏涓婄殑X杞存渶灏忋�乊鏈�澶с�傚彸涓嬬殑X鏈�澶э紝鑰孻灏�
+        #濞夈劍鍓伴敍姘箯娑撳﹦娈慩鏉炲瓨娓剁亸蹇嬶拷涔婇張锟芥径褋锟藉倸褰告稉瀣畱X閺堬拷婢堆嶇礉閼板鐏忥拷
         xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[0];
         yHeight = ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[3];
         if (xWidth <= 0 or yHeight <= 0):
@@ -139,32 +145,34 @@ class classMotoProcess(object):
         return self.funcMotoMove2HoleNbr(1);
         #print("MOTO: Running Start Position!")
 
-    #鏆傛椂涓嶉渶瑕佺殑杩囩▼
+    #閺嗗倹妞傛稉宥夋付鐟曚胶娈戞潻鍥┾柤
     def funcMotoStop(self):
         #print("MOTO: Stop!")
+        print("MOTO: funcMotoStop")
+        self.ObjMotorApi.moto_proc_full_stop()
         return 1;
     
-    #鏆傛椂涓嶉渶瑕佺殑杩囩▼
+    #閺嗗倹妞傛稉宥夋付鐟曚胶娈戞潻鍥┾柤
     def funcMotoResume(self):
         print("MOTO: Resume action!")
         return 1;
     
     def funcMotoMove2HoleNbr(self, holeIndex):
         time.sleep(1)
-        #璁＄畻鏂扮殑鐩爣浣嶇疆
+        #鐠侊紕鐣婚弬鎵畱閻╊喗鐖ｆ担宥囩枂
         if (holeIndex == 0):
             xTargetHoleNbr = 0;
             yTargetHoleNbr = 0;
             newPosX = 0;
             newPosY = 0;
         else:
-            #琛岋紙1-12锛�, 鍒楋紙1-8锛�
+            #鐞涘矉绱�1-12閿涳拷, 閸掓绱�1-8閿涳拷
             xTargetHoleNbr = ((holeIndex-1) % ModCebsCom.GL_CEBS_HB_HOLE_X_NUM) + 1;
             yTargetHoleNbr = ((holeIndex-1) // ModCebsCom.GL_CEBS_HB_HOLE_X_NUM) + 1;
             newPosX = int(ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] + (xTargetHoleNbr-1)*ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE);
             newPosY = int(ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - (yTargetHoleNbr-1)*ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE);
         print("MOTO: Moving to working hole=%d, newPosX/Y=%d/%d." % (holeIndex, newPosX, newPosY))
-        #鐪熷疄绉诲姩杩囩▼
+        #閻喎鐤勭粔璇插З鏉╁洨鈻�
         if (self.funcMotoMove2AxisPos(ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1], newPosX, newPosY) > 0):
             ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] = newPosX;
             ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] = newPosY;
@@ -173,9 +181,10 @@ class classMotoProcess(object):
             return -2;
         print("MOTO: Finished once!")
 
-    #浠庡綋鍓嶄竴涓潗鏍囩Щ鍔ㄥ埌鍙︿竴涓柊鍧愭爣
-    #闇�瑕佸皢鍧愭爣杞崲涓鸿剦鍐叉暟
+    #娴犲骸缍嬮崜宥勭娑擃亜娼楅弽鍥┬╅崝銊ュ煂閸欙缚绔存稉顏呮煀閸ф劖鐖�
+    #闂囷拷鐟曚礁鐨㈤崸鎰垼鏉烆剚宕叉稉楦垮墻閸愬弶鏆�
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy):
+        print("MOTO: funcMotoMove2AxisPos", curPx, curPy, newPx, newPy)
         self.ObjMotorApi.moto_proc_move_to_axis_postion(curPx, curPy, newPx, newPy)
         return 1;
         

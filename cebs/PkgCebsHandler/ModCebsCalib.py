@@ -1,5 +1,5 @@
 '''
-Created on 2018年5月17日
+Created on 2018骞�5鏈�17鏃�
 
 @author: Administrator
 '''
@@ -39,7 +39,7 @@ class classCalibProcess(object):
         self.objMotoProc=ModCebsMoto.classMotoProcess();
         self.objVision=ModCebsVision.classVisionProcess();
         
-        #初始化不同目标板子的数量
+        #鍒濆鍖栦笉鍚岀洰鏍囨澘瀛愮殑鏁伴噺
         if (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD):
             ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX;
         elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_48_STANDARD):
@@ -51,18 +51,18 @@ class classCalibProcess(object):
         else:
             ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_BOARD_BATCH_MAX;
 
-        #初始化板孔参数
+        #鍒濆鍖栨澘瀛斿弬鏁�
         self.funcInitHoleBoardPar();
         
-        #清理现场
+        #娓呯悊鐜板満
         self.funcCleanWorkingEnv()
 
-        #启动第三个干活的子进程
+        #鍚姩绗笁涓共娲荤殑瀛愯繘绋�
         self.threadCalibMotoPilot = classCalibPilotThread()
         self.threadCalibMotoPilot.setIdentity("CalibPilotThread")
-        self.threadCalibMotoPilot.signal_calib_print_log.connect(self.funcLogTrace) #接收信号
-        self.threadCalibMotoPilot.signal_calib_moto_pilot.connect(self.threadCalibMotoPilot.funcCalibMotoPilotSart) #发送启动信号
-        self.threadCalibMotoPilot.signal_calib_pilot_stop.connect(self.threadCalibMotoPilot.funcCalibMotoPilotStop) #发送停止信号
+        self.threadCalibMotoPilot.signal_calib_print_log.connect(self.funcLogTrace) #鎺ユ敹淇″彿
+        self.threadCalibMotoPilot.signal_calib_moto_pilot.connect(self.threadCalibMotoPilot.funcCalibMotoPilotSart) #鍙戦�佸惎鍔ㄤ俊鍙�
+        self.threadCalibMotoPilot.signal_calib_pilot_stop.connect(self.threadCalibMotoPilot.funcCalibMotoPilotStop) #鍙戦�佸仠姝俊鍙�
         self.threadCalibMotoPilot.start();
         
     def setIdentity(self,text):
@@ -72,16 +72,16 @@ class classCalibProcess(object):
         self.calibForm.calib_print_log(myString)
 
     def funcCleanWorkingEnv(self):
-        #将马达复位到零点
+        #灏嗛┈杈惧浣嶅埌闆剁偣
         self.objMotoProc.funcMotoStop();
-        #停止图像识别
+        #鍋滄鍥惧儚璇嗗埆
         self.objVision.funcVisionClasEnd()
 
     def funcRecoverWorkingEnv(self):
-        #将马达复位到零点
+        #灏嗛┈杈惧浣嶅埌闆剁偣
         self.objMotoProc.funcMotoStop();
     
-    #初始化板孔参数
+    #鍒濆鍖栨澘瀛斿弬鏁�
     def funcInitHoleBoardPar(self):
         if (ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE == 0 or ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE == 0 or ModCebsCom.GL_CEBS_HB_HOLE_X_NUM == 0 or ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM == 0):
             if (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD):
@@ -109,8 +109,8 @@ class classCalibProcess(object):
                 ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = 8;
                 ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_BOARD_X_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
                 ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_BOARD_Y_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
-        #再考虑真实情况下的覆盖
-        #真正的校准在校准过程中进行更新
+        #鍐嶈�冭檻鐪熷疄鎯呭喌涓嬬殑瑕嗙洊
+        #鐪熸鐨勬牎鍑嗗湪鏍″噯杩囩▼涓繘琛屾洿鏂�
         if (ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] !=0):
             xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[0];
             yHeight = ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[3];
@@ -120,7 +120,7 @@ class classCalibProcess(object):
             pass        
     
     def funcUpdateHoleBoardPar(self):
-        #更新系统级参数
+        #鏇存柊绯荤粺绾у弬鏁�
         if (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD):
             ModCebsCom.GL_CEBS_HB_HOLE_X_NUM = 12;
             ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = 8;
@@ -139,57 +139,57 @@ class classCalibProcess(object):
         ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = (ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[0]) / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
         ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = (ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]) / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
 
-    #托盘四周巡游
+    #鎵樼洏鍥涘懆宸℃父
     def funcCalibPilotStart(self):
-        self.funcLogTrace("CALIB: 系统校准巡视开始...")
+        self.funcLogTrace("CALIB: 绯荤粺鏍″噯宸¤寮�濮�...")
         self.threadCalibMotoPilot.signal_calib_moto_pilot.emit()
 
-    #巡游停止
+    #宸℃父鍋滄
     def funcCalibPilotStop(self):
-        self.funcLogTrace("CALIB: 系统校准巡视停止...")
+        self.funcLogTrace("CALIB: 绯荤粺鏍″噯宸¤鍋滄...")
         self.threadCalibMotoPilot.signal_calib_pilot_stop.emit()
 
-    #处理校准过程完成的动作
+    #澶勭悊鏍″噯杩囩▼瀹屾垚鐨勫姩浣�
     def funcCtrlCalibComp(self):
         self.funcUpdateHoleBoardPar()
-        #控制比特位
-        self.funcRecoverWorkingEnv();
+        #鎺у埗姣旂壒浣�
+        self.funcRecoverWorkingEnv()
 
     def funcCalibMove(self, parMoveScale, parMoveDir):
-        #调用处理函数
+        #璋冪敤澶勭悊鍑芥暟
         obj = ModCebsMoto.classMotoProcess();
         obj.funcMotoCalaMoveOneStep(parMoveScale, parMoveDir);
         self.funcLogTrace("CALIB: Moving one step. Current position XY=[%d/%d]." % (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]))
         
     def funcCalibLeftUp(self):
-        #存入新坐标
+        #瀛樺叆鏂板潗鏍�
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0];
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1];
-        #更新系统参数
+        #鏇存柊绯荤粺鍙傛暟
         self.funcUpdateHoleBoardPar()
-        #更新配置文件参数
+        #鏇存柊閰嶇疆鏂囦欢鍙傛暟
         iniObj = ModCebsCfg.ConfigOpr();
         iniObj.updateSectionPar();
         self.funcLogTrace("CALIB: LeftUp Axis set! XY=%d/%d." % (ModCebsCom.GL_CEBS_HB_POS_IN_UM[0], ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
 
     def funcCalibRightBottom(self):
-        #存入新坐标
+        #瀛樺叆鏂板潗鏍�
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0];
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1];
-        #更新系统参数
+        #鏇存柊绯荤粺鍙傛暟
         self.funcUpdateHoleBoardPar()
-        #更新配置文件参数
+        #鏇存柊閰嶇疆鏂囦欢鍙傛暟
         iniObj = ModCebsCfg.ConfigOpr();
         iniObj.updateSectionPar();
         self.funcLogTrace("CALIB: RightBottom Axis set!  XY=%d/%d." % (ModCebsCom.GL_CEBS_HB_POS_IN_UM[2], ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))    
     
     
     
-#校准巡视独立的线程
+#鏍″噯宸¤鐙珛鐨勭嚎绋�
 class classCalibPilotThread(QThread):
-    signal_calib_print_log = pyqtSignal(str) #申明信号
-    signal_calib_moto_pilot = pyqtSignal() #申明给CebsCtrl启动本任务功能的信号
-    signal_calib_pilot_stop = pyqtSignal() #申明给CebsCtrl启动本任务功能的信号
+    signal_calib_print_log = pyqtSignal(str) #鐢虫槑淇″彿
+    signal_calib_moto_pilot = pyqtSignal() #鐢虫槑缁機ebsCtrl鍚姩鏈换鍔″姛鑳界殑淇″彿
+    signal_calib_pilot_stop = pyqtSignal() #鐢虫槑缁機ebsCtrl鍚姩鏈换鍔″姛鑳界殑淇″彿
 
     def __init__(self,parent=None):
         super(classCalibPilotThread,self).__init__(parent)
@@ -203,18 +203,18 @@ class classCalibPilotThread(QThread):
     def funcCalibMotoPilotSart(self):
         self.cntCtrl = ModCebsCom.GL_CEBS_PILOT_WOKING_ROUNDS_MAX+1;
 
-    #这是高级技巧！
+    #杩欐槸楂樼骇鎶�宸э紒
     def funcCalibMotoPilotStop(self):
             self.cntCtrl = 1;
 
     def funcMotoCalibPilotWorkingOnces(self):
-        #移动到左上
+        #绉诲姩鍒板乏涓�
         self.objMotoProc.funcMotoMove2HoleNbr(1);
-        #移动到右上
+        #绉诲姩鍒板彸涓�
         self.objMotoProc.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_HOLE_X_NUM);
-        #移动到左下
+        #绉诲姩鍒板乏涓�
         self.objMotoProc.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX - ModCebsCom.GL_CEBS_HB_HOLE_X_NUM + 1);
-        #移动到右下
+        #绉诲姩鍒板彸涓�
         self.objMotoProc.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX);
                 
     def run(self):
@@ -224,10 +224,10 @@ class classCalibPilotThread(QThread):
             if (self.cntCtrl > 0):
                 self.signal_calib_print_log.emit("CALIB: Running Calibration pilot process! roundIndex = %d" % (self.cntCtrl))
                 self.funcMotoCalibPilotWorkingOnces();
-            #STOP标识位
+            #STOP鏍囪瘑浣�
             elif (self.cntCtrl == 0): 
                 self.signal_calib_print_log.emit("CALIB: Stop Calibration pilot!")
-                #停止马达
+                #鍋滄椹揪
                 self.objMotoProc.funcMotoStop();
 
 
