@@ -1,5 +1,5 @@
 '''
-Created on 2018年5月4日
+Created on 2018/5/4
 
 @author: Administrator
 '''
@@ -42,27 +42,27 @@ class classVisionProcess(object):
         pass
          
     def funcVisionCapture(self, batch, fileNbr):
-        # 选取摄像头，0为笔记本内置的摄像头，1,2···为外接的摄像头**
-        cap = cv.VideoCapture(0)#括号里的数和ls /dev/video*　结果有关
+        #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
+        cap = cv.VideoCapture(0) #CHECK WITH ls /dev/video*　RESULT
         # Check if the webcam is opened correctly
         if not cap.isOpened():
             #raise IOError("Cannot open webcam")
             print("VS_CAP: Cannot open webcam!, Batch/Nbr=%d/%d" % (batch, fileNbr))
             return -1;
 
-        #定义摄像头的分辨率
+        #DEFINE PIC GRADULARITY
         cap.set(4,720)
-        #大量的错和坑出现在这里
-        #第一个参数是路径和文件名
-        #第二个参数是视频格式，“MPEG”是一**种标准格式，百度fourcc可见各种格式
-        #第二个参数（fourcc）如果设置为-1，允许实时选择视频格式
+        #MASSIVE ERROR!
+        #1st par is path and file name
+        #2nd par is video format, “MPEG” is **standard， BAIDU fourcc could find more
+        #2nd par（fourcc） = -1，means allow select video format
         #fourcc = cv.VideoWriter_fourcc(*"MPEG")
         #fourcc=-1**
-        # 第三个参数则是镜头快慢的，20为正常，小于二十为慢镜头**
+        #3rd par is carmera speed，20 is normal，less than 20 is slow**
         #out = cv.VideoWriter('c://output.avi',fourcc,20,(640,480))
         ret, frame = cap.read()
         if (ret == True):
-            frame = cv.flip(frame, 1)# 在帧上进行操作
+            frame = cv.flip(frame, 1)#Operation in frame
             frame = cv.resize(frame, None, fx=1.5, fy=1.5, interpolation=cv.INTER_AREA)
             #cv.imshow('Input', frame)
             obj=ModCebsCfg.ConfigOpr();
@@ -78,11 +78,11 @@ class classVisionProcess(object):
     def funcVisionClasEnd(self):
         ModCebsCom.GL_CEBS_PIC_CLAS_FLAG = False;
 
-#主处理任务模块
+#MAIN PROCESSING MODULE
 class classVisionThread(QThread):
-    signal_print_log = pyqtSignal(str) #申明发送信号
-    signal_vision_start = pyqtSignal()  #申明发送给主函数的信号，暂时未使用
-    signal_vision_stop = pyqtSignal()   #申明发送给主函数的信号，暂时未使用
+    signal_print_log = pyqtSignal(str) #DECLAR MAIN FUNCTIONS
+    signal_vision_start = pyqtSignal()  #DECLAR MAIN FUNCTIONS, NOT USED
+    signal_vision_stop = pyqtSignal()   #DECLAR MAIN FUNCTIONS, NOT USED
 
     def __init__(self,parent=None):
         super(classVisionThread,self).__init__(parent)
@@ -96,23 +96,23 @@ class classVisionThread(QThread):
         batch, fileNbr = self.objInitCfg.findUnclasFileBatchAndFileNbr();
         if (batch < 0):
             ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = 0;
-            self.signal_print_log.emit("VS_CLAS: 图片识别完成： 还剩照片数量=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+            self.signal_print_log.emit("VS_CLAS: PICTURE IDENTIFY NOT FINISHED: REMAINING NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
             self.objInitCfg.updateCtrlCntInfo();
             return;
         fileName = self.objInitCfg.getStoredFileName(batch, fileNbr);
         if (fileName == None):
             ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = 0;
-            self.signal_print_log.emit("VS_CLAS图片识别完成： 还剩照片数量=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+            self.signal_print_log.emit("VS_CLASPICTURE IDENTIFY FINISHED: REMAINING NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
             self.objInitCfg.updateCtrlCntInfo();
             return;
-        #真正的处理过程
+        #REAL PROCESSING PROCEDURE
         print("VISION CLAS: Batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
         self.funcVisionClassify(fileName);
         ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT -= 1;
         self.objInitCfg.updateUnclasFileAsClassified(batch, fileNbr);
-        self.signal_print_log.emit("VS_CLAS图片识别完成： 还剩照片数量=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+        self.signal_print_log.emit("VS_CLAS PIC IDENTIFY： REMAINING NUMBRES=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
     
-    #对着图像进行处理
+    #PIC PROC
     def funcVisionClassify(self, filename):
         time.sleep(random.random()*10)
         

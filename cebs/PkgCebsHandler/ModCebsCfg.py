@@ -1,5 +1,5 @@
 '''
-Created on 2018年5月4日
+Created on 2018/5/4
 
 @author: Administrator
 '''
@@ -20,21 +20,21 @@ class ConfigOpr(object):
         self.filePath = ModCebsCom.GL_CEBS_CFG_FILE_NAME
         self.initGlobalPar()
 
-    #初始化所有的存储区
+    #INIT ALL STORAGE AREA
     def initGlobalPar(self):
-        #判定捕获图像的工作文件目录
+        #JUDGE WORKING DIR
         ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH = os.getcwd()+ self.osDifferentStr() + ModCebsCom.GL_CEBS_PIC_ORIGIN_PATH
         flag = os.path.exists(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH)
         if (flag == False):
             os.mkdir(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH)
         ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH += self.osDifferentStr()
-        #判定中间图像的工作文件目录
+        #JUDGE MID PIC WOKRING DIR
         ModCebsCom.GL_CEBS_PIC_ABS_MIDDLE_PATH = os.getcwd()+ self.osDifferentStr() + ModCebsCom.GL_CEBS_PIC_MIDDLE_PATH
         flag = os.path.exists(ModCebsCom.GL_CEBS_PIC_ABS_MIDDLE_PATH)
         if (flag == False):
             os.mkdir(ModCebsCom.GL_CEBS_PIC_ABS_MIDDLE_PATH)
         ModCebsCom.GL_CEBS_PIC_ABS_MIDDLE_PATH += self.osDifferentStr()
-        #判定是否需要创建ini文件
+        #JUDGE CREATE INIT FILE OR NOT
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
         flag = os.path.exists(self.filePath)
@@ -53,7 +53,7 @@ class ConfigOpr(object):
             self.CReader.set("Counter","PicBatchClas", "0")
             self.CReader.set("Counter","PicRemainCnt", "0")
             self.CReader.write(open(self.filePath, "w"))
-        #为了防止ini文件中信息错误，重新写入
+        #REWRITE FILE TO AVOID INI FILE ERROR
         if (self.CReader['Env']['workdir'] != str(os.getcwd()+ self.osDifferentStr())):
             self.updateSectionPar()
 
@@ -115,7 +115,7 @@ class ConfigOpr(object):
         self.CReader.write(fd)
         fd.close()
                 
-    #写入全局控制数据
+    #FILLING GLOBAL CONTROL DATA
     def updateCtrlCntInfo(self):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
@@ -167,7 +167,7 @@ class ConfigOpr(object):
             self.CReader.write(fd)
             fd.close()
 
-    #读取控制文件
+    #READ CONTROL FILE
     def getStoredFileName(self, batch, fileNbr):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
@@ -183,24 +183,24 @@ class ConfigOpr(object):
         fileName = str("batch#" + str(batch) + "FileName#" + str(fileNbr))
         return str(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
     
-    #得到某一个BTACH的未分类的第一个文件
+    #FETCH UN-CLASSIFIED FILE FOR ONE BATCH
     def getUnclasBatchFile(self, batch):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
         batchStr = "batch#" + str(batch)
         if (self.CReader.has_section(batchStr) == False):
             return -1;
-        # 遍历配置组的key, 与'DEFAULT'组的key
+        #SEARCH ALL CONFIGURATION KEY and 'DEFAULT' key
         for key in self.CReader[batchStr]:
             #print(key, self.CReader[batchStr][key])
             if (('batchfileclas#' in key) and (self.CReader[batchStr][key] == 'no')):
                 temps = key[len('batchfileclas#'):]
                 tempi = int(temps)
                 return tempi;
-        #没找到
+        #NOT FIND
         return -2;
     
-    #全局搜索是否存在还未完成的图像
+    #SEARCH GLOBAL WETHER UN-FINISHED PICTURE EXIST
     def findUnclasFileBatchAndFileNbr(self):
         start = ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX;
         end = ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX;
@@ -212,7 +212,7 @@ class ConfigOpr(object):
                 return index, fileNbr;
         return -1, -1;
                 
-    #更新分类后的图像文件信息
+    #UPDATE CATEGORY PICTURE INFORMATION
     def updateUnclasFileAsClassified(self, batch, fileNbr):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
