@@ -18,7 +18,7 @@ import http
 import socket
 
 
-#Gllbal set data
+#Global parameter set
 GL_CEBS_PIC_PROC_BATCH_INDEX = 0;
 GL_CEBS_PIC_PROC_CLAS_INDEX = 0;  #WHICH CATEGORY IS TO BE IDENTIFY
 GL_CEBS_PIC_PROC_REMAIN_CNT = 0;
@@ -29,6 +29,10 @@ GL_CEBS_PIC_MIDDLE_PATH = r"pic_middle";
 GL_CEBS_PIC_ABS_ORIGIN_PATH = "";
 GL_CEBS_PIC_ABS_MIDDLE_PATH = "";
 GL_CEBS_PILOT_WOKING_ROUNDS_MAX = 5;
+#Fix point to take picture or not? Formally auto-working shall set as False.
+GL_CEBS_TAKING_PIC_FIX_POINT_SET = True; 
+#To enable debug UI under MOTOAPI not yet installed. Formally it sets as True.
+GL_CEBS_MOTOAPI_INSTALLED_SET = False; 
 
 #MEACHNICAL HARDWARE PLATFORM SCOPE DEFINATION
 GL_CEBS_HB_MECHNICAL_PLATFORM_X_MAX = 240000;

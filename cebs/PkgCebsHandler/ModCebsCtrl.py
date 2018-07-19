@@ -86,10 +86,12 @@ class classCtrlThread(QThread):
             return -1;
         #NEW STATE
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CAP_PIC;
-        #MOTO START POINT
-        if (self.objMoto.funcMotoMove2Start() < 0):
-            self.signal_print_log.emit("CTRL: MOTO MOVING ERROR！")
-            return -2;
+        #JUDGE WHETHER TAKING PICTURE IS FIXED POSITION OR NOT
+        if (ModCebsCom.GL_CEBS_TAKING_PIC_FIX_POINT_SET == False):
+            #MOTO START POINT
+            if (self.objMoto.funcMotoMove2Start() < 0):
+                self.signal_print_log.emit("CTRL: MOTO MOVING ERROR！")
+                return -2;
         self.times = ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH+1;
         self.signal_print_log.emit("CTRL: START TAKING PICTURE: REMAINING TIMES=%d." %(self.times-1))
         self.objInitCfg.createBatch(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX);

@@ -51,7 +51,7 @@ class classVisionProcess(object):
             return -1;
 
         #DEFINE PIC GRADULARITY
-        cap.set(4,720)
+        cap.set(4,1440)
         #MASSIVE ERROR!
         #1st par is path and file name
         #2nd par is video format, “MPEG” is **standard， BAIDU fourcc could find more
