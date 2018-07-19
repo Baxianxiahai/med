@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['cebsMain.py'],
-             pathex=['D:\\IHUSRC\\huicloud\\cebs'],
+             pathex=['D:\\IHUSRC\\med\\cebs'],
              binaries=[],
              datas=[],
              hiddenimports=[],
