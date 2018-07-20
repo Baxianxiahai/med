@@ -44,18 +44,33 @@ class MotorClass():
     bot_right_y_position_mm = 0
     IsSerialOpenOk = False
     serialFd = serial.Serial()
+    targetComPortString = ''
 
     def __init__(self):
         '''
         Constructor
         '''
         plist = list(serial.tools.list_ports.comports())
+        self.targetComPortString = 'Prolific USB-to-Serial Comm Port ('
         if len(plist) <= 0:
             print ("MOTOAPI: The Serial port can't find!")
         else:
             plist_0 =list(plist[0])
-            serialName = plist_0[0]
-            self.serialFd = serial.Serial(serialName, 115200, timeout = 60)
+            searchComPartString = ''
+            #Find right COM# with 'Prolific USB-to-Serial Comm Port'
+            for comPortStr in plist_0:
+                indexStart = comPortStr.find(self.targetComPortString)
+                indexEnd = comPortStr.find(')')
+                if (indexStart >= 0) and (indexEnd >=0) and (indexEnd > len(self.targetComPortString)):
+                    searchComPartString = comPortStr[len(self.targetComPortString):indexEnd]
+            if searchComPartString == '':
+                #serialName = plist_0[0]
+                print("MOTOAPI: Can not find right serial port!")
+                return
+            else:
+                print("MOTOAPI: serial port = ", searchComPartString)
+                serialName = searchComPartString
+            self.serialFd = serial.Serial(serialName, 115200, timeout = 5)
             self.IsSerialOpenOk = True
             print("MOTOAPI:" + str(self.serialFd))
             print("MOTOAPI: Initialized SerialFd OK")
@@ -128,6 +143,8 @@ class MotorClass():
         #time.sleep(1)
         Version = self.serialFd.readline()
         print("Version = ", Version)
+        if Version == b'':
+            return -1;
         VerNumber = Version.split()[0]
         print("VerNumber = ", VerNumber)
         if int(VerNumber) == 37:

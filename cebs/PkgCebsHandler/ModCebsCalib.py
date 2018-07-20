@@ -68,7 +68,8 @@ class classCalibProcess(object):
         self.calibForm.calib_print_log(myString)
 
     def funcCleanWorkingEnv(self):
-        self.objMotoProc.funcMotoStop();
+        if (self.objMotoProc.funcMotoRunningStatusInquery() == True):
+            self.objMotoProc.funcMotoStop()        
         self.objVision.funcVisionClasEnd()
 
     def funcRecoverWorkingEnv(self):

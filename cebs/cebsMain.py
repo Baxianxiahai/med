@@ -20,6 +20,7 @@ import hashlib
 from ctypes import *
 import serial
 import serial.tools.list_ports
+import string
 
 #System lib
 from PyQt5 import QtWidgets, QtGui, QtCore
@@ -113,50 +114,58 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
     def slot_print_trigger(self, info):
         self.cebs_print_log(info)
 
+    #Start taking picture
     def slot_ctrl_start(self):
-        self.cebs_print_log("MAIN: START...")
-        #self.funcMainFormSetEquInitStatus();
+        self.cebs_print_log("MAIN: Taking Picture start...")
+        self.funcMainFormReadGlobalParRead()
         self.threadCtrl.signal_ctrl_start.emit()
-        
+    
+    #Stop taking picture
     def slot_ctrl_stop(self):
-        self.cebs_print_log("MAIN: STOP!")
+        self.cebs_print_log("MAIN: Taking Picture stop!")
         self.threadCtrl.signal_ctrl_stop.emit()
 
+    #Control moto run to Zero position
     def slot_ctrl_zero(self):
-        #self.funcMainFormSetEquInitStatus();
+        self.funcMainFormReadGlobalParRead()
         self.cebs_print_log("MAIN: RUN TO ZERO!")
         self.threadCtrl.signal_ctrl_zero.emit()
 
+    #Start vision classification
     def slot_ctrl_vclas_start(self):
-        #self.funcMainFormSetEquInitStatus();
-        self.cebs_print_log("MAIN: PIC IDENTIFY START")
+        self.funcMainFormReadGlobalParRead()
+        self.cebs_print_log("MAIN: Picture Classification starting...")
         self.threadCtrl.signal_ctrl_clas_start.emit()
 
+    #Stop vision classification
     def slot_ctrl_vclas_stop(self):
-        self.cebs_print_log("MAIN: PIC IDENTIFY STOP")
+        self.cebs_print_log("MAIN: Picture Classification stop.")
         self.threadCtrl.signal_ctrl_clas_stop.emit()
 
+    #Enter calibration session
     def slot_ctrl_calib(self):
         if (self.threadCtrl.funcCtrlGetRightStatus() < 0):
             self.cebs_print_log("MAIN: CALIB ERROR1!")
             return -1;
-        #self.funcMainFormSetEquInitStatus();
         self.cebs_print_log("MAIN: CALIB ACTION!")
         self.threadCtrl.signal_ctrl_calib_start.emit()
         if not self.calibForm.isVisible():
             self.signal_mainwin_unvisible.emit()
             self.calibForm.show()
 
+    #Control UI visible
     def funcMainWinVisible(self):
         if not self.isVisible():
             self.show()
         self.threadCtrl.signal_ctrl_calib_stop.emit()
         self.cebs_print_log("MAIN: CALIB UI CHANGED!")
 
+    #Control UI un-visible
     def funcMainWinUnvisible(self):
         if self.isVisible():
             self.hide()
 
+    #Clean log window
     def slot_runpg_clear(self):
         self.textEdit_runProgress.clear();
 
@@ -165,8 +174,21 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         res = {}
         self.cebs_print_log("TEST: " + str(res))
 
+    #Local function
     def funcMainFormSetEquInitStatus(self):
-        self.objMoto.funcMotoStop()
+        if (self.objMoto.funcMotoRunningStatusInquery() == True):
+            self.objMoto.funcMotoStop()
+
+    #Local function
+    def funcMainFormReadGlobalParRead(self):
+        ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET = self.checkBox_gpar_autoIdf.isChecked();
+        ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET = self.checkBox_gpar_autoPic.isChecked();
+        ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET = self.checkBox_gpar_picFixPos.isChecked();
+        try: 
+            ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = int(self.lineEdit_gpar_picTti.text());
+        except Exception: 
+            ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = 60;
+        #print("GL_CEBS_PIC_TAKING_FIX_POINT_SET = ", ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET)
 
 #Calibration Widget
 class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
@@ -202,7 +224,7 @@ class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
             parMoveScale = 5;
         else:
             parMoveScale = 1;
-        #璇诲彇杩愬姩鏂瑰悜
+        #
         radioCalaUp = self.radioButton_calib_y_plus.isChecked();
         radioCalaDown = self.radioButton_calib_y_minus.isChecked();
         radioCalaLeft = self.radioButton_calib_x_minus.isChecked();

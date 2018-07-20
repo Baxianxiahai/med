@@ -225,4 +225,9 @@ class ConfigOpr(object):
         self.CReader.write(fd)
         fd.close()
 
+    #RECORD ERROR LOG FILE SAVING, WITH YMDHMS and basic information!
+    def medErrorLog(self, inputStr):
+        #HOW TO GET LINE/FILES: 如何获取当前执行的代码行号和文件名？
+        #时间标签这里统一给出
+        pass
 

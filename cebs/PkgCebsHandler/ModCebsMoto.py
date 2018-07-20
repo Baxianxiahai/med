@@ -159,8 +159,12 @@ class classMotoProcess(object):
         return self.funcMotoMove2HoleNbr(1);
         #print("MOTO: Running Start Position!")
 
+    #Fetch moto actual status, especially the moto is still under running
+    #To be finished function!
+    def funcMotoRunningStatusInquery(self):
+        return False;
+
     def funcMotoStop(self):
-        #print("MOTO: Stop!")
         print("MOTO: funcMotoStop")
         if (ModCebsCom.GL_CEBS_MOTOAPI_INSTALLED_SET == True):
             self.ObjMotorApi.moto_proc_full_stop()

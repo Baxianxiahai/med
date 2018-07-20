@@ -7,15 +7,17 @@
 
 
 
-
-
-
-
+//=ZJL, 2018/7/20, CURRENT_SW_DELIVERY R1.05 =>CEBS
+= 增加潜在的自动识别和定时拍照界面，但功能并未实现
+= 增加定点拍照选项：实现完整
+= 增加串口是否打开的固定选项，HARD-CODE，方便调测。正式版本需要放开。
+= 优化串口端口搜索的方式，做到了自动化
+= 准备增加基础的操作错误信息，方便调测和问题的解决！
 
 //=ZJL, 2018/7/20, CURRENT_SW_DELIVERY R1.04 =>CEBS
 = 为满足定点拍照、MOTOAPI未安装时的调测，增加两个COMM级别的标识位，方便调测。正式交付时注意修改为默认模式。
 #Fix point to take picture or not? Formally auto-working shall set as False.
-GL_CEBS_TAKING_PIC_FIX_POINT_SET = True; 
+GL_CEBS_PIC_TAKING_FIX_POINT_SET = True; 
 #To enable debug UI under MOTOAPI not yet installed. Formally it sets as True.
 GL_CEBS_MOTOAPI_INSTALLED_SET = False;  
 
