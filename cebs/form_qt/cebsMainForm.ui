@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1202</width>
-    <height>546</height>
+    <height>683</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -188,105 +188,18 @@ p, li { white-space: pre-wrap; }
      <string>停止图像识别</string>
     </property>
    </widget>
-   <widget class="QGroupBox" name="groupBox_gpar">
+   <widget class="QPushButton" name="pushButton_gpar_set">
     <property name="geometry">
      <rect>
       <x>20</x>
       <y>380</y>
-      <width>331</width>
-      <height>91</height>
+      <width>341</width>
+      <height>71</height>
      </rect>
     </property>
-    <property name="title">
-     <string>全局参数设置</string>
+    <property name="text">
+     <string>参数设定</string>
     </property>
-    <widget class="QCheckBox" name="checkBox_gpar_autoIdf">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>30</y>
-       <width>111</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>拍照后自动识别</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEdit_gpar_picTti">
-     <property name="geometry">
-      <rect>
-       <x>90</x>
-       <y>60</y>
-       <width>51</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>60</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_gpar_picTti_title">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>60</y>
-       <width>81</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>定时拍照间隔</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_gpar_picTti_min">
-     <property name="geometry">
-      <rect>
-       <x>150</x>
-       <y>60</y>
-       <width>31</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>分钟</string>
-     </property>
-    </widget>
-    <widget class="QCheckBox" name="checkBox_gpar_autoPic">
-     <property name="geometry">
-      <rect>
-       <x>130</x>
-       <y>30</y>
-       <width>111</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>定时自动拍照</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QCheckBox" name="checkBox_gpar_picFixPos">
-     <property name="geometry">
-      <rect>
-       <x>240</x>
-       <y>30</y>
-       <width>71</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>定点拍照</string>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -467,6 +380,22 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_gpar_set</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsMainWindow</receiver>
+   <slot>slot_gpar_start()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>236</x>
+     <y>434</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>370</x>
+     <y>481</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>slot_runpg_test()</slot>
@@ -479,5 +408,6 @@ p, li { white-space: pre-wrap; }
   <slot>slot_ctrl_calib()</slot>
   <slot>slot_ctrl_vclas_start()</slot>
   <slot>slot_ctrl_vclas_stop()</slot>
+  <slot>slot_gpar_start()</slot>
  </slots>
 </ui>

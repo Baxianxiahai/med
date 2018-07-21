@@ -1,6 +1,8 @@
 eclipse.preferences.version=1
 encoding//PkgCebsHandler/ModCebsCalib.py=UTF-8
 encoding//PkgCebsHandler/ModCebsMoto.py=UTF-8
+encoding//form_qt/cebscalibform.py=utf-8
+encoding//form_qt/cebsgparform.py=utf-8
 encoding//form_qt/cebsmainform.py=utf-8
 encoding/<project>=UTF-8
 encoding/cebsMain.py=UTF-8

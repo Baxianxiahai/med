@@ -51,7 +51,6 @@ class classCalibProcess(object):
             ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_BOARD_BATCH_MAX;
 
         self.funcInitHoleBoardPar();
-        
         self.funcCleanWorkingEnv()
 
         self.threadCalibMotoPilot = classCalibPilotThread()
@@ -161,9 +160,7 @@ class classCalibProcess(object):
         self.funcUpdateHoleBoardPar()
         iniObj = ModCebsCfg.ConfigOpr();
         iniObj.updateSectionPar();
-        self.funcLogTrace("CALIB: RightBottom Axis set!  XY=%d/%d." % (ModCebsCom.GL_CEBS_HB_POS_IN_UM[2], ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))    
-    
-    
+        self.funcLogTrace("CALIB: RightBottom Axis set!  XY=%d/%d." % (ModCebsCom.GL_CEBS_HB_POS_IN_UM[2], ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))       
     
 class classCalibPilotThread(QThread):
     signal_calib_print_log = pyqtSignal(str)

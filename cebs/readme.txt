@@ -4,6 +4,10 @@
 
 
 
+//=ZJL, 2018/7/21, CURRENT_SW_DELIVERY R1.06 =>CEBS
+= 新建参数配置页面
+
+
 
 
 
@@ -23,7 +27,10 @@ GL_CEBS_MOTOAPI_INSTALLED_SET = False;
 
 //=ZJL, 2018/7/20, CURRENT_SW_DELIVERY R1.03 =>CEBS
 = 界面生成
-  cd form_qt, pyuic5 -o  cebsmainform.py cebsMainform.ui,    pyuic5 -o  cebscalibform.py cebsCalibform.ui
+  cd form_qt, 
+  pyuic5 -o  cebsmainform.py cebsMainform.ui    
+  pyuic5 -o  cebscalibform.py cebsCalibform.ui
+  pyuic5 -o  cebsgparform.py cebsGparform.ui
 = 安装包生成
   d:, cd \IHUSRC\med\cebs
   pyinstaller -F -w --icon=.\icon_res\cebs.ico cebsMain.py

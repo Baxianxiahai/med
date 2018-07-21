@@ -35,6 +35,7 @@ from PyQt5.QtGui import QIcon
 #Form class
 from form_qt.cebsmainform import Ui_cebsMainWindow
 from form_qt.cebscalibform import Ui_cebsCalibForm
+from form_qt.cebsgparform import Ui_cebsGparForm
 
 #Local Class
 from PkgCebsHandler import ModCebsCom  #Common Support module
@@ -43,6 +44,7 @@ from PkgCebsHandler import ModCebsCtrl
 from PkgCebsHandler import ModCebsVision
 from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsCalib
+from PkgCebsHandler import ModCebsGpar
 
 #Main Windows
 class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
@@ -54,9 +56,11 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.initUI()
         
         self.calibForm = cebsCalibForm()
+        self.gparForm = cebsGparForm()
         self.objMoto = ModCebsMoto.classMotoProcess();
 
         self.calibForm.signal_mainwin_visible.connect(self.funcMainWinVisible);
+        self.gparForm.signal_mainwin_visible.connect(self.funcMainWinVisible);
         self.signal_mainwin_unvisible.connect(self.funcMainWinUnvisible);
         
         objInitCfg=ModCebsCfg.ConfigOpr()
@@ -117,7 +121,7 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
     #Start taking picture
     def slot_ctrl_start(self):
         self.cebs_print_log("MAIN: Taking Picture start...")
-        self.funcMainFormReadGlobalParRead()
+        #self.funcMainFormReadGlobalParRead()
         self.threadCtrl.signal_ctrl_start.emit()
     
     #Stop taking picture
@@ -127,13 +131,13 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 
     #Control moto run to Zero position
     def slot_ctrl_zero(self):
-        self.funcMainFormReadGlobalParRead()
+        #self.funcMainFormReadGlobalParRead()
         self.cebs_print_log("MAIN: RUN TO ZERO!")
         self.threadCtrl.signal_ctrl_zero.emit()
 
     #Start vision classification
     def slot_ctrl_vclas_start(self):
-        self.funcMainFormReadGlobalParRead()
+        #self.funcMainFormReadGlobalParRead()
         self.cebs_print_log("MAIN: Picture Classification starting...")
         self.threadCtrl.signal_ctrl_clas_start.emit()
 
@@ -153,6 +157,14 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
             self.signal_mainwin_unvisible.emit()
             self.calibForm.show()
 
+    #Enter parameter setting session
+    def slot_gpar_start(self):
+        self.cebs_print_log("MAIN: PARAMETER SETTING ACTION!")
+        #self.threadCtrl.signal_ctrl_calib_start.emit()
+        if not self.gparForm.isVisible():
+            self.signal_mainwin_unvisible.emit()
+            self.gparForm.show()
+            
     #Control UI visible
     def funcMainWinVisible(self):
         if not self.isVisible():
@@ -178,17 +190,6 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
     def funcMainFormSetEquInitStatus(self):
         if (self.objMoto.funcMotoRunningStatusInquery() == True):
             self.objMoto.funcMotoStop()
-
-    #Local function
-    def funcMainFormReadGlobalParRead(self):
-        ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET = self.checkBox_gpar_autoIdf.isChecked();
-        ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET = self.checkBox_gpar_autoPic.isChecked();
-        ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET = self.checkBox_gpar_picFixPos.isChecked();
-        try: 
-            ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = int(self.lineEdit_gpar_picTti.text());
-        except Exception: 
-            ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = 60;
-        #print("GL_CEBS_PIC_TAKING_FIX_POINT_SET = ", ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET)
 
 #Calibration Widget
 class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
@@ -262,6 +263,39 @@ class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.calibProc.funcRecoverWorkingEnv()
         self.signal_mainwin_visible.emit()
         self.close()
+
+
+#Calibration Widget
+class cebsGparForm(QtWidgets.QWidget, Ui_cebsGparForm):
+    signal_mainwin_visible = pyqtSignal()
+
+    def __init__(self):    
+        super(cebsGparForm, self).__init__()  
+        self.setupUi(self)
+        self.gparProc = ModCebsGpar.classGparProcess(self)
+        
+    def slot_gpar_close(self):
+        #self.gparProc.funcCtrlCalibComp()
+        self.funcMainFormReadGlobalParRead()
+        self.signal_mainwin_visible.emit()
+        self.close()
+
+    def closeEvent(self, event):
+        #self.gparProc.funcRecoverWorkingEnv()
+        self.funcMainFormReadGlobalParRead()
+        self.signal_mainwin_visible.emit()
+        self.close()
+
+    #Local function
+    def funcMainFormReadGlobalParRead(self):
+        ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET = self.checkBox_gpar_autoIdf.isChecked();
+        ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET = self.checkBox_gpar_autoPic.isChecked();
+        ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET = self.checkBox_gpar_picFixPos.isChecked();
+        try: 
+            ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = int(self.lineEdit_gpar_picTti.text());
+        except Exception: 
+            ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = 60;
+        #print("GL_CEBS_PIC_TAKING_FIX_POINT_SET = ", ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET)
 
 #Main App entry
 def main_form():
