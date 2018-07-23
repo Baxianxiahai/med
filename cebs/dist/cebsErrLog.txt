@@ -1,0 +1,1 @@
+[CEBS] 2018/07/23 12:56:07 [ERR] MOTOAPI: Can not find right serial port![CEBS] 2018/07/23 12:59:13 [ERR] MOTOAPI: Can not find right serial port!

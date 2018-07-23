@@ -9,7 +9,7 @@
 = 新参数初始化更新
 = 新参数全部存入初始化的文件中去
 = ErrorLog
-
+= MOTOAPI的Bug
 
 //=ZJL, 2018/7/20, CURRENT_SW_DELIVERY R1.05 =>CEBS
 = 增加潜在的自动识别和定时拍照界面，但功能并未实现

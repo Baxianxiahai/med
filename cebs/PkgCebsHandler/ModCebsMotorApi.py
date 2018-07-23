@@ -38,7 +38,7 @@ MotorCmdStrReadStatus = 'Q03\r\n'
 ' Default parameters for motor '
 MOTOR_DISTANCE_MM_PER_ROUND = 5
 MOTOR_STEPS_PER_ROUND = 6400
-MOTOR_DEFAULT_SPEED = 300
+MOTOR_DEFAULT_SPEED = 400
 MOTOR_STEPS_PER_DISTANCE_MM = MOTOR_STEPS_PER_ROUND / MOTOR_DISTANCE_MM_PER_ROUND
 MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DISTANCE_MM_PER_ROUND / 1000
     
@@ -67,14 +67,16 @@ class MotorClass():
             self.objInitCfg.medErrorLog("MOTOAPI: The Serial port can't find!")
             print ("MOTOAPI: The Serial port can't find!")
         else:
-            plist_0 =list(plist[0])
+            maxList = len(plist)
             searchComPartString = ''
-            #Find right COM# with 'Prolific USB-to-Serial Comm Port'
-            for comPortStr in plist_0:
-                indexStart = comPortStr.find(self.targetComPortString)
-                indexEnd = comPortStr.find(')')
-                if (indexStart >= 0) and (indexEnd >=0) and (indexEnd > len(self.targetComPortString)):
-                    searchComPartString = comPortStr[len(self.targetComPortString):indexEnd]
+            for index in range(0, maxList):
+                plistIndex =list(plist[index])
+                #Find right COM# with 'Prolific USB-to-Serial Comm Port'
+                for comPortStr in plistIndex:
+                    indexStart = comPortStr.find(self.targetComPortString)
+                    indexEnd = comPortStr.find(')')
+                    if (indexStart >= 0) and (indexEnd >=0) and (indexEnd > len(self.targetComPortString)):
+                        searchComPartString = comPortStr[len(self.targetComPortString):indexEnd]
             if searchComPartString == '':
                 #serialName = plist_0[0]
                 print("MOTOAPI: Can not find right serial port!")
