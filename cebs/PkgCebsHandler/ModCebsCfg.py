@@ -48,6 +48,15 @@ class ConfigOpr(object):
             self.CReader.set("Env","holeboard, left_up Y-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
             self.CReader.set("Env","holeboard, right bot X-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[2]))
             self.CReader.set("Env","holeboard, right bot Y-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))
+            self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET))
+            self.CReader.set("Env","pic classification set", str(ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET))
+            self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET))
+            self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN))
+            self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT))
+            self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT))
+            self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT))
+            self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT))
+            self.CReader.set("Env","vision res addup set", str(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET))
             self.CReader.add_section("Counter")
             self.CReader.set("Counter","PicBatchCnt", "0")
             self.CReader.set("Counter","PicBatchClas", "0")
@@ -68,6 +77,31 @@ class ConfigOpr(object):
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] = int(self.CReader['Env']['holeboard, left_up Y-axis']);
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] = int(self.CReader['Env']['holeboard, right bot X-axis']);
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] = int(self.CReader['Env']['holeboard, right bot Y-axis']);
+        tmp = self.CReader['Env']['pic taking fix point set']
+        if (tmp == 'True'):
+            ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET = True
+        else:
+            ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET = False
+        tmp = self.CReader['Env']['pic classification set']
+        if (tmp == 'True'):
+            ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET = True
+        else:
+            ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET = False
+        tmp = self.CReader['Env']['pic auto-work after start set']
+        if (tmp == 'True'):
+            ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET = True
+        else:
+            ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET = False
+        ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = int(self.CReader['Env']['pic auto-work tti']);
+        ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT = int(self.CReader['Env']['vision small-low limit']);
+        ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT = int(self.CReader['Env']['vision small-mid limit']);
+        ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT = int(self.CReader['Env']['vision mid-big limit']);
+        ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT = int(self.CReader['Env']['vision big-upper limit']);
+        tmp = self.CReader['Env']['vision res addup set']
+        if (tmp == 'True'):
+            ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET = True
+        else:
+            ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET = False
 
     def getSection(self):
         return self.CReader.sections()
@@ -99,7 +133,16 @@ class ConfigOpr(object):
             self.CReader.set("Env","holeboard, left_up X-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[0]))
             self.CReader.set("Env","holeboard, left_up Y-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
             self.CReader.set("Env","holeboard, right bot X-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[2]))
-            self.CReader.set("Env","holeboard, right bot Y-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))            
+            self.CReader.set("Env","holeboard, right bot Y-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))
+            self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET))
+            self.CReader.set("Env","pic classification set", str(ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET))
+            self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET))
+            self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN))
+            self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT))
+            self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT))
+            self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT))
+            self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT))
+            self.CReader.set("Env","vision res addup set", str(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET))        
         else:
             self.CReader.remove_section("Env")
             self.CReader.add_section("Env")        
@@ -110,7 +153,16 @@ class ConfigOpr(object):
             self.CReader.set("Env","holeboard, left_up X-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[0]))
             self.CReader.set("Env","holeboard, left_up Y-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
             self.CReader.set("Env","holeboard, right bot X-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[2]))
-            self.CReader.set("Env","holeboard, right bot Y-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))            
+            self.CReader.set("Env","holeboard, right bot Y-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))
+            self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET))
+            self.CReader.set("Env","pic classification set", str(ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET))
+            self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET))
+            self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN))
+            self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT))
+            self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT))
+            self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT))
+            self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT))
+            self.CReader.set("Env","vision res addup set", str(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET))                  
         fd = open(self.filePath, 'w')
         self.CReader.write(fd)
         fd.close()
@@ -227,7 +279,8 @@ class ConfigOpr(object):
 
     #RECORD ERROR LOG FILE SAVING, WITH YMDHMS and basic information!
     def medErrorLog(self, inputStr):
-        #HOW TO GET LINE/FILES: 如何获取当前执行的代码行号和文件名？
-        #时间标签这里统一给出
-        pass
+        head = '\r[CEBS] ' + time.strftime("%Y/%m/%d %H:%M:%S") + ' [ERR] '
+        outputStr = head + inputStr
+        with open("cebsErrLog.txt", 'a') as f:
+            f.write(outputStr)
 

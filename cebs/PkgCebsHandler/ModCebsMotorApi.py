@@ -9,6 +9,16 @@ import serial.tools.list_ports
 import time
 from asyncio.tasks import sleep
 
+from PkgCebsHandler import ModCebsCom  #Common Support module
+from PkgCebsHandler import ModCebsMoto
+from PkgCebsHandler import ModCebsCtrl
+from PkgCebsHandler import ModCebsVision
+from PkgCebsHandler import ModCebsCfg
+from PkgCebsHandler import ModCebsCalib
+from PkgCebsHandler import ModCebsGpar
+
+
+
 SerialPortIndex = 0
 Speed = 400
 Step = 6400
@@ -50,9 +60,11 @@ class MotorClass():
         '''
         Constructor
         '''
+        self.objInitCfg = ModCebsCfg.ConfigOpr()
         plist = list(serial.tools.list_ports.comports())
         self.targetComPortString = 'Prolific USB-to-Serial Comm Port ('
         if len(plist) <= 0:
+            self.objInitCfg.medErrorLog("MOTOAPI: The Serial port can't find!")
             print ("MOTOAPI: The Serial port can't find!")
         else:
             plist_0 =list(plist[0])
@@ -66,6 +78,7 @@ class MotorClass():
             if searchComPartString == '':
                 #serialName = plist_0[0]
                 print("MOTOAPI: Can not find right serial port!")
+                self.objInitCfg.medErrorLog("MOTOAPI: Can not find right serial port!")
                 return
             else:
                 print("MOTOAPI: serial port = ", searchComPartString)
@@ -144,6 +157,7 @@ class MotorClass():
         Version = self.serialFd.readline()
         print("Version = ", Version)
         if Version == b'':
+            self.objInitCfg.medErrorLog("MOTOAPI: Can not find right version!")
             return -1;
         VerNumber = Version.split()[0]
         print("VerNumber = ", VerNumber)

@@ -55,6 +55,11 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.setupUi(self)
         self.initUI()
         
+        #MUST Load global parameters, to initilze different UI and update the stored parameters.
+        objInitCfg=ModCebsCfg.ConfigOpr()
+        objInitCfg.readGlobalPar();
+        objInitCfg.updateCtrlCntInfo()
+        
         self.calibForm = cebsCalibForm()
         self.gparForm = cebsGparForm()
         self.objMoto = ModCebsMoto.classMotoProcess();
@@ -62,10 +67,6 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.calibForm.signal_mainwin_visible.connect(self.funcMainWinVisible);
         self.gparForm.signal_mainwin_visible.connect(self.funcMainWinVisible);
         self.signal_mainwin_unvisible.connect(self.funcMainWinUnvisible);
-        
-        objInitCfg=ModCebsCfg.ConfigOpr()
-        objInitCfg.readGlobalPar();
-        objInitCfg.updateCtrlCntInfo()
         
         self.threadCtrl = ModCebsCtrl.classCtrlThread()
         self.threadCtrl.setIdentity("CtrlThread")
@@ -87,7 +88,7 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.funcMainFormSetEquInitStatus();
 
     def initUI(self):
-        self.statusBar().showMessage('SYSTEM START: ')
+        self.statusBar().showMessage('SYSTEM START ')
         self.setGeometry(10, 30, 1024, 768)
 
         exitAction = QAction(QIcon('.\icon_res\q10.ico'), '&Exit', self)
@@ -121,7 +122,6 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
     #Start taking picture
     def slot_ctrl_start(self):
         self.cebs_print_log("MAIN: Taking Picture start...")
-        #self.funcMainFormReadGlobalParRead()
         self.threadCtrl.signal_ctrl_start.emit()
     
     #Stop taking picture
@@ -131,13 +131,11 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 
     #Control moto run to Zero position
     def slot_ctrl_zero(self):
-        #self.funcMainFormReadGlobalParRead()
         self.cebs_print_log("MAIN: RUN TO ZERO!")
         self.threadCtrl.signal_ctrl_zero.emit()
 
     #Start vision classification
     def slot_ctrl_vclas_start(self):
-        #self.funcMainFormReadGlobalParRead()
         self.cebs_print_log("MAIN: Picture Classification starting...")
         self.threadCtrl.signal_ctrl_clas_start.emit()
 
@@ -170,7 +168,7 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         if not self.isVisible():
             self.show()
         self.threadCtrl.signal_ctrl_calib_stop.emit()
-        self.cebs_print_log("MAIN: CALIB UI CHANGED!")
+        self.cebs_print_log("MAIN: WELCOME COME BACK!")
 
     #Control UI un-visible
     def funcMainWinUnvisible(self):
@@ -273,21 +271,29 @@ class cebsGparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         super(cebsGparForm, self).__init__()  
         self.setupUi(self)
         self.gparProc = ModCebsGpar.classGparProcess(self)
+        self.objInitCfg2=ModCebsCfg.ConfigOpr()
+        #Update UI interface last time parameter setting
+        self.funcGlobalParReadSet2Ui()
         
-    def slot_gpar_close(self):
-        #self.gparProc.funcCtrlCalibComp()
-        self.funcMainFormReadGlobalParRead()
+    #Give up and not save parameters
+    def closeEvent(self, event):
+        #self.gparProc.funcRecoverWorkingEnv()
         self.signal_mainwin_visible.emit()
         self.close()
 
-    def closeEvent(self, event):
-        #self.gparProc.funcRecoverWorkingEnv()
-        self.funcMainFormReadGlobalParRead()
+    def slot_gpar_compl(self):
+        #self.gparProc.funcCtrlCalibComp()
+        self.funcGlobalParReadSave()
+        self.signal_mainwin_visible.emit()
+        self.close()
+
+    #Give up and not save parameters
+    def slot_gpar_giveup(self):
         self.signal_mainwin_visible.emit()
         self.close()
 
     #Local function
-    def funcMainFormReadGlobalParRead(self):
+    def funcGlobalParReadSave(self):
         ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET = self.checkBox_gpar_autoIdf.isChecked();
         ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET = self.checkBox_gpar_autoPic.isChecked();
         ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET = self.checkBox_gpar_picFixPos.isChecked();
@@ -295,7 +301,36 @@ class cebsGparForm(QtWidgets.QWidget, Ui_cebsGparForm):
             ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = int(self.lineEdit_gpar_picTti.text());
         except Exception: 
             ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = 60;
-        #print("GL_CEBS_PIC_TAKING_FIX_POINT_SET = ", ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET)
+        try: 
+            ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT = int(self.lineEdit_gpar_vision_small_low_limit.text());
+        except Exception: 
+            ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT = 200;
+        try: 
+            ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT = int(self.lineEdit_gpar_vision_small_mid_limit.text());
+        except Exception: 
+            ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT = 500;
+        try: 
+            ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT = int(self.lineEdit_gpar_vision_mid_big_limit.text());
+        except Exception: 
+            ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT = 2000;
+        try: 
+            ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT = int(self.lineEdit_gpar_vision_big_upper_limit.text());
+        except Exception: 
+            ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT = 2000;
+        ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET = self.checkBox_gpar_vision_res_addup.isChecked();
+        self.objInitCfg2.updateSectionPar()
+
+    #Using global parameter set to UI during launch
+    def funcGlobalParReadSet2Ui(self):
+        self.checkBox_gpar_picFixPos.setChecked(ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET)
+        self.checkBox_gpar_autoIdf.setChecked(ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET)
+        self.checkBox_gpar_autoPic.setChecked(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET)
+        self.lineEdit_gpar_picTti.setText(str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN))
+        self.lineEdit_gpar_vision_small_low_limit.setText(str(ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT))
+        self.lineEdit_gpar_vision_small_mid_limit.setText(str(ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT))
+        self.lineEdit_gpar_vision_mid_big_limit.setText(str(ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT))
+        self.lineEdit_gpar_vision_big_upper_limit.setText(str(ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT))
+        self.checkBox_gpar_vision_res_addup.setChecked(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET)
 
 #Main App entry
 def main_form():

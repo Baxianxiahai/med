@@ -125,7 +125,7 @@
    <property name="title">
     <string>图像识别参数设置</string>
    </property>
-   <widget class="QLineEdit" name="lineEdit_gpar_picTti_2">
+   <widget class="QLineEdit" name="lineEdit_gpar_vision_small_low_limit">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -151,7 +151,7 @@
      <string>小尺寸门限</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_gpar_picTti_3">
+   <widget class="QLineEdit" name="lineEdit_gpar_vision_small_mid_limit">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -177,7 +177,7 @@
      <string>小-中尺寸门限</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_gpar_picTti_4">
+   <widget class="QLineEdit" name="lineEdit_gpar_vision_mid_big_limit">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -203,7 +203,7 @@
      <string>中-大尺寸门限</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_gpar_picTti_5">
+   <widget class="QLineEdit" name="lineEdit_gpar_vision_big_upper_limit">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -229,7 +229,7 @@
      <string>大尺寸门限</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox_gpar_autoPic_2">
+   <widget class="QCheckBox" name="checkBox_gpar_vision_res_addup">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -246,12 +246,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QPushButton" name="pushButton_ctrl_stop">
+  <widget class="QPushButton" name="pushButton_ctrl_compl">
    <property name="geometry">
     <rect>
-     <x>370</x>
+     <x>670</x>
      <y>270</y>
-     <width>561</width>
+     <width>261</width>
      <height>71</height>
     </rect>
    </property>
@@ -342,22 +342,51 @@ p, li { white-space: pre-wrap; }
     </property>
    </widget>
   </widget>
+  <widget class="QPushButton" name="pushButton_ctrl_giveup">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>270</y>
+     <width>261</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>设定放弃</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>
   <connection>
-   <sender>pushButton_ctrl_stop</sender>
+   <sender>pushButton_ctrl_compl</sender>
    <signal>clicked()</signal>
    <receiver>cebsGparForm</receiver>
-   <slot>slot_gpar_close()</slot>
+   <slot>slot_gpar_compl()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>223</x>
-     <y>426</y>
+     <x>670</x>
+     <y>340</y>
     </hint>
     <hint type="destinationlabel">
-     <x>228</x>
-     <y>492</y>
+     <x>875</x>
+     <y>444</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_ctrl_giveup</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsGparForm</receiver>
+   <slot>slot_gpar_giveup()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>513</x>
+     <y>306</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>528</x>
+     <y>480</y>
     </hint>
    </hints>
   </connection>
@@ -369,6 +398,7 @@ p, li { white-space: pre-wrap; }
   <slot>slot_calib_right_bottom()</slot>
   <slot>slot_calib_pilot()</slot>
   <slot>slot_calib_pilot_stop()</slot>
-  <slot>slot_gpar_close()</slot>
+  <slot>slot_gpar_compl()</slot>
+  <slot>slot_gpar_giveup()</slot>
  </slots>
 </ui>

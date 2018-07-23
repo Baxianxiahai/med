@@ -6,9 +6,9 @@
 
 //=ZJL, 2018/7/21, CURRENT_SW_DELIVERY R1.06 =>CEBS
 = 新建参数配置页面
-
-
-
+= 新参数初始化更新
+= 新参数全部存入初始化的文件中去
+= ErrorLog
 
 
 //=ZJL, 2018/7/20, CURRENT_SW_DELIVERY R1.05 =>CEBS
