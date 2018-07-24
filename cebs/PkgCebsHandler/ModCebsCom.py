@@ -18,6 +18,13 @@ import http
 import socket
 
 
+#STATIC CONFIGURATION AND CAN NOT MODIFY BY HAND
+GL_CEBS_ERR_LOG_FILE_NAME_SET = r"cebsErrLog.txt"
+GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET = r"cebsVsClas.log";
+GL_CEBS_VISION_MAX_CAMERA_SEARCH = 15;
+
+
+#FOLLOWING DYNAMIC PARAMETERS SET
 #Global parameter set for PICTURE
 GL_CEBS_PIC_PROC_BATCH_INDEX = 0;
 GL_CEBS_PIC_PROC_CLAS_INDEX = 0;  #WHICH CATEGORY IS TO BE IDENTIFY
@@ -28,6 +35,7 @@ GL_CEBS_PIC_ORIGIN_PATH = r"pic_origin";
 GL_CEBS_PIC_MIDDLE_PATH = r"pic_middle";
 GL_CEBS_PIC_ABS_ORIGIN_PATH = "";
 GL_CEBS_PIC_ABS_MIDDLE_PATH = "";
+
 #Fix point to take picture or not? Formally auto-working shall set as False.
 GL_CEBS_PIC_TAKING_FIX_POINT_SET = False; 
 #After taking picture, whether the pic identification will be run automatically

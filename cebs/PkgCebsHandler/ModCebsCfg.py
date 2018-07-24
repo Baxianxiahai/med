@@ -232,6 +232,14 @@ class ConfigOpr(object):
         res = self.CReader[batchStr][fileName];
         return res;
 
+    def getStoredFileNukeName(self, batch, fileNbr):
+        self.CReader=configparser.ConfigParser()
+        self.CReader.read(self.filePath, encoding='utf8')
+        batchStr = "batch#" + str(batch)
+        fileName = self.combineFileName(batch, fileNbr)
+        res = fileName + '.jpg'
+        return res;
+
     def combineFileName(self, batch, fileNbr):
         return str("batch#" + str(batch) + "FileName#" + str(fileNbr))
 
@@ -285,6 +293,6 @@ class ConfigOpr(object):
     def medErrorLog(self, inputStr):
         head = '\r[CEBS] ' + time.strftime("%Y/%m/%d %H:%M:%S") + ' [ERR] '
         outputStr = head + inputStr
-        with open("cebsErrLog.txt", 'a') as f:
+        with open(ModCebsCom.GL_CEBS_ERR_LOG_FILE_NAME_SET, 'a+') as f:
             f.write(outputStr)
 
