@@ -37,7 +37,7 @@ class Ui_cebsGparForm(object):
         self.checkBox_gpar_picFixPos.setChecked(False)
         self.checkBox_gpar_picFixPos.setObjectName("checkBox_gpar_picFixPos")
         self.groupBox_gpar_2 = QtWidgets.QGroupBox(cebsGparForm)
-        self.groupBox_gpar_2.setGeometry(QtCore.QRect(20, 150, 331, 191))
+        self.groupBox_gpar_2.setGeometry(QtCore.QRect(20, 190, 331, 191))
         self.groupBox_gpar_2.setObjectName("groupBox_gpar_2")
         self.lineEdit_gpar_vision_small_low_limit = QtWidgets.QLineEdit(self.groupBox_gpar_2)
         self.lineEdit_gpar_vision_small_low_limit.setGeometry(QtCore.QRect(130, 30, 51, 20))
@@ -94,6 +94,12 @@ class Ui_cebsGparForm(object):
         self.pushButton_ctrl_giveup = QtWidgets.QPushButton(cebsGparForm)
         self.pushButton_ctrl_giveup.setGeometry(QtCore.QRect(370, 270, 261, 71))
         self.pushButton_ctrl_giveup.setObjectName("pushButton_ctrl_giveup")
+        self.lineEdit_gpar_camera_nbr = QtWidgets.QLineEdit(cebsGparForm)
+        self.lineEdit_gpar_camera_nbr.setGeometry(QtCore.QRect(140, 140, 51, 20))
+        self.lineEdit_gpar_camera_nbr.setObjectName("lineEdit_gpar_camera_nbr")
+        self.label_gpar_camera_nbr = QtWidgets.QLabel(cebsGparForm)
+        self.label_gpar_camera_nbr.setGeometry(QtCore.QRect(30, 140, 111, 21))
+        self.label_gpar_camera_nbr.setObjectName("label_gpar_camera_nbr")
 
         self.retranslateUi(cebsGparForm)
         self.pushButton_ctrl_compl.clicked.connect(cebsGparForm.slot_gpar_compl)
@@ -130,4 +136,6 @@ class Ui_cebsGparForm(object):
         self.pushButton_eng_send.setText(_translate("cebsGparForm", "发送"))
         self.pushButton_eng_clear.setText(_translate("cebsGparForm", "清除"))
         self.pushButton_ctrl_giveup.setText(_translate("cebsGparForm", "设定放弃"))
+        self.lineEdit_gpar_camera_nbr.setText(_translate("cebsGparForm", "0"))
+        self.label_gpar_camera_nbr.setText(_translate("cebsGparForm", "摄像头编号"))
 

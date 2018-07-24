@@ -70,6 +70,7 @@ class MotorClass():
             maxList = len(plist)
             searchComPartString = ''
             for index in range(0, maxList):
+                self.objInitCfg.medErrorLog("MOTOAPI: " + str(plist[index]))
                 plistIndex =list(plist[index])
                 #Find right COM# with 'Prolific USB-to-Serial Comm Port'
                 for comPortStr in plistIndex:

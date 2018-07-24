@@ -87,6 +87,11 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 
         self.funcMainFormSetEquInitStatus();
 
+        #Detect all valid camera
+        initObjVision = ModCebsVision.classVisionProcess();
+        res = initObjVision.funcVisionDetectAllCamera()
+        self.slot_print_trigger(res)
+
     def initUI(self):
         self.statusBar().showMessage('SYSTEM START ')
         self.setGeometry(10, 30, 1024, 768)
@@ -317,6 +322,10 @@ class cebsGparForm(QtWidgets.QWidget, Ui_cebsGparForm):
             ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT = int(self.lineEdit_gpar_vision_big_upper_limit.text());
         except Exception: 
             ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT = 2000;
+        try: 
+            ModCebsCom.GL_CEBS_VISION_CAMBER_NBR = int(self.lineEdit_gpar_camera_nbr.text());
+        except Exception: 
+            ModCebsCom.GL_CEBS_VISION_CAMBER_NBR = 0;
         ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET = self.checkBox_gpar_vision_res_addup.isChecked();
         self.objInitCfg2.updateSectionPar()
 
@@ -331,6 +340,7 @@ class cebsGparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         self.lineEdit_gpar_vision_mid_big_limit.setText(str(ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT))
         self.lineEdit_gpar_vision_big_upper_limit.setText(str(ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT))
         self.checkBox_gpar_vision_res_addup.setChecked(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET)
+        self.lineEdit_gpar_camera_nbr.setText(str(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR))
 
 #Main App entry
 def main_form():

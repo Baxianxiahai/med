@@ -39,14 +39,24 @@ from PkgCebsHandler import ModCebsCfg
 
 class classVisionProcess(object):
     def __init__(self):
-        pass
+        self.objInitCfg = ModCebsCfg.ConfigOpr()
+    
+    def funcVisionDetectAllCamera(self):
+        MaxDetectNbr = 100
+        res = "Valid camera number: "
+        for index in range(0, MaxDetectNbr):
+            cap = cv.VideoCapture(index)
+            if cap.isOpened():
+                res = res + str(index) + ", "
+        return res
          
     def funcVisionCapture(self, batch, fileNbr):
         #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
-        cap = cv.VideoCapture(0) #CHECK WITH ls /dev/video*　RESULT
+        cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
         # Check if the webcam is opened correctly
         if not cap.isOpened():
             #raise IOError("Cannot open webcam")
+            self.objInitCfg.medErrorLog("VS_CAP: Cannot open webcam!")
             print("VS_CAP: Cannot open webcam!, Batch/Nbr=%d/%d" % (batch, fileNbr))
             return -1;
 

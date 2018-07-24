@@ -117,7 +117,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>150</y>
+     <y>190</y>
      <width>331</width>
      <height>191</height>
     </rect>
@@ -353,6 +353,32 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>设定放弃</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_gpar_camera_nbr">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>140</y>
+     <width>51</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_gpar_camera_nbr">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>140</y>
+     <width>111</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>摄像头编号</string>
    </property>
   </widget>
  </widget>
