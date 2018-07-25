@@ -245,13 +245,13 @@ class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
             parMoveDir = 1;
         self.calibProc.funcCalibMove(parMoveScale, parMoveDir);
     
-    def slot_calib_left_up(self):
-        self.calibProc.funcCalibLeftUp();
+    def slot_calib_left_down(self):
+        self.calibProc.funcCalibLeftDown();
     
-    def slot_calib_right_bottom(self):
-        self.calibProc.funcCalibRightBottom();
+    def slot_calib_right_up(self):
+        self.calibProc.funcCalibRightUp();
     
-    def slot_calib_pilot(self):
+    def slot_calib_pilot_start(self):
         self.calibProc.funcCalibPilotStart();
 
     def slot_calib_pilot_stop(self):

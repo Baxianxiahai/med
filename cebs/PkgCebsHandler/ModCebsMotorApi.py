@@ -9,6 +9,11 @@ import serial.tools.list_ports
 import time
 from asyncio.tasks import sleep
 
+from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtCore import pyqtSlot
+
+from cebsMain import *
+
 from PkgCebsHandler import ModCebsCom  #Common Support module
 from PkgCebsHandler import ModCebsMoto
 from PkgCebsHandler import ModCebsCtrl
@@ -42,7 +47,7 @@ MOTOR_DEFAULT_SPEED = 400
 MOTOR_STEPS_PER_DISTANCE_MM = MOTOR_STEPS_PER_ROUND / MOTOR_DISTANCE_MM_PER_ROUND
 MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DISTANCE_MM_PER_ROUND / 1000
     
-class MotorClass():
+class MotorClass(object):
     '''
     classdocs
     '''
@@ -65,6 +70,7 @@ class MotorClass():
         self.targetComPortString = 'Prolific USB-to-Serial Comm Port ('
         if len(plist) <= 0:
             self.objInitCfg.medErrorLog("MOTOAPI: The Serial port can't find!")
+            self.signal_print_log.emit("MOTOAPI: The Serial port can't find!")
             print ("MOTOAPI: The Serial port can't find!")
         else:
             maxList = len(plist)
@@ -81,6 +87,7 @@ class MotorClass():
             if searchComPartString == '':
                 #serialName = plist_0[0]
                 print("MOTOAPI: Can not find right serial port!")
+                #self.signal_print_log.emit("MOTOAPI: Can not find right serial port!")
                 self.objInitCfg.medErrorLog("MOTOAPI: Can not find right serial port!")
                 return
             else:
@@ -419,20 +426,20 @@ class MotorClass():
     def moto_proc_move_to_axis_postion(self, curPx, curPy, newPx, newPy):
         if(self.IsSerialOpenOk == False):
             print("MOTOAPI: Serial is not opened, return")
-            return        
+            return -1
         if ((0 == newPx) and (0 == newPy)):
-            pass
             self.moto_proc_back_to_zero()
-            return
+            return 1
         print("MOTOAPI: moto_proc_move_to_axis_postion (mm)", curPx, curPy, newPx, newPy)        
         x_move_steps = int((newPx - curPx) * MOTOR_STEPS_PER_DISTANCE_UM)
         y_move_steps = int((newPy - curPy) * MOTOR_STEPS_PER_DISTANCE_UM)
         if((0 == x_move_steps) and (0 == y_move_steps)):
             print("MOTOAPI: moto_proc_move_to_axis_postion (steps), all zero return", y_move_steps, x_move_steps, 0, 0)
-            return  
+            return 2
         print("MOTOAPI: moto_proc_move_to_axis_postion (steps)", y_move_steps, x_move_steps, 0, 0)        
         self.motor_api_go_with_steps(y_move_steps, x_move_steps, 0, 0)
         self.moto_proc_wait_for_stop(90)
+        return 3
 #SYSTEM ENTRY
 if __name__ == '__main__':
     print("[CEBS] ", time.asctime(), ", System starting...\n" );

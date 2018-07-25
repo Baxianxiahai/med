@@ -166,33 +166,33 @@ class classVisionThread(QThread, ModCebsCfg.ConfigOpr):
     def func_vision_worm_binvalue_test(self, img):
         new = np.zeros(img.shape, np.uint8)    
     
-        #灰度化
+        #Gray transaction: 灰度化
         for i in range(new.shape[0]):  #Axis-y/height/Rows
             for j in range(new.shape[1]):
                 (b,g,r) = img[i,j]
                 #加权平均法
                 new[i,j] = int(0.3*float(b) + 0.59*float(g) + 0.11*float(r))&0xFF
     
-        #中值滤波
+        #Middle value filter: 中值滤波
         blur= cv.medianBlur(new, 5)
         midGray = cv.cvtColor(blur, cv.COLOR_BGR2GRAY)
         #cv.imshow('Middle Blur', midGray)
     
-        #自适应二值化
+        #Adaptive bin-translation: 自适应二值化
         binGray = cv.adaptiveThreshold(midGray, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 43, 5)   # ADAPTIVE_THRESH_MEAN_C ADAPTIVE_THRESH_GAUSSIAN_C
         binRes= cv.GaussianBlur(binGray, (5,5), 1.5) #medianBlur
         #cv.imshow('Adaptive Bin', binRes)
         return binRes;
     
     def func_vision_worm_remove_noise_test(self, img):
-        # 膨胀+腐蚀等形态学变化  
+        #Enlarge + Erosion: shape translation 膨胀+腐蚀等形态学变化  
         kerne1 = np.ones((7, 7), np.uint8)  
         img_erosin = cv.erode(img, kerne1, iterations=1)
            
-        #再次中值滤波
+        #2nd time mid-value filter: 再次中值滤波
         midFilter= cv.medianBlur(img_erosin, 5)
         
-        #固定二值化
+        #Fix bin-value: 固定二值化
         ret, binImg = cv.threshold(midFilter, 130, 255, cv.THRESH_BINARY)
         #cv.imshow("img_erosin and Noise removal", binImg)
                 
@@ -210,17 +210,17 @@ class classVisionThread(QThread, ModCebsCfg.ConfigOpr):
     #E = sqrt(1-I^2)
     #I = (u20+u02-sqrt(4u11*u11(u20-u02)*(u20-u02))/(u20+u02+sqrt(4u11*u11(u20-u02)*(u20-u02))
     def func_vision_worm_find_contours(self, nfImg, orgImg):
-        #找到轮廓
+        #Searching out-form shape: 找到轮廓
         _, contours, hierarchy = cv.findContours(nfImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
         #contours = contours[0] if imutils.is_cv() else contours[1]
         
-        #输出图形
+        #Output graphic: 输出图形
         outputImg = cv.cvtColor(nfImg, cv.COLOR_GRAY2BGR)
         mask = np.zeros((orgImg.shape[0]+2, orgImg.shape[1]+2), np.uint8)
         mask[:] = 1
-        #分别分析
+        #Analysis one by one: 分别分析
         for c in contours:
-            #外矩形框
+            #External retangle: 外矩形框
             (x,y,w,h)=cv.boundingRect(c)
             pointx=x+w/2
             pointy=y+h/2
@@ -229,14 +229,14 @@ class classVisionThread(QThread, ModCebsCfg.ConfigOpr):
             cX = int(M["m10"] / (M["m00"]+0.01))
             cY = int(M["m01"] / (M["m00"]+0.01))
             seed_point = (cX, cY)
-            #轮廓面积
+            #Shape square: 轮廓面积
             cArea = cv.contourArea(c)
-            #轮廓弧长
+            #Shape length: 轮廓弧长
             cPerimeter = cv.arcLength(c,True)
             
-            #第四种方法：
+            #4th method: 第四种方法
             rect = cv.minAreaRect(c)
-            # 长宽,总有 width>=height  
+            #width / height: 长宽,总有 width>=height  
             width, height = rect[1]
             if (width > height):
                 cE = height / (width+0.001)
@@ -244,7 +244,7 @@ class classVisionThread(QThread, ModCebsCfg.ConfigOpr):
                 cE = width / (height+0.001)
             cE = round(cE, 2)
     
-            #最终决定不采用flood算法
+            #Finally not use flood algorithms: 最终决定不采用flood算法
             #print(self.HST_VISION_WORM_CLASSIFY_base)
             if cArea < self.HST_VISION_WORM_CLASSIFY_base:
                 pass
@@ -287,9 +287,9 @@ class classVisionThread(QThread, ModCebsCfg.ConfigOpr):
         return outputImg;
         pass;
 
-    #分类总处理    
+    #Classified processing: 分类总处理    
     def func_vision_worm_clasification(self, fileName, fileNukeName):
-        #读取文件
+        #Reading file: 读取文件
         if (os.path.exists(fileName) == False):
             errStr = "VISION CLAS: File %s not exist!" % (fileName)
             self.medErrorLog(errStr);
@@ -302,7 +302,7 @@ class classVisionThread(QThread, ModCebsCfg.ConfigOpr):
             print("VISION CLAS: Read file error, errinfo = ", str(err))
             return;
 
-        #处理过程
+        #Processing procedure: 处理过程
         binImg = self.func_vision_worm_binvalue_test(inputImg)
         nfImg = self.func_vision_worm_remove_noise_test(binImg)
         outputImg = self.func_vision_worm_find_contours(nfImg, inputImg)
@@ -310,22 +310,39 @@ class classVisionThread(QThread, ModCebsCfg.ConfigOpr):
         print("VISION CLAS: OutputFn = %s, nuke name = %s" %(outputFn, fileNukeName))
         cv.imwrite(outputFn, outputImg)
             
-        # 存储干活的log记录
+        #Save log record: 存储干活的log记录
         f = open(ModCebsCom.GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET, "a+")
         a = '[%s], vision worm classification ones, save result as [%s] with output [%s].\n' % (time.asctime(), outputFn, str(self.HST_VISION_WORM_CLASSIFY_pic_sta_output))
         f.write(a)
         f.close()
         
-        #根据指令，是否显示文件
+        #Show result or not: 根据指令，是否显示文件
         cv.destroyAllWindows()
         
     def run(self):
+        ctrlFlag = False
+        ctrlInterest = False
         while True:
             time.sleep(1)
             if ((ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT > 0) and (ModCebsCom.GL_CEBS_PIC_CLAS_FLAG == True)):
+                if (ctrlFlag == True):
+                    ctrlFlag = True
+                    ctrlInterest = False
+                else:
+                    ctrlFlag = True
+                    ctrlInterest = False
                 self.funcVisionProc();
-                pass
-        
+            else:
+                if (ctrlFlag == True):
+                    ctrlFlag = False
+                    ctrlInterest = True
+                else:
+                    ctrlFlag = False
+                    ctrlInterest = False
+            #Send signal to CebsCtrl to stop STM
+            if (ctrlInterest == True):
+                #self.signal_ctrl_clas_stop.emit()
+                self.signal_print_log.emit("VISION CLAS: Finish all picture classification!")
         
         
         

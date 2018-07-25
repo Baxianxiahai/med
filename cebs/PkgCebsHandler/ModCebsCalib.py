@@ -126,7 +126,7 @@ class classCalibProcess(object):
         else:
             ModCebsCom.GL_CEBS_HB_HOLE_X_NUM = 12;
             ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = 8;
-        ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = (ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[0]) / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
+        ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = (ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[2]) / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
         ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = (ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]) / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
 
     def funcCalibPilotStart(self):
@@ -146,7 +146,7 @@ class classCalibProcess(object):
         obj.funcMotoCalaMoveOneStep(parMoveScale, parMoveDir);
         self.funcLogTrace("CALIB: Moving one step. Current position XY=[%d/%d]." % (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]))
         
-    def funcCalibLeftUp(self):
+    def funcCalibLeftDown(self):
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0];
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1];
         self.funcUpdateHoleBoardPar()
@@ -154,7 +154,7 @@ class classCalibProcess(object):
         iniObj.updateSectionPar();
         self.funcLogTrace("CALIB: LeftUp Axis set! XY=%d/%d." % (ModCebsCom.GL_CEBS_HB_POS_IN_UM[0], ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
 
-    def funcCalibRightBottom(self):
+    def funcCalibRightUp(self):
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0];
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1];
         self.funcUpdateHoleBoardPar()

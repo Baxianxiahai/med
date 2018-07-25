@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1194</width>
-    <height>443</height>
+    <height>674</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -193,7 +193,7 @@
      <string>移动</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_calib_left_up">
+   <widget class="QPushButton" name="pushButton_calib_left_down">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -203,10 +203,10 @@
      </rect>
     </property>
     <property name="text">
-     <string>设定左上</string>
+     <string>设定左下</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_calib_right_bottom">
+   <widget class="QPushButton" name="pushButton_calib_right_up">
     <property name="geometry">
      <rect>
       <x>180</x>
@@ -216,7 +216,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>设定右下</string>
+     <string>设定右上</string>
     </property>
    </widget>
   </widget>
@@ -277,7 +277,7 @@ p, li { white-space: pre-wrap; }
     <string>校准进展</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_calib_pilot">
+  <widget class="QPushButton" name="pushButton_calib_pilot_start">
    <property name="geometry">
     <rect>
      <x>30</x>
@@ -303,7 +303,7 @@ p, li { white-space: pre-wrap; }
     <string>校准完成</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_calib_pilot_2">
+  <widget class="QPushButton" name="pushButton_calib_pilot_stop">
    <property name="geometry">
     <rect>
      <x>210</x>
@@ -326,12 +326,12 @@ p, li { white-space: pre-wrap; }
    <slot>slot_calib_close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>305</x>
-     <y>269</y>
+     <x>325</x>
+     <y>383</y>
     </hint>
     <hint type="destinationlabel">
-     <x>332</x>
-     <y>327</y>
+     <x>395</x>
+     <y>463</y>
     </hint>
    </hints>
   </connection>
@@ -346,72 +346,72 @@ p, li { white-space: pre-wrap; }
      <y>61</y>
     </hint>
     <hint type="destinationlabel">
-     <x>16</x>
-     <y>59</y>
+     <x>186</x>
+     <y>13</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_calib_left_up</sender>
+   <sender>pushButton_calib_left_down</sender>
    <signal>clicked()</signal>
    <receiver>cebsCalibForm</receiver>
-   <slot>slot_calib_left_up()</slot>
+   <slot>slot_calib_left_down()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>179</x>
-     <y>57</y>
+     <x>126</x>
+     <y>210</y>
     </hint>
     <hint type="destinationlabel">
-     <x>249</x>
-     <y>17</y>
+     <x>188</x>
+     <y>458</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_calib_right_bottom</sender>
+   <sender>pushButton_calib_right_up</sender>
    <signal>clicked()</signal>
    <receiver>cebsCalibForm</receiver>
-   <slot>slot_calib_right_bottom()</slot>
+   <slot>slot_calib_right_up()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>305</x>
-     <y>64</y>
+     <x>306</x>
+     <y>226</y>
     </hint>
     <hint type="destinationlabel">
-     <x>383</x>
-     <y>70</y>
+     <x>424</x>
+     <y>556</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_calib_pilot</sender>
+   <sender>pushButton_calib_pilot_start</sender>
    <signal>clicked()</signal>
    <receiver>cebsCalibForm</receiver>
-   <slot>slot_calib_pilot()</slot>
+   <slot>slot_calib_pilot_start()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>121</x>
      <y>280</y>
     </hint>
     <hint type="destinationlabel">
-     <x>139</x>
-     <y>344</y>
+     <x>161</x>
+     <y>633</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_calib_pilot_2</sender>
+   <sender>pushButton_calib_pilot_stop</sender>
    <signal>clicked()</signal>
    <receiver>cebsCalibForm</receiver>
    <slot>slot_calib_pilot_stop()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>210</x>
-     <y>263</y>
+     <x>242</x>
+     <y>320</y>
     </hint>
     <hint type="destinationlabel">
-     <x>257</x>
-     <y>321</y>
+     <x>426</x>
+     <y>612</y>
     </hint>
    </hints>
   </connection>
@@ -419,9 +419,9 @@ p, li { white-space: pre-wrap; }
  <slots>
   <slot>slot_calib_close()</slot>
   <slot>slot_calib_move()</slot>
-  <slot>slot_calib_left_up()</slot>
-  <slot>slot_calib_right_bottom()</slot>
-  <slot>slot_calib_pilot()</slot>
+  <slot>slot_calib_left_down()</slot>
+  <slot>slot_calib_right_up()</slot>
+  <slot>slot_calib_pilot_start()</slot>
   <slot>slot_calib_pilot_stop()</slot>
  </slots>
 </ui>

@@ -70,6 +70,7 @@ class classCtrlThread(QThread):
         #INIT STM
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
         
+        
     def setIdentity(self,text):
         self.identity = text
 
@@ -89,8 +90,10 @@ class classCtrlThread(QThread):
         #JUDGE WHETHER TAKING PICTURE IS FIXED POSITION OR NOT
         if (ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET == False):
             #MOTO START POINT
-            if (self.objMoto.funcMotoMove2Start() < 0):
+            res, string = self.objMoto.funcMotoMove2Start()
+            if (res < 0):
                 self.signal_print_log.emit("CTRL: MOTO MOVING ERROR！")
+                self.signal_print_log.emit(string)
                 return -2;
         self.times = ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH+1;
         self.signal_print_log.emit("CTRL: START TAKING PICTURE: REMAINING TIMES=%d." %(self.times-1))
@@ -99,24 +102,13 @@ class classCtrlThread(QThread):
     #STOP TAKING PICTURE
     #THIS IS HIGH LEVEL SKILLS
     def funcTakePicStop(self):
-        if (self.CTRL_STM_STATE != self.__CEBS_STM_CTRL_CAP_PIC):
-            self.signal_print_log.emit("CTRL: funcTakePicStop PLS FINISH LAST TASK！")
-            return -1;        
-        self.times = 1
-        #STOP TAKING PICTURE MIGHT DAMAGE WHOLE SYSTEM
-#         self.signal_print_log.emit("CTRL: STOP PICTURE TAKING, REMAINING TIMES=%d." %(self.times))
-#         ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX +=1;
-#         self.objInitCfg.updateCtrlCntInfo();
-#         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
+        if (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_INIT):
+            self.signal_print_log.emit("CTRL: funcTakePicStop Already finished, no action！")
+            self.times = 1
+            return 1;
+        if (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_CAP_PIC):
+            self.times = 1
         return 1;
-        #MOTO RUN TO ZERO POSITION: NONE-VALUABLE ACTIONS
-#         if (self.objMoto.funcMotoBackZero() < 0):
-#             self.signal_print_log.emit("SYSTME RUN TO ZERO ERROR!")
-#             self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_ERR;
-#             return -1;
-#         else:
-#             self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
-#             return 1;
 
     #PLATE RUN TO INIT POSITION
     def funcCtrlMotoBackZero(self):
@@ -156,28 +148,24 @@ class classCtrlThread(QThread):
     def funcVisionClasStart(self):
         if (self.CTRL_STM_STATE != self.__CEBS_STM_CTRL_INIT):
             self.signal_print_log.emit("CTRL: funcVisionClasStart PLS FINISH LAST TASK IN ADVANCE！")
-            return -1;        
+            return -1;
+        if (ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT <=0):
+            self.signal_print_log.emit("CTRL: No remaining picture to classify, no action!")
+            return -1;
         self.objVision.funcVisionClasStart()
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CLAS;
     
     def funcVisionClasStop(self):
-        if (self.CTRL_STM_STATE != self.__CEBS_STM_CTRL_CLAS):
-            self.signal_print_log.emit("CTRL: funcVisionClasStop PLS FINISH LAST TASK IN ADVANCE!")
-            return -1;
         self.objVision.funcVisionClasEnd()
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
 
     def funcCtrlCalibStart(self):
         if (self.CTRL_STM_STATE != self.__CEBS_STM_CTRL_INIT):
             self.signal_print_log.emit("CTRL: funcCtrlCalibStart PLS FINISH LAST TASK IN ADVANCE!")
-            return -1;        
+            return -1;
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CALIB;
     
     def funcCtrlCalibStop(self):
-        #print(self.CTRL_STM_STATE)
-#         if (self.CTRL_STM_STATE != self.__CEBS_STM_CTRL_CALIB):
-#             self.signal_print_log.emit("CTRL: funcCtrlCalibStop PLS FINISH LAST TASK！")
-#             return -1;
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
         
     def funcCtrlGetRightStatus(self):

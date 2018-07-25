@@ -58,7 +58,7 @@ class classMotoProcess(object):
                 ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_BOARD_X_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
                 ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_BOARD_Y_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
         if (ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] !=0):
-            xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[0];
+            xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[2];
             yHeight = ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[3];
             ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = xWidth / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
             ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = yHeight / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
@@ -150,14 +150,18 @@ class classMotoProcess(object):
         #print("MOTO: Running Zero Position!")
 
     def funcMotoMove2Start(self):
-        print("MOTO: Move to start!")
-        xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[0];
+        print("MOTO: Move to start position - Left/up!")
+        xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[2];
         yHeight = ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[3];
         if (xWidth <= 0 or yHeight <= 0):
             print("MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight))
-            return -1;
-        return self.funcMotoMove2HoleNbr(1);
-        #print("MOTO: Running Start Position!")
+            return -1, ("MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight));
+        res = self.funcMotoMove2HoleNbr(1)
+        print("MOTO: Feedback get from funcMotoMove2HoleNbr = ", res)
+        if (res > 0):
+            return res, "MOTO: Success!"
+        else:
+            return res, "MOTO: Failure!"
 
     #Fetch moto actual status, especially the moto is still under running
     #To be finished function!
@@ -184,20 +188,24 @@ class classMotoProcess(object):
         else:
             xTargetHoleNbr = ((holeIndex-1) % ModCebsCom.GL_CEBS_HB_HOLE_X_NUM) + 1;
             yTargetHoleNbr = ((holeIndex-1) // ModCebsCom.GL_CEBS_HB_HOLE_X_NUM) + 1;
-            newPosX = int(ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] + (xTargetHoleNbr-1)*ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE);
-            newPosY = int(ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - (yTargetHoleNbr-1)*ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE);
+            newPosX = int(ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] - (xTargetHoleNbr-1)*ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE);
+            newPosY = int(ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] + (yTargetHoleNbr-1)*ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE);
         print("MOTO: Moving to working hole=%d, newPosX/Y=%d/%d." % (holeIndex, newPosX, newPosY))
         if (self.funcMotoMove2AxisPos(ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1], newPosX, newPosY) > 0):
             ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] = newPosX;
             ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] = newPosY;
+            print("MOTO: Finished once!")
             return 1;
         else:
+            print("MOTO: Error get feedback from funcMotoMove2AxisPos.")
             return -2;
-        print("MOTO: Finished once!")
 
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy):
-        print("MOTO: funcMotoMove2AxisPos", curPx, curPy, newPx, newPy)
+        print("MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy))
         if (ModCebsCom.GL_CEBS_MOTOAPI_INSTALLED_SET == True):
-            self.ObjMotorApi.moto_proc_move_to_axis_postion(curPx, curPy, newPx, newPy)
-        return 1;
+            if (self.ObjMotorApi.moto_proc_move_to_axis_postion(curPx, curPy, newPx, newPy) < 0):
+                return -1
+            else:
+                return 1
+        return 2
         
