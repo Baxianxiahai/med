@@ -62,7 +62,11 @@ class classVisionProcess(object):
         
         #Picture capture
         #DEFINE PIC GRADULARITY
-        cap.set(4,1440)
+        #cap.set(4,1440)  #720
+        width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
+        height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
+        fps = 20
+        
         #MASSIVE ERROR!
         #1st par is path and file name
         #2nd par is video format, “MPEG” is **standard， BAIDU fourcc could find more
@@ -81,21 +85,24 @@ class classVisionProcess(object):
             cv.imwrite(fileName, frame)
         
         #Video capture
+        #Ref: http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_video_display/py_video_display.html
+        #fourcc code: http://www.fourcc.org/codecs.php
         if (ret == True) and (ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE == True):
             #Video capture with 3 second
-            fourcc = cv.VideoWriter_fourcc(*'mp4v')
-            fps = 20
-            fileNameVideo = obj.combineFileNameMp4WithDir(batch, fileNbr)
-            out = cv.VideoWriter(fileNameVideo, fourcc, fps, (640, 480))
-            cnt = 0;
+            fourcc = cv.VideoWriter_fourcc(*'mp4v')  #mp4v(.mp4), XVID(.avi)
+            fileNameVideo = obj.combineFileNameVideoWithDir(batch, fileNbr)
+            out = cv.VideoWriter(fileNameVideo, fourcc, fps, (width, height))
+            cnt = 0
+            targetCnt = fps * ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC
             while cap.isOpened():
                 cnt += 1
                 ret, frame = cap.read()
                 if ret:
                     frame = cv.flip(frame, 0)
                     #write the flipped frame
+                    time.sleep(1.0/fps)
                     out.write(frame)
-                    if cnt >= (fps * ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC):
+                    if cnt >= targetCnt:
                         break
                 else:
                     break

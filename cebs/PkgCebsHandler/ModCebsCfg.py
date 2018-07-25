@@ -263,9 +263,9 @@ class ConfigOpr(object):
         fileName = str("batch#" + str(batch) + "FileName#" + str(fileNbr))
         return str(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
     
-    def combineFileNameMp4WithDir(self, batch, fileNbr):
+    def combineFileNameVideoWithDir(self, batch, fileNbr):
         fileName = str("batch#" + str(batch) + "FileName#" + str(fileNbr))
-        return str(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH) + fileName + '.mp4'
+        return str(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH) + fileName + '.mp4'  #.mp4, .avi
 
     #FETCH UN-CLASSIFIED FILE FOR ONE BATCH
     def getUnclasBatchFile(self, batch):
