@@ -59,7 +59,8 @@ class classVisionProcess(object):
             self.objInitCfg.medErrorLog("VISION CLAS: Cannot open webcam!")
             print("VISION CLAS: Cannot open webcam!, Batch/Nbr=%d/%d" % (batch, fileNbr))
             return -1;
-
+        
+        #Picture capture
         #DEFINE PIC GRADULARITY
         cap.set(4,1440)
         #MASSIVE ERROR!
@@ -78,6 +79,29 @@ class classVisionProcess(object):
             obj=ModCebsCfg.ConfigOpr();
             fileName = obj.combineFileNameWithDir(batch, fileNbr)
             cv.imwrite(fileName, frame)
+        
+        #Video capture
+        if (ret == True) and (ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE == True):
+            #Video capture with 3 second
+            fourcc = cv.VideoWriter_fourcc(*'mp4v')
+            fps = 20
+            fileNameVideo = obj.combineFileNameMp4WithDir(batch, fileNbr)
+            out = cv.VideoWriter(fileNameVideo, fourcc, fps, (640, 480))
+            cnt = 0;
+            while cap.isOpened():
+                cnt += 1
+                ret, frame = cap.read()
+                if ret:
+                    frame = cv.flip(frame, 0)
+                    #write the flipped frame
+                    out.write(frame)
+                    if cnt >= (fps * ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC):
+                        break
+                else:
+                    break
+            out.release()
+            
+        #Release all resource
         cap.release()
         cv.destroyAllWindows()
         return 1;

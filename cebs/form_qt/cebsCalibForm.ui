@@ -18,8 +18,8 @@
     <rect>
      <x>30</x>
      <y>20</y>
-     <width>341</width>
-     <height>241</height>
+     <width>371</width>
+     <height>321</height>
     </rect>
    </property>
    <property name="title">
@@ -29,8 +29,8 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>70</y>
-      <width>311</width>
+      <y>90</y>
+      <width>351</width>
       <height>51</height>
      </rect>
     </property>
@@ -40,9 +40,9 @@
     <widget class="QRadioButton" name="radioButton_calib_5cm">
      <property name="geometry">
       <rect>
-       <x>220</x>
+       <x>300</x>
        <y>20</y>
-       <width>41</width>
+       <width>51</width>
        <height>21</height>
       </rect>
      </property>
@@ -55,7 +55,7 @@
       <rect>
        <x>10</x>
        <y>20</y>
-       <width>51</width>
+       <width>61</width>
        <height>21</height>
       </rect>
      </property>
@@ -69,9 +69,9 @@
     <widget class="QRadioButton" name="radioButton_calib_1cm">
      <property name="geometry">
       <rect>
-       <x>170</x>
+       <x>230</x>
        <y>20</y>
-       <width>41</width>
+       <width>51</width>
        <height>21</height>
       </rect>
      </property>
@@ -82,9 +82,9 @@
     <widget class="QRadioButton" name="radioButton_calib_1mm">
      <property name="geometry">
       <rect>
-       <x>70</x>
+       <x>90</x>
        <y>20</y>
-       <width>41</width>
+       <width>51</width>
        <height>21</height>
       </rect>
      </property>
@@ -98,9 +98,9 @@
     <widget class="QRadioButton" name="radioButton_calib_5mm">
      <property name="geometry">
       <rect>
-       <x>120</x>
+       <x>160</x>
        <y>20</y>
-       <width>41</width>
+       <width>51</width>
        <height>21</height>
       </rect>
      </property>
@@ -113,9 +113,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>130</y>
-      <width>311</width>
-      <height>51</height>
+      <y>160</y>
+      <width>351</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="title">
@@ -140,7 +140,7 @@
     <widget class="QRadioButton" name="radioButton_calib_x_plus">
      <property name="geometry">
       <rect>
-       <x>210</x>
+       <x>280</x>
        <y>20</y>
        <width>61</width>
        <height>21</height>
@@ -153,7 +153,7 @@
     <widget class="QRadioButton" name="radioButton_calib_y_minus">
      <property name="geometry">
       <rect>
-       <x>80</x>
+       <x>100</x>
        <y>20</y>
        <width>61</width>
        <height>21</height>
@@ -169,7 +169,7 @@
     <widget class="QRadioButton" name="radioButton_calib_x_minus">
      <property name="geometry">
       <rect>
-       <x>140</x>
+       <x>190</x>
        <y>20</y>
        <width>61</width>
        <height>21</height>
@@ -185,7 +185,7 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>321</width>
+      <width>351</width>
       <height>41</height>
      </rect>
     </property>
@@ -196,8 +196,8 @@
    <widget class="QPushButton" name="pushButton_calib_left_down">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>190</y>
+      <x>20</x>
+      <y>250</y>
       <width>141</width>
       <height>41</height>
      </rect>
@@ -209,8 +209,8 @@
    <widget class="QPushButton" name="pushButton_calib_right_up">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>190</y>
+      <x>200</x>
+      <y>250</y>
       <width>141</width>
       <height>41</height>
      </rect>
@@ -223,9 +223,9 @@
   <widget class="QTextEdit" name="textEdit_calib_runProgress">
    <property name="geometry">
     <rect>
-     <x>400</x>
+     <x>420</x>
      <y>30</y>
-     <width>751</width>
+     <width>731</width>
      <height>391</height>
     </rect>
    </property>
@@ -267,9 +267,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="label_calib_runProgress">
    <property name="geometry">
     <rect>
-     <x>400</x>
+     <x>420</x>
      <y>10</y>
-     <width>261</width>
+     <width>81</width>
      <height>16</height>
     </rect>
    </property>
@@ -280,8 +280,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QPushButton" name="pushButton_calib_pilot_start">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>280</y>
+     <x>40</x>
+     <y>390</y>
      <width>161</width>
      <height>61</height>
     </rect>
@@ -294,8 +294,8 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>360</y>
-     <width>341</width>
+     <y>500</y>
+     <width>371</width>
      <height>61</height>
     </rect>
    </property>
@@ -306,8 +306,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QPushButton" name="pushButton_calib_pilot_stop">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>280</y>
+     <x>230</x>
+     <y>390</y>
      <width>161</width>
      <height>61</height>
     </rect>
@@ -327,11 +327,11 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>325</x>
-     <y>383</y>
+     <y>523</y>
     </hint>
     <hint type="destinationlabel">
-     <x>395</x>
-     <y>463</y>
+     <x>370</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -346,8 +346,8 @@ p, li { white-space: pre-wrap; }
      <y>61</y>
     </hint>
     <hint type="destinationlabel">
-     <x>186</x>
-     <y>13</y>
+     <x>184</x>
+     <y>94</y>
     </hint>
    </hints>
   </connection>
@@ -358,12 +358,12 @@ p, li { white-space: pre-wrap; }
    <slot>slot_calib_left_down()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>126</x>
-     <y>210</y>
+     <x>136</x>
+     <y>270</y>
     </hint>
     <hint type="destinationlabel">
-     <x>188</x>
-     <y>458</y>
+     <x>138</x>
+     <y>361</y>
     </hint>
    </hints>
   </connection>
@@ -374,12 +374,12 @@ p, li { white-space: pre-wrap; }
    <slot>slot_calib_right_up()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>306</x>
-     <y>226</y>
+     <x>326</x>
+     <y>286</y>
     </hint>
     <hint type="destinationlabel">
-     <x>424</x>
-     <y>556</y>
+     <x>332</x>
+     <y>363</y>
     </hint>
    </hints>
   </connection>
@@ -390,12 +390,12 @@ p, li { white-space: pre-wrap; }
    <slot>slot_calib_pilot_start()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>121</x>
-     <y>280</y>
+     <x>131</x>
+     <y>390</y>
     </hint>
     <hint type="destinationlabel">
-     <x>161</x>
-     <y>633</y>
+     <x>135</x>
+     <y>472</y>
     </hint>
    </hints>
   </connection>
@@ -406,12 +406,12 @@ p, li { white-space: pre-wrap; }
    <slot>slot_calib_pilot_stop()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>242</x>
-     <y>320</y>
+     <x>262</x>
+     <y>430</y>
     </hint>
     <hint type="destinationlabel">
-     <x>426</x>
-     <y>612</y>
+     <x>306</x>
+     <y>472</y>
     </hint>
    </hints>
   </connection>

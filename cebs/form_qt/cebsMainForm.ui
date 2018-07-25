@@ -81,7 +81,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string>启动拍照</string>
+     <string>启动拍摄</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_runProgress">
@@ -107,7 +107,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string>停止拍照</string>
+     <string>停止拍摄</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_runpg_test">

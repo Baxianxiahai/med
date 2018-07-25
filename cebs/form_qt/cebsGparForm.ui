@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>GLOBAL PARAMETER</string>
   </property>
-  <widget class="QGroupBox" name="groupBox_gpar">
+  <widget class="QGroupBox" name="groupBox_gpar_normal">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -113,12 +113,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_gpar_2">
+  <widget class="QGroupBox" name="groupBox_gpar_pic">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>190</y>
-     <width>331</width>
+     <width>241</width>
      <height>191</height>
     </rect>
    </property>
@@ -249,9 +249,9 @@
   <widget class="QPushButton" name="pushButton_ctrl_compl">
    <property name="geometry">
     <rect>
-     <x>670</x>
-     <y>270</y>
-     <width>261</width>
+     <x>760</x>
+     <y>320</y>
+     <width>171</width>
      <height>71</height>
     </rect>
    </property>
@@ -345,9 +345,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QPushButton" name="pushButton_ctrl_giveup">
    <property name="geometry">
     <rect>
-     <x>370</x>
-     <y>270</y>
-     <width>261</width>
+     <x>760</x>
+     <y>230</y>
+     <width>171</width>
      <height>71</height>
     </rect>
    </property>
@@ -381,6 +381,74 @@ p, li { white-space: pre-wrap; }
     <string>摄像头编号</string>
    </property>
   </widget>
+  <widget class="QGroupBox" name="groupBox_gpar_video">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>190</y>
+     <width>241</width>
+     <height>191</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>视频参数设置</string>
+   </property>
+   <widget class="QLineEdit" name="lineEdit_gpar_video_input">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>60</y>
+      <width>51</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>3</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_gpar_video_len">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>61</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>视频时长</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_gpar_video_enable">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>181</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>开启视频记录</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_gpar_video_sec">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>60</y>
+      <width>41</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>秒</string>
+    </property>
+   </widget>
+  </widget>
  </widget>
  <resources/>
  <connections>
@@ -391,12 +459,12 @@ p, li { white-space: pre-wrap; }
    <slot>slot_gpar_compl()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>670</x>
-     <y>340</y>
+     <x>865</x>
+     <y>356</y>
     </hint>
     <hint type="destinationlabel">
-     <x>875</x>
-     <y>444</y>
+     <x>996</x>
+     <y>353</y>
     </hint>
    </hints>
   </connection>
@@ -407,12 +475,12 @@ p, li { white-space: pre-wrap; }
    <slot>slot_gpar_giveup()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>513</x>
-     <y>306</y>
+     <x>903</x>
+     <y>266</y>
     </hint>
     <hint type="destinationlabel">
-     <x>528</x>
-     <y>480</y>
+     <x>991</x>
+     <y>274</y>
     </hint>
    </hints>
   </connection>

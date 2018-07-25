@@ -58,6 +58,8 @@ class ConfigOpr(object):
             self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT))
             self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT))
             self.CReader.set("Env","vision res addup set", str(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET))
+            self.CReader.set("Env","video capture enable set", str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE))
+            self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC))
             self.CReader.add_section("Counter")
             self.CReader.set("Counter","PicBatchCnt", "0")
             self.CReader.set("Counter","PicBatchClas", "0")
@@ -66,6 +68,7 @@ class ConfigOpr(object):
         #REWRITE FILE TO AVOID INI FILE ERROR
         if (self.CReader['Env']['workdir'] != str(os.getcwd()+ self.osDifferentStr())):
             self.updateSectionPar()
+
 
     def readGlobalPar(self):
         self.CReader=configparser.ConfigParser()
@@ -104,6 +107,13 @@ class ConfigOpr(object):
             ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET = True
         else:
             ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET = False
+        tmp = self.CReader['Env']['video capture enable set']
+        if (tmp == 'True'):
+            ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE = True
+        else:
+            ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE = False
+        ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC = int(self.CReader['Env']['video capture dur in sec']);
+
 
     def getSection(self):
         return self.CReader.sections()
@@ -145,7 +155,10 @@ class ConfigOpr(object):
             self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT))
             self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT))
             self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT))
-            self.CReader.set("Env","vision res addup set", str(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET))        
+            self.CReader.set("Env","vision res addup set", str(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET))
+            self.CReader.set("Env","video capture enable set", str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE))
+            self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC))
+            
         else:
             self.CReader.remove_section("Env")
             self.CReader.add_section("Env")        
@@ -166,7 +179,10 @@ class ConfigOpr(object):
             self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT))
             self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT))
             self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT))
-            self.CReader.set("Env","vision res addup set", str(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET))                  
+            self.CReader.set("Env","vision res addup set", str(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET))
+            self.CReader.set("Env","video capture enable set", str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE))
+            self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC))
+                            
         fd = open(self.filePath, 'w')
         self.CReader.write(fd)
         fd.close()
@@ -247,6 +263,10 @@ class ConfigOpr(object):
         fileName = str("batch#" + str(batch) + "FileName#" + str(fileNbr))
         return str(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
     
+    def combineFileNameMp4WithDir(self, batch, fileNbr):
+        fileName = str("batch#" + str(batch) + "FileName#" + str(fileNbr))
+        return str(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH) + fileName + '.mp4'
+
     #FETCH UN-CLASSIFIED FILE FOR ONE BATCH
     def getUnclasBatchFile(self, batch):
         self.CReader=configparser.ConfigParser()

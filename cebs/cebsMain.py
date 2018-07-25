@@ -327,6 +327,11 @@ class cebsGparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         except Exception: 
             ModCebsCom.GL_CEBS_VISION_CAMBER_NBR = 0;
         ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET = self.checkBox_gpar_vision_res_addup.isChecked();
+        ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE = self.checkBox_gpar_video_enable.isChecked();
+        try: 
+            ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC = int(self.lineEdit_gpar_video_input.text());
+        except Exception: 
+            ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC = 3;
         self.objInitCfg2.updateSectionPar()
 
     #Using global parameter set to UI during launch
@@ -341,6 +346,8 @@ class cebsGparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         self.lineEdit_gpar_vision_big_upper_limit.setText(str(ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT))
         self.checkBox_gpar_vision_res_addup.setChecked(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET)
         self.lineEdit_gpar_camera_nbr.setText(str(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR))
+        self.checkBox_gpar_video_enable.setChecked(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE)
+        self.lineEdit_gpar_video_input.setText(str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC))
 
 #Main App entry
 def main_form():

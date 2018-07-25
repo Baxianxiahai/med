@@ -110,9 +110,9 @@ class Ui_cebsMainWindow(object):
 "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">&gt;&gt; 2018/5/2 15:30:99 系统启动</p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">&gt;&gt; 2018/5/2 15:40:55 启动执行命令 </p></body></html>"))
-        self.pushButton_ctrl_start.setText(_translate("cebsMainWindow", "启动拍照"))
+        self.pushButton_ctrl_start.setText(_translate("cebsMainWindow", "启动拍摄"))
         self.label_runProgress.setText(_translate("cebsMainWindow", "运行进展"))
-        self.pushButton_ctrl_stop.setText(_translate("cebsMainWindow", "停止拍照"))
+        self.pushButton_ctrl_stop.setText(_translate("cebsMainWindow", "停止拍摄"))
         self.pushButton_runpg_test.setText(_translate("cebsMainWindow", "TEST"))
         self.pushButton_runpg_clear.setText(_translate("cebsMainWindow", "清除"))
         self.pushButton_ctrl_zero.setText(_translate("cebsMainWindow", "位置归零"))
