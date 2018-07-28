@@ -64,86 +64,109 @@ class classMotoProcess(object):
             ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = yHeight / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
         else:
             pass
-         
+    
+    #Normal moving with limitation    
     def funcMotoCalaMoveOneStep(self, scale, dir):
-        #500um = 0.5mm
+        #10um
         if (scale == 1):
-            actualScale = 500;
-        #1000um = 1mm
+            actualScale = 10;
+        #100um
         elif (scale == 2):
-            actualScale = 1000;
-        #5000um = 5mm
+            actualScale = 100;
+        #200um
         elif (scale == 3):
-            actualScale = 5000;
-        #10000um = 1cm
+            actualScale = 200;
+        #500um
         elif (scale == 4):
-            actualScale = 10000;
-        #50000um = 5cm
+            actualScale = 500;
+        #1mm
         elif (scale == 5):
+            actualScale = 1000;
+        #2mm
+        elif (scale == 6):
+            actualScale = 2000;
+        #5mm
+        elif (scale == 7):
+            actualScale = 5000;
+        #1cm
+        elif (scale == 8):
+            actualScale = 10000;
+        #2cm
+        elif (scale == 9):
+            actualScale = 20000;
+        #5cm
+        elif (scale == 10):
             actualScale = 50000;
         else:
-            actualScale = 0;
+            actualScale = 10;
         Old_Px = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] #X-Axis
         Old_Py = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] #Y-Axis
 
         #Not specify this action to each real plastic board, but addiction to mechanical platform.
         #UP DIRECTION - Y add
-        if (dir == 1):
+        if (dir == "UP"):
             ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] += actualScale;
-#             if ((ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD) and (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] > ModCebsCom.GL_CEBS_HB_TARGET_96_SD_Y_MAX)):
-#                 ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_Y_MAX;
-#             elif ((ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_48_STANDARD) and (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] > ModCebsCom.GL_CEBS_HB_TARGET_48_SD_Y_MAX)):
-#                 ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] = ModCebsCom.GL_CEBS_HB_TARGET_48_SD_Y_MAX;
-#             elif ((ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_32_STANDARD) and (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] > ModCebsCom.GL_CEBS_HB_TARGET_32_SD_Y_MAX)):
-#                 ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] = ModCebsCom.GL_CEBS_HB_TARGET_32_SD_Y_MAX;
-#             elif ((ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_12_STANDARD) and (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] > ModCebsCom.GL_CEBS_HB_TARGET_12_SD_Y_MAX)):
-#                 ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] = ModCebsCom.GL_CEBS_HB_TARGET_12_SD_Y_MAX;
-#             elif (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] > ModCebsCom.GL_CEBS_HB_TARGET_BOARD_Y_MAX):
-#                 ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] = ModCebsCom.GL_CEBS_HB_TARGET_BOARD_Y_MAX;
-#             else:
-#                 pass
             if (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] > ModCebsCom.GL_CEBS_HB_MECHNICAL_PLATFORM_Y_MAX):
                 ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] = ModCebsCom.GL_CEBS_HB_MECHNICAL_PLATFORM_Y_MAX;
                 
         #DOWN DIRECTION - Y sub
-        elif (dir == 2):
+        elif (dir == "DOWN"):
             ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] -= actualScale;
-            if (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] < -100000):
+            if (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] < 0):
                 ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] = 0;
                 
         #LEFT DIRECTION - X sub
-        elif (dir == 3):
+        elif (dir == "LEFT"):
             ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] -= actualScale;
-            if (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] < -100000):
+            if (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] < 0):
                 ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] = 0;
                 
         #RIGHT DIRECTION - X add
-        elif (dir == 4):
+        elif (dir == "RIGHT"):
             ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] += actualScale;
-#             if ((ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD) and (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] > ModCebsCom.GL_CEBS_HB_TARGET_96_SD_X_MAX)):
-#                 ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_X_MAX;
-#             elif ((ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_48_STANDARD) and (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] > ModCebsCom.GL_CEBS_HB_TARGET_48_SD_X_MAX)):
-#                 ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] = ModCebsCom.GL_CEBS_HB_TARGET_48_SD_X_MAX;
-#             elif ((ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_32_STANDARD) and (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] > ModCebsCom.GL_CEBS_HB_TARGET_32_SD_X_MAX)):
-#                 ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] = ModCebsCom.GL_CEBS_HB_TARGET_32_SD_X_MAX;
-#             elif ((ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_12_STANDARD) and (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] > ModCebsCom.GL_CEBS_HB_TARGET_12_SD_X_MAX)):
-#                 ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] = ModCebsCom.GL_CEBS_HB_TARGET_12_SD_X_MAX;
-#             elif (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] > ModCebsCom.GL_CEBS_HB_TARGET_BOARD_X_MAX):
-#                 ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] = ModCebsCom.GL_CEBS_HB_TARGET_BOARD_X_MAX;
-#             else:
-#                 pass
             if (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] > ModCebsCom.GL_CEBS_HB_MECHNICAL_PLATFORM_X_MAX):
                 ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] = ModCebsCom.GL_CEBS_HB_MECHNICAL_PLATFORM_X_MAX;
         
         #Error case
         else:
             pass
-        print("MOTO: Moving one step! Scale=%d, Dir=%d. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (scale, dir, Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]));
+        print("MOTO: Moving one step! Scale=%d, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (scale, dir, Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]));
         if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]) > 0):
             return 1;
         else:
             return -2;
-        return 1;
+
+    #Force Moving function, with scale = 1cm=10mm=10000um
+    def funcMotoFmCalaMoveOneStep(self, dir):
+        actualScale = 10000;
+        Old_Px = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] #X-Axis
+        Old_Py = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] #Y-Axis
+
+        #Not specify this action to each real plastic board, but addiction to mechanical platform.
+        #UP DIRECTION - Y add
+        if (dir == "UP"):
+            ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] += actualScale;
+                
+        #DOWN DIRECTION - Y sub
+        elif (dir == "DOWN"):
+            ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] -= actualScale;
+                
+        #LEFT DIRECTION - X sub
+        elif (dir == "LEFT"):
+            ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] -= actualScale;
+                
+        #RIGHT DIRECTION - X add
+        elif (dir == "RIGHT"):
+            ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] += actualScale;
+        
+        #Error case
+        else:
+            pass
+        print("MOTO: Moving one step! Scale=1cm, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (dir, Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]));
+        if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]) > 0):
+            return 1;
+        else:
+            return -2;
     
     def funcMotoBackZero(self):
         return self.funcMotoMove2HoleNbr(0);

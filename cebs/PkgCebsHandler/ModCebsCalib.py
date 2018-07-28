@@ -145,15 +145,12 @@ class classCalibProcess(object):
         obj = ModCebsMoto.classMotoProcess();
         obj.funcMotoCalaMoveOneStep(parMoveScale, parMoveDir);
         self.funcLogTrace("CALIB: Moving one step. Current position XY=[%d/%d]." % (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]))
-        
-    def funcCalibLeftDown(self):
-        ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0];
-        ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1];
-        self.funcUpdateHoleBoardPar()
-        iniObj = ModCebsCfg.ConfigOpr();
-        iniObj.updateSectionPar();
-        self.funcLogTrace("CALIB: LeftUp Axis set! XY=%d/%d." % (ModCebsCom.GL_CEBS_HB_POS_IN_UM[0], ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
 
+    def funcCalibForceMove(self, parMoveDir):
+        obj = ModCebsMoto.classMotoProcess();
+        obj.funcMotoFmCalaMoveOneStep(parMoveDir);
+        self.funcLogTrace("CALIB: Force moving one step. Current position XY=[%d/%d]." % (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]))
+        
     def funcCalibRightUp(self):
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0];
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1];
@@ -161,6 +158,14 @@ class classCalibProcess(object):
         iniObj = ModCebsCfg.ConfigOpr();
         iniObj.updateSectionPar();
         self.funcLogTrace("CALIB: RightBottom Axis set!  XY=%d/%d." % (ModCebsCom.GL_CEBS_HB_POS_IN_UM[2], ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))       
+
+    def funcCalibLeftDown(self):
+        ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0];
+        ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1];
+        self.funcUpdateHoleBoardPar()
+        iniObj = ModCebsCfg.ConfigOpr();
+        iniObj.updateSectionPar();
+        self.funcLogTrace("CALIB: LeftUp Axis set! XY=%d/%d." % (ModCebsCom.GL_CEBS_HB_POS_IN_UM[0], ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
     
 class classCalibPilotThread(QThread):
     signal_calib_print_log = pyqtSignal(str)

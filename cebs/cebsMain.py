@@ -211,21 +211,36 @@ class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.textEdit_calib_runProgress.insertPlainText("")
         
     def slot_calib_move(self):
-        radioCala05mm = self.radioButton_calib_05mm.isChecked();
+        radioCala10um = self.radioButton_calib_10um.isChecked();
+        radioCala100um = self.radioButton_calib_100um.isChecked();
+        radioCala200um = self.radioButton_calib_200um.isChecked();
+        radioCala500um = self.radioButton_calib_500um.isChecked();
         radioCala1mm = self.radioButton_calib_1mm.isChecked();
+        radioCala2mm = self.radioButton_calib_2mm.isChecked();
         radioCala5mm = self.radioButton_calib_5mm.isChecked();
         radioCala1cm = self.radioButton_calib_1cm.isChecked();
+        radioCala2cm = self.radioButton_calib_2cm.isChecked();
         radioCala5cm = self.radioButton_calib_5cm.isChecked();
-        if (radioCala05mm == 1):
+        if (radioCala10um == 1):
             parMoveScale = 1;
-        elif (radioCala1mm == 1):
+        elif (radioCala100um == 1):
             parMoveScale = 2;
-        elif (radioCala5mm == 1):
+        elif (radioCala200um == 1):
             parMoveScale = 3;
-        elif (radioCala1cm == 1):
+        elif (radioCala500um == 1):
             parMoveScale = 4;
-        elif (radioCala5cm == 1):
+        elif (radioCala1mm == 1):
             parMoveScale = 5;
+        elif (radioCala2mm == 1):
+            parMoveScale = 6;
+        elif (radioCala5mm == 1):
+            parMoveScale = 7;
+        elif (radioCala1cm == 1):
+            parMoveScale = 8;
+        elif (radioCala2cm == 1):
+            parMoveScale = 9;
+        elif (radioCala5cm == 1):
+            parMoveScale = 10;
         else:
             parMoveScale = 1;
         #
@@ -234,22 +249,22 @@ class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         radioCalaLeft = self.radioButton_calib_x_minus.isChecked();
         radioCalaRight = self.radioButton_calib_x_plus.isChecked();
         if (radioCalaUp == 1):
-            parMoveDir = 1;
+            parMoveDir = "UP";
         elif (radioCalaDown == 1):
-            parMoveDir = 2;
+            parMoveDir = "DOWN";
         elif (radioCalaLeft == 1):
-            parMoveDir = 3;
+            parMoveDir = "LEFT";
         elif (radioCalaRight == 1):
-            parMoveDir = 4;
+            parMoveDir = "RIGHT";
         else:
-            parMoveDir = 1;
+            parMoveDir = "UP";
         self.calibProc.funcCalibMove(parMoveScale, parMoveDir);
-    
-    def slot_calib_left_down(self):
-        self.calibProc.funcCalibLeftDown();
     
     def slot_calib_right_up(self):
         self.calibProc.funcCalibRightUp();
+    
+    def slot_calib_left_down(self):
+        self.calibProc.funcCalibLeftDown();
     
     def slot_calib_pilot_start(self):
         self.calibProc.funcCalibPilotStart();
@@ -257,6 +272,18 @@ class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
     def slot_calib_pilot_stop(self):
         self.calibProc.funcCalibPilotStop();
 
+    def slot_calib_fm_up(self):
+        self.calibProc.funcCalibForceMove('UP');
+    
+    def slot_calib_fm_down(self):
+        self.calibProc.funcCalibForceMove('DOWN');
+
+    def slot_calib_fm_left(self):
+        self.calibProc.funcCalibForceMove('LEFT');
+
+    def slot_calib_fm_right(self):
+        self.calibProc.funcCalibForceMove('RIGHT');
+    
     def slot_calib_close(self):
         self.calibProc.funcCtrlCalibComp()
         self.signal_mainwin_visible.emit()
