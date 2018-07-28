@@ -88,6 +88,7 @@ class classCtrlThread(QThread):
         #NEW STATE
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CAP_PIC;
         #JUDGE WHETHER TAKING PICTURE IS FIXED POSITION OR NOT
+        print(ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET)
         if (ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET == False):
             #MOTO START POINT
             res, string = self.objMoto.funcMotoMove2Start()
@@ -135,6 +136,11 @@ class classCtrlThread(QThread):
         self.objInitCfg.addBatchFile(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne)
         #MOVINT TO NEXT WORKIN POSITION IN ADVANCE
         nextOne = curOne + 1;
+        
+        #Using FIX Point set to un-make the moto mving step
+        if (ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET == True):
+            return 1;
+        
         #IF ALREADY LAST POSITION, RUN TO ZERO
         if ((nextOne <= ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH) and (nextOne >=1)):
             if (self.objMoto.funcMotoMove2HoleNbr(nextOne) < 0):
@@ -144,6 +150,7 @@ class classCtrlThread(QThread):
             if (self.objMoto.funcMotoBackZero() < 0):
                 self.signal_print_log.emit("CTRL: SYSTEM RUN TO ZERO ERROR!")
                 return -2;
+        return 1;
     
     def funcVisionClasStart(self):
         if (self.CTRL_STM_STATE != self.__CEBS_STM_CTRL_INIT):

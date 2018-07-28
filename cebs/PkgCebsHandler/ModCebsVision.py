@@ -51,6 +51,7 @@ class classVisionProcess(object):
         return res
          
     def funcVisionCapture(self, batch, fileNbr):
+        time.sleep(1)
         #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
         cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
         # Check if the webcam is opened correctly
@@ -62,7 +63,7 @@ class classVisionProcess(object):
         
         #Picture capture
         #DEFINE PIC GRADULARITY
-        #cap.set(4,1440)  #720
+        cap.set(4, 1440)  #720
         width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
         height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
         fps = 20
@@ -78,7 +79,8 @@ class classVisionProcess(object):
         ret, frame = cap.read()
         if (ret == True):
             frame = cv.flip(frame, 1)#Operation in frame
-            frame = cv.resize(frame, None, fx=1.5, fy=1.5, interpolation=cv.INTER_AREA)
+            #frame = cv.resize(frame, None, fx=1.5, fy=1.5, interpolation=cv.INTER_AREA)
+            frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_AREA)
             #cv.imshow('Input', frame)
             obj=ModCebsCfg.ConfigOpr();
             fileName = obj.combineFileNameWithDir(batch, fileNbr)

@@ -70,7 +70,6 @@ class MotorClass(object):
         self.targetComPortString = 'Prolific USB-to-Serial Comm Port ('
         if len(plist) <= 0:
             self.objInitCfg.medErrorLog("MOTOAPI: The Serial port can't find!")
-            self.signal_print_log.emit("MOTOAPI: The Serial port can't find!")
             print ("MOTOAPI: The Serial port can't find!")
         else:
             maxList = len(plist)
@@ -212,7 +211,7 @@ class MotorClass(object):
             print("MOTOAPI: Serial is not opened, return")
             return
         MotorCmdStringToSend = 'M03 ' + str(motor1) + ' ' + str(motor2) + ' '+ str(motor3) + ' '+ str(motor4) + ' ' + '\r\n'
-        print("MotorCmdStringToSend = ", MotorCmdStringToSend)    
+        print("MotorCmdStringToSend1 = ", MotorCmdStringToSend)    
         self.serialFd.reset_input_buffer()
         self.serialFd.reset_output_buffer()
         self.serialFd.write(MotorCmdStringToSend.encode())
@@ -236,7 +235,7 @@ class MotorClass(object):
             return
         MotorStatusStr = ['0','0','0','0']
         MotorCmdStringToSend = 'M04 ' + str(motor1) + ' ' + str(motor2) + ' '+ str(motor3) + ' '+ str(motor4) + ' ' + '\r\n'
-        print("MotorCmdStringToSend = ", MotorCmdStringToSend)    
+        print("MotorCmdStringToSend2 = ", MotorCmdStringToSend)    
         self.serialFd.reset_input_buffer()
         self.serialFd.reset_output_buffer()
         self.serialFd.write(MotorCmdStringToSend.encode())
@@ -279,7 +278,7 @@ class MotorClass(object):
             print("MOTOAPI: Serial is not opened, return")
             return
         MotorCmdStringToSend = 'M01 ' + str(motor1_steps) + ' ' + str(motor2_steps) + ' '+ str(motor3_steps) + ' '+ str(motor4_steps) + ' ' + '\r\n'
-        print("MotorCmdStringToSend = ", MotorCmdStringToSend)    
+        print("MotorCmdStringToSend3 = ", MotorCmdStringToSend)    
         self.serialFd.reset_input_buffer()
         self.serialFd.reset_output_buffer()        
         self.serialFd.write(MotorCmdStringToSend.encode())
@@ -301,7 +300,7 @@ class MotorClass(object):
             print("MOTOAPI: Serial is not opened, return")
             return
         MotorCmdStringToSend = 'M02 ' + str(motor1_speed) + ' ' + str(motor2_speed) + ' '+ str(motor3_speed) + ' '+ str(motor4_speed) + ' ' + '\r\n'
-        print("MotorCmdStringToSend = ", MotorCmdStringToSend)    
+        print("MotorCmdStringToSend4 = ", MotorCmdStringToSend)    
         self.serialFd.reset_input_buffer()
         self.serialFd.reset_output_buffer()
         self.serialFd.write(MotorCmdStringToSend.encode())
@@ -324,7 +323,7 @@ class MotorClass(object):
             return        
         MotorStatusStr = ['0','0','0','0']
         MotorCmdStringToSend = 'M05 ' + str(motor1_speed) + ' ' + str(motor2_speed) + ' '+ str(motor3_speed) + ' '+ str(motor4_speed) + ' ' + '\r\n'
-        print("MOTOAPI: MotorCmdStringToSend = ", MotorCmdStringToSend)    
+        print("MOTOAPI: MotorCmdStringToSend5 = ", MotorCmdStringToSend)    
         self.serialFd.reset_input_buffer()
         self.serialFd.reset_output_buffer()
         self.serialFd.write(MotorCmdStringToSend.encode())
@@ -385,6 +384,8 @@ class MotorClass(object):
         MotorStatusStr = ['0','0','0','0']
         self.serialFd.write(MotorCmdStrReadStatus.encode())    
         MotorStatusStrFull = self.serialFd.readline()
+        if (MotorStatusStrFull == b''):
+            return ;
         MotorStatusStr[0] = MotorStatusStrFull.split()[0]
         MotorStatusStr[1] = MotorStatusStrFull.split()[1]
         MotorStatusStr[2] = MotorStatusStrFull.split()[2]

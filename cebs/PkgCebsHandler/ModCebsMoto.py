@@ -108,13 +108,13 @@ class classMotoProcess(object):
         #DOWN DIRECTION - Y sub
         elif (dir == 2):
             ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] -= actualScale;
-            if (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] < 0):
+            if (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] < -100000):
                 ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] = 0;
                 
         #LEFT DIRECTION - X sub
         elif (dir == 3):
             ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] -= actualScale;
-            if (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] < 0):
+            if (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] < -100000):
                 ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] = 0;
                 
         #RIGHT DIRECTION - X add
