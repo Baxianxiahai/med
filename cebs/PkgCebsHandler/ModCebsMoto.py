@@ -64,7 +64,10 @@ class classMotoProcess(object):
             ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = yHeight / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
         else:
             pass
-    
+        
+        #打印到文件专用
+        self.objInitCfg = ModCebsCfg.ConfigOpr()
+        
     #Normal moving with limitation    
     def funcMotoCalaMoveOneStep(self, scale, dir):
         #10um
@@ -134,6 +137,7 @@ class classMotoProcess(object):
         if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]) > 0):
             return 1;
         else:
+            self.objInitCfg.medErrorLog("MOTO: funcMotoCalaMoveOneStep error!")
             return -2;
 
     #Force Moving function, with scale = 1cm=10mm=10000um
@@ -166,6 +170,7 @@ class classMotoProcess(object):
         if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]) > 0):
             return 1;
         else:
+            self.objInitCfg.medErrorLog("MOTO: funcMotoFmCalaMoveOneStep error!")
             return -2;
     
     def funcMotoBackZero(self):
@@ -184,6 +189,7 @@ class classMotoProcess(object):
         if (res > 0):
             return res, "MOTO: Success!"
         else:
+            self.objInitCfg.medErrorLog("MOTO: funcMotoMove2Start Failure!")
             return res, "MOTO: Failure!"
 
     #Fetch moto actual status, especially the moto is still under running
@@ -192,13 +198,16 @@ class classMotoProcess(object):
         return False;
 
     def funcMotoStop(self):
-        print("MOTO: funcMotoStop")
+        print("MOTO: funcMotoStop running...")
         if (ModCebsCom.GL_CEBS_MOTOAPI_INSTALLED_SET == True):
-            self.ObjMotorApi.moto_proc_full_stop()
-        return 1;
+            res = self.ObjMotorApi.moto_proc_full_stop()
+            if (res < 0):
+                print("MOTO: funcMotoStop error!")
+                return -1
+        return 1
     
     def funcMotoResume(self):
-        print("MOTO: Resume action!")
+        print("MOTO: Resume action running...")
         return 1;
     
     def funcMotoMove2HoleNbr(self, holeIndex):
@@ -221,14 +230,22 @@ class classMotoProcess(object):
             return 1;
         else:
             print("MOTO: Error get feedback from funcMotoMove2AxisPos.")
+            self.objInitCfg.medErrorLog("MOTO: Error get feedback from funcMotoMove2AxisPos")
             return -2;
 
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy):
         print("MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy))
         if (ModCebsCom.GL_CEBS_MOTOAPI_INSTALLED_SET == True):
             if (self.ObjMotorApi.moto_proc_move_to_axis_postion(curPx, curPy, newPx, newPy) < 0):
+                self.objInitCfg.medErrorLog("MOTO: funcMotoMove2AxisPos get error!")
                 return -1
             else:
                 return 1
         return 2
+    
+    
+    
+    
+    
+    
         

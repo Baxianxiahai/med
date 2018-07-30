@@ -80,6 +80,10 @@ class classCalibProcess(object):
         self.threadCameraDisp.signal_calib_camdisp_stop.connect(self.threadCameraDisp.funcCalibCameraDispStop)
         self.threadCameraDisp.start();
         
+        #Get CalibForm position
+        #self.cfCameraX, self.cfCameraY = self.calibForm.geometry()
+        #print("CameraX/Y = %d/%d" %(self.cfCameraX, self.cfCameraY))        
+        
     def setIdentity(self,text):
         self.identity = text
 
@@ -188,8 +192,16 @@ class classCalibProcess(object):
         self.threadCalibMotoPilot.signal_calib_pilot_stop.emit()
         self.threadCameraDisp.signal_calib_camdisp_stop.emit()
 
+    #Using different function/api to find the right position
+    #pos = self.calibForm.size()
+    #pos = self.calibForm.rect()
+    #geometry will return (left, top, width, height)
     def funcCalibPilotCameraEnable(self):
         self.funcLogTrace("CALIB: PILOT CEMERA ENABLE...")
+        pos = self.calibForm.geometry()
+        ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_X = pos.x() + 420
+        ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y = pos.y() + 10
+        #print(ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_X, ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y)    
         self.threadCameraDisp.signal_calib_camdisp_start.emit()
 
     #FINISH all the pilot functions
@@ -302,6 +314,10 @@ class classCalibCameraDispThread(QThread):
         if not self.cap.isOpened():
             self.objInitCfg.medErrorLog("CALIB: Cannot open webcam!")
             return -1;
+        #Prepare to show window
+        cv.namedWindow('CAMERA CAPTURED', 0)
+        cv.resizeWindow('CAMERA CAPTURED', 640, 480);
+        cv.moveWindow('CAMERA CAPTURED', ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_X, ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y)
         while True:
             time.sleep(0.01)
             try:
@@ -310,7 +326,7 @@ class classCalibCameraDispThread(QThread):
                 break;
             if (self.runFlag == True) and (ret == True):
                 cv.imshow('CAMERA CAPTURED', frame)
-                waitKey(500)
+                waitKey(100)
             else:
                 break;
 

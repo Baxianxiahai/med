@@ -441,7 +441,7 @@ p, li { white-space: pre-wrap; }
      <x>420</x>
      <y>10</y>
      <width>731</width>
-     <height>41</height>
+     <height>411</height>
     </rect>
    </property>
    <property name="mouseTracking">
@@ -574,9 +574,9 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>60</y>
+     <y>430</y>
      <width>731</width>
-     <height>461</height>
+     <height>111</height>
     </rect>
    </property>
   </widget>

@@ -115,7 +115,7 @@ class Ui_cebsCalibForm(object):
         self.pushButton_calib_fm_left.setGeometry(QtCore.QRect(100, 620, 31, 111))
         self.pushButton_calib_fm_left.setObjectName("pushButton_calib_fm_left")
         self.textEdit_calib_runProgress_2 = QtWidgets.QTextEdit(cebsCalibForm)
-        self.textEdit_calib_runProgress_2.setGeometry(QtCore.QRect(420, 10, 731, 41))
+        self.textEdit_calib_runProgress_2.setGeometry(QtCore.QRect(420, 10, 731, 411))
         self.textEdit_calib_runProgress_2.setMouseTracking(True)
         self.textEdit_calib_runProgress_2.setTabletTracking(True)
         self.textEdit_calib_runProgress_2.setLayoutDirection(QtCore.Qt.LeftToRight)
@@ -148,7 +148,7 @@ class Ui_cebsCalibForm(object):
         self.pushButton_calib_pilot_camera_enable.setGeometry(QtCore.QRect(280, 30, 81, 41))
         self.pushButton_calib_pilot_camera_enable.setObjectName("pushButton_calib_pilot_camera_enable")
         self.graphicsView_pilot_display = QtWidgets.QGraphicsView(cebsCalibForm)
-        self.graphicsView_pilot_display.setGeometry(QtCore.QRect(420, 60, 731, 461))
+        self.graphicsView_pilot_display.setGeometry(QtCore.QRect(420, 430, 731, 111))
         self.graphicsView_pilot_display.setObjectName("graphicsView_pilot_display")
 
         self.retranslateUi(cebsCalibForm)
