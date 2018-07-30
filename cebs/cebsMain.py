@@ -272,6 +272,16 @@ class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
     def slot_calib_pilot_stop(self):
         self.calibProc.funcCalibPilotStop();
 
+    def slot_calib_pilot_move_0(self):
+        self.calibProc.funcCalibPilotMove0();
+
+    def slot_calib_pilot_move_n(self):
+        try:
+            boardNbr = int(self.lineEdit_pilot_move_n.text())
+        except Exception: 
+            boardNbr = 1;
+        self.calibProc.funcCalibPilotMoven(boardNbr);
+
     def slot_calib_fm_up(self):
         self.calibProc.funcCalibForceMove('UP');
     

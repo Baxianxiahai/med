@@ -129,10 +129,40 @@ class classCalibProcess(object):
         ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = (ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[2]) / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
         ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = (ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]) / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
 
+    def funcCheckHoldNumber(self, holeNbr):
+        if (holeNbr <= 0):
+            return 1;
+        if (holeNbr >= ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH):
+            return ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH
+        return holeNbr
+
     def funcCalibPilotStart(self):
         self.funcLogTrace("CALIB: PILOT STARTING...")
         self.threadCalibMotoPilot.signal_calib_moto_pilot.emit()
 
+    def funcCalibPilotMove0(self):
+        self.funcLogTrace("CALIB: Move to Hole#0 point.")
+        res, string = self.objMotoProc.funcMotoMove2Start()
+        if (res < 0):
+            self.funcLogTrace("CALIB: Moving to start point error!")
+            return -2;
+        print("CALIB: " + string)
+        return 1;
+        
+    def funcCalibPilotMoven(self, holeNbr):
+        outputStr = "CALIB: Starting move to Hole#%d point." % (holeNbr)
+        self.funcLogTrace(outputStr)
+        newHoldNbr = self.funcCheckHoldNumber(holeNbr)
+        res = self.objMotoProc.funcMotoMove2HoleNbr(newHoldNbr)
+        if (res < 0):
+            outputStr = "CALIB: Move to Hole#%d point error!" % (newHoldNbr)
+            self.funcLogTrace(outputStr)
+            return -1;
+        else:
+            outputStr = "CALIB: Move to Hole#%d point success!" % (newHoldNbr)
+            self.funcLogTrace(outputStr)
+            return 1;
+    
     def funcCalibPilotStop(self):
         self.funcLogTrace("CALIB: PILOT STOP...")
         self.threadCalibMotoPilot.signal_calib_pilot_stop.emit()
