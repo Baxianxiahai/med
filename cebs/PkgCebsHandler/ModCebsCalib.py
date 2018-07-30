@@ -16,9 +16,21 @@ import re
 import urllib
 import http
 import socket
+import datetime
+import string
+import ctypes 
+import random
+import cv2 as cv
+import numpy as np  
+from ctypes import c_uint8
+from cv2 import waitKey
 
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
+
+# from PyQt5.QtCore import *
+# from PyQt5.QtGui import *
+# from PyQt5.QtWidgets import *
 
 #Local include
 from cebsMain import *
@@ -56,9 +68,17 @@ class classCalibProcess(object):
         self.threadCalibMotoPilot = classCalibPilotThread()
         self.threadCalibMotoPilot.setIdentity("CalibPilotThread")
         self.threadCalibMotoPilot.signal_calib_print_log.connect(self.funcLogTrace)
-        self.threadCalibMotoPilot.signal_calib_moto_pilot.connect(self.threadCalibMotoPilot.funcCalibMotoPilotSart)
+        self.threadCalibMotoPilot.signal_calib_pilot_start.connect(self.threadCalibMotoPilot.funcCalibMotoPilotStart)
         self.threadCalibMotoPilot.signal_calib_pilot_stop.connect(self.threadCalibMotoPilot.funcCalibMotoPilotStop)
         self.threadCalibMotoPilot.start();
+        
+        #SETUP 2nd task
+        self.threadCameraDisp = classCalibCameraDispThread()
+        self.threadCameraDisp.setIdentity("CalibCameraDisplay")
+        self.threadCameraDisp.signal_calib_print_log.connect(self.funcLogTrace)
+        self.threadCameraDisp.signal_calib_camdisp_start.connect(self.threadCameraDisp.funcCalibCameraDispStart)
+        self.threadCameraDisp.signal_calib_camdisp_stop.connect(self.threadCameraDisp.funcCalibCameraDispStop)
+        self.threadCameraDisp.start();
         
     def setIdentity(self,text):
         self.identity = text
@@ -138,7 +158,7 @@ class classCalibProcess(object):
 
     def funcCalibPilotStart(self):
         self.funcLogTrace("CALIB: PILOT STARTING...")
-        self.threadCalibMotoPilot.signal_calib_moto_pilot.emit()
+        self.threadCalibMotoPilot.signal_calib_pilot_start.emit()
 
     def funcCalibPilotMove0(self):
         self.funcLogTrace("CALIB: Move to Hole#0 point.")
@@ -166,8 +186,15 @@ class classCalibProcess(object):
     def funcCalibPilotStop(self):
         self.funcLogTrace("CALIB: PILOT STOP...")
         self.threadCalibMotoPilot.signal_calib_pilot_stop.emit()
+        self.threadCameraDisp.signal_calib_camdisp_stop.emit()
 
+    def funcCalibPilotCameraEnable(self):
+        self.funcLogTrace("CALIB: PILOT CEMERA ENABLE...")
+        self.threadCameraDisp.signal_calib_camdisp_start.emit()
+
+    #FINISH all the pilot functions
     def funcCtrlCalibComp(self):
+        self.threadCameraDisp.signal_calib_camdisp_stop.emit()
         self.funcUpdateHoleBoardPar()
         self.funcRecoverWorkingEnv()
 
@@ -199,7 +226,7 @@ class classCalibProcess(object):
     
 class classCalibPilotThread(QThread):
     signal_calib_print_log = pyqtSignal(str)
-    signal_calib_moto_pilot = pyqtSignal()
+    signal_calib_pilot_start = pyqtSignal()
     signal_calib_pilot_stop = pyqtSignal()
 
     def __init__(self,parent=None):
@@ -211,7 +238,7 @@ class classCalibPilotThread(QThread):
     def setIdentity(self,text):
         self.identity = text
         
-    def funcCalibMotoPilotSart(self):
+    def funcCalibMotoPilotStart(self):
         self.cntCtrl = ModCebsCom.GL_CEBS_PILOT_WOKING_ROUNDS_MAX+1;
 
     def funcCalibMotoPilotStop(self):
@@ -237,4 +264,53 @@ class classCalibPilotThread(QThread):
                 self.objMotoProc.funcMotoStop();
 
 
-    
+class classCalibCameraDispThread(QThread):
+    signal_calib_print_log = pyqtSignal(str)
+    signal_calib_camdisp_start = pyqtSignal()
+    signal_calib_camdisp_stop = pyqtSignal()
+
+    def __init__(self,parent=None):
+        super(classCalibCameraDispThread,self).__init__(parent)
+        self.identity = None;
+        self.runFlag = False;
+        self.cap = ''
+
+    def setIdentity(self,text):
+        self.identity = text
+        
+    def funcCalibCameraDispStart(self):
+        self.runFlag = True;
+
+    def funcCalibCameraDispStop(self):
+        self.runFlag = False;
+        try:
+            self.cap.release()
+        except Exception:
+            pass
+        try:
+            cv.destroyAllWindows()
+        except Exception:
+            pass
+
+    def run(self):
+        while True:
+            time.sleep(1)
+            if (self.runFlag == True):
+                print("Active the camera display!")
+                self.cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR)
+                break;
+        if not self.cap.isOpened():
+            self.objInitCfg.medErrorLog("CALIB: Cannot open webcam!")
+            return -1;
+        while True:
+            time.sleep(0.01)
+            try:
+                ret, frame = self.cap.read()
+            except Exception:
+                break;
+            if (self.runFlag == True) and (ret == True):
+                cv.imshow('CAMERA CAPTURED', frame)
+                waitKey(500)
+            else:
+                break;
+

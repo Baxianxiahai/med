@@ -36,6 +36,7 @@ from PyQt5.QtCore import pyqtSlot
 from cebsMain import *
 from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
+from cv2 import waitKey
 
 class classVisionProcess(object):
     def __init__(self):
@@ -85,6 +86,9 @@ class classVisionProcess(object):
             obj=ModCebsCfg.ConfigOpr();
             fileName = obj.combineFileNameWithDir(batch, fileNbr)
             cv.imwrite(fileName, frame)
+            #cv.imshow("Final output", frame)
+            #waitKey(2000)
+            #time.sleep(2)
         
         #Video capture
         #Ref: http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_video_display/py_video_display.html

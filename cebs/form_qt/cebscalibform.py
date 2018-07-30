@@ -115,7 +115,7 @@ class Ui_cebsCalibForm(object):
         self.pushButton_calib_fm_left.setGeometry(QtCore.QRect(100, 620, 31, 111))
         self.pushButton_calib_fm_left.setObjectName("pushButton_calib_fm_left")
         self.textEdit_calib_runProgress_2 = QtWidgets.QTextEdit(cebsCalibForm)
-        self.textEdit_calib_runProgress_2.setGeometry(QtCore.QRect(420, 10, 731, 541))
+        self.textEdit_calib_runProgress_2.setGeometry(QtCore.QRect(420, 10, 731, 41))
         self.textEdit_calib_runProgress_2.setMouseTracking(True)
         self.textEdit_calib_runProgress_2.setTabletTracking(True)
         self.textEdit_calib_runProgress_2.setLayoutDirection(QtCore.Qt.LeftToRight)
@@ -144,6 +144,12 @@ class Ui_cebsCalibForm(object):
         self.lineEdit_pilot_move_n = QtWidgets.QLineEdit(self.groupBox_calib_pilot)
         self.lineEdit_pilot_move_n.setGeometry(QtCore.QRect(190, 40, 51, 20))
         self.lineEdit_pilot_move_n.setObjectName("lineEdit_pilot_move_n")
+        self.pushButton_calib_pilot_camera_enable = QtWidgets.QPushButton(self.groupBox_calib_pilot)
+        self.pushButton_calib_pilot_camera_enable.setGeometry(QtCore.QRect(280, 30, 81, 41))
+        self.pushButton_calib_pilot_camera_enable.setObjectName("pushButton_calib_pilot_camera_enable")
+        self.graphicsView_pilot_display = QtWidgets.QGraphicsView(cebsCalibForm)
+        self.graphicsView_pilot_display.setGeometry(QtCore.QRect(420, 60, 731, 461))
+        self.graphicsView_pilot_display.setObjectName("graphicsView_pilot_display")
 
         self.retranslateUi(cebsCalibForm)
         self.pushButton_calib_comp.clicked.connect(cebsCalibForm.slot_calib_close)
@@ -158,6 +164,7 @@ class Ui_cebsCalibForm(object):
         self.pushButton_calib_fm_up.clicked.connect(cebsCalibForm.slot_calib_fm_up)
         self.pushButton_calib_pilot_move_0.clicked.connect(cebsCalibForm.slot_calib_pilot_move_0)
         self.pushButton_calib_pilot_move_n.clicked.connect(cebsCalibForm.slot_calib_pilot_move_n)
+        self.pushButton_calib_pilot_camera_enable.clicked.connect(cebsCalibForm.slot_calib_pilot_camera_enable)
         QtCore.QMetaObject.connectSlotsByName(cebsCalibForm)
 
     def retranslateUi(self, cebsCalibForm):
@@ -206,4 +213,5 @@ class Ui_cebsCalibForm(object):
         self.pushButton_calib_pilot_move_0.setText(_translate("cebsCalibForm", "移动到起点"))
         self.pushButton_calib_pilot_move_n.setText(_translate("cebsCalibForm", "移动到#号板"))
         self.lineEdit_pilot_move_n.setText(_translate("cebsCalibForm", "1"))
+        self.pushButton_calib_pilot_camera_enable.setText(_translate("cebsCalibForm", "摄像头激活"))
 

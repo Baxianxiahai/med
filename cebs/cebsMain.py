@@ -282,6 +282,9 @@ class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
             boardNbr = 1;
         self.calibProc.funcCalibPilotMoven(boardNbr);
 
+    def slot_calib_pilot_camera_enable(self):
+        self.calibProc.funcCalibPilotCameraEnable();
+
     def slot_calib_fm_up(self):
         self.calibProc.funcCalibForceMove('UP');
     
