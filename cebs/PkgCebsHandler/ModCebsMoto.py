@@ -237,11 +237,13 @@ class classMotoProcess(object):
         print("MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy))
         if (ModCebsCom.GL_CEBS_MOTOAPI_INSTALLED_SET == True):
             if (self.ObjMotorApi.moto_proc_move_to_axis_postion(curPx, curPy, newPx, newPy) < 0):
+                print("MOTO: funcMotoMove2AxisPos run error!")
                 self.objInitCfg.medErrorLog("MOTO: funcMotoMove2AxisPos get error!")
                 return -1
             else:
                 return 1
-        return 2
+        else:
+            return 2
     
     
     

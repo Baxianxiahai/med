@@ -38,6 +38,7 @@ from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
 from cv2 import waitKey
 
+#MAIN ENTRY： 主入口
 class classVisionProcess(object):
     def __init__(self):
         self.objInitCfg = ModCebsCfg.ConfigOpr()
@@ -125,7 +126,7 @@ class classVisionProcess(object):
     def funcVisionClasEnd(self):
         ModCebsCom.GL_CEBS_PIC_CLAS_FLAG = False;
 
-#MAIN PROCESSING MODULE
+#MAIN PROCESSING MODULE: 循环处理线程
 class classVisionThread(QThread, ModCebsCfg.ConfigOpr):
     signal_print_log = pyqtSignal(str) #DECLAR MAIN FUNCTIONS
     signal_vision_start = pyqtSignal()  #DECLAR MAIN FUNCTIONS, NOT USED

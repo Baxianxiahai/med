@@ -113,7 +113,14 @@ class ConfigOpr(object):
         else:
             ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE = False
         ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC = int(self.CReader['Env']['video capture dur in sec']);
-
+        
+        #In case of store error, re-caculate remaining unclas-pictures
+        #为了防止统计错误，重新根据
+        res = self.recheckRemaingUnclasBatchFile()
+        if (res != ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT):
+            print("CFG: Error find during re-check remaining un-clas pictures! Stored=%d, actual=%d." % (ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT, res))
+            ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = res
+            self.updateSectionPar()
 
     def getSection(self):
         return self.CReader.sections()
@@ -248,6 +255,7 @@ class ConfigOpr(object):
         res = self.CReader[batchStr][fileName];
         return res;
 
+    #Without file path
     def getStoredFileNukeName(self, batch, fileNbr):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
@@ -283,12 +291,24 @@ class ConfigOpr(object):
                 return tempi;
         #NOT FIND
         return -2;
+
+    #FETCH ALL REMAINING UNCLAS BATCH FILES
+    def recheckRemaingUnclasBatchFile(self):
+        start = ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX;
+        end = ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX;
+        res = 0;
+        for index in range(start, end+1):
+            fileNbr = self.getUnclasBatchFile(index);
+            if (fileNbr >= 0):
+                res += 1
+        return res
     
     #SEARCH GLOBAL WETHER UN-FINISHED PICTURE EXIST
     def findUnclasFileBatchAndFileNbr(self):
         start = ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX;
         end = ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX;
-        for index in range(start, end):
+        #搜索的时候，可能会出现start==end的情况，然后就停止了
+        for index in range(start, end+1):
             fileNbr = self.getUnclasBatchFile(index);
             if (fileNbr >= 0):
                 ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX = index;

@@ -1,14 +1,14 @@
 missing module named pyimod03_importers - imported by PyInstaller.loader.pyimod02_archive, c:\program files\python36\lib\site-packages\PyInstaller\loader\rthooks\pyi_rth_pkgres.py
-missing module named 'pkg_resources.extern.pyparsing' - imported by pkg_resources._vendor.packaging.requirements, pkg_resources._vendor.packaging.markers
-missing module named StringIO - imported by PyQt5.uic.port_v2.string_io, numpy.lib.utils, numpy.testing.nose_tools.utils, PyInstaller.lib.modulegraph._compat, PyInstaller.lib.modulegraph.zipio, six, scipy._lib.six, numpy.lib.format, pkg_resources._vendor.six, py._io.capture
-missing module named 'com.sun' - imported by pkg_resources._vendor.appdirs
-missing module named com - imported by pkg_resources._vendor.appdirs
-missing module named win32api - imported by distutils.msvccompiler, pkg_resources._vendor.appdirs
-missing module named win32com.shell - imported by pkg_resources._vendor.appdirs
 missing module named netbios - imported by uuid
 missing module named win32wnet - imported by uuid
 missing module named __builtin__ - imported by numpy.core.numerictypes, numpy.core.numeric, scipy._lib.six, numpy.distutils.misc_util, numpy.lib.function_base, numpy.lib._iotools, numpy.ma.core, numpy, pkg_resources._vendor.pyparsing, py._builtin
 missing module named ordereddict - imported by pkg_resources._vendor.pyparsing
+missing module named 'com.sun' - imported by pkg_resources._vendor.appdirs
+missing module named com - imported by pkg_resources._vendor.appdirs
+missing module named win32api - imported by distutils.msvccompiler, pkg_resources._vendor.appdirs
+missing module named win32com.shell - imported by pkg_resources._vendor.appdirs
+missing module named 'pkg_resources.extern.pyparsing' - imported by pkg_resources._vendor.packaging.markers, pkg_resources._vendor.packaging.requirements
+missing module named StringIO - imported by PyQt5.uic.port_v2.string_io, numpy.lib.utils, numpy.testing.nose_tools.utils, PyInstaller.lib.modulegraph._compat, PyInstaller.lib.modulegraph.zipio, six, scipy._lib.six, numpy.lib.format, pkg_resources._vendor.six, py._io.capture
 missing module named _scproxy - imported by urllib.request
 missing module named 'macholib.compat' - imported by macholib.MachO
 missing module named _pkgutil - imported by PyInstaller.lib.modulegraph.modulegraph

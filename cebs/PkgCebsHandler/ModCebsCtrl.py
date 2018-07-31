@@ -118,11 +118,12 @@ class classCtrlThread(QThread):
             return -1;
         self.signal_print_log.emit("CTRL: MOTO RUN TO ZERO...")
         if (self.objMoto.funcMotoBackZero() < 0):
-            self.signal_print_log.emit("CTRL: SYSTME RUN TO ZERO ERROR!")
+            self.signal_print_log.emit("CTRL: SYSTME RUN TO ZERO GET ERROR FEEDBACK!")
             self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_ERR;
             return -1;
         else:
             self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
+            self.signal_print_log.emit("CTRL: SYSTME RUN TO ZERO SUCCESSFUL!")
             return 1;
     
     #LOCAL FUNCTIONS  
@@ -137,7 +138,7 @@ class classCtrlThread(QThread):
         #MOVINT TO NEXT WORKIN POSITION IN ADVANCE
         nextOne = curOne + 1;
         
-        #Using FIX Point set to un-make the moto mving step
+        #Using FIX Point set to un-make the moto moving step
         if (ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET == True):
             return 1;
         

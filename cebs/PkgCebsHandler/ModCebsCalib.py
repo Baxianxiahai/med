@@ -80,10 +80,6 @@ class classCalibProcess(object):
         self.threadCameraDisp.signal_calib_camdisp_stop.connect(self.threadCameraDisp.funcCalibCameraDispStop)
         self.threadCameraDisp.start();
         
-        #Get CalibForm position
-        #self.cfCameraX, self.cfCameraY = self.calibForm.geometry()
-        #print("CameraX/Y = %d/%d" %(self.cfCameraX, self.cfCameraY))        
-        
     def setIdentity(self,text):
         self.identity = text
 
@@ -235,7 +231,8 @@ class classCalibProcess(object):
         iniObj = ModCebsCfg.ConfigOpr();
         iniObj.updateSectionPar();
         self.funcLogTrace("CALIB: LeftUp Axis set! XY=%d/%d." % (ModCebsCom.GL_CEBS_HB_POS_IN_UM[0], ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
-    
+
+#Pilot thread, control moto moving and accomplish activities    
 class classCalibPilotThread(QThread):
     signal_calib_print_log = pyqtSignal(str)
     signal_calib_pilot_start = pyqtSignal()
@@ -276,6 +273,7 @@ class classCalibPilotThread(QThread):
                 self.objMotoProc.funcMotoStop();
 
 
+#Camera display thread, control camera video and easy calibration action
 class classCalibCameraDispThread(QThread):
     signal_calib_print_log = pyqtSignal(str)
     signal_calib_camdisp_start = pyqtSignal()
@@ -291,6 +289,7 @@ class classCalibCameraDispThread(QThread):
         self.identity = text
         
     def funcCalibCameraDispStart(self):
+        #SETUP 2nd task
         self.runFlag = True;
 
     def funcCalibCameraDispStop(self):
@@ -306,9 +305,9 @@ class classCalibCameraDispThread(QThread):
 
     def run(self):
         while True:
-            time.sleep(1)
+            time.sleep(0.1)
             if (self.runFlag == True):
-                print("Active the camera display!")
+                print("CALIB: Active the camera display!")
                 self.cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR)
                 break;
         if not self.cap.isOpened():
@@ -317,16 +316,54 @@ class classCalibCameraDispThread(QThread):
         #Prepare to show window
         cv.namedWindow('CAMERA CAPTURED', 0)
         cv.resizeWindow('CAMERA CAPTURED', 640, 480);
-        cv.moveWindow('CAMERA CAPTURED', ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_X, ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y)
+        #Not yet able to embed vision into UI, so has to put at another side
+        #cv.moveWindow('CAMERA CAPTURED', ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_X, ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y)
+        cv.moveWindow('CAMERA CAPTURED', 0, ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y)
         while True:
-            time.sleep(0.01)
+            time.sleep(0.001)
             try:
                 ret, frame = self.cap.read()
             except Exception:
                 break;
             if (self.runFlag == True) and (ret == True):
                 cv.imshow('CAMERA CAPTURED', frame)
-                waitKey(100)
+                waitKey(50)
             else:
                 break;
+
+            
+            #第二种设计的方案，本来想解决第二次启动后的工作问题，但并没有真正起到作用
+#             workingMode = False
+#             while True:
+#                 if (self.runFlag == True):
+#                     self.runFlag = False
+#                     workingMode = True
+#                     self.cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR)
+#                     if not self.cap.isOpened():
+#                         self.objInitCfg.medErrorLog("CALIB: Cannot open webcam!")
+#                         print("CALIB: Cannot open webcam!")
+#                         return -1;
+#                     cv.namedWindow('CAMERA CAPTURED', 0)
+#                     cv.resizeWindow('CAMERA CAPTURED', 640, 480);
+#                     cv.moveWindow('CAMERA CAPTURED', 0, ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y)
+#                 else:
+#                     workingMode = False
+# 
+#                 if (workingMode == False):
+#                     time.sleep(0.1)
+#                 else:
+#                     try:
+#                         ret, frame = self.cap.read()
+#                     except Exception:
+#                         time.sleep(0.1)
+#                         continue
+#                     print("Ret = %d", ret)
+#                     if (ret == True):
+#                         cv.imshow('CAMERA CAPTURED', frame)
+#                         waitKey(100)
+#                     else:
+#                         time.sleep(0.1)
+#                         continue
+
+
 

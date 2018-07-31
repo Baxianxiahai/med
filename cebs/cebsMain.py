@@ -55,7 +55,7 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.setupUi(self)
         self.initUI()
         
-        #MUST Load global parameters, to initilze different UI and update the stored parameters.
+        #MUST Load global parameters, to initialize different UI and update the stored parameters.
         objInitCfg=ModCebsCfg.ConfigOpr()
         objInitCfg.readGlobalPar();
         objInitCfg.updateCtrlCntInfo()
