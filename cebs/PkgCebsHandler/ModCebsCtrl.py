@@ -88,7 +88,6 @@ class classCtrlThread(QThread):
         #NEW STATE
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CAP_PIC;
         #JUDGE WHETHER TAKING PICTURE IS FIXED POSITION OR NOT
-        print(ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET)
         if (ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET == False):
             #MOTO START POINT
             res, string = self.objMoto.funcMotoMove2Start()

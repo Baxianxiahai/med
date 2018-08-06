@@ -181,6 +181,8 @@ class classVisionThread(QThread, ModCebsCfg.ConfigOpr):
         ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT -= 1;
         self.updateUnclasFileAsClassified(batch, fileNbr);
         self.signal_print_log.emit("VISION CLAS: PIC IDENTIFY： REMAINING NUMBRES=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+        self.updateCtrlCntInfo();
+        return;
        
     #PIC PROC
     def funcVisionClassify(self, fileName, fileNukeName):
