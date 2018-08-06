@@ -275,8 +275,10 @@ class ConfigOpr(object):
         fileName = str("batch#" + str(batch) + "FileName#" + str(fileNbr))
         return str(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH) + fileName + '.mp4'  #.mp4, .avi
 
-    #FETCH UN-CLASSIFIED FILE FOR ONE BATCH
-    def getUnclasBatchFile(self, batch):
+
+    #FETCH UN-CLASSIFIED FILE FOR ONE BATCH, WITH FIRST TARGET ONLY
+    #这个函数只是用来找到最后一个未识别图像的起点，而并不是总共还有多少图像未识别
+    def getUnclasBatchFileAtFirstIndex(self, batch):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
         batchStr = "batch#" + str(batch)
@@ -284,7 +286,7 @@ class ConfigOpr(object):
             return -1;
         #SEARCH ALL CONFIGURATION KEY and 'DEFAULT' key
         for key in self.CReader[batchStr]:
-            #print(key, self.CReader[batchStr][key])
+            #print("key = %s, Creader = %s" %(str(key), str(self.CReader[batchStr][key])))
             if (('batchfileclas#' in key) and (self.CReader[batchStr][key] == 'no')):
                 temps = key[len('batchfileclas#'):]
                 tempi = int(temps)
@@ -292,29 +294,48 @@ class ConfigOpr(object):
         #NOT FIND
         return -2;
 
-    #FETCH ALL REMAINING UNCLAS BATCH FILES
-    def recheckRemaingUnclasBatchFile(self):
-        start = ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX;
-        end = ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX;
-        res = 0;
-        for index in range(start, end+1):
-            fileNbr = self.getUnclasBatchFile(index);
-            if (fileNbr >= 0):
-                res += 1
-        return res
-    
     #SEARCH GLOBAL WETHER UN-FINISHED PICTURE EXIST
+    #目标是找到未识别图像的第一个目标
     def findUnclasFileBatchAndFileNbr(self):
         start = ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX;
         end = ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX;
         #搜索的时候，可能会出现start==end的情况，然后就停止了
         for index in range(start, end+1):
-            fileNbr = self.getUnclasBatchFile(index);
+            fileNbr = self.getUnclasBatchFileAtFirstIndex(index);
             if (fileNbr >= 0):
                 ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX = index;
                 self.updateCtrlCntInfo()
                 return index, fileNbr;
         return -1, -1;
+
+    #FETCH UN-CLASSIFIED FILE FOR ONE BATCH, WITH TOTAL NUMBER
+    #寻找所有未识别图像数量
+    def getUnclasBatchFileWithTotalNbr(self, batch):
+        self.CReader=configparser.ConfigParser()
+        self.CReader.read(self.filePath, encoding='utf8')
+        batchStr = "batch#" + str(batch)
+        if (self.CReader.has_section(batchStr) == False):
+            return -1;
+        #SEARCH ALL CONFIGURATION KEY and 'DEFAULT' key
+        totalNbr = 0
+        for key in self.CReader[batchStr]:
+            #print("key = %s, Creader = %s" %(str(key), str(self.CReader[batchStr][key])))
+            if (('batchfileclas#' in key) and (self.CReader[batchStr][key] == 'no')):
+                totalNbr +=1
+        #FINAL RESULT
+        return totalNbr
+    
+    #FETCH ALL REMAINING UNCLAS BATCH FILES TOTAL NUMBER
+    #寻找所有还未识别图像的总数
+    def recheckRemaingUnclasBatchFile(self):
+        start = ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX;
+        end = ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX;
+        res = 0;
+        for index in range(start, end+1):
+            fileNbr = self.getUnclasBatchFileWithTotalNbr(index);
+            if (fileNbr > 0):
+                res += fileNbr
+        return res
                 
     #UPDATE CATEGORY PICTURE INFORMATION
     def updateUnclasFileAsClassified(self, batch, fileNbr):

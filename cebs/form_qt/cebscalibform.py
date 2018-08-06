@@ -211,7 +211,7 @@ class Ui_cebsCalibForm(object):
         self.pushButton_calib_pilot_start.setText(_translate("cebsCalibForm", "校准巡游"))
         self.pushButton_calib_pilot_stop.setText(_translate("cebsCalibForm", "巡游停止"))
         self.pushButton_calib_pilot_move_0.setText(_translate("cebsCalibForm", "移动到起点"))
-        self.pushButton_calib_pilot_move_n.setText(_translate("cebsCalibForm", "移动到#号板"))
+        self.pushButton_calib_pilot_move_n.setText(_translate("cebsCalibForm", "移动到#号孔"))
         self.lineEdit_pilot_move_n.setText(_translate("cebsCalibForm", "1"))
         self.pushButton_calib_pilot_camera_enable.setText(_translate("cebsCalibForm", "摄像头激活"))
 

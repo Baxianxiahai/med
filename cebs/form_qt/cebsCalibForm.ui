@@ -540,7 +540,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string>移动到#号板</string>
+     <string>移动到#号孔</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_pilot_move_n">

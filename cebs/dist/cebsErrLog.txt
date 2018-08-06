@@ -1,1 +1,0 @@
-[CEBS] 2018/08/04 10:59:39 [ERR] MOTOAPI: COM1 - м╗пе╤к©з (COM1)[CEBS] 2018/08/04 10:59:39 [ERR] MOTOAPI: Can not find right serial port!

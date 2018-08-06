@@ -33,7 +33,8 @@
 11. 还存在最开始读版本读不到的情况。插拔USB可以恢复。
 
 
-
+//=ZJL, 2018/8/7, CURRENT_SW_DELIVERY R1.12 =>CEBS
+= 修复计算剩余图像未识别的错误
 
 //=ZJL, 2018/7/31, CURRENT_SW_DELIVERY R1.10 =>CEBS
 = 加强MOTOAPI的可靠性
