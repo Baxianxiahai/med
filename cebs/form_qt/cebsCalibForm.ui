@@ -18,8 +18,8 @@
     <rect>
      <x>30</x>
      <y>10</y>
-     <width>371</width>
-     <height>301</height>
+     <width>881</width>
+     <height>241</height>
     </rect>
    </property>
    <property name="title">
@@ -28,10 +28,10 @@
    <widget class="QGroupBox" name="groupBox_calib_move_scale">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>70</y>
-      <width>351</width>
-      <height>101</height>
+      <x>20</x>
+      <y>80</y>
+      <width>841</width>
+      <height>81</height>
      </rect>
     </property>
     <property name="title">
@@ -40,8 +40,8 @@
     <widget class="QRadioButton" name="radioButton_calib_5cm">
      <property name="geometry">
       <rect>
-       <x>300</x>
-       <y>60</y>
+       <x>650</x>
+       <y>20</y>
        <width>51</width>
        <height>21</height>
       </rect>
@@ -53,8 +53,8 @@
     <widget class="QRadioButton" name="radioButton_calib_2mm">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>60</y>
+       <x>360</x>
+       <y>20</y>
        <width>61</width>
        <height>21</height>
       </rect>
@@ -69,8 +69,8 @@
     <widget class="QRadioButton" name="radioButton_calib_2cm">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>60</y>
+       <x>580</x>
+       <y>20</y>
        <width>51</width>
        <height>21</height>
       </rect>
@@ -82,8 +82,8 @@
     <widget class="QRadioButton" name="radioButton_calib_5mm">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>60</y>
+       <x>440</x>
+       <y>20</y>
        <width>51</width>
        <height>21</height>
       </rect>
@@ -98,8 +98,8 @@
     <widget class="QRadioButton" name="radioButton_calib_1cm">
      <property name="geometry">
       <rect>
-       <x>160</x>
-       <y>60</y>
+       <x>510</x>
+       <y>20</y>
        <width>51</width>
        <height>21</height>
       </rect>
@@ -188,12 +188,142 @@
       <bool>true</bool>
      </property>
     </widget>
+    <widget class="QRadioButton" name="radioButton_calib_hole96_l">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>96孔长边</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_calib_hole96_s">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>50</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>96孔短边</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_calib_hole48_l">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>50</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>48孔长边</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_calib_hole48_s">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>50</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>48孔短边</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_calib_hole24_s">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>50</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>24孔短边</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_calib_hole24_l">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>50</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>24孔长边</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_calib_hole12_s">
+     <property name="geometry">
+      <rect>
+       <x>510</x>
+       <y>50</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>12孔短边</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_calib_hole12_l">
+     <property name="geometry">
+      <rect>
+       <x>440</x>
+       <y>50</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>12孔长边</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_calib_hole6_s">
+     <property name="geometry">
+      <rect>
+       <x>650</x>
+       <y>50</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>6孔短边</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_calib_hole6_l">
+     <property name="geometry">
+      <rect>
+       <x>580</x>
+       <y>50</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>6孔长边</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_calib_move_dir">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>180</y>
+      <y>170</y>
       <width>351</width>
       <height>61</height>
      </rect>
@@ -260,26 +390,13 @@
      </property>
     </widget>
    </widget>
-   <widget class="QPushButton" name="pushButton_calib_move">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>351</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>移动</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton_calib_left_down">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>250</y>
+      <x>400</x>
+      <y>170</y>
       <width>81</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -289,14 +406,120 @@
    <widget class="QPushButton" name="pushButton_calib_right_up">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>250</y>
+      <x>400</x>
+      <y>200</y>
       <width>81</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
      <string>设定右上</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_calib_bts">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>841</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>板型选择</string>
+    </property>
+    <widget class="QRadioButton" name="radioButton_calib_bts_96">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>61</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>96孔板</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_calib_bts_48">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>20</y>
+       <width>61</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>48孔板</string>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_calib_bts_24">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>20</y>
+       <width>61</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>24孔板</string>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_calib_bts_12">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>20</y>
+       <width>61</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>12孔板</string>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_calib_bts_6">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>20</y>
+       <width>61</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>6孔板</string>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="pushButton_calib_move">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>170</y>
+      <width>321</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>移动</string>
     </property>
    </widget>
   </widget>
@@ -304,9 +527,9 @@
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>580</y>
+     <y>350</y>
      <width>731</width>
-     <height>181</height>
+     <height>421</height>
     </rect>
    </property>
    <property name="mouseTracking">
@@ -348,7 +571,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>560</y>
+     <y>330</y>
      <width>81</width>
      <height>16</height>
     </rect>
@@ -361,9 +584,9 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>480</y>
+     <y>420</y>
      <width>371</width>
-     <height>41</height>
+     <height>71</height>
     </rect>
    </property>
    <property name="text">
@@ -374,7 +597,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>620</y>
+     <y>590</y>
      <width>131</width>
      <height>111</height>
     </rect>
@@ -387,7 +610,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>580</y>
+     <y>550</y>
      <width>131</width>
      <height>31</height>
     </rect>
@@ -400,7 +623,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>740</y>
+     <y>710</y>
      <width>131</width>
      <height>31</height>
     </rect>
@@ -413,7 +636,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>280</x>
-     <y>620</y>
+     <y>590</y>
      <width>31</width>
      <height>111</height>
     </rect>
@@ -426,7 +649,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>100</x>
-     <y>620</y>
+     <y>590</y>
      <width>31</width>
      <height>111</height>
     </rect>
@@ -439,9 +662,9 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>10</y>
+     <y>270</y>
      <width>731</width>
-     <height>411</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="mouseTracking">
@@ -483,7 +706,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>330</y>
+     <y>270</y>
      <width>371</width>
      <height>131</height>
     </rect>
@@ -574,9 +797,9 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>430</y>
+     <y>300</y>
      <width>731</width>
-     <height>111</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -591,7 +814,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>325</x>
-     <y>503</y>
+     <y>443</y>
     </hint>
     <hint type="destinationlabel">
      <x>333</x>
@@ -606,12 +829,12 @@ p, li { white-space: pre-wrap; }
    <slot>slot_calib_move()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>94</x>
-     <y>61</y>
+     <x>861</x>
+     <y>189</y>
     </hint>
     <hint type="destinationlabel">
-     <x>184</x>
-     <y>94</y>
+     <x>942</x>
+     <y>174</y>
     </hint>
    </hints>
   </connection>
@@ -622,12 +845,12 @@ p, li { white-space: pre-wrap; }
    <slot>slot_calib_left_down()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>290</x>
-     <y>260</y>
+     <x>510</x>
+     <y>180</y>
     </hint>
     <hint type="destinationlabel">
-     <x>142</x>
-     <y>318</y>
+     <x>937</x>
+     <y>218</y>
     </hint>
    </hints>
   </connection>
@@ -638,12 +861,12 @@ p, li { white-space: pre-wrap; }
    <slot>slot_calib_right_up()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>320</x>
-     <y>300</y>
+     <x>440</x>
+     <y>240</y>
     </hint>
     <hint type="destinationlabel">
-     <x>326</x>
-     <y>319</y>
+     <x>942</x>
+     <y>249</y>
     </hint>
    </hints>
   </connection>
@@ -655,7 +878,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>120</x>
-     <y>430</y>
+     <y>370</y>
     </hint>
     <hint type="destinationlabel">
      <x>107</x>
@@ -671,7 +894,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>143</x>
-     <y>423</y>
+     <y>363</y>
     </hint>
     <hint type="destinationlabel">
      <x>147</x>
@@ -703,7 +926,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>193</x>
-     <y>743</y>
+     <y>713</y>
     </hint>
     <hint type="destinationlabel">
      <x>232</x>
@@ -735,7 +958,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>235</x>
-     <y>588</y>
+     <y>558</y>
     </hint>
     <hint type="destinationlabel">
      <x>328</x>
@@ -751,7 +974,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>69</x>
-     <y>384</y>
+     <y>324</y>
     </hint>
     <hint type="destinationlabel">
      <x>22</x>
@@ -767,7 +990,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>179</x>
-     <y>379</y>
+     <y>319</y>
     </hint>
     <hint type="destinationlabel">
      <x>19</x>
@@ -783,7 +1006,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>362</x>
-     <y>390</y>
+     <y>330</y>
     </hint>
     <hint type="destinationlabel">
      <x>395</x>

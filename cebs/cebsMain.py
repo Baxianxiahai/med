@@ -211,6 +211,27 @@ class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.textEdit_calib_runProgress.insertPlainText("")
         
     def slot_calib_move(self):
+        radioCalaHts96 = self.radioButton_calib_bts_96.isChecked();
+        radioCalaHts48 = self.radioButton_calib_bts_48.isChecked();
+        radioCalaHts24 = self.radioButton_calib_bts_32.isChecked();
+        radioCalaHts12 = self.radioButton_calib_bts_12.isChecked();
+        radioCalaHts6 = self.radioButton_calib_bts_6.isChecked();
+        if (radioCalaHts96 == 1):
+            parMoveHts = 1;
+        elif (radioCalaHts48 == 1):
+            parMoveHts = 2;
+        elif (radioCalaHts24 == 1):
+            parMoveHts = 3;
+        elif (radioCalaHts12 == 1):
+            parMoveHts = 4;
+        elif (radioCalaHts6 == 1):
+            parMoveHts = 5;
+        else:
+            parMoveHts = 1;
+        #SELECT HOLE TYPE, but to be complete this function.
+        ModCebsCom.GL_CEBS_HB_TARGET_TYPE_NBR = parMoveHts;
+        
+        #SCALE
         radioCala10um = self.radioButton_calib_10um.isChecked();
         radioCala100um = self.radioButton_calib_100um.isChecked();
         radioCala200um = self.radioButton_calib_200um.isChecked();
@@ -221,6 +242,16 @@ class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         radioCala1cm = self.radioButton_calib_1cm.isChecked();
         radioCala2cm = self.radioButton_calib_2cm.isChecked();
         radioCala5cm = self.radioButton_calib_5cm.isChecked();
+        radioCalaH96l = self.radioButton_calib_hole96_l.isChecked();
+        radioCalaH96s = self.radioButton_calib_hole96_s.isChecked();
+        radioCalaH48l = self.radioButton_calib_hole48_l.isChecked();
+        radioCalaH48s = self.radioButton_calib_hole48_s.isChecked();
+        radioCalaH24l = self.radioButton_calib_hole24_l.isChecked();
+        radioCalaH24s = self.radioButton_calib_hole24_s.isChecked();
+        radioCalaH12l = self.radioButton_calib_hole12_l.isChecked();
+        radioCalaH12s = self.radioButton_calib_hole12_s.isChecked();
+        radioCalaH6l = self.radioButton_calib_hole6_l.isChecked();
+        radioCalaH6s = self.radioButton_calib_hole6_s.isChecked();
         if (radioCala10um == 1):
             parMoveScale = 1;
         elif (radioCala100um == 1):
@@ -241,8 +272,30 @@ class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
             parMoveScale = 9;
         elif (radioCala5cm == 1):
             parMoveScale = 10;
+        #To be completed
+        elif (radioCalaH96l == 1):
+            parMoveScale = 11;
+        elif (radioCalaH96s == 1):
+            parMoveScale = 12;
+        elif (radioCalaH48l == 1):
+            parMoveScale = 13;
+        elif (radioCalaH48s == 1):
+            parMoveScale = 14;
+        elif (radioCalaH24l == 1):
+            parMoveScale = 15;
+        elif (radioCalaH24s == 1):
+            parMoveScale = 16;
+        elif (radioCalaH12l == 1):
+            parMoveScale = 17;
+        elif (radioCalaH12s == 1):
+            parMoveScale = 18;
+        elif (radioCalaH6l == 1):
+            parMoveScale = 19;
+        elif (radioCalaH6s == 1):
+            parMoveScale = 20;
         else:
             parMoveScale = 1;
+        
         #
         radioCalaUp = self.radioButton_calib_y_plus.isChecked();
         radioCalaDown = self.radioButton_calib_y_minus.isChecked();

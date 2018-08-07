@@ -100,6 +100,36 @@ class classMotoProcess(object):
         #5cm
         elif (scale == 10):
             actualScale = 50000;
+        #radioCalaH96l
+        elif (scale == 11):
+            actualScale = 99000;
+        #radioCalaH96s
+        elif (scale == 12):
+            actualScale = 63000;
+        #radioCalaH48l
+        elif (scale == 13):
+            actualScale = 99000;
+        #radioCalaH48s
+        elif (scale == 14):
+            actualScale = 63000;
+        #radioCalaH24l: 19.3*5 = 96.5mm
+        elif (scale == 15):
+            actualScale = 96500;
+        #radioCalaH24s: 85.25 - 13.67*2 = 57.91
+        elif (scale == 16):
+            actualScale = 57910;
+        #radioCalaH12l
+        elif (scale == 17):
+            actualScale = 99000;
+        #radioCalaH12s
+        elif (scale == 18):
+            actualScale = 63000;
+        #radioCalaH6l: 127.5-24.5*2 = 78.4mm
+        elif (scale == 19):
+            actualScale = 78400;
+        #radioCalaH6s: 85.3-23.05*2 = 39.2mm
+        elif (scale == 20):
+            actualScale = 39200;
         else:
             actualScale = 10;
         Old_Px = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] #X-Axis
