@@ -91,6 +91,9 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         initObjVision = ModCebsVision.classVisionProcess();
         res = initObjVision.funcVisionDetectAllCamera()
         self.slot_print_trigger(res)
+        
+        #MAKE MOTO GO BACK TO ZERO
+        self.threadCtrl.signal_ctrl_zero.emit()
 
     def initUI(self):
         self.statusBar().showMessage('SYSTEM START ')
@@ -202,6 +205,7 @@ class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         super(cebsCalibForm, self).__init__()  
         self.setupUi(self)
         self.calibProc = ModCebsCalib.classCalibProcess(self)
+        self.objInitCfg1 = ModCebsCfg.ConfigOpr()
         
     def calib_print_log(self, info):
         strOut = ">> " + time.asctime() + " " + info;
@@ -211,26 +215,6 @@ class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.textEdit_calib_runProgress.insertPlainText("")
         
     def slot_calib_move(self):
-        radioCalaHts96 = self.radioButton_calib_bts_96.isChecked();
-        radioCalaHts48 = self.radioButton_calib_bts_48.isChecked();
-        radioCalaHts24 = self.radioButton_calib_bts_32.isChecked();
-        radioCalaHts12 = self.radioButton_calib_bts_12.isChecked();
-        radioCalaHts6 = self.radioButton_calib_bts_6.isChecked();
-        if (radioCalaHts96 == 1):
-            parMoveHts = 1;
-        elif (radioCalaHts48 == 1):
-            parMoveHts = 2;
-        elif (radioCalaHts24 == 1):
-            parMoveHts = 3;
-        elif (radioCalaHts12 == 1):
-            parMoveHts = 4;
-        elif (radioCalaHts6 == 1):
-            parMoveHts = 5;
-        else:
-            parMoveHts = 1;
-        #SELECT HOLE TYPE, but to be complete this function.
-        ModCebsCom.GL_CEBS_HB_TARGET_TYPE_NBR = parMoveHts;
-        
         #SCALE
         radioCala10um = self.radioButton_calib_10um.isChecked();
         radioCala100um = self.radioButton_calib_100um.isChecked();
@@ -351,7 +335,10 @@ class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.calibProc.funcCalibForceMove('RIGHT');
     
     def slot_calib_close(self):
-        self.calibProc.funcCtrlCalibComp()
+        try:
+            self.calibProc.funcCtrlCalibComp()
+        except Exception:
+            self.objInitCfg1.medErrorLog("CALIBMAIN: Execute calibProc.funcCtrlCalibComp() get error feedback.")
         self.signal_mainwin_visible.emit()
         self.close()
 
@@ -425,6 +412,31 @@ class cebsGparForm(QtWidgets.QWidget, Ui_cebsGparForm):
             ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC = int(self.lineEdit_gpar_video_input.text());
         except Exception: 
             ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC = 3;
+        #HB-TYPE SELECTION
+        radioGparHts96 = self.radioButton_gpar_bts_96.isChecked();
+        radioGparHts48 = self.radioButton_gpar_bts_48.isChecked();
+        radioGparHts24 = self.radioButton_gpar_bts_24.isChecked();
+        radioGparHts12 = self.radioButton_gpar_bts_12.isChecked();
+        radioGparHts6 = self.radioButton_gpar_bts_6.isChecked();
+        if (radioGparHts96 == 1):
+            ModCebsCom.GL_CEBS_HB_TARGET_TYPE = ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD;
+            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX;
+        elif (radioGparHts48 == 1):
+            ModCebsCom.GL_CEBS_HB_TARGET_TYPE = ModCebsCom.GL_CEBS_HB_TARGET_48_STANDARD;
+            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_48_SD_BATCH_MAX;
+        elif (radioGparHts24 == 1):
+            ModCebsCom.GL_CEBS_HB_TARGET_TYPE = ModCebsCom.GL_CEBS_HB_TARGET_24_STANDARD;
+            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_24_SD_BATCH_MAX;
+        elif (radioGparHts12 == 1):
+            ModCebsCom.GL_CEBS_HB_TARGET_TYPE = ModCebsCom.GL_CEBS_HB_TARGET_12_STANDARD;
+            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_12_SD_BATCH_MAX;
+        elif (radioGparHts6 == 1):
+            ModCebsCom.GL_CEBS_HB_TARGET_TYPE = ModCebsCom.GL_CEBS_HB_TARGET_6_STANDARD;
+            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_6_SD_BATCH_MAX;
+        else:
+            ModCebsCom.GL_CEBS_HB_TARGET_TYPE = ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD;
+            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX;
+        #FINAL UPDATE         
         self.objInitCfg2.updateSectionPar()
 
     #Using global parameter set to UI during launch
@@ -441,6 +453,18 @@ class cebsGparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         self.lineEdit_gpar_camera_nbr.setText(str(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR))
         self.checkBox_gpar_video_enable.setChecked(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE)
         self.lineEdit_gpar_video_input.setText(str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC))
+        if (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD):
+            self.radioButton_gpar_bts_96.setChecked(True)
+        elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_48_STANDARD):
+            self.radioButton_gpar_bts_48.setChecked(True)
+        elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_24_STANDARD):
+            self.radioButton_gpar_bts_24.setChecked(True)
+        elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_12_STANDARD):
+            self.radioButton_gpar_bts_12.setChecked(True)
+        elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_6_STANDARD):
+            self.radioButton_gpar_bts_6.setChecked(True)
+        else:
+            self.radioButton_gpar_bts_96.setChecked(True)
 
 #Main App entry
 def main_form():
