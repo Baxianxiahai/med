@@ -251,6 +251,17 @@ class classVisionThread(QThread, ModCebsCfg.ConfigOpr):
     #E = sqrt(1-I^2)
     #I = (u20+u02-sqrt(4u11*u11(u20-u02)*(u20-u02))/(u20+u02+sqrt(4u11*u11(u20-u02)*(u20-u02))
     def func_vision_worm_find_contours(self, nfImg, orgImg):
+        #Init output figure
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalNbr'] = 0
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['bigAlive'] = 0
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['bigDead'] = 0
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['middleAlive'] = 0
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['middleDead'] = 0
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['smallAlive'] = 0
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['smallDead'] = 0
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalAlive'] = 0
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalDead'] = 0
+        
         #Searching out-form shape: 找到轮廓
         _, contours, hierarchy = cv.findContours(nfImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
         #contours = contours[0] if imutils.is_cv() else contours[1]

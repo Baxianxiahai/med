@@ -18,6 +18,7 @@
 
 
 
+
 //=MYC, 2018/8/04, CURRENT_SW_DELIVERY R1.11 =>CEBS
 2018/08/04, test with following issues:
 1. Dist不好使
@@ -33,6 +34,8 @@
 11. 还存在最开始读版本读不到的情况。插拔USB可以恢复。
 
 
+//=ZJL, 2018/8/11, CURRENT_SW_DELIVERY R1.14 =>CEBS
+= 统一批次识别数据，不断加总，改正
 
 //=ZJL, 2018/8/8, CURRENT_SW_DELIVERY R1.13 =>CEBS
 = 启动时马达自动归零； 2) 校准完成时出现奔溃，Exception被截获。
