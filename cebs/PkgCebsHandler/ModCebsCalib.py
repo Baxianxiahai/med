@@ -319,8 +319,8 @@ class classCalibCameraDispThread(QThread):
             if (self.runFlag == True):
                 print("CALIB: Active the camera display!")
                 self.cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR)
-                ret1=self.cap.set(3, 1600)
-                ret2=self.cap.set(4, 1200)
+                self.cap.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
+                self.cap.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)             
                 break;
         if not self.cap.isOpened():
             self.objInitCfg.medErrorLog("CALIB: Cannot open webcam!")

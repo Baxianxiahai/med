@@ -42,6 +42,24 @@ from cv2 import waitKey
 class classVisionProcess(object):
     def __init__(self):
         self.objInitCfg = ModCebsCfg.ConfigOpr()
+
+#         #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
+#         self.cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
+#         if not self.cap.isOpened():
+#             self.objInitCfg.medErrorLog("VISION CLAS: Cannot open webcam!")
+#             print("VISION CLAS: Cannot open webcam!")
+#             return -1;
+#         #Set working resolution
+#         self.cap.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
+#         self.cap.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)
+#         self.width = int(self.cap.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
+#         self.height = int(self.cap.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
+#         print("VISION CLAS: Width/Height = %d/%d" % (self.width, self.height))
+#         self.fps = 20
+        #Init the camera resolution, iso set every capture time. 这样可以避免每次对焦的长时间消耗
+        capInit = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
+        capInit.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
+        capInit.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)
     
     def funcVisionDetectAllCamera(self):
         MaxDetectNbr = ModCebsCom.GL_CEBS_VISION_MAX_CAMERA_SEARCH
@@ -53,7 +71,6 @@ class classVisionProcess(object):
         return res
          
     def funcVisionCapture(self, batch, fileNbr):
-        time.sleep(2)
         #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
         cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
         # Check if the webcam is opened correctly
@@ -62,14 +79,12 @@ class classVisionProcess(object):
             self.objInitCfg.medErrorLog("VISION CLAS: Cannot open webcam!")
             print("VISION CLAS: Cannot open webcam!, Batch/Nbr=%d/%d" % (batch, fileNbr))
             return -1;
-        
-        #Picture capture
-        #DEFINE PIC GRADULARITY
-        ret1=cap.set(3, 1600)
-        ret2=cap.set(4, 1200)
+
         width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
         height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
         fps = 20
+        #print("VISION CLAS: Width/Height = %d/%d" % (width, height))
+        time.sleep(3)
         
         #MASSIVE ERROR!
         #1st par is path and file name
@@ -84,10 +99,25 @@ class classVisionProcess(object):
             frame = cv.flip(frame, 1)#Operation in frame
             #frame = cv.resize(frame, None, fx=1.5, fy=1.5, interpolation=cv.INTER_AREA)
             frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_AREA)
+            #白平衡算法
+            B,G,R = cv.split(frame)
+            bMean = cv.mean(B)
+            gMean = cv.mean(G)
+            rMean = cv.mean(R)
+            print("VISION CLAS: Mean B/G/R = %d/%d/%d" %(bMean[0], gMean[0], rMean[0]))
+            kb = (bMean[0] + gMean[0] + rMean[0])/(3*bMean[0]+0.0001)
+            kg = (bMean[0] + gMean[0] + rMean[0])/(3*gMean[0]+0.0001)
+            kr = (bMean[0] + gMean[0] + rMean[0])/(3*rMean[0]+0.0001)
+            B = B * kb
+            G = G * kg
+            R = R * kr
+            outputFrame = cv.merge([B, G, R])
+            
+            #Show picture
             #cv.imshow('Input', frame)
             obj=ModCebsCfg.ConfigOpr();
             fileName = obj.combineFileNameWithDir(batch, fileNbr)
-            cv.imwrite(fileName, frame)
+            cv.imwrite(fileName, outputFrame)
             #cv.imshow("Final output", frame)
             #waitKey(2000)
             #time.sleep(2)
@@ -117,8 +147,8 @@ class classVisionProcess(object):
             out.release()
             
         #Release all resource
-        cap.release()
-        cv.destroyAllWindows()
+        #self.cap.release()
+        #cv.destroyAllWindows()
         return 1;
 
     def funcVisionClasStart(self):
