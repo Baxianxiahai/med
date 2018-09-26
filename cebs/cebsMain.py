@@ -74,6 +74,8 @@ MAIN => 主入口
                 -> clsL2_CalibCamDispThread
         -> SEUI_L4_GparForm
 
+注意：信号槽，只能在线程和任务之间传递，所以普通的CLASS是不能增加信号槽的，设计机制时需要注意
+
 '''
 
 '''
@@ -82,8 +84,9 @@ MAIN => 主入口
 Main Windows
 '''
 class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
-    qtsg_mainwin_unvisible = pyqtSignal()
-    
+    signal_mainwin_unvisible = pyqtSignal()
+    signal_mainwin_visible = pyqtSignal()
+
     def __init__(self):    
         super(SEUI_L4_MainWindow, self).__init__()
         #系统级别的界面初始化
@@ -112,11 +115,11 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         #STEP2: 启动子界面        
         self.instL4CalibForm = SEUI_L4_CalibForm()
         self.instL4GparForm = SEUI_L4_GparForm()
-        self.instL2MotoProc = ModCebsMoto.clsL2_MotoProc();
+        self.instL2MotoProc = ModCebsMoto.clsL2_MotoProc()
         #STEP3: 连接信号槽
         self.instL4CalibForm.signal_mainwin_visible.connect(self.funcMainWinVisible);
         self.instL4GparForm.signal_mainwin_visible.connect(self.funcMainWinVisible);
-        self.qtsg_mainwin_unvisible.connect(self.funcMainWinUnvisible);
+        self.signal_mainwin_unvisible.connect(self.funcMainWinUnvisible);
         #STEP4: 控制调度模块初始化
         self.instL3CtrlSchdThd = ModCebsCtrl.clsL3_CtrlSchdThread()
         self.instL3CtrlSchdThd.setIdentity("TASK_CtrlScheduleThread")
@@ -201,7 +204,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.cebs_print_log("MAIN: CALIB ACTION!")
         self.instL3CtrlSchdThd.signal_ctrl_calib_start.emit()
         if not self.instL4CalibForm.isVisible():
-            self.qtsg_mainwin_unvisible.emit()
+            self.signal_mainwin_unvisible.emit()
             self.instL4CalibForm.show()
 
     #Enter parameter setting session
@@ -209,7 +212,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.cebs_print_log("MAIN: PARAMETER SETTING ACTION!")
         #self.instL3CtrlSchdThd.signal_ctrl_calib_start.emit()
         if not self.instL4GparForm.isVisible():
-            self.qtsg_mainwin_unvisible.emit()
+            self.signal_mainwin_unvisible.emit()
             self.instL4GparForm.show()
 
     #Clean log window
@@ -250,6 +253,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 #第二主入口
 #Calibration Widget
 class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
+    signal_mainwin_unvisible = pyqtSignal()
     signal_mainwin_visible = pyqtSignal()
 
     def __init__(self):    
@@ -413,6 +417,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
 #第三主入口
 #Calibration Widget
 class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
+    signal_mainwin_unvisible = pyqtSignal()
     signal_mainwin_visible = pyqtSignal()
 
     def __init__(self):    

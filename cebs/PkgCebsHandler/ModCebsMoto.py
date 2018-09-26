@@ -71,7 +71,7 @@ class clsL2_MotoProc(object):
             pass
         
         #打印到文件专用
-        self.objInitCfg = ModCebsCfg.clsL1_ConfigOpr()
+        self.instL1ConfigOpr = ModCebsCfg.clsL1_ConfigOpr()
         
     #Normal moving with limitation    
     def funcMotoCalaMoveOneStep(self, scale, dir):
@@ -172,7 +172,7 @@ class clsL2_MotoProc(object):
         if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]) > 0):
             return 1;
         else:
-            self.objInitCfg.medErrorLog("MOTO: funcMotoCalaMoveOneStep error!")
+            self.instL1ConfigOpr.medErrorLog("MOTO: funcMotoCalaMoveOneStep error!")
             return -2;
 
     #Force Moving function, with scale = 1cm=10mm=10000um
@@ -205,7 +205,7 @@ class clsL2_MotoProc(object):
         if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]) > 0):
             return 1;
         else:
-            self.objInitCfg.medErrorLog("MOTO: funcMotoFmCalaMoveOneStep error!")
+            self.instL1ConfigOpr.medErrorLog("MOTO: funcMotoFmCalaMoveOneStep error!")
             return -2;
     
     def funcMotoBackZero(self):
@@ -224,7 +224,7 @@ class clsL2_MotoProc(object):
         if (res > 0):
             return res, "MOTO: Success!"
         else:
-            self.objInitCfg.medErrorLog("MOTO: funcMotoMove2Start Failure!")
+            self.instL1ConfigOpr.medErrorLog("MOTO: funcMotoMove2Start Failure!")
             return res, "MOTO: Failure!"
 
     #Fetch moto actual status, especially the moto is still under running
@@ -265,7 +265,7 @@ class clsL2_MotoProc(object):
             return 1;
         else:
             print("MOTO: Error get feedback from funcMotoMove2AxisPos.")
-            self.objInitCfg.medErrorLog("MOTO: Error get feedback from funcMotoMove2AxisPos")
+            self.instL1ConfigOpr.medErrorLog("MOTO: Error get feedback from funcMotoMove2AxisPos")
             return -2;
 
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy):
@@ -273,7 +273,7 @@ class clsL2_MotoProc(object):
         if (ModCebsCom.GL_CEBS_MOTOAPI_INSTALLED_SET == True):
             if (self.instL1MotoDrvApi.moto_proc_move_to_axis_postion(curPx, curPy, newPx, newPy) < 0):
                 print("MOTO: funcMotoMove2AxisPos run error!")
-                self.objInitCfg.medErrorLog("MOTO: funcMotoMove2AxisPos get error!")
+                self.instL1ConfigOpr.medErrorLog("MOTO: funcMotoMove2AxisPos get error!")
                 return -1
             else:
                 return 1
