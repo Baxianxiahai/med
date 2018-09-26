@@ -84,8 +84,8 @@ MAIN => 主入口
 Main Windows
 '''
 class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
-    signal_mainwin_unvisible = pyqtSignal()
-    signal_mainwin_visible = pyqtSignal()
+    sgL4MainWinUnvisible = pyqtSignal()
+    sgL4MainWinVisible = pyqtSignal()
 
     def __init__(self):    
         super(SEUI_L4_MainWindow, self).__init__()
@@ -106,8 +106,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         toolbar = self.addToolBar('EXIT')  
         toolbar.addAction(exitAction)
 
+    #MUST Load global parameters, to initialize different UI and update the stored parameters.
     def initParameter(self):
-        #MUST Load global parameters, to initialize different UI and update the stored parameters.
         #STEP1: 初始化配置文件
         self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr()
         self.instL1ConfigOpr.readGlobalPar();
@@ -115,45 +115,45 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         #STEP2: 启动子界面        
         self.instL4CalibForm = SEUI_L4_CalibForm()
         self.instL4GparForm = SEUI_L4_GparForm()
-        self.instL2MotoProc = ModCebsMoto.clsL2_MotoProc()
+        self.instL2MotoProc = ModCebsMoto.clsL2_MotoProc(self, 1) #第一种选择
         #STEP3: 连接信号槽
-        self.instL4CalibForm.signal_mainwin_visible.connect(self.funcMainWinVisible);
-        self.instL4GparForm.signal_mainwin_visible.connect(self.funcMainWinVisible);
-        self.signal_mainwin_unvisible.connect(self.funcMainWinUnvisible);
+        self.instL4CalibForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
+        self.instL4GparForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
+        self.sgL4MainWinUnvisible.connect(self.funcMainWinUnvisible);
         #STEP4: 控制调度模块初始化
-        self.instL3CtrlSchdThd = ModCebsCtrl.clsL3_CtrlSchdThread()
+        self.instL3CtrlSchdThd = ModCebsCtrl.clsL3_CtrlSchdThread(self)
         self.instL3CtrlSchdThd.setIdentity("TASK_CtrlScheduleThread")
-        self.instL3CtrlSchdThd.signal_print_log.connect(self.slot_print_trigger)
-        self.instL3CtrlSchdThd.signal_ctrl_start.connect(self.instL3CtrlSchdThd.funcTakePicStart)
-        self.instL3CtrlSchdThd.signal_ctrl_stop.connect(self.instL3CtrlSchdThd.funcTakePicStop)
-        self.instL3CtrlSchdThd.signal_ctrl_clas_start.connect(self.instL3CtrlSchdThd.funcVisionClasStart)
-        self.instL3CtrlSchdThd.signal_ctrl_clas_stop.connect(self.instL3CtrlSchdThd.funcVisionClasStop)
-        self.instL3CtrlSchdThd.signal_ctrl_calib_start.connect(self.instL3CtrlSchdThd.funcCtrlCalibStart)
-        self.instL3CtrlSchdThd.signal_ctrl_calib_stop.connect(self.instL3CtrlSchdThd.funcCtrlCalibStop)
-        self.instL3CtrlSchdThd.signal_ctrl_zero.connect(self.instL3CtrlSchdThd.funcCtrlMotoBackZero)
+        self.instL3CtrlSchdThd.sgL4MainWinPrtLog.connect(self.slot_print_trigger)
+        self.instL3CtrlSchdThd.sgL3CtrlCapStart.connect(self.instL3CtrlSchdThd.funcTakePicStart)
+        self.instL3CtrlSchdThd.sgL3CtrlCapStop.connect(self.instL3CtrlSchdThd.funcTakePicStop)
+        self.instL3CtrlSchdThd.sgL3CtrlClfyStart.connect(self.instL3CtrlSchdThd.funcVisionClasStart)
+        self.instL3CtrlSchdThd.sgL3CtrlClfyStop.connect(self.instL3CtrlSchdThd.funcVisionClasStop)
+        self.instL3CtrlSchdThd.sgL3CtrlCalibStart.connect(self.instL3CtrlSchdThd.funcCtrlCalibStart)
+        self.instL3CtrlSchdThd.sgL3CtrlCalibStop.connect(self.instL3CtrlSchdThd.funcCtrlCalibStop)
+        self.instL3CtrlSchdThd.sgL3CtrlMotoZero.connect(self.instL3CtrlSchdThd.funcCtrlMotoBackZero)
         self.instL3CtrlSchdThd.start();
         #STEP5: 图像识别模块初始化
-        self.instL3VisCfyThd = ModCebsVision.clsL3_VisCfyThread()
+        self.instL3VisCfyThd = ModCebsVision.clsL3_VisCfyThread(self)
         self.instL3VisCfyThd.setIdentity("TASK_VisionClassifyThread")
-        self.instL3VisCfyThd.signal_print_log.connect(self.slot_print_trigger)
+        self.instL3VisCfyThd.sgL4MainWinPrtLog.connect(self.slot_print_trigger)
         self.instL3VisCfyThd.start();
         #STEP6: 设置马达等物理硬件状态
         self.funcMainFormSetEquInitStatus();
         #STEP7: 智能初始化摄像头
         #Detect all valid camera
-        self.instL3VisCapProc = ModCebsVision.clsL2_VisCapProc();
+        self.instL3VisCapProc = ModCebsVision.clsL2_VisCapProc(self, 1);
         res = self.instL3VisCapProc.funcVisionDetectAllCamera()
         self.slot_print_trigger(res)
         #STEP8: 发送归零信号给马达
         #MAKE MOTO GO BACK TO ZERO
-        self.instL3CtrlSchdThd.signal_ctrl_zero.emit()
+        self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
         
     #File Open Method, for reference
     def test_openMsg(self):  
         file, ok=QFileDialog.getOpenFileName(self,"OPEN FILE","C:/","All Files (*);;Text Files (*.txt)")  
         self.statusbar.showMessage(file)
 
-    def cebs_print_log(self, info):
+    def med_debug_print(self, info):
         strOld = self.textEdit_runProgress.toPlainText()
         #strOut = strOld + "\n>> " + time.asctime() + " " + info;
         #self.textEdit_runProgress.setText(strOut);
@@ -169,50 +169,50 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
     #
     #
     def slot_print_trigger(self, info):
-        self.cebs_print_log(info)
+        self.med_debug_print(info)
 
     #Start taking picture
     def slot_ctrl_start(self):
-        self.cebs_print_log("MAIN: Taking Picture start...")
-        self.instL3CtrlSchdThd.signal_ctrl_start.emit()
+        self.med_debug_print("L4MAIN: Taking Picture start...")
+        self.instL3CtrlSchdThd.sgL3CtrlCapStart.emit()
     
     #Stop taking picture
     def slot_ctrl_stop(self):
-        self.cebs_print_log("MAIN: Taking Picture stop!")
-        self.instL3CtrlSchdThd.signal_ctrl_stop.emit()
+        self.med_debug_print("L4MAIN: Taking Picture stop!")
+        self.instL3CtrlSchdThd.sgL3CtrlCapStop.emit()
 
     #Control moto run to Zero position
     def slot_ctrl_zero(self):
-        self.cebs_print_log("MAIN: RUN TO ZERO!")
-        self.instL3CtrlSchdThd.signal_ctrl_zero.emit()
+        self.med_debug_print("L4MAIN: RUN TO ZERO!")
+        self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
 
     #Start vision classification
     def slot_ctrl_vclas_start(self):
-        self.cebs_print_log("MAIN: Picture Classification starting...")
-        self.instL3CtrlSchdThd.signal_ctrl_clas_start.emit()
+        self.med_debug_print("L4MAIN: Picture Classification starting...")
+        self.instL3CtrlSchdThd.sgL3CtrlClfyStart.emit()
 
     #Stop vision classification
     def slot_ctrl_vclas_stop(self):
-        self.cebs_print_log("MAIN: Picture Classification stop.")
-        self.instL3CtrlSchdThd.signal_ctrl_clas_stop.emit()
+        self.med_debug_print("L4MAIN: Picture Classification stop.")
+        self.instL3CtrlSchdThd.sgL3CtrlClfyStop.emit()
 
     #Enter calibration session
     def slot_ctrl_calib(self):
         if (self.instL3CtrlSchdThd.funcCtrlGetRightStatus() < 0):
-            self.cebs_print_log("MAIN: CALIB ERROR1!")
+            self.med_debug_print("L4MAIN: CALIB ERROR1!")
             return -1;
-        self.cebs_print_log("MAIN: CALIB ACTION!")
-        self.instL3CtrlSchdThd.signal_ctrl_calib_start.emit()
+        self.med_debug_print("L4MAIN: CALIB ACTION!")
+        self.instL3CtrlSchdThd.sgL3CtrlCalibStart.emit()
         if not self.instL4CalibForm.isVisible():
-            self.signal_mainwin_unvisible.emit()
+            self.sgL4MainWinUnvisible.emit()
             self.instL4CalibForm.show()
 
     #Enter parameter setting session
     def slot_gpar_start(self):
-        self.cebs_print_log("MAIN: PARAMETER SETTING ACTION!")
-        #self.instL3CtrlSchdThd.signal_ctrl_calib_start.emit()
+        self.med_debug_print("L4MAIN: PARAMETER SETTING ACTION!")
+        #self.instL3CtrlSchdThd.sgL3CtrlCalibStart.emit()
         if not self.instL4GparForm.isVisible():
-            self.signal_mainwin_unvisible.emit()
+            self.sgL4MainWinUnvisible.emit()
             self.instL4GparForm.show()
 
     #Clean log window
@@ -222,7 +222,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
     #Test functions
     def slot_runpg_test(self):
         res = {}
-        self.cebs_print_log("TEST: " + str(res))
+        self.med_debug_print("TEST: " + str(res))
 
 
     #
@@ -234,8 +234,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
     def funcMainWinVisible(self):
         if not self.isVisible():
             self.show()
-        self.instL3CtrlSchdThd.signal_ctrl_calib_stop.emit()
-        self.cebs_print_log("MAIN: WELCOME COME BACK!")
+        self.instL3CtrlSchdThd.sgL3CtrlCalibStop.emit()
+        self.med_debug_print("L4MAIN: WELCOME COME BACK!")
 
     #Control UI un-visible
     def funcMainWinUnvisible(self):
@@ -253,8 +253,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 #第二主入口
 #Calibration Widget
 class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
-    signal_mainwin_unvisible = pyqtSignal()
-    signal_mainwin_visible = pyqtSignal()
+    sgL4MainWinUnvisible = pyqtSignal()
+    sgL4MainWinVisible = pyqtSignal()
 
     def __init__(self):    
         super(SEUI_L4_CalibForm, self).__init__()  
@@ -399,8 +399,8 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         try:
             self.instL3CalibProc.funcCtrlCalibComp()
         except Exception:
-            self.instL1ConfigOpr1.medErrorLog("CALIBMAIN: Execute instL3CalibProc.funcCtrlCalibComp() get error feedback.")
-        self.signal_mainwin_visible.emit()
+            self.instL1ConfigOpr1.medErrorLog("L4CALIBMAIN: Execute instL3CalibProc.funcCtrlCalibComp() get error feedback.")
+        self.sgL4MainWinVisible.emit()
         self.close()
 
 
@@ -410,15 +410,15 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
     #
     def closeEvent(self, event):
         self.instL3CalibProc.funcRecoverWorkingEnv()
-        self.signal_mainwin_visible.emit()
+        self.sgL4MainWinVisible.emit()
         self.close()
 
 
 #第三主入口
 #Calibration Widget
 class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
-    signal_mainwin_unvisible = pyqtSignal()
-    signal_mainwin_visible = pyqtSignal()
+    sgL4MainWinUnvisible = pyqtSignal()
+    sgL4MainWinVisible = pyqtSignal()
 
     def __init__(self):    
         super(SEUI_L4_GparForm, self).__init__()  
@@ -436,12 +436,12 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
     def slot_gpar_compl(self):
         #self.instL1GparProc.funcCtrlCalibComp()
         self.funcGlobalParReadSave()
-        self.signal_mainwin_visible.emit()
+        self.sgL4MainWinVisible.emit()
         self.close()
 
     #Give up and not save parameters
     def slot_gpar_giveup(self):
-        self.signal_mainwin_visible.emit()
+        self.sgL4MainWinVisible.emit()
         self.close()
 
     #
@@ -541,7 +541,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
     #Give up and not save parameters
     def closeEvent(self, event):
         #self.instL1GparProc.funcRecoverWorkingEnv()
-        self.signal_mainwin_visible.emit()
+        self.sgL4MainWinVisible.emit()
         self.close()
 
 

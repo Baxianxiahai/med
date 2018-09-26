@@ -40,10 +40,11 @@ from cv2 import waitKey
 
 
 #MAIN PROCESSING MODULE: 循环处理线程
+#模块只能被WinMain调用，所以打印只会打到WinMain上去
 class clsL3_VisCfyThread(QThread, ModCebsCfg.clsL1_ConfigOpr):
-    signal_print_log = pyqtSignal(str) #DECLAR MAIN FUNCTIONS
-    signal_vision_start = pyqtSignal()  #DECLAR MAIN FUNCTIONS, NOT USED
-    signal_vision_stop = pyqtSignal()   #DECLAR MAIN FUNCTIONS, NOT USED
+    sgL4MainWinPrtLog = pyqtSignal(str) #DECLAR MAIN FUNCTIONS
+    sgL3VisCfyStart = pyqtSignal()  #DECLAR MAIN FUNCTIONS, NOT USED
+    sgL3VisCfyStop = pyqtSignal()   #DECLAR MAIN FUNCTIONS, NOT USED
 
     #分类大小的参数定义
     HST_VISION_WORM_CLASSIFY_base = 0;
@@ -58,11 +59,10 @@ class clsL3_VisCfyThread(QThread, ModCebsCfg.clsL1_ConfigOpr):
     #处理后的结果
     HST_VISION_WORM_CLASSIFY_pic_sta_output = {'totalNbr':0, 'bigAlive':0, 'bigDead':0, 'middleAlive':0, 'middleDead':0, 'smallAlive':0, 'smallDead':0, 'totalAlive':0, 'totalDead':0}
 
-
-    def __init__(self,parent=None):
-        super(clsL3_VisCfyThread,self).__init__(parent)
+    def __init__(self, father):
+        super(clsL3_VisCfyThread,self).__init__()
         self.identity = None;
-
+        self.instL4WinForm = father
         self.HST_VISION_WORM_CLASSIFY_base = ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT;
         self.HST_VISION_WORM_CLASSIFY_small2mid = ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT;
         self.HST_VISION_WORM_CLASSIFY_mid2big = ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT;
@@ -70,30 +70,34 @@ class clsL3_VisCfyThread(QThread, ModCebsCfg.clsL1_ConfigOpr):
         self.HST_VISION_WORM_CLASSIFY_pic_filepath = ModCebsCom.GL_CEBS_PIC_MIDDLE_PATH + '/'
         self.HST_VISION_WORM_CLASSIFY_pic_filename = "1.jpg"
         self.HST_VISION_WORM_CLASSIFY_pic_sta_output = {'totalNbr':0, 'bigAlive':0, 'bigDead':0, 'middleAlive':0, 'middleDead':0, 'smallAlive':0, 'smallDead':0, 'totalAlive':0, 'totalDead':0}
+        self.funcVisCfyLogTrace("L3VISCFY: Instance start test!")
         
     def setIdentity(self,text):
         self.identity = text
 
+    def funcVisCfyLogTrace(self, myString):
+        self.instL4WinForm.med_debug_print(myString)
+        
     def funcVisionProc(self):
         batch, fileNbr = self.findUnclasFileBatchAndFileNbr();
         if (batch < 0):
             ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = 0;
-            self.signal_print_log.emit("VISION CLAS: PICTURE IDENTIFY NOT FINISHED: REMAINING NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+            self.sgL4MainWinPrtLog.emit("L3VISCFY: PICTURE IDENTIFY NOT FINISHED: REMAINING NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
             self.updateCtrlCntInfo();
             return;
         fileName = self.getStoredFileName(batch, fileNbr);
         fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
         if (fileName == None) or (fileNukeName == None):
             ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = 0;
-            self.signal_print_log.emit("VISION CLAS: VS_CLASPICTURE IDENTIFY FINISHED: REMAINING NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+            self.sgL4MainWinPrtLog.emit("L3VISCFY: VS_CLASPICTURE IDENTIFY FINISHED: REMAINING NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
             self.updateCtrlCntInfo();
             return;
         #REAL PROCESSING PROCEDURE
-        print("VISION CLAS: Batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
+        print("L3VISCFY: Batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
         self.funcVisionClassify(fileName, fileNukeName);
         ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT -= 1;
         self.updateUnclasFileAsClassified(batch, fileNbr);
-        self.signal_print_log.emit("VISION CLAS: PIC IDENTIFY： REMAINING NUMBRES=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+        self.sgL4MainWinPrtLog.emit("L3VISCFY: PIC IDENTIFY： REMAINING NUMBRES=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
         self.updateCtrlCntInfo();
         return;
        
@@ -111,9 +115,9 @@ class clsL3_VisCfyThread(QThread, ModCebsCfg.clsL1_ConfigOpr):
                 self.HST_VISION_WORM_CLASSIFY_big2top = inputStr['cfBig2TopIndex'];
                 self.HST_VISION_WORM_CLASSIFY_pic_filename = inputStr['fileName'];
             else:
-                print("VISION CLAS: func_vision_worm_input_processing on input error!")
+                print("L3VISCFY: func_vision_worm_input_processing on input error!")
         except Exception as err:
-            text = "VISION CLAS: func_vision_worm_input_processing on input error = %s" % str(err)
+            text = "L3VISCFY: func_vision_worm_input_processing on input error = %s" % str(err)
             print(text);
 
     def func_vision_worm_binvalue_test(self, img):
@@ -255,15 +259,15 @@ class clsL3_VisCfyThread(QThread, ModCebsCfg.clsL1_ConfigOpr):
     def func_vision_worm_clasification(self, fileName, fileNukeName):
         #Reading file: 读取文件
         if (os.path.exists(fileName) == False):
-            errStr = "VISION CLAS: File %s not exist!" % (fileName)
+            errStr = "L3VISCFY: File %s not exist!" % (fileName)
             self.medErrorLog(errStr);
-            print("VISION CLAS: File %s not exist!" % (fileName))
+            print("L3VISCFY: File %s not exist!" % (fileName))
             return;
         self.HST_VISION_WORM_CLASSIFY_pic_filename = fileName
         try:
             inputImg = cv.imread(fileName)
         except Exception as err:
-            print("VISION CLAS: Read file error, errinfo = ", str(err))
+            print("L3VISCFY: Read file error, errinfo = ", str(err))
             return;
 
         #Processing procedure: 处理过程
@@ -271,7 +275,7 @@ class clsL3_VisCfyThread(QThread, ModCebsCfg.clsL1_ConfigOpr):
         nfImg = self.func_vision_worm_remove_noise_test(binImg)
         outputImg = self.func_vision_worm_find_contours(nfImg, inputImg)
         outputFn = self.HST_VISION_WORM_CLASSIFY_pic_filepath + "result_" + fileNukeName
-        print("VISION CLAS: OutputFn = %s, nuke name = %s" %(outputFn, fileNukeName))
+        print("L3VISCFY: OutputFn = %s, nuke name = %s" %(outputFn, fileNukeName))
         cv.imwrite(outputFn, outputImg)
             
         #Save log record: 存储干活的log记录
@@ -306,34 +310,48 @@ class clsL3_VisCfyThread(QThread, ModCebsCfg.clsL1_ConfigOpr):
             #Send signal to CebsCtrl to stop STM
             if (ctrlInterest == True):
                 #self.signal_ctrl_clas_stop.emit()
-                self.signal_print_log.emit("VISION CLAS: Finish all picture classification!")
+                self.sgL4MainWinPrtLog.emit("L3VISCFY: Finish all picture classification!")
         
-        
+#模块可能被WinMain和Calib调用，所以初始化需要传入Father进去
 class clsL2_VisCapProc(object):
-    def __init__(self):
+    #prtFlag=1: WinMainForm,  prtFlag=2: CalibForm
+    def __init__(self, father, prtFlag):
+        super(clsL2_VisCapProc, self).__init__()
+        self.identity = None;
+        self.instL4WinForm = father
+        self.prtFlag = prtFlag
         self.instL1ConfigOpr = ModCebsCfg.clsL1_ConfigOpr()
 
 #         #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
 #         self.cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
 #         if not self.cap.isOpened():
-#             self.instL1ConfigOpr.medErrorLog("VISION CLAS: Cannot open webcam!")
-#             print("VISION CLAS: Cannot open webcam!")
+#             self.instL1ConfigOpr.medErrorLog("L2VISCAP: Cannot open webcam!")
+#             print("L2VISCAP: Cannot open webcam!")
 #             return -1;
 #         #Set working resolution
 #         self.cap.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
 #         self.cap.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)
 #         self.width = int(self.cap.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
 #         self.height = int(self.cap.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
-#         print("VISION CLAS: Width/Height = %d/%d" % (self.width, self.height))
+#         print("L2VISCAP: Width/Height = %d/%d" % (self.width, self.height))
 #         self.fps = 20
         #Init the camera resolution, iso set every capture time. 这样可以避免每次对焦的长时间消耗
         capInit = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
         capInit.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
         capInit.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)
-    
+        self.funcVisCapLogTrace("L2VISCAP: Instance start test!")
+        
+    def funcVisCapLogTrace(self, myString):
+        if (self.prtFlag == 1):
+            self.instL4WinForm.med_debug_print(myString)
+        elif (self.prtFlag == 2):
+            self.instL4WinForm.calib_print_log(myString)
+        else:
+            pass
+        
     def funcVisionDetectAllCamera(self):
         MaxDetectNbr = ModCebsCom.GL_CEBS_VISION_MAX_CAMERA_SEARCH
-        res = "VALID CAMERA NUMBER: "
+        res = "L2VISCAP: VALID CAMERA NUMBER = "
         for index in range(0, MaxDetectNbr):
             cap = cv.VideoCapture(index)
             if cap.isOpened():
@@ -346,14 +364,14 @@ class clsL2_VisCapProc(object):
         # Check if the webcam is opened correctly
         if not cap.isOpened():
             #raise IOError("Cannot open webcam")
-            self.instL1ConfigOpr.medErrorLog("VISION CLAS: Cannot open webcam!")
-            print("VISION CLAS: Cannot open webcam!, Batch/Nbr=%d/%d" % (batch, fileNbr))
+            self.instL1ConfigOpr.medErrorLog("L2VISCAP: Cannot open webcam!")
+            print("L2VISCAP: Cannot open webcam!, Batch/Nbr=%d/%d" % (batch, fileNbr))
             return -1;
 
         width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
         height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
         fps = 20
-        #print("VISION CLAS: Width/Height = %d/%d" % (width, height))
+        #print("L2VISCAP: Width/Height = %d/%d" % (width, height))
         time.sleep(3)
         
         #MASSIVE ERROR!
@@ -374,7 +392,7 @@ class clsL2_VisCapProc(object):
             bMean = cv.mean(B)
             gMean = cv.mean(G)
             rMean = cv.mean(R)
-            print("VISION CLAS: Mean B/G/R = %d/%d/%d" %(bMean[0], gMean[0], rMean[0]))
+            print("L2VISCAP: Mean B/G/R = %d/%d/%d" %(bMean[0], gMean[0], rMean[0]))
             kb = (bMean[0] + gMean[0] + rMean[0])/(3*bMean[0]+0.0001)
             kg = (bMean[0] + gMean[0] + rMean[0])/(3*gMean[0]+0.0001)
             kr = (bMean[0] + gMean[0] + rMean[0])/(3*rMean[0]+0.0001)

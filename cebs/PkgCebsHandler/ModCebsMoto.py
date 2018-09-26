@@ -26,11 +26,18 @@ from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsMotorApi
 
+#模块可能被WinMain和Calib调用，所以初始化需要传入Father进去
 class clsL2_MotoProc(object):
     if (ModCebsCom.GL_CEBS_MOTOAPI_INSTALLED_SET == True):
         instL1MotoDrvApi = ModCebsMotorApi.clsL1_MotoDrvApi()
     
-    def __init__(self):
+    #附带的prtFlag参数，用来表示是哪一种窗体调用的，这样MOTO过程才能得到正确的父句柄，并执行打印函数
+    #prtFlag=1: WinMainForm,  prtFlag=2: CalibForm
+    def __init__(self, father, prtFlag):
+        super(clsL2_MotoProc, self).__init__()
+        self.identity = None;
+        self.instL4WinForm = father
+        self.prtFlag = prtFlag
         if (ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE == 0 or ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE == 0 or ModCebsCom.GL_CEBS_HB_HOLE_X_NUM == 0 or ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM == 0):
             if (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD):
                 ModCebsCom.GL_CEBS_HB_HOLE_X_NUM = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_XDIR_NBR
@@ -72,6 +79,15 @@ class clsL2_MotoProc(object):
         
         #打印到文件专用
         self.instL1ConfigOpr = ModCebsCfg.clsL1_ConfigOpr()
+        self.funcMotoLogTrace("L2MOTO: Instance start test!")
+
+    def funcMotoLogTrace(self, myString):
+        if (self.prtFlag == 1):
+            self.instL4WinForm.med_debug_print(myString)
+        elif (self.prtFlag == 2):
+            self.instL4WinForm.calib_print_log(myString)
+        else:
+            pass
         
     #Normal moving with limitation    
     def funcMotoCalaMoveOneStep(self, scale, dir):
@@ -168,11 +184,11 @@ class clsL2_MotoProc(object):
         #Error case
         else:
             pass
-        print("MOTO: Moving one step! Scale=%d, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (scale, dir, Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]));
+        print("L2MOTO: Moving one step! Scale=%d, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (scale, dir, Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]));
         if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]) > 0):
             return 1;
         else:
-            self.instL1ConfigOpr.medErrorLog("MOTO: funcMotoCalaMoveOneStep error!")
+            self.instL1ConfigOpr.medErrorLog("L2MOTO: funcMotoCalaMoveOneStep error!")
             return -2;
 
     #Force Moving function, with scale = 1cm=10mm=10000um
@@ -201,31 +217,31 @@ class clsL2_MotoProc(object):
         #Error case
         else:
             pass
-        print("MOTO: Moving one step! Scale=1cm, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (dir, Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]));
+        print("L2MOTO: Moving one step! Scale=1cm, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (dir, Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]));
         if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]) > 0):
             return 1;
         else:
-            self.instL1ConfigOpr.medErrorLog("MOTO: funcMotoFmCalaMoveOneStep error!")
+            self.instL1ConfigOpr.medErrorLog("L2MOTO: funcMotoFmCalaMoveOneStep error!")
             return -2;
     
     def funcMotoBackZero(self):
         return self.funcMotoMove2HoleNbr(0);
-        #print("MOTO: Running Zero Position!")
+        #print("L2MOTO: Running Zero Position!")
 
     def funcMotoMove2Start(self):
-        print("MOTO: Move to start position - Left/up!")
+        print("L2MOTO: Move to start position - Left/up!")
         xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[2];
         yHeight = ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[3];
         if (xWidth <= 0 or yHeight <= 0):
-            print("MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight))
-            return -1, ("MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight));
+            print("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight))
+            return -1, ("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight));
         res = self.funcMotoMove2HoleNbr(1)
-        print("MOTO: Feedback get from funcMotoMove2HoleNbr = ", res)
+        print("L2MOTO: Feedback get from funcMotoMove2HoleNbr = ", res)
         if (res > 0):
-            return res, "MOTO: Success!"
+            return res, "L2MOTO: Success!"
         else:
-            self.instL1ConfigOpr.medErrorLog("MOTO: funcMotoMove2Start Failure!")
-            return res, "MOTO: Failure!"
+            self.instL1ConfigOpr.medErrorLog("L2MOTO: funcMotoMove2Start Failure!")
+            return res, "L2MOTO: Failure!"
 
     #Fetch moto actual status, especially the moto is still under running
     #To be finished function!
@@ -233,16 +249,15 @@ class clsL2_MotoProc(object):
         return False;
 
     def funcMotoStop(self):
-        print("MOTO: funcMotoStop running...")
         if (ModCebsCom.GL_CEBS_MOTOAPI_INSTALLED_SET == True):
             res = self.instL1MotoDrvApi.moto_proc_full_stop()
             if (res < 0):
-                print("MOTO: funcMotoStop error!")
+                print("L2MOTO: funcMotoStop() execute error!")
                 return -1
         return 1
     
     def funcMotoResume(self):
-        print("MOTO: Resume action running...")
+        print("L2MOTO: Resume action running...")
         return 1;
     
     def funcMotoMove2HoleNbr(self, holeIndex):
@@ -257,23 +272,23 @@ class clsL2_MotoProc(object):
             yTargetHoleNbr = ((holeIndex-1) // ModCebsCom.GL_CEBS_HB_HOLE_X_NUM) + 1;
             newPosX = int(ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] - (xTargetHoleNbr-1)*ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE);
             newPosY = int(ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] + (yTargetHoleNbr-1)*ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE);
-        print("MOTO: Moving to working hole=%d, newPosX/Y=%d/%d." % (holeIndex, newPosX, newPosY))
+        print("L2MOTO: Moving to working hole=%d, newPosX/Y=%d/%d." % (holeIndex, newPosX, newPosY))
         if (self.funcMotoMove2AxisPos(ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1], newPosX, newPosY) > 0):
             ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] = newPosX;
             ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] = newPosY;
-            print("MOTO: Finished once!")
+            print("L2MOTO: Finished once!")
             return 1;
         else:
-            print("MOTO: Error get feedback from funcMotoMove2AxisPos.")
-            self.instL1ConfigOpr.medErrorLog("MOTO: Error get feedback from funcMotoMove2AxisPos")
+            print("L2MOTO: funcMotoMove2HoleNbr() error get feedback from funcMotoMove2AxisPos.")
+            self.instL1ConfigOpr.medErrorLog("L2MOTO: Error get feedback from funcMotoMove2AxisPos")
             return -2;
 
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy):
-        print("MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy))
+        print("L2MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy))
         if (ModCebsCom.GL_CEBS_MOTOAPI_INSTALLED_SET == True):
             if (self.instL1MotoDrvApi.moto_proc_move_to_axis_postion(curPx, curPy, newPx, newPy) < 0):
-                print("MOTO: funcMotoMove2AxisPos run error!")
-                self.instL1ConfigOpr.medErrorLog("MOTO: funcMotoMove2AxisPos get error!")
+                print("L2MOTO: funcMotoMove2AxisPos() run error!")
+                self.instL1ConfigOpr.medErrorLog("L2MOTO: funcMotoMove2AxisPos get error!")
                 return -1
             else:
                 return 1
