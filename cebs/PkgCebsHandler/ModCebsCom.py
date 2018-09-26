@@ -135,7 +135,7 @@ GL_CEBS_CAMERA_DISPLAY_POS_Y = 0;
 
 
 #公共函数库，简化设计
-class clsMedCFlib():
+class clsL0_MedCFlib():
     
     def __init__(self):    
         #super(classComCebsFuncLib, self).__init__()  

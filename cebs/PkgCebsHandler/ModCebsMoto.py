@@ -26,9 +26,9 @@ from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsMotorApi
 
-class classMotoProcess(object):
+class clsL2_MotoProc(object):
     if (ModCebsCom.GL_CEBS_MOTOAPI_INSTALLED_SET == True):
-        ObjMotorApi = ModCebsMotorApi.MotorClass()
+        ObjMotorApi = ModCebsMotorApi.clsL1_MotoDrvApi()
     
     def __init__(self):
         if (ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE == 0 or ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE == 0 or ModCebsCom.GL_CEBS_HB_HOLE_X_NUM == 0 or ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM == 0):
@@ -71,7 +71,7 @@ class classMotoProcess(object):
             pass
         
         #打印到文件专用
-        self.objInitCfg = ModCebsCfg.ConfigOpr()
+        self.objInitCfg = ModCebsCfg.clsL1_ConfigOpr()
         
     #Normal moving with limitation    
     def funcMotoCalaMoveOneStep(self, scale, dir):

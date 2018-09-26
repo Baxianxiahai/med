@@ -38,127 +38,9 @@ from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
 from cv2 import waitKey
 
-#MAIN ENTRY： 主入口
-class classVisionProcess(object):
-    def __init__(self):
-        self.objInitCfg = ModCebsCfg.ConfigOpr()
-
-#         #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
-#         self.cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
-#         if not self.cap.isOpened():
-#             self.objInitCfg.medErrorLog("VISION CLAS: Cannot open webcam!")
-#             print("VISION CLAS: Cannot open webcam!")
-#             return -1;
-#         #Set working resolution
-#         self.cap.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
-#         self.cap.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)
-#         self.width = int(self.cap.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
-#         self.height = int(self.cap.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
-#         print("VISION CLAS: Width/Height = %d/%d" % (self.width, self.height))
-#         self.fps = 20
-        #Init the camera resolution, iso set every capture time. 这样可以避免每次对焦的长时间消耗
-        capInit = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
-        capInit.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
-        capInit.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)
-    
-    def funcVisionDetectAllCamera(self):
-        MaxDetectNbr = ModCebsCom.GL_CEBS_VISION_MAX_CAMERA_SEARCH
-        res = "VALID CAMERA NUMBER: "
-        for index in range(0, MaxDetectNbr):
-            cap = cv.VideoCapture(index)
-            if cap.isOpened():
-                res = res + str(index) + ", "
-        return res
-         
-    def funcVisionCapture(self, batch, fileNbr):
-        #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
-        cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
-        # Check if the webcam is opened correctly
-        if not cap.isOpened():
-            #raise IOError("Cannot open webcam")
-            self.objInitCfg.medErrorLog("VISION CLAS: Cannot open webcam!")
-            print("VISION CLAS: Cannot open webcam!, Batch/Nbr=%d/%d" % (batch, fileNbr))
-            return -1;
-
-        width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
-        height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
-        fps = 20
-        #print("VISION CLAS: Width/Height = %d/%d" % (width, height))
-        time.sleep(3)
-        
-        #MASSIVE ERROR!
-        #1st par is path and file name
-        #2nd par is video format, “MPEG” is **standard， BAIDU fourcc could find more
-        #2nd par（fourcc） = -1，means allow select video format
-        #fourcc = cv.VideoWriter_fourcc(*"MPEG")
-        #fourcc=-1**
-        #3rd par is carmera speed，20 is normal，less than 20 is slow**
-        #out = cv.VideoWriter('c://output.avi',fourcc,20,(640,480))
-        ret, frame = cap.read()
-        if (ret == True):
-            frame = cv.flip(frame, 1)#Operation in frame
-            #frame = cv.resize(frame, None, fx=1.5, fy=1.5, interpolation=cv.INTER_AREA)
-            frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_AREA)
-            #白平衡算法
-            B,G,R = cv.split(frame)
-            bMean = cv.mean(B)
-            gMean = cv.mean(G)
-            rMean = cv.mean(R)
-            print("VISION CLAS: Mean B/G/R = %d/%d/%d" %(bMean[0], gMean[0], rMean[0]))
-            kb = (bMean[0] + gMean[0] + rMean[0])/(3*bMean[0]+0.0001)
-            kg = (bMean[0] + gMean[0] + rMean[0])/(3*gMean[0]+0.0001)
-            kr = (bMean[0] + gMean[0] + rMean[0])/(3*rMean[0]+0.0001)
-            B = B * kb
-            G = G * kg
-            R = R * kr
-            outputFrame = cv.merge([B, G, R])
-            
-            #Show picture
-            #cv.imshow('Input', frame)
-            obj=ModCebsCfg.ConfigOpr();
-            fileName = obj.combineFileNameWithDir(batch, fileNbr)
-            cv.imwrite(fileName, outputFrame)
-            #cv.imshow("Final output", frame)
-            #waitKey(2000)
-            #time.sleep(2)
-        
-        #Video capture
-        #Ref: http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_video_display/py_video_display.html
-        #fourcc code: http://www.fourcc.org/codecs.php
-        if (ret == True) and (ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE == True):
-            #Video capture with 3 second
-            fourcc = cv.VideoWriter_fourcc(*'mp4v')  #mp4v(.mp4), XVID(.avi)
-            fileNameVideo = obj.combineFileNameVideoWithDir(batch, fileNbr)
-            out = cv.VideoWriter(fileNameVideo, fourcc, fps, (width, height))
-            cnt = 0
-            targetCnt = fps * ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC
-            while cap.isOpened():
-                cnt += 1
-                ret, frame = cap.read()
-                if ret:
-                    frame = cv.flip(frame, 0)
-                    #write the flipped frame
-                    time.sleep(1.0/fps)
-                    out.write(frame)
-                    if cnt >= targetCnt:
-                        break
-                else:
-                    break
-            out.release()
-            
-        #Release all resource
-        #self.cap.release()
-        #cv.destroyAllWindows()
-        return 1;
-
-    def funcVisionClasStart(self):
-        ModCebsCom.GL_CEBS_PIC_CLAS_FLAG = True;
-
-    def funcVisionClasEnd(self):
-        ModCebsCom.GL_CEBS_PIC_CLAS_FLAG = False;
 
 #MAIN PROCESSING MODULE: 循环处理线程
-class classVisionThread(QThread, ModCebsCfg.ConfigOpr):
+class clsL3_VisCfyThread(QThread, ModCebsCfg.clsL1_ConfigOpr):
     signal_print_log = pyqtSignal(str) #DECLAR MAIN FUNCTIONS
     signal_vision_start = pyqtSignal()  #DECLAR MAIN FUNCTIONS, NOT USED
     signal_vision_stop = pyqtSignal()   #DECLAR MAIN FUNCTIONS, NOT USED
@@ -178,7 +60,7 @@ class classVisionThread(QThread, ModCebsCfg.ConfigOpr):
 
 
     def __init__(self,parent=None):
-        super(classVisionThread,self).__init__(parent)
+        super(clsL3_VisCfyThread,self).__init__(parent)
         self.identity = None;
 
         self.HST_VISION_WORM_CLASSIFY_base = ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT;
@@ -427,4 +309,124 @@ class classVisionThread(QThread, ModCebsCfg.ConfigOpr):
                 self.signal_print_log.emit("VISION CLAS: Finish all picture classification!")
         
         
+class clsL2_VisCapProc(object):
+    def __init__(self):
+        self.objInitCfg = ModCebsCfg.clsL1_ConfigOpr()
+
+#         #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
+#         self.cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
+#         if not self.cap.isOpened():
+#             self.objInitCfg.medErrorLog("VISION CLAS: Cannot open webcam!")
+#             print("VISION CLAS: Cannot open webcam!")
+#             return -1;
+#         #Set working resolution
+#         self.cap.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
+#         self.cap.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)
+#         self.width = int(self.cap.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
+#         self.height = int(self.cap.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
+#         print("VISION CLAS: Width/Height = %d/%d" % (self.width, self.height))
+#         self.fps = 20
+        #Init the camera resolution, iso set every capture time. 这样可以避免每次对焦的长时间消耗
+        capInit = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
+        capInit.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
+        capInit.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)
+    
+    def funcVisionDetectAllCamera(self):
+        MaxDetectNbr = ModCebsCom.GL_CEBS_VISION_MAX_CAMERA_SEARCH
+        res = "VALID CAMERA NUMBER: "
+        for index in range(0, MaxDetectNbr):
+            cap = cv.VideoCapture(index)
+            if cap.isOpened():
+                res = res + str(index) + ", "
+        return res
+         
+    def funcVisionCapture(self, batch, fileNbr):
+        #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
+        cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
+        # Check if the webcam is opened correctly
+        if not cap.isOpened():
+            #raise IOError("Cannot open webcam")
+            self.objInitCfg.medErrorLog("VISION CLAS: Cannot open webcam!")
+            print("VISION CLAS: Cannot open webcam!, Batch/Nbr=%d/%d" % (batch, fileNbr))
+            return -1;
+
+        width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
+        height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
+        fps = 20
+        #print("VISION CLAS: Width/Height = %d/%d" % (width, height))
+        time.sleep(3)
+        
+        #MASSIVE ERROR!
+        #1st par is path and file name
+        #2nd par is video format, “MPEG” is **standard， BAIDU fourcc could find more
+        #2nd par（fourcc） = -1，means allow select video format
+        #fourcc = cv.VideoWriter_fourcc(*"MPEG")
+        #fourcc=-1**
+        #3rd par is carmera speed，20 is normal，less than 20 is slow**
+        #out = cv.VideoWriter('c://output.avi',fourcc,20,(640,480))
+        ret, frame = cap.read()
+        if (ret == True):
+            frame = cv.flip(frame, 1)#Operation in frame
+            #frame = cv.resize(frame, None, fx=1.5, fy=1.5, interpolation=cv.INTER_AREA)
+            frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_AREA)
+            #白平衡算法
+            B,G,R = cv.split(frame)
+            bMean = cv.mean(B)
+            gMean = cv.mean(G)
+            rMean = cv.mean(R)
+            print("VISION CLAS: Mean B/G/R = %d/%d/%d" %(bMean[0], gMean[0], rMean[0]))
+            kb = (bMean[0] + gMean[0] + rMean[0])/(3*bMean[0]+0.0001)
+            kg = (bMean[0] + gMean[0] + rMean[0])/(3*gMean[0]+0.0001)
+            kr = (bMean[0] + gMean[0] + rMean[0])/(3*rMean[0]+0.0001)
+            B = B * kb
+            G = G * kg
+            R = R * kr
+            outputFrame = cv.merge([B, G, R])
+            
+            #Show picture
+            #cv.imshow('Input', frame)
+            obj=ModCebsCfg.clsL1_ConfigOpr();
+            fileName = obj.combineFileNameWithDir(batch, fileNbr)
+            cv.imwrite(fileName, outputFrame)
+            #cv.imshow("Final output", frame)
+            #waitKey(2000)
+            #time.sleep(2)
+        
+        #Video capture
+        #Ref: http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_video_display/py_video_display.html
+        #fourcc code: http://www.fourcc.org/codecs.php
+        if (ret == True) and (ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE == True):
+            #Video capture with 3 second
+            fourcc = cv.VideoWriter_fourcc(*'mp4v')  #mp4v(.mp4), XVID(.avi)
+            fileNameVideo = obj.combineFileNameVideoWithDir(batch, fileNbr)
+            out = cv.VideoWriter(fileNameVideo, fourcc, fps, (width, height))
+            cnt = 0
+            targetCnt = fps * ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC
+            while cap.isOpened():
+                cnt += 1
+                ret, frame = cap.read()
+                if ret:
+                    frame = cv.flip(frame, 0)
+                    #write the flipped frame
+                    time.sleep(1.0/fps)
+                    out.write(frame)
+                    if cnt >= targetCnt:
+                        break
+                else:
+                    break
+            out.release()
+            
+        #Release all resource
+        #self.cap.release()
+        #cv.destroyAllWindows()
+        return 1;
+
+    def funcVisionClasStart(self):
+        ModCebsCom.GL_CEBS_PIC_CLAS_FLAG = True;
+
+    def funcVisionClasEnd(self):
+        ModCebsCom.GL_CEBS_PIC_CLAS_FLAG = False;
+
+
+
         

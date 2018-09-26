@@ -47,7 +47,7 @@ MOTOR_DEFAULT_SPEED = 400
 MOTOR_STEPS_PER_DISTANCE_MM = MOTOR_STEPS_PER_ROUND / MOTOR_DISTANCE_MM_PER_ROUND
 MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DISTANCE_MM_PER_ROUND / 1000
     
-class MotorClass(object):
+class clsL1_MotoDrvApi(object):
     '''
     classdocs
     '''
@@ -65,7 +65,7 @@ class MotorClass(object):
         '''
         Constructor
         '''
-        self.objInitCfg = ModCebsCfg.ConfigOpr()
+        self.objInitCfg = ModCebsCfg.clsL1_ConfigOpr()
         plist = list(serial.tools.list_ports.comports())
         self.targetComPortString = 'Prolific USB-to-Serial Comm Port ('
         if len(plist) <= 0:
@@ -110,19 +110,19 @@ class MotorClass(object):
             self.motor_api_read_status()
             
             print("MOTOAPI: Test 3: motor_api_emergency_stop("", serialFd, 1, 1, 1, 1)")          
-            #MotorClass.motor_api_emergency_stop("", serialFd, 1, 1, 1, 1)
+            #clsL1_MotoDrvApi.motor_api_emergency_stop("", serialFd, 1, 1, 1, 1)
             time.sleep(1)
             self.motor_api_read_status()            
             time.sleep(1)
              
             print("MOTOAPI: Test 4: motor_api_slow_stop("", serialFd, 1, 1, 1, 1)")
-            #MotorClass.motor_api_slow_stop("", serialFd, 1, 1, 1, 1)
+            #clsL1_MotoDrvApi.motor_api_slow_stop("", serialFd, 1, 1, 1, 1)
             time.sleep(1)
             self.motor_api_read_status()
             time.sleep(1)
              
             print("MOTOAPI: Test 5: motor_api_go_with_steps(serialFd, 6400, 6400, 6400, 6400)")
-            #MotorClass.motor_api_go_with_steps("", serialFd, 6400, 6400, 6400, 6400)
+            #clsL1_MotoDrvApi.motor_api_go_with_steps("", serialFd, 6400, 6400, 6400, 6400)
             time.sleep(0)
             self.motor_api_read_status()
             time.sleep(1)
@@ -133,7 +133,7 @@ class MotorClass(object):
              
              
             print("MOTOAPI: Test 6: motor_api_go_with_steps(serialFd, -6400, -6400, -6400, -6400)")
-            #MotorClass.motor_api_go_with_steps("", serialFd, -6400, -6400, -6400, -6400)
+            #clsL1_MotoDrvApi.motor_api_go_with_steps("", serialFd, -6400, -6400, -6400, -6400)
             time.sleep(0)
             self.motor_api_read_status()
             time.sleep(1)
@@ -573,5 +573,5 @@ class MotorClass(object):
 #SYSTEM ENTRY
 if __name__ == '__main__':
     print("[CEBS] ", time.asctime(), ", System starting...\n" );
-    Obj = MotorClass()
+    Obj = clsL1_MotoDrvApi()
     Obj.motor_test()

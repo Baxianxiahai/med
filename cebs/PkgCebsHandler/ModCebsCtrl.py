@@ -27,7 +27,7 @@ from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsVision
 from PkgCebsHandler import ModCebsMoto
 
-class classCtrlThread(QThread):
+class clsL3_CtrlSchdThread(QThread):
     signal_print_log = pyqtSignal(str) #DECLAR SIGNAL
     signal_ctrl_start = pyqtSignal() #DECLAR USED FOR MAIN FUNCTIONS
     signal_ctrl_stop = pyqtSignal()  #DECLAR USED FOR MAIN FUNCTIONS
@@ -47,12 +47,12 @@ class classCtrlThread(QThread):
     __CEBS_STM_CTRL_INVALID =   0xFF;
 
     def __init__(self,parent=None):
-        super(classCtrlThread,self).__init__(parent)
+        super(clsL3_CtrlSchdThread,self).__init__(parent)
         self.identity = None;
         self.times = -1;
-        self.objInitCfg=ModCebsCfg.ConfigOpr();
-        self.objMoto=ModCebsMoto.classMotoProcess();
-        self.objVision=ModCebsVision.classVisionProcess();
+        self.objInitCfg=ModCebsCfg.clsL1_ConfigOpr();
+        self.objMoto=ModCebsMoto.clsL2_MotoProc();
+        self.objVision=ModCebsVision.clsL2_VisCapProc();
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_NULL;
         
         #INIT DIFFERENT TARGET BOARDS AND NUMBERS

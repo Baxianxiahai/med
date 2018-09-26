@@ -29,12 +29,12 @@ from PkgCebsHandler import ModCebsMoto
 from PkgCebsHandler import ModCebsCtrl
 
 
-class classGparProcess(object):
+class clsL1_GparProc(object):
     def __init__(self, father):
-        super(classGparProcess, self).__init__()
+        super(clsL1_GparProc, self).__init__()
         self.identity = None;
         self.gparForm = father
-        self.objInitCfg=ModCebsCfg.ConfigOpr();
+        self.objInitCfg=ModCebsCfg.clsL1_ConfigOpr();
     
 
     

@@ -41,15 +41,15 @@ from PkgCebsHandler import ModCebsMoto
 from PkgCebsHandler import ModCebsCtrl
 
 
-
-class classCalibProcess(object):
+#校准处理过程
+class clsL3_CalibProc(object):
     def __init__(self, father):
-        super(classCalibProcess, self).__init__()
+        super(clsL3_CalibProc, self).__init__()
         self.identity = None;
         self.calibForm = father
-        self.objInitCfg=ModCebsCfg.ConfigOpr();
-        self.objMotoProc=ModCebsMoto.classMotoProcess();
-        self.objVision=ModCebsVision.classVisionProcess();
+        self.objInitCfg=ModCebsCfg.clsL1_ConfigOpr();
+        self.objMotoProc=ModCebsMoto.clsL2_MotoProc();
+        self.objVision=ModCebsVision.clsL2_VisCapProc();
         
         if (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD):
             ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX;
@@ -67,7 +67,7 @@ class classCalibProcess(object):
         self.funcInitHoleBoardPar();
         self.funcCleanWorkingEnv()
 
-        self.threadCalibMotoPilot = classCalibPilotThread()
+        self.threadCalibMotoPilot = clsL2_CalibPilotThread()
         self.threadCalibMotoPilot.setIdentity("CalibPilotThread")
         self.threadCalibMotoPilot.signal_calib_print_log.connect(self.funcLogTrace)
         self.threadCalibMotoPilot.signal_calib_pilot_start.connect(self.threadCalibMotoPilot.funcCalibMotoPilotStart)
@@ -75,7 +75,7 @@ class classCalibProcess(object):
         self.threadCalibMotoPilot.start();
         
         #SETUP 2nd task
-        self.threadCameraDisp = classCalibCameraDispThread()
+        self.threadCameraDisp = clsL2_CalibCamDispThread()
         self.threadCameraDisp.setIdentity("CalibCameraDisplay")
         self.threadCameraDisp.signal_calib_print_log.connect(self.funcLogTrace)
         self.threadCameraDisp.signal_calib_camdisp_start.connect(self.threadCameraDisp.funcCalibCameraDispStart)
@@ -217,12 +217,12 @@ class classCalibProcess(object):
         self.funcRecoverWorkingEnv()
 
     def funcCalibMove(self, parMoveScale, parMoveDir):
-        obj = ModCebsMoto.classMotoProcess();
+        obj = ModCebsMoto.clsL2_MotoProc();
         obj.funcMotoCalaMoveOneStep(parMoveScale, parMoveDir);
         self.funcLogTrace("CALIB: Moving one step. Current position XY=[%d/%d]." % (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]))
 
     def funcCalibForceMove(self, parMoveDir):
-        obj = ModCebsMoto.classMotoProcess();
+        obj = ModCebsMoto.clsL2_MotoProc();
         obj.funcMotoFmCalaMoveOneStep(parMoveDir);
         self.funcLogTrace("CALIB: Force moving one step. Current position XY=[%d/%d]." % (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]))
         
@@ -230,7 +230,7 @@ class classCalibProcess(object):
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0];
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1];
         self.funcUpdateHoleBoardPar()
-        iniObj = ModCebsCfg.ConfigOpr();
+        iniObj = ModCebsCfg.clsL1_ConfigOpr();
         iniObj.updateSectionPar();
         self.funcLogTrace("CALIB: RightBottom Axis set!  XY=%d/%d." % (ModCebsCom.GL_CEBS_HB_POS_IN_UM[2], ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))       
 
@@ -238,21 +238,21 @@ class classCalibProcess(object):
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0];
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1];
         self.funcUpdateHoleBoardPar()
-        iniObj = ModCebsCfg.ConfigOpr();
+        iniObj = ModCebsCfg.clsL1_ConfigOpr();
         iniObj.updateSectionPar();
         self.funcLogTrace("CALIB: LeftUp Axis set! XY=%d/%d." % (ModCebsCom.GL_CEBS_HB_POS_IN_UM[0], ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
 
 #Pilot thread, control moto moving and accomplish activities    
-class classCalibPilotThread(QThread):
+class clsL2_CalibPilotThread(QThread):
     signal_calib_print_log = pyqtSignal(str)
     signal_calib_pilot_start = pyqtSignal()
     signal_calib_pilot_stop = pyqtSignal()
 
     def __init__(self,parent=None):
-        super(classCalibPilotThread,self).__init__(parent)
+        super(clsL2_CalibPilotThread,self).__init__(parent)
         self.identity = None;
         self.cntCtrl = -1;
-        self.objMotoProc = ModCebsMoto.classMotoProcess();
+        self.objMotoProc = ModCebsMoto.clsL2_MotoProc();
 
     def setIdentity(self,text):
         self.identity = text
@@ -284,13 +284,13 @@ class classCalibPilotThread(QThread):
 
 
 #Camera display thread, control camera video and easy calibration action
-class classCalibCameraDispThread(QThread):
+class clsL2_CalibCamDispThread(QThread):
     signal_calib_print_log = pyqtSignal(str)
     signal_calib_camdisp_start = pyqtSignal()
     signal_calib_camdisp_stop = pyqtSignal()
 
     def __init__(self,parent=None):
-        super(classCalibCameraDispThread,self).__init__(parent)
+        super(clsL2_CalibCamDispThread,self).__init__(parent)
         self.identity = None;
         self.runFlag = False;
         self.cap = ''

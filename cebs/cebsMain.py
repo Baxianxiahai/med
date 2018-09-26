@@ -46,37 +46,54 @@ from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsCalib
 from PkgCebsHandler import ModCebsGpar
 
+'''
+系统设计框架
+MAIN => 主入口
+    |--SEUI_L4_MainWindow => 主界面
+        |---SEUI_L4_CalibForm => 校准界面
+        |---SEUI_L4_GparForm => 参数设置界面
+            |---clsL3_CtrlSchdThread => 控制调度线程
+            |---clsL3_VisCfyThread => 图像识别线程
+                |---clsL2_VisCapProc => 图像抓取过程
+            |---clsL3_CalibProc => 校准任务
+                |---clsL2_CalibPilotThread => 校准巡游线程
+                |---clsL2_CalibCamDispThread => 摄像头显示视频线程
+                |---clsL2_MotoProc => 马达控制任务
+                    |---clsL1_MotoDrvApi => 马达驱动接口
+                    |---clsL1_GparProc => 参数填写接口
+                    |---clsL1_ConfigOpr => 本地配置文件接口
+                        |---clsL0_MedCFlib => 公共函数库
+'''
 
-#SEF => System Entry Form，表示系统级的主入口
-#
-#
-#第一主入口
-#Main Windows
-class SEF_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCom.clsMedCFlib):
+'''
+#SEUI => System Entry UI，表示系统级的主入口
+第一主入口
+Main Windows
+'''
+class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
     qtsg_mainwin_unvisible = pyqtSignal()
     
     def __init__(self):    
-        super(SEF_MainWindow, self).__init__()  
+        super(SEUI_L4_MainWindow, self).__init__()  
         self.setupUi(self)
         self.initUI()
         
-        #测试一下
-        ModCebsCom.clsMedCFlib.med_cfl_test1(self);
-        
         #MUST Load global parameters, to initialize different UI and update the stored parameters.
-        objInitCfg=ModCebsCfg.ConfigOpr()
+        #STEP1: 初始化配置文件
+        objInitCfg=ModCebsCfg.clsL1_ConfigOpr()
         objInitCfg.readGlobalPar();
         objInitCfg.updateCtrlCntInfo()
-        
-        self.calibForm = SEF_CalibForm()
-        self.gparForm = SEF_GparForm()
-        self.objMoto = ModCebsMoto.classMotoProcess();
+
+        #STEP2: 启动子界面        
+        self.calibForm = SEUI_L4_CalibForm()
+        self.gparForm = SEUI_L4_GparForm()
+        self.objMoto = ModCebsMoto.clsL2_MotoProc();
 
         self.calibForm.signal_mainwin_visible.connect(self.funcMainWinVisible);
         self.gparForm.signal_mainwin_visible.connect(self.funcMainWinVisible);
         self.qtsg_mainwin_unvisible.connect(self.funcMainWinUnvisible);
         
-        self.threadCtrl = ModCebsCtrl.classCtrlThread()
+        self.threadCtrl = ModCebsCtrl.clsL3_CtrlSchdThread()
         self.threadCtrl.setIdentity("CtrlThread")
         self.threadCtrl.signal_print_log.connect(self.slot_print_trigger)
         self.threadCtrl.signal_ctrl_start.connect(self.threadCtrl.funcTakePicStart)
@@ -88,7 +105,7 @@ class SEF_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCom.clsMed
         self.threadCtrl.signal_ctrl_zero.connect(self.threadCtrl.funcCtrlMotoBackZero)
         self.threadCtrl.start();
 
-        self.threadVision = ModCebsVision.classVisionThread()
+        self.threadVision = ModCebsVision.clsL3_VisCfyThread()
         self.threadVision.setIdentity("VisionThread")
         self.threadVision.signal_print_log.connect(self.slot_print_trigger)
         self.threadVision.start();
@@ -96,7 +113,7 @@ class SEF_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCom.clsMed
         self.funcMainFormSetEquInitStatus();
 
         #Detect all valid camera
-        initObjVision = ModCebsVision.classVisionProcess();
+        initObjVision = ModCebsVision.clsL2_VisCapProc();
         res = initObjVision.funcVisionDetectAllCamera()
         self.slot_print_trigger(res)
         
@@ -221,14 +238,14 @@ class SEF_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCom.clsMed
 
 #第二主入口
 #Calibration Widget
-class SEF_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
+class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
     signal_mainwin_visible = pyqtSignal()
 
     def __init__(self):    
-        super(SEF_CalibForm, self).__init__()  
+        super(SEUI_L4_CalibForm, self).__init__()  
         self.setupUi(self)
-        self.calibProc = ModCebsCalib.classCalibProcess(self)
-        self.objInitCfg1 = ModCebsCfg.ConfigOpr()
+        self.calibProc = ModCebsCalib.clsL3_CalibProc(self)
+        self.objInitCfg1 = ModCebsCfg.clsL1_ConfigOpr()
         
     def calib_print_log(self, info):
         strOut = ">> " + time.asctime() + " " + info;
@@ -384,14 +401,14 @@ class SEF_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
 
 #第三主入口
 #Calibration Widget
-class SEF_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
+class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
     signal_mainwin_visible = pyqtSignal()
 
     def __init__(self):    
-        super(SEF_GparForm, self).__init__()  
+        super(SEUI_L4_GparForm, self).__init__()  
         self.setupUi(self)
-        self.gparProc = ModCebsGpar.classGparProcess(self)
-        self.objInitCfg2=ModCebsCfg.ConfigOpr()
+        self.gparProc = ModCebsGpar.clsL1_GparProc(self)
+        self.objInitCfg2=ModCebsCfg.clsL1_ConfigOpr()
         #Update UI interface last time parameter setting
         self.funcGlobalParReadSet2Ui()
         
@@ -516,7 +533,7 @@ class SEF_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
 #Main App entry
 def main_form():
     app = QtWidgets.QApplication(sys.argv)
-    mainWindow = SEF_MainWindow()
+    mainWindow = SEUI_L4_MainWindow()
     mainWindow.show()
     sys.exit(app.exec_())
 

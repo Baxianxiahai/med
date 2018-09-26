@@ -15,7 +15,7 @@ import time
 from PkgCebsHandler import ModCebsCom
 
 
-class ConfigOpr(object):
+class clsL1_ConfigOpr(object):
     def __init__(self):
         self.filePath = ModCebsCom.GL_CEBS_CFG_FILE_NAME
         self.initGlobalPar()
@@ -72,7 +72,7 @@ class ConfigOpr(object):
 
     def readGlobalPar(self):
         self.CReader=configparser.ConfigParser()
-        self.CReader.read(self.filePath, encoding='utf8')        
+        self.CReader.read(self.filePath, encoding='utf8')
         ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX = int(self.CReader['Counter']['PicBatchCnt']);
         ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX = int(self.CReader['Counter']['PicBatchClas']);
         ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = int(self.CReader['Counter']['PicRemainCnt']);
