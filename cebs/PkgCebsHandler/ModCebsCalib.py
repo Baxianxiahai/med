@@ -51,7 +51,10 @@ class clsL3_CalibProc(object):
         self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr();
         self.instL2MotoProc=ModCebsMoto.clsL2_MotoProc(self.instL4CalibForm, 2);
         self.instL2VisCapProc=ModCebsVision.clsL2_VisCapProc(self.instL4CalibForm, 2);
-        
+        self.initParameter();
+
+    def initParameter(self):
+        #STEP1: 判定产品型号
         if (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD):
             ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX;
         elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_48_STANDARD):
@@ -64,18 +67,17 @@ class clsL3_CalibProc(object):
             ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_6_SD_BATCH_MAX;
         else:
             ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX;
-
+        #STEP2：初始化工作环境
         self.funcInitHoleBoardPar();
         self.funcCleanWorkingEnv()
-
-        self.instL2CalibPiThd = clsL2_CalibPilotThread(self.instL4CalibForm)
+        #STEP3：初始化Pilot任务
+        self.instL2CalibPiThd = clsL2_CalibPilotThread(self.instL4CalibForm, self.instL2MotoProc)
         self.instL2CalibPiThd.setIdentity("TASK_CalibPilotThread")
         self.instL2CalibPiThd.sgL3CalibFormPrtLog.connect(self.funcCalibLogTrace)
         self.instL2CalibPiThd.sgL2PiStart.connect(self.instL2CalibPiThd.funcCalibMotoPilotStart)
         self.instL2CalibPiThd.sgL2PiStop.connect(self.instL2CalibPiThd.funcCalibMotoPilotStop)
         self.instL2CalibPiThd.start();
-        
-        #SETUP 2nd task
+        #STEP3：初始化摄像头视频展示任务 #SETUP 2nd task
         self.instL2CalibCamDisThd = clsL2_CalibCamDispThread(self.instL4CalibForm)
         self.instL2CalibCamDisThd.setIdentity("TASK_CalibCameraDisplay")
         self.instL2CalibCamDisThd.sgL3CalibFormPrtLog.connect(self.funcCalibLogTrace)
@@ -83,7 +85,7 @@ class clsL3_CalibProc(object):
         self.instL2CalibCamDisThd.sgL2CamDiStop.connect(self.instL2CalibCamDisThd.funcCalibCameraDispStop)
         self.instL2CalibCamDisThd.start();
         self.funcCalibLogTrace("L3CALIB: Instance start test!")
-        
+                        
     def setIdentity(self,text):
         self.identity = text
 
@@ -249,12 +251,15 @@ class clsL2_CalibPilotThread(QThread):
     sgL2PiStart = pyqtSignal()
     sgL2PiStop = pyqtSignal()
 
-    def __init__(self, father):
+    def __init__(self, father, instMotoHandler):
         super(clsL2_CalibPilotThread, self).__init__()
         self.identity = None;
         self.instL4CalibForm = father
+        self.instMotoHandler = instMotoHandler
         self.cntCtrl = -1;
-        self.instL2MotoProc = ModCebsMoto.clsL2_MotoProc(self.instL4CalibForm, 2);
+        '''简化Class调用过程
+        #self.instL2MotoProc = ModCebsMoto.clsL2_MotoProc(self.instL4CalibForm, 2);
+        '''
         self.funcCalibPiLogTrace("L2CALPI: Instance start test!")
 
     def setIdentity(self,text):
@@ -271,10 +276,10 @@ class clsL2_CalibPilotThread(QThread):
 
     #OPTIMIZE PILOT WORKING METHOD
     def funcMotoCalibPilotWorkingOnces(self):
-        self.instL2MotoProc.funcMotoMove2HoleNbr(1);
-        self.instL2MotoProc.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_HOLE_X_NUM);
-        self.instL2MotoProc.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX);
-        self.instL2MotoProc.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX - ModCebsCom.GL_CEBS_HB_HOLE_X_NUM + 1);
+        self.instMotoHandler.funcMotoMove2HoleNbr(1);
+        self.instMotoHandler.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_HOLE_X_NUM);
+        self.instMotoHandler.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX);
+        self.instMotoHandler.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX - ModCebsCom.GL_CEBS_HB_HOLE_X_NUM + 1);
                 
     def run(self):
         while True:
@@ -286,7 +291,7 @@ class clsL2_CalibPilotThread(QThread):
             #STOP
             elif (self.cntCtrl == 0): 
                 self.sgL3CalibFormPrtLog.emit("L2CALPI: Stop Calibration pilot!")
-                self.instL2MotoProc.funcMotoStop();
+                self.instMotoHandler.funcMotoStop();
 
 
 #Camera display thread, control camera video and easy calibration action

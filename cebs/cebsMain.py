@@ -108,6 +108,11 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 
     #MUST Load global parameters, to initialize different UI and update the stored parameters.
     def initParameter(self):
+        '''
+        ModCebsCom.clsL0_MedCFlib.med_cfl_test1(self)
+        c = ModCebsCom.clsL0_MedCFlib.med_cfl_add(self, 1, 2)
+        print("Test result = %d" % (c))
+        '''
         #STEP1: 初始化配置文件
         self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr()
         self.instL1ConfigOpr.readGlobalPar();
@@ -115,7 +120,6 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         #STEP2: 启动子界面        
         self.instL4CalibForm = SEUI_L4_CalibForm()
         self.instL4GparForm = SEUI_L4_GparForm()
-        self.instL2MotoProc = ModCebsMoto.clsL2_MotoProc(self, 1) #第一种选择
         #STEP3: 连接信号槽
         self.instL4CalibForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.instL4GparForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
@@ -139,13 +143,15 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.instL3VisCfyThd.start();
         #STEP6: 设置马达等物理硬件状态
         self.funcMainFormSetEquInitStatus();
-        #STEP7: 智能初始化摄像头
-        #Detect all valid camera
+        #STEP7: 智能初始化摄像头#Detect all valid camera
+        '''
+                    方法一：搞定了，但长久初始化一个线程空间，没必要，简化模式的使用
         self.instL3VisCapProc = ModCebsVision.clsL2_VisCapProc(self, 1);
         res = self.instL3VisCapProc.funcVisionDetectAllCamera()
+        '''
+        res = ModCebsVision.clsL2_VisCapProc.funcVisionDetectAllCamera(self)
         self.slot_print_trigger(res)
-        #STEP8: 发送归零信号给马达
-        #MAKE MOTO GO BACK TO ZERO
+        #STEP8: 发送归零信号给马达 #MAKE MOTO GO BACK TO ZERO
         self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
         
     #File Open Method, for reference
@@ -244,8 +250,13 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 
     #Local function
     def funcMainFormSetEquInitStatus(self):
-        if (self.instL2MotoProc.funcMotoRunningStatusInquery() == True):
-            self.instL2MotoProc.funcMotoStop()
+        '''采用简化模式，省的启动那么多类的Instance
+        #self.instL2MotoProc = ModCebsMoto.clsL2_MotoProc(self, 1) #第一种选择
+        #if (self.instL2MotoProc.funcMotoRunningStatusInquery() == True):
+        #    self.instL2MotoProc.funcMotoStop()
+        '''
+        if (ModCebsMoto.clsL2_MotoProc.funcMotoRunningStatusInquery(self) == True):
+            ModCebsMoto.clsL2_MotoProc.funcMotoStop(self)            
 
 
 

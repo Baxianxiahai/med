@@ -73,7 +73,7 @@ class clsL3_CtrlSchdThread(QThread):
 
         #INIT STM
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
-        
+        self.transferLogTrace("L3CTRLST: Instance start test!")
         
     def setIdentity(self,text):
         self.identity = text

@@ -138,7 +138,7 @@ GL_CEBS_CAMERA_DISPLAY_POS_Y = 0;
 class clsL0_MedCFlib():
     
     def __init__(self):    
-        #super(classComCebsFuncLib, self).__init__()  
+        super(clsL0_MedCFlib, self).__init__()  
         pass
 
     def med_cfl_test1(self):
@@ -146,6 +146,8 @@ class clsL0_MedCFlib():
         print("Test functions! Global parameter Nbr Set = %d" % (GL_CEBS_COM_NUMBER_SET))
         pass
 
+    def med_cfl_add(self, a, b):
+        return a+b
 
 
 

@@ -321,7 +321,6 @@ class clsL2_VisCapProc(object):
         self.instL4WinForm = father
         self.prtFlag = prtFlag
         self.instL1ConfigOpr = ModCebsCfg.clsL1_ConfigOpr()
-
 #         #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
 #         self.cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
 #         if not self.cap.isOpened():

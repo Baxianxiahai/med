@@ -24,6 +24,8 @@
 = 对重要的过程进行必要的注释
 = 对实例化的对象句柄进行统一命名
 = 将所有模块的打印调出来了
+= 某些简要的Class调用函数，因为只用到一次，所以简化为直接调用，而不再需要单独new这个Class再使用。
+= ComLib上进行了验证
 
 //=MYC, 2018/8/04, CURRENT_SW_DELIVERY R1.16 =>CEBS
 2018/08/04, test with following issues:
