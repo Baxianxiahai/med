@@ -46,10 +46,10 @@ class clsL3_CalibProc(object):
     def __init__(self, father):
         super(clsL3_CalibProc, self).__init__()
         self.identity = None;
-        self.calibForm = father
-        self.objInitCfg=ModCebsCfg.clsL1_ConfigOpr();
-        self.objMotoProc=ModCebsMoto.clsL2_MotoProc();
-        self.objVision=ModCebsVision.clsL2_VisCapProc();
+        self.instL4CalibForm = father
+        self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr();
+        self.instL2MotoProc=ModCebsMoto.clsL2_MotoProc();
+        self.instL2VisCapProc=ModCebsVision.clsL2_VisCapProc();
         
         if (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD):
             ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX;
@@ -67,34 +67,34 @@ class clsL3_CalibProc(object):
         self.funcInitHoleBoardPar();
         self.funcCleanWorkingEnv()
 
-        self.threadCalibMotoPilot = clsL2_CalibPilotThread()
-        self.threadCalibMotoPilot.setIdentity("CalibPilotThread")
-        self.threadCalibMotoPilot.signal_calib_print_log.connect(self.funcLogTrace)
-        self.threadCalibMotoPilot.signal_calib_pilot_start.connect(self.threadCalibMotoPilot.funcCalibMotoPilotStart)
-        self.threadCalibMotoPilot.signal_calib_pilot_stop.connect(self.threadCalibMotoPilot.funcCalibMotoPilotStop)
-        self.threadCalibMotoPilot.start();
+        self.instL2CalibPiThd = clsL2_CalibPilotThread()
+        self.instL2CalibPiThd.setIdentity("TASK_CalibPilotThread")
+        self.instL2CalibPiThd.signal_calib_print_log.connect(self.funcLogTrace)
+        self.instL2CalibPiThd.signal_calib_pilot_start.connect(self.instL2CalibPiThd.funcCalibMotoPilotStart)
+        self.instL2CalibPiThd.signal_calib_pilot_stop.connect(self.instL2CalibPiThd.funcCalibMotoPilotStop)
+        self.instL2CalibPiThd.start();
         
         #SETUP 2nd task
-        self.threadCameraDisp = clsL2_CalibCamDispThread()
-        self.threadCameraDisp.setIdentity("CalibCameraDisplay")
-        self.threadCameraDisp.signal_calib_print_log.connect(self.funcLogTrace)
-        self.threadCameraDisp.signal_calib_camdisp_start.connect(self.threadCameraDisp.funcCalibCameraDispStart)
-        self.threadCameraDisp.signal_calib_camdisp_stop.connect(self.threadCameraDisp.funcCalibCameraDispStop)
-        self.threadCameraDisp.start();
+        self.instL2CalibCamDisThd = clsL2_CalibCamDispThread()
+        self.instL2CalibCamDisThd.setIdentity("TASK_CalibCameraDisplay")
+        self.instL2CalibCamDisThd.signal_calib_print_log.connect(self.funcLogTrace)
+        self.instL2CalibCamDisThd.signal_calib_camdisp_start.connect(self.instL2CalibCamDisThd.funcCalibCameraDispStart)
+        self.instL2CalibCamDisThd.signal_calib_camdisp_stop.connect(self.instL2CalibCamDisThd.funcCalibCameraDispStop)
+        self.instL2CalibCamDisThd.start();
         
     def setIdentity(self,text):
         self.identity = text
 
     def funcLogTrace(self, myString):
-        self.calibForm.calib_print_log(myString)
+        self.instL4CalibForm.calib_print_log(myString)
 
     def funcCleanWorkingEnv(self):
-        if (self.objMotoProc.funcMotoRunningStatusInquery() == True):
-            self.objMotoProc.funcMotoStop()        
-        self.objVision.funcVisionClasEnd()
+        if (self.instL2MotoProc.funcMotoRunningStatusInquery() == True):
+            self.instL2MotoProc.funcMotoStop()        
+        self.instL2VisCapProc.funcVisionClasEnd()
 
     def funcRecoverWorkingEnv(self):
-        self.objMotoProc.funcMotoStop();
+        self.instL2MotoProc.funcMotoStop();
     
     def funcInitHoleBoardPar(self):
         if (ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE == 0 or ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE == 0 or ModCebsCom.GL_CEBS_HB_HOLE_X_NUM == 0 or ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM == 0):
@@ -168,11 +168,11 @@ class clsL3_CalibProc(object):
 
     def funcCalibPilotStart(self):
         self.funcLogTrace("CALIB: PILOT STARTING...")
-        self.threadCalibMotoPilot.signal_calib_pilot_start.emit()
+        self.instL2CalibPiThd.signal_calib_pilot_start.emit()
 
     def funcCalibPilotMove0(self):
         self.funcLogTrace("CALIB: Move to Hole#0 point.")
-        res, string = self.objMotoProc.funcMotoMove2Start()
+        res, string = self.instL2MotoProc.funcMotoMove2Start()
         if (res < 0):
             self.funcLogTrace("CALIB: Moving to start point error!")
             return -2;
@@ -183,7 +183,7 @@ class clsL3_CalibProc(object):
         outputStr = "CALIB: Starting move to Hole#%d point." % (holeNbr)
         self.funcLogTrace(outputStr)
         newHoldNbr = self.funcCheckHoldNumber(holeNbr)
-        res = self.objMotoProc.funcMotoMove2HoleNbr(newHoldNbr)
+        res = self.instL2MotoProc.funcMotoMove2HoleNbr(newHoldNbr)
         if (res < 0):
             outputStr = "CALIB: Move to Hole#%d point error!" % (newHoldNbr)
             self.funcLogTrace(outputStr)
@@ -195,24 +195,24 @@ class clsL3_CalibProc(object):
     
     def funcCalibPilotStop(self):
         self.funcLogTrace("CALIB: PILOT STOP...")
-        self.threadCalibMotoPilot.signal_calib_pilot_stop.emit()
-        self.threadCameraDisp.signal_calib_camdisp_stop.emit()
+        self.instL2CalibPiThd.signal_calib_pilot_stop.emit()
+        self.instL2CalibCamDisThd.signal_calib_camdisp_stop.emit()
 
     #Using different function/api to find the right position
-    #pos = self.calibForm.size()
-    #pos = self.calibForm.rect()
+    #pos = self.instL4CalibForm.size()
+    #pos = self.instL4CalibForm.rect()
     #geometry will return (left, top, width, height)
     def funcCalibPilotCameraEnable(self):
         self.funcLogTrace("CALIB: PILOT CEMERA ENABLE...")
-        pos = self.calibForm.geometry()
+        pos = self.instL4CalibForm.geometry()
         ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_X = pos.x() + 420
         ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y = pos.y() + 10
         #print(ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_X, ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y)    
-        self.threadCameraDisp.signal_calib_camdisp_start.emit()
+        self.instL2CalibCamDisThd.signal_calib_camdisp_start.emit()
 
     #FINISH all the pilot functions
     def funcCtrlCalibComp(self):
-        self.threadCameraDisp.signal_calib_camdisp_stop.emit()
+        self.instL2CalibCamDisThd.signal_calib_camdisp_stop.emit()
         self.funcUpdateHoleBoardPar()
         self.funcRecoverWorkingEnv()
 
@@ -252,7 +252,7 @@ class clsL2_CalibPilotThread(QThread):
         super(clsL2_CalibPilotThread,self).__init__(parent)
         self.identity = None;
         self.cntCtrl = -1;
-        self.objMotoProc = ModCebsMoto.clsL2_MotoProc();
+        self.instL2MotoProc = ModCebsMoto.clsL2_MotoProc();
 
     def setIdentity(self,text):
         self.identity = text
@@ -261,14 +261,14 @@ class clsL2_CalibPilotThread(QThread):
         self.cntCtrl = ModCebsCom.GL_CEBS_PILOT_WOKING_ROUNDS_MAX+1;
 
     def funcCalibMotoPilotStop(self):
-            self.cntCtrl = 1;
+        self.cntCtrl = 1;
 
     #OPTIMIZE PILOT WORKING METHOD
     def funcMotoCalibPilotWorkingOnces(self):
-        self.objMotoProc.funcMotoMove2HoleNbr(1);
-        self.objMotoProc.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_HOLE_X_NUM);
-        self.objMotoProc.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX);
-        self.objMotoProc.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX - ModCebsCom.GL_CEBS_HB_HOLE_X_NUM + 1);
+        self.instL2MotoProc.funcMotoMove2HoleNbr(1);
+        self.instL2MotoProc.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_HOLE_X_NUM);
+        self.instL2MotoProc.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX);
+        self.instL2MotoProc.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX - ModCebsCom.GL_CEBS_HB_HOLE_X_NUM + 1);
                 
     def run(self):
         while True:
@@ -280,7 +280,7 @@ class clsL2_CalibPilotThread(QThread):
             #STOP
             elif (self.cntCtrl == 0): 
                 self.signal_calib_print_log.emit("CALIB: Stop Calibration pilot!")
-                self.objMotoProc.funcMotoStop();
+                self.instL2MotoProc.funcMotoStop();
 
 
 #Camera display thread, control camera video and easy calibration action
@@ -323,7 +323,7 @@ class clsL2_CalibCamDispThread(QThread):
                 self.cap.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)             
                 break;
         if not self.cap.isOpened():
-            self.objInitCfg.medErrorLog("CALIB: Cannot open webcam!")
+            self.instL1ConfigOpr.medErrorLog("CALIB: Cannot open webcam!")
             return -1;
         #Prepare to show window
         cv.namedWindow('CAMERA CAPTURED', 0)
@@ -352,7 +352,7 @@ class clsL2_CalibCamDispThread(QThread):
 #                     workingMode = True
 #                     self.cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR)
 #                     if not self.cap.isOpened():
-#                         self.objInitCfg.medErrorLog("CALIB: Cannot open webcam!")
+#                         self.instL1ConfigOpr.medErrorLog("CALIB: Cannot open webcam!")
 #                         print("CALIB: Cannot open webcam!")
 #                         return -1;
 #                     cv.namedWindow('CAMERA CAPTURED', 0)

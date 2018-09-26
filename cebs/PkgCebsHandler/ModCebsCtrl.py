@@ -50,9 +50,9 @@ class clsL3_CtrlSchdThread(QThread):
         super(clsL3_CtrlSchdThread,self).__init__(parent)
         self.identity = None;
         self.times = -1;
-        self.objInitCfg=ModCebsCfg.clsL1_ConfigOpr();
-        self.objMoto=ModCebsMoto.clsL2_MotoProc();
-        self.objVision=ModCebsVision.clsL2_VisCapProc();
+        self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr();
+        self.instL2MotoProc=ModCebsMoto.clsL2_MotoProc();
+        self.instL2VisCapProc=ModCebsVision.clsL2_VisCapProc();
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_NULL;
         
         #INIT DIFFERENT TARGET BOARDS AND NUMBERS
@@ -92,14 +92,14 @@ class clsL3_CtrlSchdThread(QThread):
         #JUDGE WHETHER TAKING PICTURE IS FIXED POSITION OR NOT
         if (ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET == False):
             #MOTO START POINT
-            res, string = self.objMoto.funcMotoMove2Start()
+            res, string = self.instL2MotoProc.funcMotoMove2Start()
             if (res < 0):
                 self.signal_print_log.emit("CTRL: MOTO MOVING ERROR！")
                 self.signal_print_log.emit(string)
                 return -2;
         self.times = ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH+1;
         self.signal_print_log.emit("CTRL: START TAKING PICTURE: REMAINING TIMES=%d." %(self.times-1))
-        self.objInitCfg.createBatch(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX);
+        self.instL1ConfigOpr.createBatch(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX);
 
     #STOP TAKING PICTURE
     #THIS IS HIGH LEVEL SKILLS
@@ -118,7 +118,7 @@ class clsL3_CtrlSchdThread(QThread):
             self.signal_print_log.emit("CTRL: funcCtrlMotoBackZero PLS FINISH LAST TASK！")
             return -1;
         self.signal_print_log.emit("CTRL: MOTO RUN TO ZERO...")
-        if (self.objMoto.funcMotoBackZero() < 0):
+        if (self.instL2MotoProc.funcMotoBackZero() < 0):
             self.signal_print_log.emit("CTRL: SYSTME RUN TO ZERO GET ERROR FEEDBACK!")
             self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_ERR;
             return -1;
@@ -133,9 +133,9 @@ class clsL3_CtrlSchdThread(QThread):
         if ((curOne > ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH) or (curOne < 1)):
             self.signal_print_log.emit("CTRL: TAKING PICTURE SERIAL NUMBER ERROR!")
             return -1;
-        self.objVision.funcVisionCapture(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne);
+        self.instL2VisCapProc.funcVisionCapture(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne);
         print("CTRL: Taking picture once! Current Batch=%d and Index =%d" % (ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne));
-        self.objInitCfg.addBatchFile(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne)
+        self.instL1ConfigOpr.addBatchFile(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne)
         #MOVINT TO NEXT WORKIN POSITION IN ADVANCE
         nextOne = curOne + 1;
         
@@ -145,11 +145,11 @@ class clsL3_CtrlSchdThread(QThread):
         
         #IF ALREADY LAST POSITION, RUN TO ZERO
         if ((nextOne <= ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH) and (nextOne >=1)):
-            if (self.objMoto.funcMotoMove2HoleNbr(nextOne) < 0):
+            if (self.instL2MotoProc.funcMotoMove2HoleNbr(nextOne) < 0):
                 self.signal_print_log.emit("CTRL: MOTO MOVE ERROR!")
                 return -1;
         else:
-            if (self.objMoto.funcMotoBackZero() < 0):
+            if (self.instL2MotoProc.funcMotoBackZero() < 0):
                 self.signal_print_log.emit("CTRL: SYSTEM RUN TO ZERO ERROR!")
                 return -2;
         return 1;
@@ -161,11 +161,11 @@ class clsL3_CtrlSchdThread(QThread):
         if (ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT <=0):
             self.signal_print_log.emit("CTRL: No remaining picture to classify, no action!")
             return -1;
-        self.objVision.funcVisionClasStart()
+        self.instL2VisCapProc.funcVisionClasStart()
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CLAS;
     
     def funcVisionClasStop(self):
-        self.objVision.funcVisionClasEnd()
+        self.instL2VisCapProc.funcVisionClasEnd()
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
 
     def funcCtrlCalibStart(self):
@@ -196,7 +196,7 @@ class clsL3_CtrlSchdThread(QThread):
                 elif (self.times == 0):
                     self.signal_print_log.emit("CTRL: STOP TAKING PICTURE, REMAINING TIMES=%d." %(self.times))
                     ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX +=1;
-                    self.objInitCfg.updateCtrlCntInfo();
+                    self.instL1ConfigOpr.updateCtrlCntInfo();
                     self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
         
         

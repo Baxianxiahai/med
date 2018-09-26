@@ -311,12 +311,12 @@ class clsL3_VisCfyThread(QThread, ModCebsCfg.clsL1_ConfigOpr):
         
 class clsL2_VisCapProc(object):
     def __init__(self):
-        self.objInitCfg = ModCebsCfg.clsL1_ConfigOpr()
+        self.instL1ConfigOpr = ModCebsCfg.clsL1_ConfigOpr()
 
 #         #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
 #         self.cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
 #         if not self.cap.isOpened():
-#             self.objInitCfg.medErrorLog("VISION CLAS: Cannot open webcam!")
+#             self.instL1ConfigOpr.medErrorLog("VISION CLAS: Cannot open webcam!")
 #             print("VISION CLAS: Cannot open webcam!")
 #             return -1;
 #         #Set working resolution
@@ -346,7 +346,7 @@ class clsL2_VisCapProc(object):
         # Check if the webcam is opened correctly
         if not cap.isOpened():
             #raise IOError("Cannot open webcam")
-            self.objInitCfg.medErrorLog("VISION CLAS: Cannot open webcam!")
+            self.instL1ConfigOpr.medErrorLog("VISION CLAS: Cannot open webcam!")
             print("VISION CLAS: Cannot open webcam!, Batch/Nbr=%d/%d" % (batch, fileNbr))
             return -1;
 

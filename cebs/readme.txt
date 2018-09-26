@@ -18,8 +18,13 @@
 
 
 
+//=ZJL, 2018/9/27, CURRENT_SW_DELIVERY R1.17 =>CEBS
+= 对整个程序框架进行清理，尽量做到清晰明了
+= 对所有类、函数进行规则命名
+= 对重要的过程进行必要的注释
+= 对实例化的对象句柄进行统一命名
 
-//=MYC, 2018/8/04, CURRENT_SW_DELIVERY R1.11 =>CEBS
+//=MYC, 2018/8/04, CURRENT_SW_DELIVERY R1.16 =>CEBS
 2018/08/04, test with following issues:
 1. Dist不好使
 2. 图像识别不按停止，校准界面弹不出来（已知）

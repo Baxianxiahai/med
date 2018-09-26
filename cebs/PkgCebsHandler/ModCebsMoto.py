@@ -28,7 +28,7 @@ from PkgCebsHandler import ModCebsMotorApi
 
 class clsL2_MotoProc(object):
     if (ModCebsCom.GL_CEBS_MOTOAPI_INSTALLED_SET == True):
-        ObjMotorApi = ModCebsMotorApi.clsL1_MotoDrvApi()
+        instL1MotoDrvApi = ModCebsMotorApi.clsL1_MotoDrvApi()
     
     def __init__(self):
         if (ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE == 0 or ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE == 0 or ModCebsCom.GL_CEBS_HB_HOLE_X_NUM == 0 or ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM == 0):
@@ -235,7 +235,7 @@ class clsL2_MotoProc(object):
     def funcMotoStop(self):
         print("MOTO: funcMotoStop running...")
         if (ModCebsCom.GL_CEBS_MOTOAPI_INSTALLED_SET == True):
-            res = self.ObjMotorApi.moto_proc_full_stop()
+            res = self.instL1MotoDrvApi.moto_proc_full_stop()
             if (res < 0):
                 print("MOTO: funcMotoStop error!")
                 return -1
@@ -271,7 +271,7 @@ class clsL2_MotoProc(object):
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy):
         print("MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy))
         if (ModCebsCom.GL_CEBS_MOTOAPI_INSTALLED_SET == True):
-            if (self.ObjMotorApi.moto_proc_move_to_axis_postion(curPx, curPy, newPx, newPy) < 0):
+            if (self.instL1MotoDrvApi.moto_proc_move_to_axis_postion(curPx, curPy, newPx, newPy) < 0):
                 print("MOTO: funcMotoMove2AxisPos run error!")
                 self.objInitCfg.medErrorLog("MOTO: funcMotoMove2AxisPos get error!")
                 return -1

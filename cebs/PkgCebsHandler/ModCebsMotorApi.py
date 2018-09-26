@@ -65,17 +65,17 @@ class clsL1_MotoDrvApi(object):
         '''
         Constructor
         '''
-        self.objInitCfg = ModCebsCfg.clsL1_ConfigOpr()
+        self.instL1ConfigOpr = ModCebsCfg.clsL1_ConfigOpr()
         plist = list(serial.tools.list_ports.comports())
         self.targetComPortString = 'Prolific USB-to-Serial Comm Port ('
         if len(plist) <= 0:
-            self.objInitCfg.medErrorLog("MOTOAPI: The Serial port can't find!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: The Serial port can't find!")
             print ("MOTOAPI: The Serial port can't find!")
         else:
             maxList = len(plist)
             searchComPartString = ''
             for index in range(0, maxList):
-                self.objInitCfg.medErrorLog("MOTOAPI: " + str(plist[index]))
+                self.instL1ConfigOpr.medErrorLog("MOTOAPI: " + str(plist[index]))
                 plistIndex =list(plist[index])
                 #Find right COM# with 'Prolific USB-to-Serial Comm Port'
                 for comPortStr in plistIndex:
@@ -87,7 +87,7 @@ class clsL1_MotoDrvApi(object):
                 #serialName = plist_0[0]
                 print("MOTOAPI: Can not find right serial port!")
                 #self.signal_print_log.emit("MOTOAPI: Can not find right serial port!")
-                self.objInitCfg.medErrorLog("MOTOAPI: Can not find right serial port!")
+                self.instL1ConfigOpr.medErrorLog("MOTOAPI: Can not find right serial port!")
                 return -1
             else:
                 print("MOTOAPI: serial port = ", searchComPartString)
@@ -158,7 +158,7 @@ class clsL1_MotoDrvApi(object):
     def motor_api_read_version(self):
         if(self.IsSerialOpenOk == False):
             print("MOTOAPI: Serial is not opened, return motor_api_read_version")
-            self.objInitCfg.medErrorLog("MOTOAPI: Serial is not opened, return motor_api_read_version")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: Serial is not opened, return motor_api_read_version")
             return -1
         self.serialFd.reset_input_buffer()
         self.serialFd.reset_output_buffer()
@@ -167,14 +167,14 @@ class clsL1_MotoDrvApi(object):
         Version = self.serialFd.readline()
         print("MOTOAPI: Version = ", Version)
         if Version == b'':
-            self.objInitCfg.medErrorLog("MOTOAPI: Can not find right version 1!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: Can not find right version 1!")
             return -1;
         VerNumber = Version.split()[0]
         print("MOTOAPI: VerNumber = ", VerNumber)
         if int(VerNumber) == 37:
             self.IsSerialOpenOk = True
         else:
-            self.objInitCfg.medErrorLog("MOTOAPI: Can not find right version 2!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: Can not find right version 2!")
             self.IsSerialOpenOk = False
         print("MOTOAPI: IsSerialOpenOk =", self.IsSerialOpenOk)
         return int(VerNumber)
@@ -182,7 +182,7 @@ class clsL1_MotoDrvApi(object):
     def motor_api_read_status(self):
         if(self.IsSerialOpenOk == False):
             print("MOTOAPI: Serial is not opened, return motor_api_read_status")
-            self.objInitCfg.medErrorLog("MOTOAPI: Serial is not opened, return motor_api_read_status")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: Serial is not opened, return motor_api_read_status")
             return -1
         MotorStatusStr = ['0','0','0','0']
         try:
@@ -190,13 +190,13 @@ class clsL1_MotoDrvApi(object):
             self.serialFd.reset_output_buffer()
             self.serialFd.write(MotorCmdStrReadStatus.encode())
         except Exception:
-            self.objInitCfg.medErrorLog("MOTOAPI: motor_api_read_status error 1!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: motor_api_read_status error 1!")
             return -1
         #time.sleep(1)
         MotorStatusStrFull = self.serialFd.readline()
         print("MOTOAPI: MotorStatusStr = ", MotorStatusStrFull)
         if (MotorStatusStrFull == b''):
-            self.objInitCfg.medErrorLog("MOTOAPI: motor_api_read_status error 2!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: motor_api_read_status error 2!")
             return -2
         MotorStatusStr[0] = MotorStatusStrFull.split()[0]
         MotorStatusStr[1] = MotorStatusStrFull.split()[1]
@@ -219,24 +219,24 @@ class clsL1_MotoDrvApi(object):
     def motor_api_emergency_stop(self, motor1, motor2, motor3, motor4):
         if(self.IsSerialOpenOk == False):
             print("MOTOAPI: Serial is not opened, return motor_api_emergency_stop")
-            self.objInitCfg.medErrorLog("MOTOAPI: Serial is not opened, return motor_api_emergency_stop")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: Serial is not opened, return motor_api_emergency_stop")
             return -1
         MotorCmdStringToSend = 'M03 ' + str(motor1) + ' ' + str(motor2) + ' '+ str(motor3) + ' '+ str(motor4) + ' ' + '\r\n'
         print("MOTOAPI: MotorCmdStringToSend1 = ", MotorCmdStringToSend)
         try:
             self.serialFd.reset_input_buffer()
         except Exception:
-            self.objInitCfg.medErrorLog("MOTOAPI: serialFd.reset_input_buffer error!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: serialFd.reset_input_buffer error!")
             return -1
         try:
             self.serialFd.reset_output_buffer()
         except Exception:
-            self.objInitCfg.medErrorLog("MOTOAPI: serialFd.reset_output_buffer error!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: serialFd.reset_output_buffer error!")
             return -2
         try:
             self.serialFd.write(MotorCmdStringToSend.encode())
         except Exception:
-            self.objInitCfg.medErrorLog("MOTOAPI: serialFd.write error!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: serialFd.write error!")
             return -3
         
         #time.sleep(1)
@@ -244,48 +244,48 @@ class clsL1_MotoDrvApi(object):
             try:
                 MotorReturn = self.serialFd.readline()
             except Exception:
-                self.objInitCfg.medErrorLog("MOTOAPI: serialFd.readline 1!")
+                self.instL1ConfigOpr.medErrorLog("MOTOAPI: serialFd.readline 1!")
                 return -4
             print("MOTOAPI: MotorReturn11 = ", MotorReturn)
             if (MotorReturn == b''):
-                self.objInitCfg.medErrorLog("MOTOAPI: MotorReturn error 1!")
+                self.instL1ConfigOpr.medErrorLog("MOTOAPI: MotorReturn error 1!")
                 return -10
         if motor2 == 1:        
             try:
                 MotorReturn = self.serialFd.readline()
             except Exception:
-                self.objInitCfg.medErrorLog("MOTOAPI: serialFd.readline 2!")
+                self.instL1ConfigOpr.medErrorLog("MOTOAPI: serialFd.readline 2!")
                 return -5
             print("MOTOAPI: MotorReturn12 = ", MotorReturn)
             if (MotorReturn == b''):
-                self.objInitCfg.medErrorLog("MOTOAPI: MotorReturn error 2!")
+                self.instL1ConfigOpr.medErrorLog("MOTOAPI: MotorReturn error 2!")
                 return -11
         if motor3 == 1:        
             try:
                 MotorReturn = self.serialFd.readline()
             except Exception:
-                self.objInitCfg.medErrorLog("MOTOAPI: serialFd.readline 3!")
+                self.instL1ConfigOpr.medErrorLog("MOTOAPI: serialFd.readline 3!")
                 return -6
             print("MOTOAPI: MotorReturn13 = ", MotorReturn)
             if (MotorReturn == b''):
-                self.objInitCfg.medErrorLog("MOTOAPI: MotorReturn error 3!")
+                self.instL1ConfigOpr.medErrorLog("MOTOAPI: MotorReturn error 3!")
                 return -12
         if motor4 == 1:
             try:
                 MotorReturn = self.serialFd.readline()
             except Exception:
-                self.objInitCfg.medErrorLog("MOTOAPI: serialFd.readline 4!")
+                self.instL1ConfigOpr.medErrorLog("MOTOAPI: serialFd.readline 4!")
                 return -7
             print("MOTOAPI: MotorReturn14 = ", MotorReturn)
             if (MotorReturn == b''):
-                self.objInitCfg.medErrorLog("MOTOAPI: MotorReturn error 4!")
+                self.instL1ConfigOpr.medErrorLog("MOTOAPI: MotorReturn error 4!")
                 return -13
         return 1
 
     def motor_api_slow_stop(self, motor1, motor2, motor3, motor4):
         if(self.IsSerialOpenOk == False):
             print("MOTOAPI: Serial is not opened, return motor_api_slow_stop")
-            self.objInitCfg.medErrorLog("MOTOAPI: Serial is not opened, return motor_api_slow_stop")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: Serial is not opened, return motor_api_slow_stop")
             return -1
         MotorStatusStr = ['0','0','0','0']
         MotorCmdStringToSend = 'M04 ' + str(motor1) + ' ' + str(motor2) + ' '+ str(motor3) + ' '+ str(motor4) + ' ' + '\r\n'
@@ -295,7 +295,7 @@ class clsL1_MotoDrvApi(object):
             self.serialFd.reset_output_buffer()
             self.serialFd.write(MotorCmdStringToSend.encode())
         except Exception:
-            self.objInitCfg.medErrorLog("MOTOAPI: motor_api_slow_stop error 1!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: motor_api_slow_stop error 1!")
             return -1;
 
         #time.sleep(1)
@@ -336,7 +336,7 @@ class clsL1_MotoDrvApi(object):
     def motor_api_go_with_steps(self, motor1_steps, motor2_steps, motor3_steps, motor4_steps):
         if(self.IsSerialOpenOk == False):
             print("MOTOAPI: Serial is not opened, return motor_api_go_with_steps")
-            self.objInitCfg.medErrorLog("MOTOAPI: Serial is not opened, return motor_api_go_with_steps")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: Serial is not opened, return motor_api_go_with_steps")
             return -1
         MotorCmdStringToSend = 'M01 ' + str(motor1_steps) + ' ' + str(motor2_steps) + ' '+ str(motor3_steps) + ' '+ str(motor4_steps) + ' ' + '\r\n'
         print("MOTOAPI: MotorCmdStringToSend3 = ", MotorCmdStringToSend)
@@ -345,7 +345,7 @@ class clsL1_MotoDrvApi(object):
             self.serialFd.reset_output_buffer()        
             self.serialFd.write(MotorCmdStringToSend.encode())
         except Exception:
-            self.objInitCfg.medErrorLog("MOTOAPI: motor_api_go_with_steps error 1!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: motor_api_go_with_steps error 1!")
             return -2
 
         if int(motor1_steps) != 0:        
@@ -365,7 +365,7 @@ class clsL1_MotoDrvApi(object):
     def motor_api_go_with_speed(self, motor1_speed, motor2_speed, motor3_speed, motor4_speed):
         if(self.IsSerialOpenOk == False):
             print("MOTOAPI: Serial is not opened, return motor_api_go_with_speed")
-            self.objInitCfg.medErrorLog("MOTOAPI: Serial is not opened, return motor_api_go_with_speed")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: Serial is not opened, return motor_api_go_with_speed")
             return -1
         MotorCmdStringToSend = 'M02 ' + str(motor1_speed) + ' ' + str(motor2_speed) + ' '+ str(motor3_speed) + ' '+ str(motor4_speed) + ' ' + '\r\n'
         print("MOTOAPI: MotorCmdStringToSend4 = ", MotorCmdStringToSend)
@@ -374,7 +374,7 @@ class clsL1_MotoDrvApi(object):
             self.serialFd.reset_output_buffer()
             self.serialFd.write(MotorCmdStringToSend.encode())
         except Exception:
-            self.objInitCfg.medErrorLog("MOTOAPI: motor_api_go_with_speed error 1!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: motor_api_go_with_speed error 1!")
             return -1;
 
         if int(motor1_speed) != 0:        
@@ -394,7 +394,7 @@ class clsL1_MotoDrvApi(object):
     def motor_api_back_to_zero(self, motor1_speed, motor2_speed, motor3_speed, motor4_speed):
         if(self.IsSerialOpenOk == False):
             print("MOTOAPI: Serial is not opened, return motor_api_back_to_zero")
-            self.objInitCfg.medErrorLog("MOTOAPI: Serial is not opened, return motor_api_back_to_zero")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: Serial is not opened, return motor_api_back_to_zero")
             return -1     
         MotorStatusStr = ['0','0','0','0']
         MotorCmdStringToSend = 'M05 ' + str(motor1_speed) + ' ' + str(motor2_speed) + ' '+ str(motor3_speed) + ' '+ str(motor4_speed) + ' ' + '\r\n'
@@ -405,7 +405,7 @@ class clsL1_MotoDrvApi(object):
             self.serialFd.write(MotorCmdStringToSend.encode())
         except Exception:
             print("MOTOAPI: motor_api_back_to_zero error 1!")
-            self.objInitCfg.medErrorLog("MOTOAPI: motor_api_back_to_zero error 1!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: motor_api_back_to_zero error 1!")
             return -1;
 
         if int(motor1_speed) != 0:        
@@ -413,7 +413,7 @@ class clsL1_MotoDrvApi(object):
             print("MOTOAPI: MotorReturn51 = ", MotorReturn)
             if (MotorReturn == b''):
                 print("MOTOAPI: motor_api_back_to_zero MotorReturn51 error!")
-                self.objInitCfg.medErrorLog("MOTOAPI: motor_api_back_to_zero MotorReturn51 error!")
+                self.instL1ConfigOpr.medErrorLog("MOTOAPI: motor_api_back_to_zero MotorReturn51 error!")
                 return -11
             
         if int(motor2_speed) != 0:        
@@ -421,7 +421,7 @@ class clsL1_MotoDrvApi(object):
             print("MOTOAPI: MotorReturn52 = ", MotorReturn)
             if (MotorReturn == b''):
                 print("MOTOAPI: motor_api_back_to_zero MotorReturn52 error!")
-                self.objInitCfg.medErrorLog("MOTOAPI: motor_api_back_to_zero MotorReturn52 error!")
+                self.instL1ConfigOpr.medErrorLog("MOTOAPI: motor_api_back_to_zero MotorReturn52 error!")
                 return -12
 
         if int(motor3_speed) != 0:        
@@ -429,7 +429,7 @@ class clsL1_MotoDrvApi(object):
             print("MOTOAPI: MotorReturn53 = ", MotorReturn)
             if (MotorReturn == b''):
                 print("MOTOAPI: motor_api_back_to_zero MotorReturn53 error!")
-                self.objInitCfg.medErrorLog("MOTOAPI: motor_api_back_to_zero MotorReturn53 error!")
+                self.instL1ConfigOpr.medErrorLog("MOTOAPI: motor_api_back_to_zero MotorReturn53 error!")
                 return -13
 
         if int(motor4_speed) != 0:        
@@ -437,20 +437,20 @@ class clsL1_MotoDrvApi(object):
             print("MOTOAPI: MotorReturn54 = ", MotorReturn)
             if (MotorReturn == b''):
                 print("MOTOAPI: motor_api_back_to_zero MotorReturn54 error!")
-                self.objInitCfg.medErrorLog("MOTOAPI: motor_api_back_to_zero MotorReturn54 error!")
+                self.instL1ConfigOpr.medErrorLog("MOTOAPI: motor_api_back_to_zero MotorReturn54 error!")
                 return -14
 
         #Write into buffer
         try:
             self.serialFd.write(MotorCmdStrReadStatus.encode())
         except Exception:
-            self.objInitCfg.medErrorLog("MOTOAPI: motor_api_back_to_zero write error!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: motor_api_back_to_zero write error!")
             print("MOTOAPI: motor_api_back_to_zero run error!")
             return -2
         MotorStatusStrFull = self.serialFd.readline()
         print("MOTOAPI: MotorStatusStrFull1=", MotorStatusStrFull)
         if (MotorStatusStrFull == b''):
-            self.objInitCfg.medErrorLog("MOTOAPI: motor_api_back_to_zero MotorStatusStrFull error!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: motor_api_back_to_zero MotorStatusStrFull error!")
             return -3
         if MotorStatusStrFull[0] == 48 or MotorStatusStrFull[0] == 49 :
             MotorStatusStr[0] = MotorStatusStrFull.split()[0]
@@ -482,18 +482,18 @@ class clsL1_MotoDrvApi(object):
     def moto_proc_wait_for_stop(self, timeout_seconds):
         if(self.IsSerialOpenOk == False):
             print("MOTOAPI: Serial is not opened, return moto_proc_wait_for_stop")
-            self.objInitCfg.medErrorLog("MOTOAPI: Serial is not opened, return moto_proc_wait_for_stop")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: Serial is not opened, return moto_proc_wait_for_stop")
             return -1
         MotorStatusStr = ['0','0','0','0']
         try:
             self.serialFd.write(MotorCmdStrReadStatus.encode())    
             MotorStatusStrFull = self.serialFd.readline()
         except Exception:
-            self.objInitCfg.medErrorLog("MOTOAPI: moto_proc_wait_for_stop error 1!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: moto_proc_wait_for_stop error 1!")
             return -1        
 
         if (MotorStatusStrFull == b''):
-            self.objInitCfg.medErrorLog("MOTOAPI: moto_proc_wait_for_stop return null!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: moto_proc_wait_for_stop return null!")
             return -2
         MotorStatusStr[0] = MotorStatusStrFull.split()[0]
         MotorStatusStr[1] = MotorStatusStrFull.split()[1]
@@ -519,14 +519,14 @@ class clsL1_MotoDrvApi(object):
     def moto_proc_full_stop(self):
         res = self.motor_api_emergency_stop(1, 1, 1, 1)
         if (res < 0):
-            self.objInitCfg.medErrorLog("MOTOAPI: moto_proc_full_stop error!")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: moto_proc_full_stop error!")
             return -1
         return 1
             
     def moto_proc_back_to_zero(self):
         if(self.IsSerialOpenOk == False):
             print("MOTOAPI: Serial is not opened, return moto_proc_back_to_zero")
-            self.objInitCfg.medErrorLog("MOTOAPI: Serial is not opened, return moto_proc_back_to_zero")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: Serial is not opened, return moto_proc_back_to_zero")
             return -1
         print("MOTOAPI: motor_api_back_to_zero(self, MOTOR_DEFAULT_SPEED, MOTOR_DEFAULT_SPEED, 0, 0)")        
         if (self.motor_api_back_to_zero((-1)*MOTOR_DEFAULT_SPEED, (-1)*MOTOR_DEFAULT_SPEED, 0, 0) < 0):
@@ -537,7 +537,7 @@ class clsL1_MotoDrvApi(object):
     def moto_proc_move_delta_axis_postion(self, PxDelta, PyDelta):
         if(self.IsSerialOpenOk == False):
             print("MOTOAPI: Serial is not opened, return moto_proc_move_delta_axis_postion")
-            self.objInitCfg.medErrorLog("MOTOAPI: Serial is not opened, return moto_proc_move_delta_axis_postion")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: Serial is not opened, return moto_proc_move_delta_axis_postion")
             return -1    
         x_move_steps = int(PxDelta / MOTOR_STEPS_PER_DISTANCE_MM)
         y_move_steps = int(PyDelta / MOTOR_STEPS_PER_DISTANCE_MM)  
@@ -548,7 +548,7 @@ class clsL1_MotoDrvApi(object):
     def moto_proc_move_to_axis_postion(self, curPx, curPy, newPx, newPy):
         if(self.IsSerialOpenOk == False):
             print("MOTOAPI: Serial is not opened, return moto_proc_move_to_axis_postion")
-            self.objInitCfg.medErrorLog("MOTOAPI: Serial is not opened, return moto_proc_move_to_axis_postion")
+            self.instL1ConfigOpr.medErrorLog("MOTOAPI: Serial is not opened, return moto_proc_move_to_axis_postion")
             return -1
         if ((0 == newPx) and (0 == newPy)):
             if (self.moto_proc_back_to_zero() < 0):
