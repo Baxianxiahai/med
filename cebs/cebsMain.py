@@ -46,27 +46,35 @@ from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsCalib
 from PkgCebsHandler import ModCebsGpar
 
+
+#SEF => System Entry Form，表示系统级的主入口
+#
+#
+#第一主入口
 #Main Windows
-class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
-    signal_mainwin_unvisible = pyqtSignal()
+class SEF_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCom.clsMedCFlib):
+    qtsg_mainwin_unvisible = pyqtSignal()
     
     def __init__(self):    
-        super(cebsMainWindow, self).__init__()  
+        super(SEF_MainWindow, self).__init__()  
         self.setupUi(self)
         self.initUI()
+        
+        #测试一下
+        ModCebsCom.clsMedCFlib.med_cfl_test1(self);
         
         #MUST Load global parameters, to initialize different UI and update the stored parameters.
         objInitCfg=ModCebsCfg.ConfigOpr()
         objInitCfg.readGlobalPar();
         objInitCfg.updateCtrlCntInfo()
         
-        self.calibForm = cebsCalibForm()
-        self.gparForm = cebsGparForm()
+        self.calibForm = SEF_CalibForm()
+        self.gparForm = SEF_GparForm()
         self.objMoto = ModCebsMoto.classMotoProcess();
 
         self.calibForm.signal_mainwin_visible.connect(self.funcMainWinVisible);
         self.gparForm.signal_mainwin_visible.connect(self.funcMainWinVisible);
-        self.signal_mainwin_unvisible.connect(self.funcMainWinUnvisible);
+        self.qtsg_mainwin_unvisible.connect(self.funcMainWinUnvisible);
         
         self.threadCtrl = ModCebsCtrl.classCtrlThread()
         self.threadCtrl.setIdentity("CtrlThread")
@@ -123,7 +131,12 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.textEdit_runProgress.moveCursor(QtGui.QTextCursor.End)
         self.textEdit_runProgress.ensureCursorVisible()
         self.textEdit_runProgress.insertPlainText("")
-
+    
+    #
+    #  槽函数部分
+    #    以下部分为系统接口对应的槽函数，函数命名不得动
+    #
+    #
     def slot_print_trigger(self, info):
         self.cebs_print_log(info)
 
@@ -160,7 +173,7 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.cebs_print_log("MAIN: CALIB ACTION!")
         self.threadCtrl.signal_ctrl_calib_start.emit()
         if not self.calibForm.isVisible():
-            self.signal_mainwin_unvisible.emit()
+            self.qtsg_mainwin_unvisible.emit()
             self.calibForm.show()
 
     #Enter parameter setting session
@@ -168,9 +181,24 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.cebs_print_log("MAIN: PARAMETER SETTING ACTION!")
         #self.threadCtrl.signal_ctrl_calib_start.emit()
         if not self.gparForm.isVisible():
-            self.signal_mainwin_unvisible.emit()
+            self.qtsg_mainwin_unvisible.emit()
             self.gparForm.show()
-            
+
+    #Clean log window
+    def slot_runpg_clear(self):
+        self.textEdit_runProgress.clear();
+
+    #Test functions
+    def slot_runpg_test(self):
+        res = {}
+        self.cebs_print_log("TEST: " + str(res))
+
+
+    #
+    #  槽函数部分
+    #    以下部分为系统接口对应的槽函数，函数命名不得动
+    #
+    #
     #Control UI visible
     def funcMainWinVisible(self):
         if not self.isVisible():
@@ -183,26 +211,21 @@ class cebsMainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         if self.isVisible():
             self.hide()
 
-    #Clean log window
-    def slot_runpg_clear(self):
-        self.textEdit_runProgress.clear();
-
-    #Test functions
-    def slot_runpg_test(self):
-        res = {}
-        self.cebs_print_log("TEST: " + str(res))
-
     #Local function
     def funcMainFormSetEquInitStatus(self):
         if (self.objMoto.funcMotoRunningStatusInquery() == True):
             self.objMoto.funcMotoStop()
 
+
+
+
+#第二主入口
 #Calibration Widget
-class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
+class SEF_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
     signal_mainwin_visible = pyqtSignal()
 
     def __init__(self):    
-        super(cebsCalibForm, self).__init__()  
+        super(SEF_CalibForm, self).__init__()  
         self.setupUi(self)
         self.calibProc = ModCebsCalib.classCalibProcess(self)
         self.objInitCfg1 = ModCebsCfg.ConfigOpr()
@@ -214,6 +237,12 @@ class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.textEdit_calib_runProgress.ensureCursorVisible()
         self.textEdit_calib_runProgress.insertPlainText("")
         
+        
+    #
+    #  槽函数部分
+    #    以下部分为系统接口对应的槽函数，函数命名不得动
+    #
+    #        
     def slot_calib_move(self):
         #SCALE
         radioCala10um = self.radioButton_calib_10um.isChecked();
@@ -342,30 +371,35 @@ class cebsCalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.signal_mainwin_visible.emit()
         self.close()
 
+
+    #
+    #  业务函数部分
+    #
+    #
     def closeEvent(self, event):
         self.calibProc.funcRecoverWorkingEnv()
         self.signal_mainwin_visible.emit()
         self.close()
 
 
+#第三主入口
 #Calibration Widget
-class cebsGparForm(QtWidgets.QWidget, Ui_cebsGparForm):
+class SEF_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
     signal_mainwin_visible = pyqtSignal()
 
     def __init__(self):    
-        super(cebsGparForm, self).__init__()  
+        super(SEF_GparForm, self).__init__()  
         self.setupUi(self)
         self.gparProc = ModCebsGpar.classGparProcess(self)
         self.objInitCfg2=ModCebsCfg.ConfigOpr()
         #Update UI interface last time parameter setting
         self.funcGlobalParReadSet2Ui()
         
-    #Give up and not save parameters
-    def closeEvent(self, event):
-        #self.gparProc.funcRecoverWorkingEnv()
-        self.signal_mainwin_visible.emit()
-        self.close()
-
+    #
+    #  槽函数部分
+    #    以下部分为系统接口对应的槽函数，函数命名不得动
+    #
+    #    
     def slot_gpar_compl(self):
         #self.gparProc.funcCtrlCalibComp()
         self.funcGlobalParReadSave()
@@ -377,6 +411,10 @@ class cebsGparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         self.signal_mainwin_visible.emit()
         self.close()
 
+    #
+    #  业务函数部分
+    #
+    #
     #Local function
     def funcGlobalParReadSave(self):
         ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET = self.checkBox_gpar_autoIdf.isChecked();
@@ -466,10 +504,19 @@ class cebsGparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         else:
             self.radioButton_gpar_bts_96.setChecked(True)
 
+        
+    #Give up and not save parameters
+    def closeEvent(self, event):
+        #self.gparProc.funcRecoverWorkingEnv()
+        self.signal_mainwin_visible.emit()
+        self.close()
+
+
+#第0主入口，MAIN函数部分
 #Main App entry
 def main_form():
     app = QtWidgets.QApplication(sys.argv)
-    mainWindow = cebsMainWindow()
+    mainWindow = SEF_MainWindow()
     mainWindow.show()
     sys.exit(app.exec_())
 

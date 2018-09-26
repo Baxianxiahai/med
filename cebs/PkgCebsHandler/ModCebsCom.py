@@ -134,6 +134,30 @@ GL_CEBS_CAMERA_DISPLAY_POS_X = 0;
 GL_CEBS_CAMERA_DISPLAY_POS_Y = 0;
 
 
+#公共函数库，简化设计
+class clsMedCFlib():
+    
+    def __init__(self):    
+        #super(classComCebsFuncLib, self).__init__()  
+        pass
+
+    def med_cfl_test1(self):
+        global GL_CEBS_COM_NUMBER_SET
+        print("Test functions! Global parameter Nbr Set = %d" % (GL_CEBS_COM_NUMBER_SET))
+        pass
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
