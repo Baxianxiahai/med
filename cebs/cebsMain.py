@@ -40,7 +40,7 @@ from form_qt.cebsgparform import Ui_cebsGparForm
 #Local Class
 from PkgCebsHandler import ModCebsCom  #Common Support module
 from PkgCebsHandler import ModCebsMoto
-from PkgCebsHandler import ModCebsCtrl
+from PkgCebsHandler import ModCebsCtrlSchd
 from PkgCebsHandler import ModCebsVision
 from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsCalib
@@ -86,6 +86,7 @@ Main Windows
 class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
     sgL4MainWinUnvisible = pyqtSignal()
     sgL4MainWinVisible = pyqtSignal()
+    sgL3VisCfyTransCmpl = pyqtSignal()
 
     def __init__(self):    
         super(SEUI_L4_MainWindow, self).__init__()
@@ -125,7 +126,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.instL4GparForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.sgL4MainWinUnvisible.connect(self.funcMainWinUnvisible);
         #STEP4: 控制调度模块初始化
-        self.instL3CtrlSchdThd = ModCebsCtrl.clsL3_CtrlSchdThread(self)
+        self.instL3CtrlSchdThd = ModCebsCtrlSchd.clsL3_CtrlSchdThread(self)
         self.instL3CtrlSchdThd.setIdentity("TASK_CtrlScheduleThread")
         self.instL3CtrlSchdThd.sgL4MainWinPrtLog.connect(self.slot_print_trigger)
         self.instL3CtrlSchdThd.sgL3CtrlCapStart.connect(self.instL3CtrlSchdThd.funcTakePicStart)
@@ -140,6 +141,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.instL3VisCfyThd = ModCebsVision.clsL3_VisCfyThread(self)
         self.instL3VisCfyThd.setIdentity("TASK_VisionClassifyThread")
         self.instL3VisCfyThd.sgL4MainWinPrtLog.connect(self.slot_print_trigger)
+        self.instL3VisCfyThd.sgL3VisCfyTransCmpl.connect(self.instL3CtrlSchdThd.funcVisionClasCmpl)
         self.instL3VisCfyThd.start();
         #STEP6: 设置马达等物理硬件状态
         self.funcMainFormSetEquInitStatus();

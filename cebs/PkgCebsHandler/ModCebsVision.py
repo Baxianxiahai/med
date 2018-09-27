@@ -45,6 +45,7 @@ class clsL3_VisCfyThread(QThread, ModCebsCfg.clsL1_ConfigOpr):
     sgL4MainWinPrtLog = pyqtSignal(str) #DECLAR MAIN FUNCTIONS
     sgL3VisCfyStart = pyqtSignal()  #DECLAR MAIN FUNCTIONS, NOT USED
     sgL3VisCfyStop = pyqtSignal()   #DECLAR MAIN FUNCTIONS, NOT USED
+    sgL3VisCfyTransCmpl = pyqtSignal()
 
     #分类大小的参数定义
     HST_VISION_WORM_CLASSIFY_base = 0;
@@ -97,7 +98,7 @@ class clsL3_VisCfyThread(QThread, ModCebsCfg.clsL1_ConfigOpr):
         self.funcVisionClassify(fileName, fileNukeName);
         ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT -= 1;
         self.updateUnclasFileAsClassified(batch, fileNbr);
-        self.sgL4MainWinPrtLog.emit("L3VISCFY: PIC IDENTIFY： REMAINING NUMBRES=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+        self.sgL4MainWinPrtLog.emit("L3VISCFY: PIC IDENTIFY COMPLETE, REMAINING NUMBRES=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
         self.updateCtrlCntInfo();
         return;
        
@@ -309,7 +310,8 @@ class clsL3_VisCfyThread(QThread, ModCebsCfg.clsL1_ConfigOpr):
                     ctrlInterest = False
             #Send signal to CebsCtrl to stop STM
             if (ctrlInterest == True):
-                #self.signal_ctrl_clas_stop.emit()
+                #发送信号给WINMAIN，然后通过它转发给目标任务
+                self.sgL3VisCfyTransCmpl.emit()
                 self.sgL4MainWinPrtLog.emit("L3VISCFY: Finish all picture classification!")
         
 #模块可能被WinMain和Calib调用，所以初始化需要传入Father进去

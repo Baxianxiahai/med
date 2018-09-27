@@ -83,7 +83,10 @@ class clsL3_CtrlSchdThread(QThread):
     
     def transferLogTrace(self, string):
         self.sgL4MainWinPrtLog.emit(string)
-        
+
+    def funcResetWkStatus(self):
+        self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
+                
     #TAKE PICTURE
     def funcTakePicStart(self):
         if (self.CTRL_STM_STATE != self.__CEBS_STM_CTRL_INIT):
@@ -108,10 +111,14 @@ class clsL3_CtrlSchdThread(QThread):
     def funcTakePicStop(self):
         if (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_INIT):
             self.sgL4MainWinPrtLog.emit("L3CTRLST: funcTakePicStop Already finished, no action！")
-            self.capTimes = 1
+            self.capTimes = 0
             return 1;
         if (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_CAP_PIC):
             self.capTimes = 1
+        #使用直接的方式来停止图像读取
+#         if (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_CAP_PIC):
+#             self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT
+#             self.capTimes = 0
         return 1;
 
     #PLATE RUN TO INIT POSITION
@@ -168,6 +175,9 @@ class clsL3_CtrlSchdThread(QThread):
     
     def funcVisionClasStop(self):
         self.instL2VisCapProc.funcVisionClasEnd()
+        self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
+
+    def funcVisionClasCmpl(self):
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
 
     def funcCtrlCalibStart(self):

@@ -15,12 +15,7 @@ from PyQt5.QtCore import pyqtSlot
 from cebsMain import *
 
 from PkgCebsHandler import ModCebsCom  #Common Support module
-from PkgCebsHandler import ModCebsMoto
-from PkgCebsHandler import ModCebsCtrl
-from PkgCebsHandler import ModCebsVision
 from PkgCebsHandler import ModCebsCfg
-from PkgCebsHandler import ModCebsCalib
-from PkgCebsHandler import ModCebsGpar
 
 
 

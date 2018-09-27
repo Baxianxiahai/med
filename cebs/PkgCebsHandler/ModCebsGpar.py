@@ -24,9 +24,6 @@ from PyQt5.QtCore import pyqtSlot
 from cebsMain import *
 from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
-from PkgCebsHandler import ModCebsVision
-from PkgCebsHandler import ModCebsMoto
-from PkgCebsHandler import ModCebsCtrl
 
 
 class clsL1_GparProc(object):

@@ -38,7 +38,6 @@ from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsVision
 from PkgCebsHandler import ModCebsMoto
-from PkgCebsHandler import ModCebsCtrl
 
 
 #校准处理过程
