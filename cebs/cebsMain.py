@@ -27,12 +27,12 @@ MAIN => 主入口
 
 线程启动过程
     SEUI_L4_MainWindow
-        -> clsL3_CtrlSchdThread
-        -> clsL3_VisCfyThread
+        -> clsL3_CtrlSchdThread  => 调度任务，静态，待改造状态机
+        -> clsL3_VisCfyThread  => 识别任务，静态，待改造状态机
         -> SEUI_L4_CalibForm
             -> clsL3_CalibProc
-                -> clsL2_CalibPilotThread
-                -> clsL2_CalibCamDispThread
+                -> clsL2_CalibPilotThread  =>巡游任务，静态，简单的工作任务，使用信号槽触发，不需要状态机
+                -> clsL2_CalibCamDispThread  => 摄像头显示图像任务，动态
         -> SEUI_L4_GparForm
 
 注意：信号槽，只能在线程和任务之间传递，所以普通的CLASS是不能增加信号槽的，设计机制时需要注意
