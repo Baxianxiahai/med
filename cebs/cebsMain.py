@@ -11,29 +11,31 @@ Created on 2018/4/29
 系统设计框架
 MAIN => 主入口
     |--SEUI_L4_MainWindow => 主界面
-        |---SEUI_L4_CalibForm => 校准界面
-        |---SEUI_L4_GparForm => 参数设置界面
-            |---clsL3_CtrlSchdThread => 控制调度线程
-            |---clsL3_VisCfyThread => 图像识别线程
-                |---clsL2_VisCapProc => 图像抓取过程
-            |---clsL3_CalibProc => 校准任务
-                |---clsL2_CalibPilotThread => 校准巡游线程
-                |---clsL2_CalibCamDispThread => 摄像头显示视频线程
-                |---clsL2_MotoProc => 马达控制任务
-                    |---clsL1_MotoDrvApi => 马达驱动接口
-                    |---clsL1_GparProc => 参数填写接口
-                    |---clsL1_ConfigOpr => 本地配置文件接口
-                        |---clsL0_MedCFlib => 公共函数库
+        |---clsL3_CtrlSchdThread => 控制调度线程
+            |---clsL2_VisCapProc => 图像抓取过程 
+            |---clsL2_VisCfyProc => 图像识别线程
+            |---clsL2_MotoProc => 马达控制任务
+                |---clsL1_MotoDrvApi => 马达驱动接口
+    |---SEUI_L4_CalibForm => 校准界面
+        |---clsL3_CalibProc => 校准任务
+            |---clsL2_CalibPilotThread => 校准巡游线程
+            |---clsL2_CalibCamDispThread => 摄像头显示视频线程
+            |---clsL2_MotoProc => 马达控制任务
+                |---clsL1_MotoDrvApi => 马达驱动接口
+    |---SEUI_L4_GparForm => 参数设置界面
+        |---clsL1_GparProc => 参数填写接口
+    |---CommonLib
+        |---clsL1_ConfigOpr => 本地配置文件接口
+            |---clsL0_MedCFlib => 公共函数库
 
 线程启动过程
     SEUI_L4_MainWindow
-        -> clsL3_CtrlSchdThread  => 调度任务，静态，待改造状态机
-        -> clsL3_VisCfyThread  => 识别任务，静态，待改造状态机
-        -> SEUI_L4_CalibForm
-            -> clsL3_CalibProc
-                -> clsL2_CalibPilotThread  =>巡游任务，静态，简单的工作任务，使用信号槽触发，不需要状态机
-                -> clsL2_CalibCamDispThread  => 摄像头显示图像任务，动态
-        -> SEUI_L4_GparForm
+        -> clsL3_CtrlSchdThread  => 调度任务，静态，已经完善对该状态的改造
+    -> SEUI_L4_CalibForm
+        -> clsL3_CalibProc
+            -> clsL2_CalibPilotThread  =>巡游任务，静态，简单的工作任务，使用信号槽触发，不需要状态机
+            -> clsL2_CalibCamDispThread  => 摄像头显示图像任务，动态
+    -> SEUI_L4_GparForm
 
 注意：信号槽，只能在线程和任务之间传递，所以普通的CLASS是不能增加信号槽的，设计机制时需要注意
 
@@ -86,7 +88,6 @@ Main Windows
 class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
     sgL4MainWinUnvisible = pyqtSignal()
     sgL4MainWinVisible = pyqtSignal()
-    sgL3VisCfyTransCmpl = pyqtSignal()
 
     def __init__(self):    
         super(SEUI_L4_MainWindow, self).__init__()
@@ -137,15 +138,9 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.instL3CtrlSchdThd.sgL3CtrlCalibStop.connect(self.instL3CtrlSchdThd.funcCtrlCalibStop)
         self.instL3CtrlSchdThd.sgL3CtrlMotoZero.connect(self.instL3CtrlSchdThd.funcCtrlMotoBackZero)
         self.instL3CtrlSchdThd.start();
-        #STEP5: 图像识别模块初始化
-        self.instL3VisCfyThd = ModCebsVision.clsL3_VisCfyThread(self)
-        self.instL3VisCfyThd.setIdentity("TASK_VisionClassifyThread")
-        self.instL3VisCfyThd.sgL4MainWinPrtLog.connect(self.slot_print_trigger)
-        self.instL3VisCfyThd.sgL3VisCfyTransCmpl.connect(self.instL3CtrlSchdThd.funcVisionClasCmpl)
-        self.instL3VisCfyThd.start();
-        #STEP6: 设置马达等物理硬件状态
+        #STEP5: 设置马达等物理硬件状态
         self.funcMainFormSetEquInitStatus();
-        #STEP7: 智能初始化摄像头#Detect all valid camera
+        #STEP6: 智能初始化摄像头#Detect all valid camera
         '''
                     方法一：搞定了，但长久初始化一个线程空间，没必要，简化模式的使用
         self.instL3VisCapProc = ModCebsVision.clsL2_VisCapProc(self, 1);
@@ -191,7 +186,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 
     #Control moto run to Zero position
     def slot_ctrl_zero(self):
-        self.med_debug_print("L4MAIN: RUN TO ZERO!")
+        self.med_debug_print("L4MAIN: Moto run to zero position!")
         self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
 
     #Start vision classification
@@ -207,9 +202,9 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
     #Enter calibration session
     def slot_ctrl_calib(self):
         if (self.instL3CtrlSchdThd.funcCtrlGetRightStatus() < 0):
-            self.med_debug_print("L4MAIN: CALIB ERROR1!")
+            self.med_debug_print("L4MAIN: CALIB error!")
             return -1;
-        self.med_debug_print("L4MAIN: CALIB ACTION!")
+        self.med_debug_print("L4MAIN: CALIB start!")
         self.instL3CtrlSchdThd.sgL3CtrlCalibStart.emit()
         if not self.instL4CalibForm.isVisible():
             self.sgL4MainWinUnvisible.emit()
@@ -217,7 +212,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 
     #Enter parameter setting session
     def slot_gpar_start(self):
-        self.med_debug_print("L4MAIN: PARAMETER SETTING ACTION!")
+        self.med_debug_print("L4MAIN: Parameter set action")
         #self.instL3CtrlSchdThd.sgL3CtrlCalibStart.emit()
         if not self.instL4GparForm.isVisible():
             self.sgL4MainWinUnvisible.emit()
@@ -243,7 +238,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         if not self.isVisible():
             self.show()
         self.instL3CtrlSchdThd.sgL3CtrlCalibStop.emit()
-        self.med_debug_print("L4MAIN: WELCOME COME BACK!")
+        self.med_debug_print("L4MAIN: Main form welcome to come back!")
 
     #Control UI un-visible
     def funcMainWinUnvisible(self):
@@ -552,7 +547,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         
     #Give up and not save parameters
     def closeEvent(self, event):
-        #self.instL1GparProc.funcRecoverWorkingEnv()
+        self.instL1GparProc.funcRecoverWorkingEnv()
         self.sgL4MainWinVisible.emit()
         self.close()
 

@@ -5,17 +5,19 @@
 2. 校准图像放在在校准UI界面之外，而无法嵌入到内部图像显示部分
    -> QLable和GraphicsView控件，无法掌握其精髓，导致无法将该图像集成到UI界面里面
    -> 可以使用，不太美观完美
+3. L4MAIN在校准后的两次返回
 
 
 
-
-
-
+//=ZJL, 2018/9/28, CURRENT_SW_DELIVERY R1.20 =>CEBS
+= 准备MOTO驱动的完善
 
 
 //=ZJL, 2018/9/28, CURRENT_SW_DELIVERY R1.19 =>CEBS
 = 继续完善状态机控制和界面内容
-
+= 对CtrlSchdule模块进行了较大的修改与完善，主要是状态机
+= 对VISION模块进行了修缮，去掉了任务模块，改为API函数形式，更加简单明了
+= 调整并完善了Schedule模块的运行
 
 //=ZJL, 2018/9/28, CURRENT_SW_DELIVERY R1.18 =>CEBS
 3. 校准完成后，二次进入校准，无法激活摄像头继续进行校准

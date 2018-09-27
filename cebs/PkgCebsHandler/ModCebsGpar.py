@@ -33,5 +33,7 @@ class clsL1_GparProc(object):
         self.gparForm = father
         self.objInitCfg=ModCebsCfg.clsL1_ConfigOpr();
     
-
+    #Do nothting
+    def funcRecoverWorkingEnv(self):
+        pass
     

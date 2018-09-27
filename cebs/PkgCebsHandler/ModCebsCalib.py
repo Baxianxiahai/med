@@ -51,7 +51,6 @@ class clsL3_CalibProc(object):
         self.camerEnableFlag = False;
         self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr();
         self.instL2MotoProc=ModCebsMoto.clsL2_MotoProc(self.instL4CalibForm, 2);
-        self.instL2VisCapProc=ModCebsVision.clsL2_VisCapProc(self.instL4CalibForm, 2);
         self.initParameter();
 
     def initParameter(self):
@@ -79,6 +78,7 @@ class clsL3_CalibProc(object):
         self.instL2CalibPiThd.sgL2PiStop.connect(self.instL2CalibPiThd.funcCalibMotoPilotStop)
         self.instL2CalibPiThd.start();
         #STEP3：初始化摄像头视频展示任务，这一步的目的是为了初始化下面这个变量
+        #还有好处：即便没有手动激活过这个，在退出时依然可以操作该Handler，不然就会出现崩溃的情况，从而简化了异常处理
         self.instL2CalibCamDisThd = clsL2_CalibCamDispThread(self.instL4CalibForm, 1);
         self.instL2CalibCamDisThd.setIdentity("TASK_CalibCameraDisplay")
         self.instL2CalibCamDisThd.start();
@@ -94,7 +94,6 @@ class clsL3_CalibProc(object):
     def funcCleanWorkingEnv(self):
         if (self.instL2MotoProc.funcMotoRunningStatusInquery() == True):
             self.instL2MotoProc.funcMotoStop()        
-        self.instL2VisCapProc.funcVisionClasEnd()
 
     def funcRecoverWorkingEnv(self):
         self.instL2MotoProc.funcMotoStop();
@@ -206,15 +205,20 @@ class clsL3_CalibProc(object):
     #pos = self.instL4CalibForm.rect()
     #geometry will return (left, top, width, height)
     def funcCalibPilotCameraEnable(self):
+        #先判定摄像头状态，放置重入
         if (self.camerEnableFlag == True):
             self.funcCalibLogTrace("L3CALIB: Camera already open, can not enabled again!")
             return 1;
         self.funcCalibLogTrace("L3CALIB: Pilot camera start to open...")
+        #再取得位置信息
         pos = self.instL4CalibForm.geometry()
         ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_X = pos.x() + 420
         ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y = pos.y() + 10
-        #New test!
-        print("L3CALIB: Exiting STM = %d" % (self.instL2CalibCamDisThd.funcCalibCameraDispStateGet()))
+        #做必要的判定，放置是无效摄像头
+        print("L3CALIB: Exiting STM=%d, CamId=%d" % (self.instL2CalibCamDisThd.funcCalibCameraDispStateGet(), ModCebsCom.GL_CEBS_VISION_CAMBER_NBR))
+        if (ModCebsCom.GL_CEBS_VISION_CAMBER_NBR == ''):
+            return -1;
+        #真正启动
         self.instL2CalibCamDisThd = clsL2_CalibCamDispThread(self.instL4CalibForm, 2)
         self.instL2CalibCamDisThd.setIdentity("TASK_CalibCameraDisplay")
         self.instL2CalibCamDisThd.start();
@@ -224,11 +228,12 @@ class clsL3_CalibProc(object):
     #FINISH all the pilot functions
     #完成校准，准备离开
     def funcCtrlCalibComp(self):
-        #self.instL2CalibCamDisThd.sgL2CamDiStop.emit()
-        self.instL2CalibCamDisThd.funcCalibCameraDispStop()
-        self.camerEnableFlag = False
+        if (self.camerEnableFlag == True):
+            self.instL2CalibCamDisThd.funcCalibCameraDispStop()
+            self.camerEnableFlag = False
         self.funcUpdateHoleBoardPar()
-        self.funcRecoverWorkingEnv()
+        #暂时不做过于复杂的MOTO控制，交给界面手动来进行
+        #self.funcRecoverWorkingEnv()
 
     def funcCalibMove(self, parMoveScale, parMoveDir):
         self.instL2MotoProc.funcMotoCalaMoveOneStep(parMoveScale, parMoveDir);
@@ -343,9 +348,9 @@ class clsL2_CalibCamDispThread(threading.Thread):
         self.CDT_STM_STATE = self.__CEBS_STM_CDT_NULL;
         self.instL4CalibForm = father
         self.CDT_STM_STATE = self.__CEBS_STM_CDT_INIT;
-        print("L2CALCMDI: Instance start test!")
         if (startOption == 1):
             self.CDT_STM_STATE = self.__CEBS_STM_CDT_FIN;
+        self.funcCalibCamDisLogTrace("L2CALCMDI: Instance start test!")
 
     def setIdentity(self,text):
         self.identity = text
@@ -373,13 +378,16 @@ class clsL2_CalibCamDispThread(threading.Thread):
             #创建即退出
             if (self.CDT_STM_STATE == self.__CEBS_STM_CDT_FIN):
                 return -1
+            
             #等待干活
             elif (self.CDT_STM_STATE == self.__CEBS_STM_CDT_INIT):
                 time.sleep(1)
+            
             #初始化摄像头
             elif (self.CDT_STM_STATE == self.__CEBS_STM_CDT_CAM_INIT):
                 time.sleep(0.1)
                 print("L2CALCMDI: Active the camera display!")
+                print("ModCebsCom.GL_CEBS_VISION_CAMBER_NBR = ", ModCebsCom.GL_CEBS_VISION_CAMBER_NBR)
                 self.cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR)
                 self.cap.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
                 self.cap.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)             
@@ -394,9 +402,9 @@ class clsL2_CalibCamDispThread(threading.Thread):
                 #cv.moveWindow('CAMERA CAPTURED', ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_X, ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y)
                 cv.moveWindow('CAMERA CAPTURED', 0, ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y)
                 self.CDT_STM_STATE = self.__CEBS_STM_CDT_VID_SHOW;
+            
             #输出摄像头    
             elif (self.CDT_STM_STATE == self.__CEBS_STM_CDT_VID_SHOW):    
-                pass
                 time.sleep(0.001)
                 try:
                     ret, frame = self.cap.read()
@@ -405,6 +413,7 @@ class clsL2_CalibCamDispThread(threading.Thread):
                 if (ret == True):
                     cv.imshow('CAMERA CAPTURED', frame)
                     waitKey(50)  
+
             #销毁现场摄像头
             elif (self.CDT_STM_STATE == self.__CEBS_STM_CDT_STOP):
                 time.sleep(0.2)
@@ -418,6 +427,8 @@ class clsL2_CalibCamDispThread(threading.Thread):
                     pass                
                 print("L2CALCMDI: Task finished and run exit!")
                 return 1;
+            
+            #无效状态
             else:
                 return 2;                  
                     
