@@ -7,6 +7,38 @@ Created on 2018/4/29
 ####!/usr/bin/python3.6
 #### -*- coding: UTF-8 -*-
 
+'''
+系统设计框架
+MAIN => 主入口
+    |--SEUI_L4_MainWindow => 主界面
+        |---SEUI_L4_CalibForm => 校准界面
+        |---SEUI_L4_GparForm => 参数设置界面
+            |---clsL3_CtrlSchdThread => 控制调度线程
+            |---clsL3_VisCfyThread => 图像识别线程
+                |---clsL2_VisCapProc => 图像抓取过程
+            |---clsL3_CalibProc => 校准任务
+                |---clsL2_CalibPilotThread => 校准巡游线程
+                |---clsL2_CalibCamDispThread => 摄像头显示视频线程
+                |---clsL2_MotoProc => 马达控制任务
+                    |---clsL1_MotoDrvApi => 马达驱动接口
+                    |---clsL1_GparProc => 参数填写接口
+                    |---clsL1_ConfigOpr => 本地配置文件接口
+                        |---clsL0_MedCFlib => 公共函数库
+
+线程启动过程
+    SEUI_L4_MainWindow
+        -> clsL3_CtrlSchdThread
+        -> clsL3_VisCfyThread
+        -> SEUI_L4_CalibForm
+            -> clsL3_CalibProc
+                -> clsL2_CalibPilotThread
+                -> clsL2_CalibCamDispThread
+        -> SEUI_L4_GparForm
+
+注意：信号槽，只能在线程和任务之间传递，所以普通的CLASS是不能增加信号槽的，设计机制时需要注意
+
+'''
+
 import random
 import sys
 import time
@@ -45,38 +77,6 @@ from PkgCebsHandler import ModCebsVision
 from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsCalib
 from PkgCebsHandler import ModCebsGpar
-
-'''
-系统设计框架
-MAIN => 主入口
-    |--SEUI_L4_MainWindow => 主界面
-        |---SEUI_L4_CalibForm => 校准界面
-        |---SEUI_L4_GparForm => 参数设置界面
-            |---clsL3_CtrlSchdThread => 控制调度线程
-            |---clsL3_VisCfyThread => 图像识别线程
-                |---clsL2_VisCapProc => 图像抓取过程
-            |---clsL3_CalibProc => 校准任务
-                |---clsL2_CalibPilotThread => 校准巡游线程
-                |---clsL2_CalibCamDispThread => 摄像头显示视频线程
-                |---clsL2_MotoProc => 马达控制任务
-                    |---clsL1_MotoDrvApi => 马达驱动接口
-                    |---clsL1_GparProc => 参数填写接口
-                    |---clsL1_ConfigOpr => 本地配置文件接口
-                        |---clsL0_MedCFlib => 公共函数库
-
-线程启动过程
-    SEUI_L4_MainWindow
-        -> clsL3_CtrlSchdThread
-        -> clsL3_VisCfyThread
-        -> SEUI_L4_CalibForm
-            -> clsL3_CalibProc
-                -> clsL2_CalibPilotThread
-                -> clsL2_CalibCamDispThread
-        -> SEUI_L4_GparForm
-
-注意：信号槽，只能在线程和任务之间传递，所以普通的CLASS是不能增加信号槽的，设计机制时需要注意
-
-'''
 
 '''
 #SEUI => System Entry UI，表示系统级的主入口
