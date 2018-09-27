@@ -83,6 +83,7 @@ class clsL3_CalibProc(object):
         self.instL2CalibCamDisThd.sgL2CamDiStart.connect(self.instL2CalibCamDisThd.funcCalibCameraDispStart)
         self.instL2CalibCamDisThd.sgL2CamDiStop.connect(self.instL2CalibCamDisThd.funcCalibCameraDispStop)
         self.instL2CalibCamDisThd.start();
+        #STE4: DebugTrace
         self.funcCalibLogTrace("L3CALIB: Instance start test!")
                         
     def setIdentity(self,text):
@@ -214,10 +215,15 @@ class clsL3_CalibProc(object):
         self.instL2CalibCamDisThd.sgL2CamDiStart.emit()
 
     #FINISH all the pilot functions
+    #完成校准，准备离开
     def funcCtrlCalibComp(self):
+        print("L3CALIB: S1, stop camera display!")
         self.instL2CalibCamDisThd.sgL2CamDiStop.emit()
+        print("L3CALIB: S2, update hole board parameter!")
         self.funcUpdateHoleBoardPar()
-        self.funcRecoverWorkingEnv()
+        print("L3CALIB: S3, recover working environment and stop moto, but temparly suppress!")
+        #self.funcRecoverWorkingEnv()
+        print("L3CALIB: S4, accomplish everything!")
 
     def funcCalibMove(self, parMoveScale, parMoveDir):
         self.instL2MotoProc.funcMotoCalaMoveOneStep(parMoveScale, parMoveDir);
@@ -300,13 +306,24 @@ class clsL2_CalibCamDispThread(QThread):
     sgL2CamDiStart = pyqtSignal()
     sgL2CamDiStop = pyqtSignal()
 
+    #STATE MACHINE
+    __CEBS_STM_CDT_NULL =      0;
+    __CEBS_STM_CDT_INIT =      1;
+    __CEBS_STM_CDT_CAM_INIT =  2;
+    __CEBS_STM_CDT_VID_SHOW =  3;
+    __CEBS_STM_CDT_STOP =      4;
+    __CEBS_STM_CDT_ERR =       5;
+    __CEBS_STM_CDT_INVALID =   0xFF;
+    
     def __init__(self, father):
         super(clsL2_CalibCamDispThread,self).__init__()
         self.identity = None;
         self.runFlag = False;
         self.cap = ''
+        self.CDT_STM_STATE = self.__CEBS_STM_CDT_NULL;
         self.instL4CalibForm = father
         self.funcCalibCamDisLogTrace("L2CALCMDI: Instance start test!")
+        self.CDT_STM_STATE = self.__CEBS_STM_CDT_INIT;
 
     def setIdentity(self,text):
         self.identity = text
@@ -317,19 +334,77 @@ class clsL2_CalibCamDispThread(QThread):
     def funcCalibCameraDispStart(self):
         #SETUP 2nd task
         self.runFlag = True;
+        self.CDT_STM_STATE = self.__CEBS_STM_CDT_CAM_INIT;
 
     def funcCalibCameraDispStop(self):
         self.runFlag = False;
-        try:
-            self.cap.release()
-        except Exception:
-            pass
-        try:
-            cv.destroyAllWindows()
-        except Exception:
-            pass
+        self.CDT_STM_STATE = self.__CEBS_STM_CDT_STOP;
+#         time.sleep(0.2)
+#         print("Test1")
+#         try:
+#             self.cap.release()
+#         except Exception:
+#             pass
+#         print("Test2")
+#         try:
+#             cv.destroyAllWindows()
+#         except Exception:
+#             pass
+#         print("Test3")
 
+    #主任务
     def run(self):
+        pass
+#         while True:
+#             if (self.CDT_STM_STATE == self.__CEBS_STM_CDT_CAM_INIT):
+#                 time.sleep(0.1)
+#                 print("L2CALCMDI: Active the camera display!")
+#                 self.cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR)
+#                 self.cap.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
+#                 self.cap.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)             
+#                 if self.cap.isOpened():
+#                     #Prepare to show window
+#                     cv.namedWindow('CAMERA CAPTURED', 0)
+#                     cv.resizeWindow('CAMERA CAPTURED', 800, 600);
+#                     #Not yet able to embed vision into UI, so has to put at another side
+#                     #cv.moveWindow('CAMERA CAPTURED', ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_X, ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y)
+#                     cv.moveWindow('CAMERA CAPTURED', 0, ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y)
+#                     self.CDT_STM_STATE = self.__CEBS_STM_CDT_VID_SHOW    
+#                 else:
+#                     self.instL1ConfigOpr.medErrorLog("L2CALCMDI: Cannot open webcam!")
+#                     break
+#             elif (self.CDT_STM_STATE == self.__CEBS_STM_CDT_VID_SHOW):
+#                 time.sleep(0.001)
+#                 try:
+#                     ret, frame = self.cap.read()
+#                 except Exception:
+#                     break
+#                 if (ret == True):
+#                     cv.imshow('CAMERA CAPTURED', frame)
+#                     waitKey(50)
+#                 else:
+#                     break
+#             elif (self.CDT_STM_STATE == self.__CEBS_STM_CDT_STOP):
+#                 time.sleep(0.2)
+#                 print("Test1")
+#                 try:
+#                     self.cap.release()
+#                 except Exception:
+#                     pass
+#                 print("Test2")
+#                 try:
+#                     cv.destroyAllWindows()
+#                 except Exception:
+#                     pass
+#                 print("Test3")
+#                 self.CDT_STM_STATE = self.__CEBS_STM_INIT
+#                 #return -1
+#             else:
+#                 time.sleep(1)
+#                 print("Test!!!")
+                 
+            
+        #之前好使的方式
         while True:
             time.sleep(0.1)
             if (self.runFlag == True):
@@ -358,7 +433,7 @@ class clsL2_CalibCamDispThread(QThread):
                 waitKey(50)
             else:
                 break;
-
+            
             
             #第二种设计的方案，本来想解决第二次启动后的工作问题，但并没有真正起到作用
 #             workingMode = False

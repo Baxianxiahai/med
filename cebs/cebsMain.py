@@ -447,7 +447,6 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
     #
     #    
     def slot_gpar_compl(self):
-        #self.instL1GparProc.funcCtrlCalibComp()
         self.funcGlobalParReadSave()
         self.sgL4MainWinVisible.emit()
         self.close()
