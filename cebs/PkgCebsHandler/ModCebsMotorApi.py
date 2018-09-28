@@ -32,9 +32,9 @@ MotorCmdStrReadParamters = 'Q02\r\n'
 MotorCmdStrReadStatus = 'Q03\r\n'
 
 ' Default parameters for motor '
-MOTOR_DISTANCE_MM_PER_ROUND = 5
+MOTOR_DISTANCE_MM_PER_ROUND = 3.1415926*40*106/50
 MOTOR_STEPS_PER_ROUND = 6400
-MOTOR_DEFAULT_SPEED = 400
+MOTOR_DEFAULT_SPEED = 100
 MOTOR_STEPS_PER_DISTANCE_MM = MOTOR_STEPS_PER_ROUND / MOTOR_DISTANCE_MM_PER_ROUND
 MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DISTANCE_MM_PER_ROUND / 1000
 
@@ -165,7 +165,7 @@ class clsL1_MotoDrvApi(object):
             return -1;
         VerNumber = Version.split()[0]
         print("L1MOTOAPI: VerNumber = ", VerNumber)
-        if int(VerNumber) == 37:
+        if int(VerNumber) == 21:
             self.IsSerialOpenOk = True
         else:
             self.instL1ConfigOpr.medErrorLog("L1MOTOAPI: Can not find right version 2!")
@@ -523,7 +523,7 @@ class clsL1_MotoDrvApi(object):
             self.instL1ConfigOpr.medErrorLog("L1MOTOAPI: Serial is not opened, return moto_proc_back_to_zero")
             return -1
         print("L1MOTOAPI: motor_api_back_to_zero(self, MOTOR_DEFAULT_SPEED, MOTOR_DEFAULT_SPEED, 0, 0)")        
-        if (self.motor_api_back_to_zero((-1)*MOTOR_DEFAULT_SPEED, (-1)*MOTOR_DEFAULT_SPEED, 0, 0) < 0):
+        if (self.motor_api_back_to_zero((-1)*MOTOR_DEFAULT_SPEED, (1)*MOTOR_DEFAULT_SPEED, 0, 0) < 0):
             print("L1MOTOAPI: Procedure moto_proc_back_to_zero get error!")
             return -2
         return 1
@@ -551,7 +551,7 @@ class clsL1_MotoDrvApi(object):
             else:
                 return 1
         print("L1MOTOAPI: moto_proc_move_to_axis_postion() (mm)", curPx, curPy, newPx, newPy)        
-        x_move_steps = int((newPx - curPx) * MOTOR_STEPS_PER_DISTANCE_UM)
+        x_move_steps = int((curPx - newPx) * MOTOR_STEPS_PER_DISTANCE_UM)
         y_move_steps = int((newPy - curPy) * MOTOR_STEPS_PER_DISTANCE_UM)
         if((0 == x_move_steps) and (0 == y_move_steps)):
             print("L1MOTOAPI: moto_proc_move_to_axis_postion() (steps), all zero return", y_move_steps, x_move_steps, 0, 0)
