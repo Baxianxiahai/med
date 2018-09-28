@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'cebsMainform.ui'
+# Form implementation generated from reading ui file 'cebsMainForm.ui'
 #
 # Created by: PyQt5 UI code generator 5.10
 #
@@ -42,6 +42,7 @@ class Ui_cebsMainWindow(object):
         self.pushButton_ctrl_stop.setGeometry(QtCore.QRect(200, 20, 161, 71))
         self.pushButton_ctrl_stop.setObjectName("pushButton_ctrl_stop")
         self.pushButton_runpg_test = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_runpg_test.setEnabled(False)
         self.pushButton_runpg_test.setGeometry(QtCore.QRect(980, 450, 71, 41))
         self.pushButton_runpg_test.setObjectName("pushButton_runpg_test")
         self.pushButton_runpg_clear = QtWidgets.QPushButton(self.centralwidget)
