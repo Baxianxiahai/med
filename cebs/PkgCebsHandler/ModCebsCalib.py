@@ -383,6 +383,8 @@ class clsL2_CalibCamDispThread(threading.Thread):
         self.instL1ConfigOpr = ModCebsCfg.clsL1_ConfigOpr();
         if (startOption == 1):
             self.CDT_STM_STATE = self.__CEBS_STM_CDT_FIN;
+        self.camRtFillWidth = 0;
+        self.camRtFillHeight = 0;
         self.funcCalibCamDisLogTrace("L2CALCMDI: Instance start test!")
 
     def setIdentity(self,text):
@@ -405,7 +407,7 @@ class clsL2_CalibCamDispThread(threading.Thread):
     def funcCalibCameraDispStop(self):
         self.CDT_STM_STATE = self.__CEBS_STM_CDT_STOP;
 
-    def funcCamInit(self):
+    def funcCamDisRtInit(self):
         #确定是否安装
         if (ModCebsCom.GL_CEBS_VISION_CAMBER_NBR < 0):
             return -1;
@@ -413,6 +415,10 @@ class clsL2_CalibCamDispThread(threading.Thread):
         self.cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR)
         self.cap.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
         self.cap.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)
+        rect = self.instL4CalibForm.label_calib_RtCam_Fill.geometry()
+        self.camRtFillWidth = rect.width()
+        self.camRtFillHeight = rect.height()
+        
         #判定是否正常打开
         if not self.cap.isOpened():
             self.cap.release()
@@ -441,7 +447,7 @@ class clsL2_CalibCamDispThread(threading.Thread):
             elif (self.CDT_STM_STATE == self.__CEBS_STM_CDT_CAM_INIT):
                 time.sleep(0.1)
                 print("L2CALCMDI: Active the camera display!")
-                if (self.funcCamInit() < 0):
+                if (self.funcCamDisRtInit() < 0):
                     self.instL1ConfigOpr.medErrorLog("L2CALCMDI: Cannot open webcam, run exit!")
                     print("L2CALCMDI: Cannot open webcam, run exit!")
                     self.CDT_STM_STATE = self.__CEBS_STM_CDT_ERR
@@ -466,7 +472,7 @@ class clsL2_CalibCamDispThread(threading.Thread):
                         rgb = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
                     temp_image = QtGui.QImage(rgb.flatten(), width, height, QtGui.QImage.Format_RGB888)
                     temp_pixmap = QtGui.QPixmap.fromImage(temp_image)
-                    self.instL4CalibForm.label_calib_RtCam_Fill.setPixmap(temp_pixmap)
+                    self.instL4CalibForm.label_calib_RtCam_Fill.setPixmap(temp_pixmap.scaled(self.camRtFillWidth, self.camRtFillHeight))
                     waitKey(50)  
 
             #销毁现场摄像头
