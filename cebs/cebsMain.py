@@ -101,12 +101,21 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
     def initUI(self):
         self.statusBar().showMessage('SYSTEM START ')
         self.setGeometry(10, 30, 1024, 768)
-        exitAction = QAction(QIcon('.\icon_res\q10.ico'), '&Exit', self)
+        exitAction = QAction(QIcon('.\icon_res\exit.ico'), '&Exit', self)
         exitAction.setShortcut('Ctrl+Q')
         exitAction.setStatusTip('EXIT SYSTEM')
         exitAction.triggered.connect(qApp.quit)
         toolbar = self.addToolBar('EXIT')  
         toolbar.addAction(exitAction)
+
+        aboutAction = QAction(QIcon('.\icon_res\about.ico'), '&About', self)
+        aboutAction.setShortcut('Ctrl+A')
+        aboutAction.setStatusTip('ABOUT SYSTEM')
+        #aboutAction.triggered.connect(qApp.aboutQt("上海小慧智能科技有限公司, 上海纳贤路800号，科海大厦3楼"))
+        #aboutAction.clicked.connect(self.aboutCompanyBox())
+        toolbar1 = self.addToolBar('About')  
+        toolbar1.addAction(aboutAction)
+
 
     #MUST Load global parameters, to initialize different UI and update the stored parameters.
     def initParameter(self):
@@ -150,6 +159,9 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.slot_print_trigger(res)
         #STEP8: SEND BACK-ZERO SIGNAL TO MOTO, 发送归零信号给马达 #MAKE MOTO GO BACK TO ZERO
         self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
+    
+    def aboutCompanyBox(self):
+        QMessageBox.about(self, '公司信息', '上海小慧智能科技有限公司, 上海纳贤路800号，科海大厦3楼')   
         
     #File Open Method, for reference
     def test_openMsg(self):  
