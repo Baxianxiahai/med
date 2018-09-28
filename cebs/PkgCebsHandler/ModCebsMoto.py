@@ -255,6 +255,7 @@ class clsL2_MotoProc(object):
 
     def funcMotoStop(self):
         if (ModCebsCom.GL_CEBS_MOTOAPI_INSTALLED_SET == True):
+            self.instL1ConfigOpr.medCmdLog("L2MOTO: Send full stop command to moto!")
             res = self.instL1MotoDrvApi.moto_proc_full_stop()
             if (res < 0):
                 print("L2MOTO: funcMotoStop() execute error!")
@@ -297,6 +298,7 @@ class clsL2_MotoProc(object):
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy):
         print("L2MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy))
         if (ModCebsCom.GL_CEBS_MOTOAPI_INSTALLED_SET == True):
+            self.instL1ConfigOpr.medCmdLog(("L2MOTO: Send command to moto, with par in (um): current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy)));
             if (self.instL1MotoDrvApi.moto_proc_move_to_axis_postion(curPx, curPy, newPx, newPy) < 0):
                 print("L2MOTO: funcMotoMove2AxisPos() run error!")
                 self.instL1ConfigOpr.medErrorLog("L2MOTO: funcMotoMove2AxisPos get error!")

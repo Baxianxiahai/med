@@ -5,13 +5,12 @@
 2. 校准图像放在在校准UI界面之外，而无法嵌入到内部图像显示部分
    -> QLable和GraphicsView控件，无法掌握其精髓，导致无法将该图像集成到UI界面里面
    -> 可以使用，不太美观完美
-3. L4MAIN在校准后的两次返回
-
 
 
 //=ZJL, 2018/9/28, CURRENT_SW_DELIVERY R1.20 =>CEBS
 = 准备MOTO驱动的完善
 = 调整好马达坐标的计算算法
+3. L4MAIN在校准后的两次返回  => 不处理
 
 //=ZJL, 2018/9/28, CURRENT_SW_DELIVERY R1.19 =>CEBS
 = 继续完善状态机控制和界面内容

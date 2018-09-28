@@ -204,7 +204,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         if (self.instL3CtrlSchdThd.funcCtrlGetRightStatus() < 0):
             self.med_debug_print("L4MAIN: CALIB error!")
             return -1;
-        self.med_debug_print("L4MAIN: CALIB start!")
+        self.med_debug_print("L4MAIN: Calibration start!")
         self.instL3CtrlSchdThd.sgL3CtrlCalibStart.emit()
         if not self.instL4CalibForm.isVisible():
             self.sgL4MainWinUnvisible.emit()
@@ -212,8 +212,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 
     #Enter parameter setting session
     def slot_gpar_start(self):
-        self.med_debug_print("L4MAIN: Parameter set action")
-        #self.instL3CtrlSchdThd.sgL3CtrlCalibStart.emit()
+        self.med_debug_print("L4MAIN: Global parameter set start!")
         if not self.instL4GparForm.isVisible():
             self.sgL4MainWinUnvisible.emit()
             self.instL4GparForm.show()
@@ -244,6 +243,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
     def funcMainWinUnvisible(self):
         if self.isVisible():
             self.hide()
+            self.med_debug_print("L4MAIN: Main form hide!")
 
     #Local function
     def funcMainFormSetEquInitStatus(self):
@@ -411,11 +411,6 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.sgL4MainWinVisible.emit()
         self.close()
 
-
-    #
-    #  业务函数部分
-    #
-    #
     def closeEvent(self, event):
         self.instL3CalibProc.funcRecoverWorkingEnv()
         self.sgL4MainWinVisible.emit()
