@@ -263,11 +263,13 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
     sgL4MainWinUnvisible = pyqtSignal()
     sgL4MainWinVisible = pyqtSignal()
+    sgL4CalibFormActiveTrig = pyqtSignal()
 
     def __init__(self):    
         super(SEUI_L4_CalibForm, self).__init__()  
         self.setupUi(self)
         self.instL3CalibProc = ModCebsCalib.clsL3_CalibProc(self)
+        self.sgL4CalibFormActiveTrig.connect(self.instL3CalibProc.funcActiveTrig)
         self.instL1ConfigOpr1 = ModCebsCfg.clsL1_ConfigOpr()
         
     def calib_print_log(self, info):
@@ -275,8 +277,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.textEdit_calib_runProgress.append(strOut);
         self.textEdit_calib_runProgress.moveCursor(QtGui.QTextCursor.End)
         self.textEdit_calib_runProgress.ensureCursorVisible()
-        self.textEdit_calib_runProgress.insertPlainText("")
-        
+        self.textEdit_calib_runProgress.insertPlainText("")       
         
     #
     #  SLOT FUNCTION, 槽函数部分
@@ -547,12 +548,31 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         self.close()
 
 
+'''
+'高级技巧，还未搞定'
+'https://www.cnblogs.com/WSX1994/articles/9092331.html'
+
+探索使得加载更加人性化和自动化
+'''
+def load_data(sp):
+    for i in range(1, 2):              #模拟主程序加载过程 
+        time.sleep(1)                   # 加载数据
+        sp.showMessage("加载... {0}%".format(i * 10), QtCore.Qt.AlignHCenter |QtCore.Qt.AlignBottom, QtCore.Qt.black)
+        QtWidgets.qApp.processEvents()  # 允许主进程处理事件
+
 #THE MAIN ENTRY: 第0主入口，MAIN函数部分
 #Main App entry
 def main_form():
     app = QtWidgets.QApplication(sys.argv)
+    splash = QtWidgets.QSplashScreen(QtGui.QPixmap("cebsStart.jpg"))
+    splash.showMessage("加载...0%", QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom, QtCore.Qt.black)
+    splash.resize(1202, 800)
+    splash.show()
+    load_data(splash)
+    QtWidgets.qApp.processEvents()
     mainWindow = SEUI_L4_MainWindow()
     mainWindow.show()
+    splash.hide()
     sys.exit(app.exec_())
 
 #SYSTEM ENTRY

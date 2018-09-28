@@ -148,6 +148,8 @@ class clsL3_CtrlSchdThread(QThread):
         if (self.CTRL_STM_STATE != self.__CEBS_STM_CTRL_INIT):
             self.funcCtrlSchdDebugPrint("L3CTRLST: funcCtrlCalibStart Please finish last action firstly!")
             return -1;
+        #给CalibForm下的CalibTask一个驱动信号，以便完成该干的事
+        self.instL4WinMainForm.instL4CalibForm.sgL4CalibFormActiveTrig.emit()
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CALIB;
     
     def funcCtrlCalibStop(self):
@@ -212,7 +214,6 @@ class clsL3_CtrlSchdThread(QThread):
     '''                        
     def run(self):
         while True:
-            pass
             
             #初始化等待
             if (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_INIT):

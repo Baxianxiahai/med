@@ -84,7 +84,13 @@ class clsL3_CalibProc(ModCebsCom.clsL0_MedCFlib):
         self.instL2CalibCamDisThd = clsL2_CalibCamDispThread(self.instL4CalibForm, 1);
         self.instL2CalibCamDisThd.setIdentity("TASK_CalibCameraDisplay")
         self.instL2CalibCamDisThd.start();
-        #STE4: DebugTrace
+        #STEP4:设想缺省摄像头图片
+        rect = self.instL4CalibForm.label_calib_RtCam_Fill.geometry()
+        filePicInit = QtGui.QPixmap('calibInitWorm.jpg').scaled(rect.width(), rect.height())
+        self.instL4CalibForm.label_calib_RtCam_Fill.setPixmap(filePicInit)
+        #STEP5: 自动激活摄像头
+        #self.funcCalibPilotCameraEnable();
+        #STE6: DebugTrace
         self.funcCalibLogTrace("L3CALIB: Instance start test!")
                         
     def setIdentity(self,text):
@@ -92,6 +98,9 @@ class clsL3_CalibProc(ModCebsCom.clsL0_MedCFlib):
 
     def funcCalibLogTrace(self, myString):
         self.instL4CalibForm.calib_print_log(myString)
+
+    def funcActiveTrig(self):
+        self.funcCalibPilotCameraEnable()
 
     def funcCleanWorkingEnv(self):
         if (self.instL2MotoProc.funcMotoRunningStatusInquery() == True):
@@ -202,11 +211,16 @@ class clsL3_CalibProc(ModCebsCom.clsL0_MedCFlib):
     def funcCalibPilotStop(self):
         self.funcCalibLogTrace("L3CALIB: PILOT STOP...")
         self.instL2CalibPiThd.sgL2PiStop.emit()
-        
+
+    '''     
+          本函数本来是使用菜单激活的，目前可以做到固定到界面中，所以不再需要该激活过程
+          但函数过程依然保留
+
     #Using different function/api to find the right position
     #pos = self.instL4CalibForm.size()
     #pos = self.instL4CalibForm.rect()
     #geometry will return (left, top, width, height)
+    '''
     def funcCalibPilotCameraEnable(self):
         #先判定摄像头状态，放置重入
         if (self.camerEnableFlag == True):
@@ -404,12 +418,12 @@ class clsL2_CalibCamDispThread(threading.Thread):
             self.cap.release()
             cv.destroyAllWindows()
             return -1
+        #之前需要独立的界面，现在不需要了
         #Prepare to show window
-        cv.namedWindow('CAMERA CAPTURED', 0)
-        cv.resizeWindow('CAMERA CAPTURED', 800, 600);
+        #cv.namedWindow('CAMERA CAPTURED', 0)
+        #cv.resizeWindow('CAMERA CAPTURED', 800, 600);
         #Not yet able to embed vision into UI, so has to put at another side
-        #cv.moveWindow('CAMERA CAPTURED', ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_X, ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y)
-        cv.moveWindow('CAMERA CAPTURED', 0, ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y)
+        #cv.moveWindow('CAMERA CAPTURED', 0, ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y)
         return 1
                 
     #主任务
@@ -443,7 +457,16 @@ class clsL2_CalibCamDispThread(threading.Thread):
                 except Exception:
                     break;
                 if (ret == True):
-                    cv.imshow('CAMERA CAPTURED', frame)
+                    #cv.imshow('CAMERA CAPTURED', frame)
+                    #height, width, bytesPerComponent = frame.shape
+                    height, width = frame.shape[:2]
+                    if frame.ndim == 3:
+                        rgb = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+                    elif frame.ndim == 2:
+                        rgb = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
+                    temp_image = QtGui.QImage(rgb.flatten(), width, height, QtGui.QImage.Format_RGB888)
+                    temp_pixmap = QtGui.QPixmap.fromImage(temp_image)
+                    self.instL4CalibForm.label_calib_RtCam_Fill.setPixmap(temp_pixmap)
                     waitKey(50)  
 
             #销毁现场摄像头

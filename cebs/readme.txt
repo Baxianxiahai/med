@@ -2,9 +2,10 @@
 
 【已知BUG LIST】
 1. 如果将MOTOAPI的指令反馈到界面上
-2. 校准图像放在在校准UI界面之外，而无法嵌入到内部图像显示部分
-   -> QLable和GraphicsView控件，无法掌握其精髓，导致无法将该图像集成到UI界面里面
-   -> 可以使用，不太美观完美
+
+
+
+
 
 
 
@@ -15,7 +16,10 @@
 
 //=ZJL, 2018/9/29, CURRENT_SW_DELIVERY R1.21 =>CEBS
 = 优化VISION图像初始化时对于cap的RELEASE以及摄像头找不到时的处理
-
+= 支持37和21两种驱动板，灵活选择
+2. 校准图像放在在校准UI界面之外，而无法嵌入到内部图像显示部分
+   -> QLable和GraphicsView控件，无法掌握其精髓，导致无法将该图像集成到UI界面里面
+   -> 可以使用，不太美观完美
 
 //=ZJL, 2018/9/28, CURRENT_SW_DELIVERY R1.20 =>CEBS
 = 准备MOTO驱动的完善
