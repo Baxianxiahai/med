@@ -47,10 +47,10 @@ class clsL1_ConfigOpr(object):
             self.CReader.set("Env","pic_origin", str(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH))
             self.CReader.set("Env","pic_middle", str(ModCebsCom.GL_CEBS_PIC_ABS_MIDDLE_PATH))
             self.CReader.set("Env","holeboard_type", str(ModCebsCom.GL_CEBS_HB_TARGET_TYPE))
-            self.CReader.set("Env","holeboard, left_up X-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[0]))
-            self.CReader.set("Env","holeboard, left_up Y-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
-            self.CReader.set("Env","holeboard, right bot X-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[2]))
-            self.CReader.set("Env","holeboard, right bot Y-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))
+            self.CReader.set("Env","holeboard, left_bot X-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[0]))
+            self.CReader.set("Env","holeboard, left_bot Y-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
+            self.CReader.set("Env","holeboard, right_up X-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[2]))
+            self.CReader.set("Env","holeboard, right_up Y-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))
             self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET))
             self.CReader.set("Env","pic classification set", str(ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET))
             self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET))
@@ -80,10 +80,10 @@ class clsL1_ConfigOpr(object):
         ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX = int(self.CReader['Counter']['PicBatchClas']);
         ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = int(self.CReader['Counter']['PicRemainCnt']);
         ModCebsCom.GL_CEBS_HB_TARGET_TYPE = self.CReader['Env']['holeboard_type'];
-        ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] = int(self.CReader['Env']['holeboard, left_up X-axis']);
-        ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] = int(self.CReader['Env']['holeboard, left_up Y-axis']);
-        ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] = int(self.CReader['Env']['holeboard, right bot X-axis']);
-        ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] = int(self.CReader['Env']['holeboard, right bot Y-axis']);
+        ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] = int(self.CReader['Env']['holeboard, left_bot X-axis']);
+        ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] = int(self.CReader['Env']['holeboard, left_bot Y-axis']);
+        ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] = int(self.CReader['Env']['holeboard, right_up X-axis']);
+        ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] = int(self.CReader['Env']['holeboard, right_up Y-axis']);
         tmp = self.CReader['Env']['pic taking fix point set']
         if (tmp == 'True'):
             ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET = True
@@ -152,10 +152,10 @@ class clsL1_ConfigOpr(object):
             self.CReader.set("Env","pic_origin", str(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH))
             self.CReader.set("Env","pic_middle", str(ModCebsCom.GL_CEBS_PIC_ABS_MIDDLE_PATH))
             self.CReader.set("Env","holeboard_type", str(ModCebsCom.GL_CEBS_HB_TARGET_TYPE))
-            self.CReader.set("Env","holeboard, left_up X-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[0]))
-            self.CReader.set("Env","holeboard, left_up Y-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
-            self.CReader.set("Env","holeboard, right bot X-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[2]))
-            self.CReader.set("Env","holeboard, right bot Y-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))
+            self.CReader.set("Env","holeboard, left_bot X-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[0]))
+            self.CReader.set("Env","holeboard, left_bot Y-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
+            self.CReader.set("Env","holeboard, right_up X-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[2]))
+            self.CReader.set("Env","holeboard, right_up Y-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))
             self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET))
             self.CReader.set("Env","pic classification set", str(ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET))
             self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET))
@@ -176,10 +176,10 @@ class clsL1_ConfigOpr(object):
             self.CReader.set("Env","pic_origin", str(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH))
             self.CReader.set("Env","pic_middle", str(ModCebsCom.GL_CEBS_PIC_ABS_MIDDLE_PATH))
             self.CReader.set("Env","holeboard_type", str(ModCebsCom.GL_CEBS_HB_TARGET_TYPE))
-            self.CReader.set("Env","holeboard, left_up X-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[0]))
-            self.CReader.set("Env","holeboard, left_up Y-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
-            self.CReader.set("Env","holeboard, right bot X-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[2]))
-            self.CReader.set("Env","holeboard, right bot Y-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))
+            self.CReader.set("Env","holeboard, left_bot X-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[0]))
+            self.CReader.set("Env","holeboard, left_bot Y-axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
+            self.CReader.set("Env","holeboard, right_up X-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[2]))
+            self.CReader.set("Env","holeboard, right_up Y-Axis", str(ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))
             self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET))
             self.CReader.set("Env","pic classification set", str(ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET))
             self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET))
