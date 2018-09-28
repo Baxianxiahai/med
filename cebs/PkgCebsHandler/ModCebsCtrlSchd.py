@@ -113,6 +113,7 @@ class clsL3_CtrlSchdThread(QThread):
         self.funcCtrlSchdDebugPrint("L3CTRLST: Start to take picture, remaining TIMES=%d." %(self.capTimes-1))
         self.instL1ConfigOpr.createBatch(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX);
         #NEW STATE
+        self.instL2VisCapProc.funcVisBatCapStart();
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CAP_PIC;
 
     #STOP TAKING PICTURE
@@ -171,7 +172,7 @@ class clsL3_CtrlSchdThread(QThread):
           支持函数部分
     '''                        
     #LOCAL FUNCTIONS  
-    def funcCameraCapture(self, capIndex):
+    def funcCamCapInBatch(self, capIndex):
         curOne = ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH + 1 - capIndex;
         if ((curOne > ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH) or (curOne < 1)):
             self.funcCtrlSchdDebugPrint("L3CTRLST: Taking picture but serial number error!")
@@ -222,7 +223,7 @@ class clsL3_CtrlSchdThread(QThread):
                 self.capTimes -= 1;
                 if (self.capTimes > 0):
                     self.funcCtrlSchdDebugPrint(str("L3CTRLST: Taking picture, remaining TIMES=" + str(self.capTimes)))
-                    self.funcCameraCapture(self.capTimes);
+                    self.funcCamCapInBatch(self.capTimes);
                     ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT += 1;
                 #CONTROL STOP ACTIONS
                 else:
@@ -233,6 +234,7 @@ class clsL3_CtrlSchdThread(QThread):
                 self.funcCtrlSchdDebugPrint("L3CTRLST: Stop taking picture, remaining  TIMES=%d." %(self.capTimes))
                 ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX +=1;
                 self.instL1ConfigOpr.updateCtrlCntInfo();
+                self.instL2VisCapProc.funcVisBatCapStop();
                 self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
              
             #批量处理识别照片

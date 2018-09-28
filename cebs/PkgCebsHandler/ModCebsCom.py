@@ -45,7 +45,7 @@ GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET = True;
 #Auto taking picture TTI times in minutes
 GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = 60;
 #CAMERA NUMBER
-GL_CEBS_VISION_CAMBER_NBR = 0;
+GL_CEBS_VISION_CAMBER_NBR = -1;
 #896*684 is basic resolution! 896*684 / 1792*1374 / 3584*2748
 GL_CEBS_VISION_CAMBER_RES_WITDH = 1792;
 GL_CEBS_VISION_CAMBER_RES_HEIGHT = 1374;
@@ -141,9 +141,9 @@ GL_CEBS_CAMERA_DISPLAY_POS_Y = 0;
 
 
 '''
-#公共函数库，简化设计
+#COMMON LIB FUNCTIONS, to simplify the whole design.
 
-目前还只是停留在测试的阶段，并没有具体形成函数库
+CURRENTLY STILL IN TEST PHASE, TO BE ENLARGED FURTHER
 
 '''
 class clsL0_MedCFlib():
@@ -160,7 +160,7 @@ class clsL0_MedCFlib():
     def med_cfl_add(self, a, b):
         return a+b
     
-    #初始化孔板产品型号
+    #INIT PLATE PRODUCT TYPE, 初始化孔板产品型号
     def med_init_plate_product_type(self):
         global GL_CEBS_HB_TARGET_TYPE
         global GL_CEBS_PIC_ONE_WHOLE_BATCH
@@ -188,7 +188,7 @@ class clsL0_MedCFlib():
         else:
             GL_CEBS_PIC_ONE_WHOLE_BATCH = GL_CEBS_HB_TARGET_96_SD_BATCH_MAX;
 
-    #初始化孔板参数
+    #INIT PLATE PARAMETER, 初始化孔板参数
     def med_init_plate_parameter(self):
         global GL_CEBS_HB_WIDTH_X_SCALE
         global GL_CEBS_HB_HEIGHT_Y_SCALE
@@ -262,7 +262,7 @@ class clsL0_MedCFlib():
         else:
             pass
 
-    #更新孔板参数
+    #UPDATE PLATE PARAMETERS, 更新孔板参数
     def med_update_plate_parameter(self):
         global GL_CEBS_HB_WIDTH_X_SCALE
         global GL_CEBS_HB_HEIGHT_Y_SCALE

@@ -8,7 +8,7 @@ Created on 2018/4/29
 #### -*- coding: UTF-8 -*-
 
 '''
-系统设计框架
+SYSTEM DESIGN FRAMEWORK, 系统设计框架
 MAIN => 主入口
     |--SEUI_L4_MainWindow => 主界面
         |---clsL3_CtrlSchdThread => 控制调度线程
@@ -91,11 +91,11 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 
     def __init__(self):    
         super(SEUI_L4_MainWindow, self).__init__()
-        #系统级别的界面初始化
+        #SYSTEM LEVEL UI INIT, 系统级别的界面初始化
         self.setupUi(self)
-        #用户级别的界面初始化
+        #USER LAVEL UI INIT, 用户级别的界面初始化
         self.initUI()
-        #硬件初始化
+        #HARDWARE LEVEL INIT, 硬件初始化
         self.initParameter()
         
     def initUI(self):
@@ -115,18 +115,18 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         c = ModCebsCom.clsL0_MedCFlib.med_cfl_add(self, 1, 2)
         print("Test result = %d" % (c))
         '''
-        #STEP1: 初始化配置文件
+        #STEP1: INI FILE CONFIGURATION, 初始化配置文件
         self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr()
         self.instL1ConfigOpr.readGlobalPar();
         self.instL1ConfigOpr.updateCtrlCntInfo()
-        #STEP2: 启动子界面        
+        #STEP2: START SUB-UI, 启动子界面        
         self.instL4CalibForm = SEUI_L4_CalibForm()
         self.instL4GparForm = SEUI_L4_GparForm()
-        #STEP3: 连接信号槽
+        #STEP3: CONNECT SIGNAL SLOT, 连接信号槽
         self.instL4CalibForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.instL4GparForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.sgL4MainWinUnvisible.connect(self.funcMainWinUnvisible);
-        #STEP4: 控制调度模块初始化
+        #STEP4: CONTROL SCHEDULE MODULE INIT, 控制调度模块初始化
         self.instL3CtrlSchdThd = ModCebsCtrlSchd.clsL3_CtrlSchdThread(self)
         self.instL3CtrlSchdThd.setIdentity("TASK_CtrlScheduleThread")
         self.instL3CtrlSchdThd.sgL4MainWinPrtLog.connect(self.slot_print_trigger)
@@ -138,9 +138,9 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.instL3CtrlSchdThd.sgL3CtrlCalibStop.connect(self.instL3CtrlSchdThd.funcCtrlCalibStop)
         self.instL3CtrlSchdThd.sgL3CtrlMotoZero.connect(self.instL3CtrlSchdThd.funcCtrlMotoBackZero)
         self.instL3CtrlSchdThd.start();
-        #STEP5: 设置马达等物理硬件状态
+        #STEP5: SET MOTO AND RELEVANT HARDWARE STATUS, 设置马达等物理硬件状态
         self.funcMainFormSetEquInitStatus();
-        #STEP6: 智能初始化摄像头#Detect all valid camera
+        #STEP6: INTELLEGENT INIT CAMERA, 智能初始化摄像头#Detect all valid camera
         '''
                     方法一：搞定了，但长久初始化一个线程空间，没必要，简化模式的使用
         self.instL3VisCapProc = ModCebsVision.clsL2_VisCapProc(self, 1);
@@ -148,7 +148,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         '''
         res = ModCebsVision.clsL2_VisCapProc.funcVisionDetectAllCamera(self)
         self.slot_print_trigger(res)
-        #STEP8: 发送归零信号给马达 #MAKE MOTO GO BACK TO ZERO
+        #STEP8: SEND BACK-ZERO SIGNAL TO MOTO, 发送归零信号给马达 #MAKE MOTO GO BACK TO ZERO
         self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
         
     #File Open Method, for reference
@@ -167,8 +167,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.textEdit_runProgress.insertPlainText("")
     
     #
-    #  槽函数部分
-    #    以下部分为系统接口对应的槽函数，函数命名不得动
+    #  SLOT FUNCTION, 槽函数部分
+    #    DO NOT MODIFY FUNCTION NAMES, 以下部分为系统接口对应的槽函数，函数命名不得动
     #
     #
     def slot_print_trigger(self, info):
@@ -228,8 +228,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 
 
     #
-    #  槽函数部分
-    #    以下部分为系统接口对应的槽函数，函数命名不得动
+    #  SLOT FUNCTION, 槽函数部分
+    #    DO NOT MODIFY SLOT FUNCTIONS NAME, 以下部分为系统接口对应的槽函数，函数命名不得动
     #
     #
     #Control UI visible
@@ -279,8 +279,8 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         
         
     #
-    #  槽函数部分
-    #    以下部分为系统接口对应的槽函数，函数命名不得动
+    #  SLOT FUNCTION, 槽函数部分
+    #    DO NOT MODIFY SLOT FUNCTION NAMES, 以下部分为系统接口对应的槽函数，函数命名不得动
     #
     #        
     def slot_calib_move(self):
@@ -417,7 +417,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.close()
 
 
-#第三主入口
+#3rd Main Entry, 第三主入口
 #Calibration Widget
 class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
     sgL4MainWinUnvisible = pyqtSignal()
@@ -432,8 +432,8 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         self.funcGlobalParReadSet2Ui()
         
     #
-    #  槽函数部分
-    #    以下部分为系统接口对应的槽函数，函数命名不得动
+    #  SLOT FUNCTION, 槽函数部分
+    #    DO NOT MODIFY FUNCTION NAMES, 以下部分为系统接口对应的槽函数，函数命名不得动
     #
     #    
     def slot_gpar_compl(self):
@@ -447,7 +447,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         self.close()
 
     #
-    #  业务函数部分
+    #  SERVICE FUNCTION PART, 业务函数部分
     #
     #
     #Local function
@@ -478,7 +478,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         try: 
             ModCebsCom.GL_CEBS_VISION_CAMBER_NBR = int(self.lineEdit_gpar_camera_nbr.text());
         except Exception: 
-            ModCebsCom.GL_CEBS_VISION_CAMBER_NBR = 0;
+            ModCebsCom.GL_CEBS_VISION_CAMBER_NBR = -1;
         ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET = self.checkBox_gpar_vision_res_addup.isChecked();
         ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE = self.checkBox_gpar_video_enable.isChecked();
         try: 
@@ -547,7 +547,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         self.close()
 
 
-#第0主入口，MAIN函数部分
+#THE MAIN ENTRY: 第0主入口，MAIN函数部分
 #Main App entry
 def main_form():
     app = QtWidgets.QApplication(sys.argv)

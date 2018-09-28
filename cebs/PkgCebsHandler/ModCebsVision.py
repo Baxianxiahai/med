@@ -68,10 +68,7 @@ class clsL2_VisCapProc(object):
         self.instL4WinForm = winFormHandler
         self.prtFlag = prtFlag
         self.instL1ConfigOpr = ModCebsCfg.clsL1_ConfigOpr()
-        #Init the camera resolution, iso set every capture time. 这样可以避免每次对焦的长时间消耗
-        capInit = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
-        capInit.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
-        capInit.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)
+        self.capInit = ''
         self.funcVisCapLogTrace("L2VISCAP: Instance start test!")
         
     def funcVisCapLogTrace(self, myString):
@@ -89,20 +86,41 @@ class clsL2_VisCapProc(object):
             cap = cv.VideoCapture(index)
             if cap.isOpened():
                 res = res + str(index) + ", "
+                cap.release()
+            cv.destroyAllWindows()
         return res
-         
+    
+    #Init the camera resolution, iso set every capture time. 这样可以避免每次对焦的长时间消耗
+    def funcVisBatCapStart(self):
+        if (ModCebsCom.GL_CEBS_VISION_CAMBER_NBR < 0):
+            self.funcVisCapLogTrace("L2VISCAP: Camera not yet installed!");
+            return -1;
+        else:
+            self.capInit = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
+            self.capInit.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
+            self.capInit.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)
+            return 1;
+
+    def funcVisBatCapStop(self):
+        self.capInit.release()
+        cv.destroyAllWindows()
+    
+    '''     
+    #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
+    #cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
+    #Check if the webcam is opened correctly
+    '''
     def funcVisionCapture(self, batch, fileNbr):
-        #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
-        cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
-        # Check if the webcam is opened correctly
-        if not cap.isOpened():
+        if not self.capInit.isOpened():
             #raise IOError("Cannot open webcam")
             self.instL1ConfigOpr.medErrorLog("L2VISCAP: Cannot open webcam!")
             print("L2VISCAP: Cannot open webcam!, Batch/Nbr=%d/%d" % (batch, fileNbr))
+            self.capInit.release()
+            cv.destroyAllWindows()            
             return -1;
 
-        width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
-        height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
+        width = int(self.capInit.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
+        height = int(self.capInit.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
         fps = 20
         #print("L2VISCAP: Width/Height = %d/%d" % (width, height))
         time.sleep(3)
@@ -115,7 +133,7 @@ class clsL2_VisCapProc(object):
         #fourcc=-1**
         #3rd par is carmera speed，20 is normal，less than 20 is slow**
         #out = cv.VideoWriter('c://output.avi',fourcc,20,(640,480))
-        ret, frame = cap.read()
+        ret, frame = self.capInit.read()
         if (ret == True):
             frame = cv.flip(frame, 1)#Operation in frame
             #frame = cv.resize(frame, None, fx=1.5, fy=1.5, interpolation=cv.INTER_AREA)
@@ -153,9 +171,9 @@ class clsL2_VisCapProc(object):
             out = cv.VideoWriter(fileNameVideo, fourcc, fps, (width, height))
             cnt = 0
             targetCnt = fps * ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC
-            while cap.isOpened():
+            while self.capInit.isOpened():
                 cnt += 1
-                ret, frame = cap.read()
+                ret, frame = self.capInit.read()
                 if ret:
                     frame = cv.flip(frame, 0)
                     #write the flipped frame
@@ -166,10 +184,6 @@ class clsL2_VisCapProc(object):
                 else:
                     break
             out.release()
-            
-        #Release all resource
-        #self.cap.release()
-        #cv.destroyAllWindows()
         return 1;
       
         

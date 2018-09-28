@@ -13,7 +13,8 @@
 
 
 
-
+//=ZJL, 2018/9/29, CURRENT_SW_DELIVERY R1.21 =>CEBS
+= 优化VISION图像初始化时对于cap的RELEASE以及摄像头找不到时的处理
 
 
 //=ZJL, 2018/9/28, CURRENT_SW_DELIVERY R1.20 =>CEBS
