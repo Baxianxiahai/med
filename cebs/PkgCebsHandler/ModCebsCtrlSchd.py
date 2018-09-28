@@ -41,11 +41,11 @@ class clsL3_CtrlSchdThread(QThread):
     #STATE MACHINE
     __CEBS_STM_CTRL_NULL =      0;
     __CEBS_STM_CTRL_INIT =      1;
-    __CEBS_STM_CTRL_CAP_PIC =   2;
+    __CEBS_STM_CTRL_CAP_PIC =   2;  #抓取图片
     __CEBS_STM_CTRL_CAP_CMPL =  3;
-    __CEBS_STM_CTRL_CFY_PROC =  4;
+    __CEBS_STM_CTRL_CFY_PROC =  4;  #识别处理图片
     __CEBS_STM_CTRL_CFY_CMPL =  5;
-    __CEBS_STM_CTRL_CALIB =     6;
+    __CEBS_STM_CTRL_CALIB =     6;  #校准过程
     __CEBS_STM_CTRL_ERR =       7;
     __CEBS_STM_CTRL_INVALID =   0xFF;
 

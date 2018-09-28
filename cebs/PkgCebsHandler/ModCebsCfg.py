@@ -15,6 +15,9 @@ import time
 from PkgCebsHandler import ModCebsCom
 
 
+'''
+配置模块
+'''
 class clsL1_ConfigOpr(object):
     def __init__(self):
         self.filePath = ModCebsCom.GL_CEBS_CFG_FILE_NAME
@@ -356,4 +359,9 @@ class clsL1_ConfigOpr(object):
         outputStr = head + inputStr
         with open(ModCebsCom.GL_CEBS_ERR_LOG_FILE_NAME_SET, 'a+') as f:
             f.write(outputStr)
+
+
+
+
+
 

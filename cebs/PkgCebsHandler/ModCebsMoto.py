@@ -19,14 +19,18 @@ import socket
 
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
-
-#Local include
 from cebsMain import *
 from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsMotorApi
 
+
+'''
+MOTO处理过程的L3模块
+
 #模块可能被WinMain和Calib调用，所以初始化需要传入Father进去
+
+'''
 class clsL2_MotoProc(object):
     if (ModCebsCom.GL_CEBS_MOTOAPI_INSTALLED_SET == True):
         instL1MotoDrvApi = ModCebsMotorApi.clsL1_MotoDrvApi()
@@ -70,8 +74,9 @@ class clsL2_MotoProc(object):
                 ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_X_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
                 ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_Y_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
         if (ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] !=0):
-            xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[2];
-            yHeight = ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[3];
+            #小坐标是左下角，大坐标是右上角
+            xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[0];
+            yHeight = ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[1];
             ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = xWidth / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
             ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = yHeight / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
         else:
@@ -230,8 +235,8 @@ class clsL2_MotoProc(object):
 
     def funcMotoMove2Start(self):
         print("L2MOTO: Move to start position - Left/up!")
-        xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[2];
-        yHeight = ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[3];
+        xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[0];
+        yHeight = ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[1];
         if (xWidth <= 0 or yHeight <= 0):
             print("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight))
             return -1, ("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight));
@@ -259,7 +264,13 @@ class clsL2_MotoProc(object):
     def funcMotoResume(self):
         print("L2MOTO: Resume action running...")
         return 1;
-    
+
+    '''
+          左下角的坐标，存在X1/Y1上， 右上角的坐标，存在X2/Y2上 
+          这种方式，符合坐标系的习惯：小值在X1/Y1中，大值在X2/Y2中
+    LEFT-BOTTOM for X1/Y1 save in [0/1], RIGHT-UP for X2/Y2 save in [2/3]
+    '''    
+    '这个移动算法跟显微镜的放置方式息息相关'
     def funcMotoMove2HoleNbr(self, holeIndex):
         time.sleep(1)
         if (holeIndex == 0):
@@ -270,8 +281,8 @@ class clsL2_MotoProc(object):
         else:
             xTargetHoleNbr = ((holeIndex-1) % ModCebsCom.GL_CEBS_HB_HOLE_X_NUM) + 1;
             yTargetHoleNbr = ((holeIndex-1) // ModCebsCom.GL_CEBS_HB_HOLE_X_NUM) + 1;
-            newPosX = int(ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] - (xTargetHoleNbr-1)*ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE);
-            newPosY = int(ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] + (yTargetHoleNbr-1)*ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE);
+            newPosX = int(ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] + (xTargetHoleNbr-1)*ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE);
+            newPosY = int(ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] - (yTargetHoleNbr-1)*ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE);
         print("L2MOTO: Moving to working hole=%d, newPosX/Y=%d/%d." % (holeIndex, newPosX, newPosY))
         if (self.funcMotoMove2AxisPos(ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1], newPosX, newPosY) > 0):
             ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] = newPosX;

@@ -11,7 +11,7 @@
 
 //=ZJL, 2018/9/28, CURRENT_SW_DELIVERY R1.20 =>CEBS
 = 准备MOTO驱动的完善
-
+= 调整好马达坐标的计算算法
 
 //=ZJL, 2018/9/28, CURRENT_SW_DELIVERY R1.19 =>CEBS
 = 继续完善状态机控制和界面内容

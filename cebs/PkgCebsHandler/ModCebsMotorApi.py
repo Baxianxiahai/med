@@ -8,15 +8,11 @@ import serial
 import serial.tools.list_ports
 import time
 from asyncio.tasks import sleep
-
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
-
 from cebsMain import *
-
 from PkgCebsHandler import ModCebsCom  #Common Support module
 from PkgCebsHandler import ModCebsCfg
-
 
 
 SerialPortIndex = 0
@@ -41,7 +37,12 @@ MOTOR_STEPS_PER_ROUND = 6400
 MOTOR_DEFAULT_SPEED = 400
 MOTOR_STEPS_PER_DISTANCE_MM = MOTOR_STEPS_PER_ROUND / MOTOR_DISTANCE_MM_PER_ROUND
 MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DISTANCE_MM_PER_ROUND / 1000
-    
+
+
+
+'''
+Moto驱动的API模块
+'''    
 class clsL1_MotoDrvApi(object):
     '''
     classdocs
@@ -94,60 +95,59 @@ class clsL1_MotoDrvApi(object):
             print("L1MOTOAPI: version =", vernum)
 
     def motor_test(self):
-            print("L1MOTOAPI: check which port was really used >", self.serialFd.name)
-            ret = self.serialFd.isOpen()
-            print("L1MOTOAPI: Open >", ret)
-            print("L1MOTOAPI: Test 1: motor_api_read_version("", serialFd)")            
-            self.motor_api_read_version()                      
-            
-            print("L1MOTOAPI: Test 2: motor_api_read_status("", serialFd)")
-            self.motor_api_read_status()
-            
-            print("L1MOTOAPI: Test 3: motor_api_emergency_stop("", serialFd, 1, 1, 1, 1)")          
-            #clsL1_MotoDrvApi.motor_api_emergency_stop("", serialFd, 1, 1, 1, 1)
-            time.sleep(1)
-            self.motor_api_read_status()            
-            time.sleep(1)
-             
-            print("L1MOTOAPI: Test 4: motor_api_slow_stop("", serialFd, 1, 1, 1, 1)")
-            #clsL1_MotoDrvApi.motor_api_slow_stop("", serialFd, 1, 1, 1, 1)
-            time.sleep(1)
-            self.motor_api_read_status()
-            time.sleep(1)
-             
-            print("L1MOTOAPI: Test 5: motor_api_go_with_steps(serialFd, 6400, 6400, 6400, 6400)")
-            #clsL1_MotoDrvApi.motor_api_go_with_steps("", serialFd, 6400, 6400, 6400, 6400)
-            time.sleep(0)
-            self.motor_api_read_status()
-            time.sleep(1)
-            self.motor_api_emergency_stop(1, 1, 1, 1)
-            time.sleep(1)
-            self.motor_api_read_status()            
-            time.sleep(1)
-             
-             
-            print("L1MOTOAPI: Test 6: motor_api_go_with_steps(serialFd, -6400, -6400, -6400, -6400)")
-            #clsL1_MotoDrvApi.motor_api_go_with_steps("", serialFd, -6400, -6400, -6400, -6400)
-            time.sleep(0)
-            self.motor_api_read_status()
-            time.sleep(1)
-            self.motor_api_emergency_stop(1, 1, 1, 1)
-            time.sleep(1)
-            self.motor_api_read_status()            
-            time.sleep(1)
+        print("L1MOTOAPI: check which port was really used >", self.serialFd.name)
+        ret = self.serialFd.isOpen()
+        print("L1MOTOAPI: Open >", ret)
+        print("L1MOTOAPI: Test 1: motor_api_read_version("", serialFd)")            
+        self.motor_api_read_version()                      
+        
+        print("L1MOTOAPI: Test 2: motor_api_read_status("", serialFd)")
+        self.motor_api_read_status()
+        
+        print("L1MOTOAPI: Test 3: motor_api_emergency_stop("", serialFd, 1, 1, 1, 1)")          
+        #clsL1_MotoDrvApi.motor_api_emergency_stop("", serialFd, 1, 1, 1, 1)
+        time.sleep(1)
+        self.motor_api_read_status()            
+        time.sleep(1)
+         
+        print("L1MOTOAPI: Test 4: motor_api_slow_stop("", serialFd, 1, 1, 1, 1)")
+        #clsL1_MotoDrvApi.motor_api_slow_stop("", serialFd, 1, 1, 1, 1)
+        time.sleep(1)
+        self.motor_api_read_status()
+        time.sleep(1)
+         
+        print("L1MOTOAPI: Test 5: motor_api_go_with_steps(serialFd, 6400, 6400, 6400, 6400)")
+        #clsL1_MotoDrvApi.motor_api_go_with_steps("", serialFd, 6400, 6400, 6400, 6400)
+        time.sleep(0)
+        self.motor_api_read_status()
+        time.sleep(1)
+        self.motor_api_emergency_stop(1, 1, 1, 1)
+        time.sleep(1)
+        self.motor_api_read_status()            
+        time.sleep(1)
+         
+        print("L1MOTOAPI: Test 6: motor_api_go_with_steps(serialFd, -6400, -6400, -6400, -6400)")
+        #clsL1_MotoDrvApi.motor_api_go_with_steps("", serialFd, -6400, -6400, -6400, -6400)
+        time.sleep(0)
+        self.motor_api_read_status()
+        time.sleep(1)
+        self.motor_api_emergency_stop(1, 1, 1, 1)
+        time.sleep(1)
+        self.motor_api_read_status()            
+        time.sleep(1)
 
-            print("L1MOTOAPI: Test 7: motor_api_go_with_steps(serialFd, 100, 100, 100, 100)")
-            self.motor_api_go_with_speed(100, 100, 100, 100)
-            time.sleep(5)
-            self.motor_api_read_status()
-            time.sleep(1)
-            self.motor_api_slow_stop(1, 1, 1, 1)
-            time.sleep(1)
-            self.motor_api_read_status()            
-            time.sleep(1)
+        print("L1MOTOAPI: Test 7: motor_api_go_with_steps(serialFd, 100, 100, 100, 100)")
+        self.motor_api_go_with_speed(100, 100, 100, 100)
+        time.sleep(5)
+        self.motor_api_read_status()
+        time.sleep(1)
+        self.motor_api_slow_stop(1, 1, 1, 1)
+        time.sleep(1)
+        self.motor_api_read_status()            
+        time.sleep(1)
 
-            print("L1MOTOAPI: Test 8: motor_api_go_with_steps(serialFd, 100, 100, 100, 100)")
-            self.motor_api_back_to_zero(100, 100, 100, 100)
+        print("L1MOTOAPI: Test 8: motor_api_go_with_steps(serialFd, 100, 100, 100, 100)")
+        self.motor_api_back_to_zero(100, 100, 100, 100)
             
     def motor_api_read_version(self):
         if(self.IsSerialOpenOk == False):
@@ -569,3 +569,11 @@ if __name__ == '__main__':
     print("[CEBS] ", time.asctime(), ", System starting...\n" );
     Obj = clsL1_MotoDrvApi()
     Obj.motor_test()
+
+
+
+
+
+
+
+
