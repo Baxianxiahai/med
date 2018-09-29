@@ -31,28 +31,14 @@ MotorCmdStrReadVersion = 'Q01\r\n'
 MotorCmdStrReadParamters = 'Q02\r\n'
 MotorCmdStrReadStatus = 'Q03\r\n'
 
-'Define MOTO DRR BOARD HW VERSION'
-MOTO_HW_DRV_HW_VER_21 = 21
-MOTO_HW_DRV_HW_VER_37 = 37
-MOTO_HW_DRV_HW_SEL = MOTO_HW_DRV_HW_VER_37
-
-' Default parameters for motor '
-if (MOTO_HW_DRV_HW_SEL == MOTO_HW_DRV_HW_VER_21):
-    MOTOR_DISTANCE_MM_PER_ROUND = 3.1415926*40*106/50
-    MOTOR_DEFAULT_SPEED = 100
-elif (MOTO_HW_DRV_HW_SEL == MOTO_HW_DRV_HW_VER_37):
-    MOTOR_DISTANCE_MM_PER_ROUND = 5
-    MOTOR_DEFAULT_SPEED = 10
-else:
-    MOTOR_DISTANCE_MM_PER_ROUND = 5
-    MOTOR_DEFAULT_SPEED = 10
 
 ' Other parameters set'
-MOTOR_STEPS_PER_ROUND = 6400
+MOTOR_DISTANCE_MM_PER_ROUND = 3.1415926*20*1.05 #*106/50
+MOTOR_DEFAULT_SPEED = 2
+MOTOR_BACK_TO_ZERO_SPEED = 10
+MOTOR_STEPS_PER_ROUND = 12800
 MOTOR_STEPS_PER_DISTANCE_MM = MOTOR_STEPS_PER_ROUND / MOTOR_DISTANCE_MM_PER_ROUND
 MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DISTANCE_MM_PER_ROUND / 1000
-
-
 
 
 '''
@@ -108,12 +94,16 @@ class clsL1_MotoDrvApi(object):
             print("L1MOTOAPI: Initialized SerialFd OK")
             vernum = self.motor_api_read_version()
             print("L1MOTOAPI: version =", vernum)
+            if (self.IsSerialOpenOk) == True:
+                self.motor_api_set_max_speed(MOTOR_DEFAULT_SPEED, MOTOR_DEFAULT_SPEED, MOTOR_DEFAULT_SPEED, MOTOR_DEFAULT_SPEED)
+                self.motor_api_set_steps_per_round(MOTOR_STEPS_PER_ROUND, MOTOR_STEPS_PER_ROUND, MOTOR_STEPS_PER_ROUND, MOTOR_STEPS_PER_ROUND)
 
     def motor_test(self):
         print("L1MOTOAPI: check which port was really used >", self.serialFd.name)
         ret = self.serialFd.isOpen()
         print("L1MOTOAPI: Open >", ret)
-        print("L1MOTOAPI: Test 1: motor_api_read_version("", serialFd)")            
+        print("L1MOTOAPI: Test 1: motor_api_read_version("", serialFd)")     
+               
         self.motor_api_read_version()                      
         
         print("L1MOTOAPI: Test 2: motor_api_read_status("", serialFd)")
@@ -180,7 +170,7 @@ class clsL1_MotoDrvApi(object):
             return -1;
         VerNumber = Version.split()[0]
         print("L1MOTOAPI: VerNumber = ", VerNumber)
-        if int(VerNumber) == MOTO_HW_DRV_HW_SEL:
+        if int(VerNumber) == 37:
             self.IsSerialOpenOk = True
         else:
             self.instL1ConfigOpr.medErrorLog("L1MOTOAPI: Can not find right version 2!")
@@ -399,6 +389,64 @@ class clsL1_MotoDrvApi(object):
             MotorReturn = self.serialFd.readline()
             print("L1MOTOAPI: MotorReturn44 = ", MotorReturn)
         return 1
+
+    def motor_api_set_max_speed(self, motor1_speed, motor2_speed, motor3_speed, motor4_speed):
+        if(self.IsSerialOpenOk == False):
+            print("L1MOTOAPI: Serial is not opened, return motor_api_set_max_speed")
+            self.instL1ConfigOpr.medErrorLog("L1MOTOAPI: Serial is not opened, return motor_api_set_max_speed")
+            return -1
+        MotorCmdStringToSend = 'S03 ' + str(motor1_speed) + ' ' + str(motor2_speed) + ' '+ str(motor3_speed) + ' '+ str(motor4_speed) + ' ' + '\r\n'
+        print("L1MOTOAPI: MotorCmdStringToSend4 = ", MotorCmdStringToSend)
+        try:
+            self.serialFd.reset_input_buffer()
+            self.serialFd.reset_output_buffer()
+            self.serialFd.write(MotorCmdStringToSend.encode())
+        except Exception:
+            self.instL1ConfigOpr.medErrorLog("L1MOTOAPI: motor_api_set_max_speed error 1!")
+            return -1;
+
+        if int(motor1_speed) != 0:        
+            MotorReturn = self.serialFd.readline()
+            print("L1MOTOAPI: MotorReturn41 = ", MotorReturn)
+        if int(motor2_speed) != 0:        
+            MotorReturn = self.serialFd.readline()
+            print("L1MOTOAPI: MotorReturn42 = ", MotorReturn)
+        if int(motor3_speed) != 0:        
+            MotorReturn = self.serialFd.readline()
+            print("L1MOTOAPI: MotorReturn43 = ", MotorReturn)
+        if int(motor4_speed) != 0:        
+            MotorReturn = self.serialFd.readline()
+            print("L1MOTOAPI: MotorReturn44 = ", MotorReturn)
+        return 1
+    
+    def motor_api_set_steps_per_round(self, motor1_steps, motor2_steps, motor3_steps, motor4_steps):
+        if(self.IsSerialOpenOk == False):
+            print("L1MOTOAPI: Serial is not opened, return motor_api_set_steps_per_round")
+            self.instL1ConfigOpr.medErrorLog("L1MOTOAPI: Serial is not opened, return motor_api_set_steps_per_round")
+            return -1
+        MotorCmdStringToSend = 'S04 ' + str(motor1_steps) + ' ' + str(motor2_steps) + ' '+ str(motor3_steps) + ' '+ str(motor4_steps) + ' ' + '\r\n'
+        print("L1MOTOAPI: MotorCmdStringToSend4 = ", MotorCmdStringToSend)
+        try:
+            self.serialFd.reset_input_buffer()
+            self.serialFd.reset_output_buffer()
+            self.serialFd.write(MotorCmdStringToSend.encode())
+        except Exception:
+            self.instL1ConfigOpr.medErrorLog("L1MOTOAPI: motor_api_set_steps_per_round error 1!")
+            return -1;
+
+        if int(motor1_steps) != 0:        
+            MotorReturn = self.serialFd.readline()
+            print("L1MOTOAPI: MotorReturn41 = ", MotorReturn)
+        if int(motor2_steps) != 0:        
+            MotorReturn = self.serialFd.readline()
+            print("L1MOTOAPI: MotorReturn42 = ", MotorReturn)
+        if int(motor3_steps) != 0:        
+            MotorReturn = self.serialFd.readline()
+            print("L1MOTOAPI: MotorReturn43 = ", MotorReturn)
+        if int(motor4_steps) != 0:        
+            MotorReturn = self.serialFd.readline()
+            print("L1MOTOAPI: MotorReturn44 = ", MotorReturn)
+        return 1
             
     def motor_api_back_to_zero(self, motor1_speed, motor2_speed, motor3_speed, motor4_speed):
         if(self.IsSerialOpenOk == False):
@@ -538,12 +586,7 @@ class clsL1_MotoDrvApi(object):
             self.instL1ConfigOpr.medErrorLog("L1MOTOAPI: Serial is not opened, return moto_proc_back_to_zero")
             return -1
         print("L1MOTOAPI: motor_api_back_to_zero(self, MOTOR_DEFAULT_SPEED, MOTOR_DEFAULT_SPEED, 0, 0)")        
-        if (MOTO_HW_DRV_HW_SEL == MOTO_HW_DRV_HW_VER_21):
-            ret = self.motor_api_back_to_zero((-1)*MOTOR_DEFAULT_SPEED, (1)*MOTOR_DEFAULT_SPEED, 0, 0)
-        elif (MOTO_HW_DRV_HW_SEL == MOTO_HW_DRV_HW_VER_37):
-            ret = self.motor_api_back_to_zero((-1)*MOTOR_DEFAULT_SPEED, (-1)*MOTOR_DEFAULT_SPEED, 0, 0)
-        else:
-            ret = self.motor_api_back_to_zero((-1)*MOTOR_DEFAULT_SPEED, (-1)*MOTOR_DEFAULT_SPEED, 0, 0)
+        ret = self.motor_api_back_to_zero((1)*MOTOR_BACK_TO_ZERO_SPEED, (-1)*MOTOR_BACK_TO_ZERO_SPEED, 0, 0)
         if (ret < 0):
             print("L1MOTOAPI: Procedure moto_proc_back_to_zero get error!")
             return -2
@@ -572,15 +615,8 @@ class clsL1_MotoDrvApi(object):
             else:
                 return 1
         print("L1MOTOAPI: moto_proc_move_to_axis_postion() (mm)", curPx, curPy, newPx, newPy)
-        if (MOTO_HW_DRV_HW_SEL == MOTO_HW_DRV_HW_VER_21):
-            x_move_steps = int((curPx - newPx) * MOTOR_STEPS_PER_DISTANCE_UM)
-            y_move_steps = int((newPy - curPy) * MOTOR_STEPS_PER_DISTANCE_UM)
-        elif (MOTO_HW_DRV_HW_SEL == MOTO_HW_DRV_HW_VER_37):
-            x_move_steps = int((newPx - curPx) * MOTOR_STEPS_PER_DISTANCE_UM)
-            y_move_steps = int((newPy - curPy) * MOTOR_STEPS_PER_DISTANCE_UM)
-        else:
-            x_move_steps = 0
-            y_move_steps = 0
+        x_move_steps = int((newPx - curPx) * MOTOR_STEPS_PER_DISTANCE_UM)
+        y_move_steps = int((curPy - newPy) * MOTOR_STEPS_PER_DISTANCE_UM)
         if((0 == x_move_steps) and (0 == y_move_steps)):
             print("L1MOTOAPI: moto_proc_move_to_axis_postion() (steps), all zero return", y_move_steps, x_move_steps, 0, 0)
             return 2

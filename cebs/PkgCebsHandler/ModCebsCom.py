@@ -62,7 +62,7 @@ GL_CEBS_VIDEO_CAPTURE_ENABLE = True;
 GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC = 3;
 
 #ROUNDS of auto-pilot run
-GL_CEBS_PILOT_WOKING_ROUNDS_MAX = 2;
+GL_CEBS_PILOT_WOKING_ROUNDS_MAX = 5;
 #To enable debug UI under MOTOAPI not yet installed. Formally it sets as True.
 GL_CEBS_MOTOAPI_INSTALLED_SET = True; 
 

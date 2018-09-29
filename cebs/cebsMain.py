@@ -101,20 +101,19 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
     def initUI(self):
         self.statusBar().showMessage('SYSTEM START ')
         self.setGeometry(10, 30, 1024, 768)
-        exitAction = QAction(QIcon('.\icon_res\exit.ico'), '&Exit', self)
+        exitAction = QAction(QIcon('.\icon_res\cebsExit.ico'), '&Exit', self)
         exitAction.setShortcut('Ctrl+Q')
         exitAction.setStatusTip('EXIT SYSTEM')
         exitAction.triggered.connect(qApp.quit)
         toolbar = self.addToolBar('EXIT')  
         toolbar.addAction(exitAction)
 
-        aboutAction = QAction(QIcon('.\icon_res\about.ico'), '&About', self)
+        aboutAction = QAction(QIcon('.\icon_res\cebsAbout.ico'), '&About', self)
         aboutAction.setShortcut('Ctrl+A')
         aboutAction.setStatusTip('ABOUT SYSTEM')
-        #aboutAction.triggered.connect(qApp.aboutQt("上海小慧智能科技有限公司, 上海纳贤路800号，科海大厦3楼"))
-        #aboutAction.clicked.connect(self.aboutCompanyBox())
-        toolbar1 = self.addToolBar('About')  
-        toolbar1.addAction(aboutAction)
+        #aboutAction.triggered.connect(self.aboutCompanyBox())
+        toolbar = self.addToolBar('About')  
+        toolbar.addAction(aboutAction)
 
 
     #MUST Load global parameters, to initialize different UI and update the stored parameters.

@@ -29,10 +29,6 @@ from cv2 import waitKey
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
 
-# from PyQt5.QtCore import *
-# from PyQt5.QtGui import *
-# from PyQt5.QtWidgets import *
-
 #Local include
 from cebsMain import *
 from PkgCebsHandler import ModCebsCom
@@ -56,18 +52,6 @@ class clsL3_CalibProc(ModCebsCom.clsL0_MedCFlib):
     def initParameter(self):
         #STEP1: 判定产品型号
         ModCebsCom.clsL0_MedCFlib.med_init_plate_product_type(self)
-#         if (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD):
-#             ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX;
-#         elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_48_STANDARD):
-#             ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_48_SD_BATCH_MAX;
-#         elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_24_STANDARD):
-#             ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_24_SD_BATCH_MAX;
-#         elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_12_STANDARD):
-#             ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_12_SD_BATCH_MAX;
-#         elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_6_STANDARD):
-#             ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_6_SD_BATCH_MAX;
-#         else:
-#             ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX;
         #STEP2：初始化工作环境
         ModCebsCom.clsL0_MedCFlib.med_init_plate_parameter(self)
         #self.funcInitHoleBoardPar();
@@ -88,9 +72,7 @@ class clsL3_CalibProc(ModCebsCom.clsL0_MedCFlib):
         rect = self.instL4CalibForm.label_calib_RtCam_Fill.geometry()
         filePicInit = QtGui.QPixmap('calibInitWorm.jpg').scaled(rect.width(), rect.height())
         self.instL4CalibForm.label_calib_RtCam_Fill.setPixmap(filePicInit)
-        #STEP5: 自动激活摄像头
-        #self.funcCalibPilotCameraEnable();
-        #STE6: DebugTrace
+        #STE5: DebugTrace
         self.funcCalibLogTrace("L3CALIB: Instance start test!")
                         
     def setIdentity(self,text):
@@ -107,71 +89,7 @@ class clsL3_CalibProc(ModCebsCom.clsL0_MedCFlib):
             self.instL2MotoProc.funcMotoStop()        
 
     def funcRecoverWorkingEnv(self):
-        self.instL2MotoProc.funcMotoStop();
-    
-#     def funcInitHoleBoardPar(self):
-#         ModCebsCom.clsL0_MedCFlib.med_init_plate_parameter(self)
-#         if (ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE == 0 or ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE == 0 or ModCebsCom.GL_CEBS_HB_HOLE_X_NUM == 0 or ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM == 0):
-#             if (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD):
-#                 ModCebsCom.GL_CEBS_HB_HOLE_X_NUM = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_XDIR_NBR;
-#                 ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_YDIR_NBR;
-#                 ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_X_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
-#                 ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_Y_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
-#             elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_48_STANDARD):
-#                 ModCebsCom.GL_CEBS_HB_HOLE_X_NUM = ModCebsCom.GL_CEBS_HB_TARGET_48_SD_XDIR_NBR;
-#                 ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = ModCebsCom.GL_CEBS_HB_TARGET_48_SD_YDIR_NBR;
-#                 ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_48_SD_X_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
-#                 ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_48_SD_Y_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
-#             elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_24_STANDARD):
-#                 ModCebsCom.GL_CEBS_HB_HOLE_X_NUM = ModCebsCom.GL_CEBS_HB_TARGET_24_SD_XDIR_NBR;
-#                 ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = ModCebsCom.GL_CEBS_HB_TARGET_24_SD_YDIR_NBR;
-#                 ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_24_SD_X_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
-#                 ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_24_SD_Y_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
-#             elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_12_STANDARD):
-#                 ModCebsCom.GL_CEBS_HB_HOLE_X_NUM = ModCebsCom.GL_CEBS_HB_TARGET_12_SD_XDIR_NBR;
-#                 ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = ModCebsCom.GL_CEBS_HB_TARGET_12_SD_YDIR_NBR;
-#                 ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_12_SD_X_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
-#                 ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_12_SD_Y_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
-#             elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_6_STANDARD):
-#                 ModCebsCom.GL_CEBS_HB_HOLE_X_NUM = ModCebsCom.GL_CEBS_HB_TARGET_6_SD_XDIR_NBR;
-#                 ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = ModCebsCom.GL_CEBS_HB_TARGET_6_SD_YDIR_NBR;
-#                 ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_6_SD_X_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
-#                 ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_6_SD_Y_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
-#             else:
-#                 ModCebsCom.GL_CEBS_HB_HOLE_X_NUM = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_XDIR_NBR;
-#                 ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_YDIR_NBR;
-#                 ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_X_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
-#                 ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_Y_MAX / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
-#         if (ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] !=0 or ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] !=0):
-#             xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[0];
-#             yHeight = ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[1];
-#             ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = xWidth / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
-#             ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = yHeight / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
-#         else:
-#             pass        
-    
-#    def funcUpdateHoleBoardPar(self):
-#        ModCebsCom.clsL0_MedCFlib.med_update_plate_parameter(self)
-#         if (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD):
-#             ModCebsCom.GL_CEBS_HB_HOLE_X_NUM = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_XDIR_NBR;
-#             ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_YDIR_NBR;
-#         elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_48_STANDARD):
-#             ModCebsCom.GL_CEBS_HB_HOLE_X_NUM = ModCebsCom.GL_CEBS_HB_TARGET_48_SD_XDIR_NBR;
-#             ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = ModCebsCom.GL_CEBS_HB_TARGET_48_SD_YDIR_NBR;
-#         elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_24_STANDARD):
-#             ModCebsCom.GL_CEBS_HB_HOLE_X_NUM = ModCebsCom.GL_CEBS_HB_TARGET_24_SD_XDIR_NBR;
-#             ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = ModCebsCom.GL_CEBS_HB_TARGET_24_SD_YDIR_NBR;
-#         elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_12_STANDARD):
-#             ModCebsCom.GL_CEBS_HB_HOLE_X_NUM = ModCebsCom.GL_CEBS_HB_TARGET_12_SD_XDIR_NBR;
-#             ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = ModCebsCom.GL_CEBS_HB_TARGET_12_SD_YDIR_NBR;
-#         elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_6_STANDARD):
-#             ModCebsCom.GL_CEBS_HB_HOLE_X_NUM = ModCebsCom.GL_CEBS_HB_TARGET_6_SD_XDIR_NBR;
-#             ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = ModCebsCom.GL_CEBS_HB_TARGET_6_SD_YDIR_NBR;
-#         else:
-#             ModCebsCom.GL_CEBS_HB_HOLE_X_NUM = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_XDIR_NBR;
-#             ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_YDIR_NBR;
-#         ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE = (ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[0]) / (ModCebsCom.GL_CEBS_HB_HOLE_X_NUM-1);
-#         ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE = (ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]) / (ModCebsCom.GL_CEBS_HB_HOLE_Y_NUM-1);
+        self.instL2MotoProc.funcMotoStop();   
 
     def funcCheckHoldNumber(self, holeNbr):
         if (holeNbr <= 0):
@@ -349,7 +267,6 @@ class clsL2_CalibPilotThread(QThread):
             elif (self.cntCtrl == 0): 
                 self.sgL3CalibFormPrtLog.emit("L2CALPI: Stop calibration pilot!")
                 self.instMotoHandler.funcMotoStop();
-
 
 
 
