@@ -8,6 +8,10 @@
 
 
 
+
+//=ZJL, 2018/9/30, CURRENT_SW_DELIVERY R1.22 =>CEBS
+= 完善并增加MotoDrvNbr到界面上
+
 //=ZJL, 2018/9/29, CURRENT_SW_DELIVERY R1.21 =>CEBS
 = 优化VISION图像初始化时对于cap的RELEASE以及摄像头找不到时的处理
 = 支持37和21两种驱动板，灵活选择

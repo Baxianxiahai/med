@@ -110,7 +110,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 
         aboutAction = QAction(QIcon('.\icon_res\cebsAbout.ico'), '&About', self)
         aboutAction.setShortcut('Ctrl+A')
-        aboutAction.setStatusTip('ABOUT SYSTEM')
+        aboutAction.setStatusTip('ABOUT SYSTEM - 上海小慧智能科技有限公司, 上海纳贤路800号科海大厦302-5')
         #aboutAction.triggered.connect(self.aboutCompanyBox())
         toolbar = self.addToolBar('About')  
         toolbar.addAction(aboutAction)

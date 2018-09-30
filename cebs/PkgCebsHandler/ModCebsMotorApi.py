@@ -65,6 +65,7 @@ class clsL1_MotoDrvApi(object):
         self.instL1ConfigOpr = ModCebsCfg.clsL1_ConfigOpr()
         plist = list(serial.tools.list_ports.comports())
         self.targetComPortString = 'Prolific USB-to-Serial Comm Port ('
+        self.drvVerNbr = -1
         if len(plist) <= 0:
             self.instL1ConfigOpr.medErrorLog("L1MOTOAPI: The Serial port can't find!")
             print ("L1MOTOAPI: The Serial port can't find!")
@@ -92,12 +93,15 @@ class clsL1_MotoDrvApi(object):
             self.IsSerialOpenOk = True
             print("L1MOTOAPI:" + str(self.serialFd))
             print("L1MOTOAPI: Initialized SerialFd OK")
-            vernum = self.motor_api_read_version()
-            print("L1MOTOAPI: version =", vernum)
+            self.drvVerNbr = self.motor_api_read_version()
+            print("L1MOTOAPI: Moto Drv Version = ", self.drvVerNbr)
             if (self.IsSerialOpenOk) == True:
                 self.motor_api_set_max_speed(MOTOR_DEFAULT_SPEED, MOTOR_DEFAULT_SPEED, MOTOR_DEFAULT_SPEED, MOTOR_DEFAULT_SPEED)
                 self.motor_api_set_steps_per_round(MOTOR_STEPS_PER_ROUND, MOTOR_STEPS_PER_ROUND, MOTOR_STEPS_PER_ROUND, MOTOR_STEPS_PER_ROUND)
-
+    
+    def getDrvVerNbr(self):
+        return self.drvVerNbr
+    
     def motor_test(self):
         print("L1MOTOAPI: check which port was really used >", self.serialFd.name)
         ret = self.serialFd.isOpen()
@@ -164,12 +168,12 @@ class clsL1_MotoDrvApi(object):
         self.serialFd.write(MotorCmdStrReadVersion.encode())
         #time.sleep(1)
         Version = self.serialFd.readline()
-        print("L1MOTOAPI: Version = ", Version)
+        #print("L1MOTOAPI: Version = ", Version)
         if Version == b'':
             self.instL1ConfigOpr.medErrorLog("L1MOTOAPI: Can not find right version 1!")
             return -1;
         VerNumber = Version.split()[0]
-        print("L1MOTOAPI: VerNumber = ", VerNumber)
+        #print("L1MOTOAPI: VerNumber = ", VerNumber)
         if (int(VerNumber) > 0) and (int(VerNumber) < 100):
             self.IsSerialOpenOk = True
         else:
