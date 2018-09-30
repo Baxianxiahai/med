@@ -216,8 +216,8 @@ class clsL2_MotoProc(ModCebsCom.clsL0_MedCFlib):
 
     def funcMotoMove2Start(self):
         print("L2MOTO: Move to start position - Left/up!")
-        xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[0];
-        yHeight = ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[1];
+        xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[2];
+        yHeight = ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[3];
         if (xWidth <= 0 or yHeight <= 0):
             print("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight))
             return -1, ("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight));
