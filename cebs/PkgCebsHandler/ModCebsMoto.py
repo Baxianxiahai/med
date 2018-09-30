@@ -25,11 +25,23 @@ from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsMotorApi
 
 
+
+'''
+全局变量初始化
+全局变量设定，从而只干一次，不然每次随着moto模块的初始化，要搞两次，这就会出问题了
+'''
+instL1MotoDrvApiFlag = True
+try:
+    instL1MotoDrvApi = ModCebsMotorApi.clsL1_MotoDrvApi()
+except Exception:
+    instL1MotoDrvApiFlag = False
+print("L2MOTO: Status of Moto driver =", instL1MotoDrvApiFlag)
+
+
 '''
 MOTO处理过程的L3模块
 
 #模块可能被WinMain和Calib调用，所以初始化需要传入Father进去
-
 '''
 class clsL2_MotoProc(ModCebsCom.clsL0_MedCFlib):
     #附带的prtFlag参数，用来表示是哪一种窗体调用的，这样MOTO过程才能得到正确的父句柄，并执行打印函数
@@ -40,16 +52,11 @@ class clsL2_MotoProc(ModCebsCom.clsL0_MedCFlib):
         self.instL4WinForm = father
         self.prtFlag = prtFlag
         ModCebsCom.clsL0_MedCFlib.med_init_plate_parameter(self)       
-        self.instL1MotoDrvApi = b''
         self.motoSpsDrvVer = -2
         #打印到文件专用
         self.instL1ConfigOpr = ModCebsCfg.clsL1_ConfigOpr()
-        try:
-            self.instL1MotoDrvApi = ModCebsMotorApi.clsL1_MotoDrvApi()
-        except Exception:
-            self.instL1MotoDrvApi = b''
-        if (self.instL1MotoDrvApi != b''):
-            self.motoSpsDrvVer = self.instL1MotoDrvApi.getDrvVerNbr()
+        if (instL1MotoDrvApiFlag == True):
+            self.motoSpsDrvVer = instL1MotoDrvApi.getDrvVerNbr()
         #Trigger
         self.funcMotoLogTrace("L2MOTO: Instance start test!")
         if (self.motoSpsDrvVer == -2):
@@ -58,6 +65,7 @@ class clsL2_MotoProc(ModCebsCom.clsL0_MedCFlib):
             self.funcMotoLogTrace("L2MOTO: Fetch moto hardware driver ver nbr (%s), but can not read success!" % str(self.motoSpsDrvVer))
         else:
             self.funcMotoLogTrace("L2MOTO: Fetch moto hardware driver ver nbr = %s" % str(self.motoSpsDrvVer))
+        #print("Test")
 
     def funcMotoLogTrace(self, myString):
         if (self.prtFlag == 1):
@@ -228,8 +236,8 @@ class clsL2_MotoProc(ModCebsCom.clsL0_MedCFlib):
 
     def funcMotoStop(self):
         self.instL1ConfigOpr.medCmdLog("L2MOTO: Send full stop command to moto!")
-        if (self.instL1MotoDrvApi != b''):
-            res = self.instL1MotoDrvApi.moto_proc_full_stop()
+        if (instL1MotoDrvApiFlag == True):
+            res = instL1MotoDrvApi.moto_proc_full_stop()
             if (res < 0):
                 print("L2MOTO: funcMotoStop() execute error!")
                 return -1
@@ -270,9 +278,9 @@ class clsL2_MotoProc(ModCebsCom.clsL0_MedCFlib):
 
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy):
         print("L2MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy))
-        if (self.instL1MotoDrvApi != b''):
+        if (instL1MotoDrvApiFlag == True):
             self.instL1ConfigOpr.medCmdLog(("L2MOTO: Send command to moto, with par in (um): current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy)));
-            if (self.instL1MotoDrvApi.moto_proc_move_to_axis_postion(curPx, curPy, newPx, newPy) < 0):
+            if (instL1MotoDrvApi.moto_proc_move_to_axis_postion(curPx, curPy, newPx, newPy) < 0):
                 print("L2MOTO: funcMotoMove2AxisPos() run error!")
                 self.instL1ConfigOpr.medErrorLog("L2MOTO: funcMotoMove2AxisPos get error!")
                 return -1

@@ -163,6 +163,7 @@ class clsL1_MotoDrvApi(object):
             print("L1MOTOAPI: Serial is not opened, return motor_api_read_version")
             self.instL1ConfigOpr.medErrorLog("L1MOTOAPI: Serial is not opened, return motor_api_read_version")
             return -1
+        Version = self.serialFd.readline()
         self.serialFd.reset_input_buffer()
         self.serialFd.reset_output_buffer()
         self.serialFd.write(MotorCmdStrReadVersion.encode())
@@ -173,7 +174,7 @@ class clsL1_MotoDrvApi(object):
             self.instL1ConfigOpr.medErrorLog("L1MOTOAPI: Can not find right version 1!")
             return -1;
         VerNumber = Version.split()[0]
-        #print("L1MOTOAPI: VerNumber = ", VerNumber)
+        print("L1MOTOAPI: VerNumber = ", VerNumber)
         if (int(VerNumber) > 0) and (int(VerNumber) < 100):
             self.IsSerialOpenOk = True
         else:
