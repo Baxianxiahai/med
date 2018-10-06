@@ -99,6 +99,7 @@ class clsL2_VisCapProc(object):
             self.capInit = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
             self.capInit.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
             self.capInit.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)
+            time.sleep(5)
             return 1;
 
     def funcVisBatCapStop(self):
@@ -123,7 +124,7 @@ class clsL2_VisCapProc(object):
         height = int(self.capInit.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
         fps = 20
         #print("L2VISCAP: Width/Height = %d/%d" % (width, height))
-        time.sleep(3)
+        time.sleep(1)
         
         #MASSIVE ERROR!
         #1st par is path and file name

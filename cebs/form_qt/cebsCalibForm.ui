@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1322</width>
-    <height>873</height>
+    <height>927</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -577,9 +577,9 @@ p, li { white-space: pre-wrap; }
      <string>1</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_calib_pilot_camera_enable">
+   <widget class="QPushButton" name="pushButton_calib_pilot_camera_cap">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -590,7 +590,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string>摄像头激活</string>
+     <string>立即拍照</string>
     </property>
     <property name="checkable">
      <bool>false</bool>
@@ -636,6 +636,9 @@ p, li { white-space: pre-wrap; }
     <string>强制移动</string>
    </property>
    <widget class="QPushButton" name="pushButton_calib_fm_left">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -649,6 +652,9 @@ p, li { white-space: pre-wrap; }
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_calib_fm_right">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>200</x>
@@ -662,6 +668,9 @@ p, li { white-space: pre-wrap; }
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_calib_fm_down">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -675,6 +684,9 @@ p, li { white-space: pre-wrap; }
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_calib_fm_1cm">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -688,6 +700,9 @@ p, li { white-space: pre-wrap; }
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_calib_fm_up">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -897,18 +912,18 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_calib_pilot_camera_enable</sender>
+   <sender>pushButton_calib_pilot_camera_cap</sender>
    <signal>clicked()</signal>
    <receiver>cebsCalibForm</receiver>
-   <slot>slot_calib_pilot_camera_enable()</slot>
+   <slot>slot_calib_pilot_camera_cap()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>359</x>
-     <y>340</y>
+     <x>355</x>
+     <y>465</y>
     </hint>
     <hint type="destinationlabel">
-     <x>377</x>
-     <y>410</y>
+     <x>392</x>
+     <y>546</y>
     </hint>
    </hints>
   </connection>
@@ -926,6 +941,6 @@ p, li { white-space: pre-wrap; }
   <slot>slot_calib_fm_right()</slot>
   <slot>slot_calib_pilot_move_0()</slot>
   <slot>slot_calib_pilot_move_n()</slot>
-  <slot>slot_calib_pilot_camera_enable()</slot>
+  <slot>slot_calib_pilot_camera_cap()</slot>
  </slots>
 </ui>

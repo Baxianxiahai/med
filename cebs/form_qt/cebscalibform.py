@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'cebsCalibForm.ui'
+# Form implementation generated from reading ui file 'cebsCalibform.ui'
 #
 # Created by: PyQt5 UI code generator 5.10
 #
@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_cebsCalibForm(object):
     def setupUi(self, cebsCalibForm):
         cebsCalibForm.setObjectName("cebsCalibForm")
-        cebsCalibForm.resize(1322, 873)
+        cebsCalibForm.resize(1322, 927)
         self.groupBox_calib_set = QtWidgets.QGroupBox(cebsCalibForm)
         self.groupBox_calib_set.setGeometry(QtCore.QRect(30, 10, 421, 381))
         self.groupBox_calib_set.setObjectName("groupBox_calib_set")
@@ -147,11 +147,11 @@ class Ui_cebsCalibForm(object):
         self.lineEdit_pilot_move_n = QtWidgets.QLineEdit(self.groupBox_calib_pilot)
         self.lineEdit_pilot_move_n.setGeometry(QtCore.QRect(190, 40, 51, 20))
         self.lineEdit_pilot_move_n.setObjectName("lineEdit_pilot_move_n")
-        self.pushButton_calib_pilot_camera_enable = QtWidgets.QPushButton(self.groupBox_calib_pilot)
-        self.pushButton_calib_pilot_camera_enable.setEnabled(False)
-        self.pushButton_calib_pilot_camera_enable.setGeometry(QtCore.QRect(280, 30, 81, 41))
-        self.pushButton_calib_pilot_camera_enable.setCheckable(False)
-        self.pushButton_calib_pilot_camera_enable.setObjectName("pushButton_calib_pilot_camera_enable")
+        self.pushButton_calib_pilot_camera_cap = QtWidgets.QPushButton(self.groupBox_calib_pilot)
+        self.pushButton_calib_pilot_camera_cap.setEnabled(True)
+        self.pushButton_calib_pilot_camera_cap.setGeometry(QtCore.QRect(280, 30, 81, 41))
+        self.pushButton_calib_pilot_camera_cap.setCheckable(False)
+        self.pushButton_calib_pilot_camera_cap.setObjectName("pushButton_calib_pilot_camera_cap")
         self.label_calib_RtCam_Fill = QtWidgets.QLabel(cebsCalibForm)
         self.label_calib_RtCam_Fill.setGeometry(QtCore.QRect(470, 50, 841, 631))
         self.label_calib_RtCam_Fill.setObjectName("label_calib_RtCam_Fill")
@@ -162,18 +162,23 @@ class Ui_cebsCalibForm(object):
         self.groupBox_calib_force_move.setGeometry(QtCore.QRect(120, 630, 251, 231))
         self.groupBox_calib_force_move.setObjectName("groupBox_calib_force_move")
         self.pushButton_calib_fm_left = QtWidgets.QPushButton(self.groupBox_calib_force_move)
+        self.pushButton_calib_fm_left.setEnabled(False)
         self.pushButton_calib_fm_left.setGeometry(QtCore.QRect(20, 70, 31, 111))
         self.pushButton_calib_fm_left.setObjectName("pushButton_calib_fm_left")
         self.pushButton_calib_fm_right = QtWidgets.QPushButton(self.groupBox_calib_force_move)
+        self.pushButton_calib_fm_right.setEnabled(False)
         self.pushButton_calib_fm_right.setGeometry(QtCore.QRect(200, 70, 31, 111))
         self.pushButton_calib_fm_right.setObjectName("pushButton_calib_fm_right")
         self.pushButton_calib_fm_down = QtWidgets.QPushButton(self.groupBox_calib_force_move)
+        self.pushButton_calib_fm_down.setEnabled(False)
         self.pushButton_calib_fm_down.setGeometry(QtCore.QRect(60, 190, 131, 31))
         self.pushButton_calib_fm_down.setObjectName("pushButton_calib_fm_down")
         self.pushButton_calib_fm_1cm = QtWidgets.QPushButton(self.groupBox_calib_force_move)
+        self.pushButton_calib_fm_1cm.setEnabled(False)
         self.pushButton_calib_fm_1cm.setGeometry(QtCore.QRect(60, 70, 131, 111))
         self.pushButton_calib_fm_1cm.setObjectName("pushButton_calib_fm_1cm")
         self.pushButton_calib_fm_up = QtWidgets.QPushButton(self.groupBox_calib_force_move)
+        self.pushButton_calib_fm_up.setEnabled(False)
         self.pushButton_calib_fm_up.setGeometry(QtCore.QRect(60, 30, 131, 31))
         self.pushButton_calib_fm_up.setObjectName("pushButton_calib_fm_up")
 
@@ -190,7 +195,7 @@ class Ui_cebsCalibForm(object):
         self.pushButton_calib_fm_up.clicked.connect(cebsCalibForm.slot_calib_fm_up)
         self.pushButton_calib_pilot_move_0.clicked.connect(cebsCalibForm.slot_calib_pilot_move_0)
         self.pushButton_calib_pilot_move_n.clicked.connect(cebsCalibForm.slot_calib_pilot_move_n)
-        self.pushButton_calib_pilot_camera_enable.clicked.connect(cebsCalibForm.slot_calib_pilot_camera_enable)
+        self.pushButton_calib_pilot_camera_cap.clicked.connect(cebsCalibForm.slot_calib_pilot_camera_cap)
         QtCore.QMetaObject.connectSlotsByName(cebsCalibForm)
 
     def retranslateUi(self, cebsCalibForm):
@@ -239,7 +244,7 @@ class Ui_cebsCalibForm(object):
         self.pushButton_calib_pilot_move_0.setText(_translate("cebsCalibForm", "移动到起点"))
         self.pushButton_calib_pilot_move_n.setText(_translate("cebsCalibForm", "移动到#号孔"))
         self.lineEdit_pilot_move_n.setText(_translate("cebsCalibForm", "1"))
-        self.pushButton_calib_pilot_camera_enable.setText(_translate("cebsCalibForm", "摄像头激活"))
+        self.pushButton_calib_pilot_camera_cap.setText(_translate("cebsCalibForm", "立即拍照"))
         self.label_calib_RtCam_Fill.setText(_translate("cebsCalibForm", "TextLabel"))
         self.label_calib_RtCam_title.setText(_translate("cebsCalibForm", "实时摄像头"))
         self.groupBox_calib_force_move.setTitle(_translate("cebsCalibForm", "强制移动"))

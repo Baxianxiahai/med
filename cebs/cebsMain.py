@@ -187,27 +187,27 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 
     #Start taking picture
     def slot_ctrl_start(self):
-        self.med_debug_print("L4MAIN: Taking Picture start...")
+        self.med_debug_print("L4MAIN: Taking Picture start......")
         self.instL3CtrlSchdThd.sgL3CtrlCapStart.emit()
     
     #Stop taking picture
     def slot_ctrl_stop(self):
-        self.med_debug_print("L4MAIN: Taking Picture stop!")
+        self.med_debug_print("L4MAIN: Taking Picture stop......")
         self.instL3CtrlSchdThd.sgL3CtrlCapStop.emit()
 
     #Control moto run to Zero position
     def slot_ctrl_zero(self):
-        self.med_debug_print("L4MAIN: Moto run to zero position!")
+        self.med_debug_print("L4MAIN: Moto run to zero position......")
         self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
 
     #Start vision classification
     def slot_ctrl_vclas_start(self):
-        self.med_debug_print("L4MAIN: Picture Classification starting...")
+        self.med_debug_print("L4MAIN: Picture classification starting......")
         self.instL3CtrlSchdThd.sgL3CtrlClfyStart.emit()
 
     #Stop vision classification
     def slot_ctrl_vclas_stop(self):
-        self.med_debug_print("L4MAIN: Picture Classification stop.")
+        self.med_debug_print("L4MAIN: Picture classification stop......")
         self.instL3CtrlSchdThd.sgL3CtrlClfyStop.emit()
 
     #Enter calibration session
@@ -223,7 +223,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 
     #Enter parameter setting session
     def slot_gpar_start(self):
-        self.med_debug_print("L4MAIN: Global parameter set start!")
+        self.med_debug_print("L4MAIN: Global parameter set start......")
         if not self.instL4GparForm.isVisible():
             self.sgL4MainWinUnvisible.emit()
             self.instL4GparForm.show()
@@ -264,7 +264,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         #    self.instL2MotoProc.funcMotoStop()
         '''
         if (ModCebsMoto.clsL2_MotoProc.funcMotoRunningStatusInquery(self) == True):
-            ModCebsMoto.clsL2_MotoProc.funcMotoStop(self)            
+            ModCebsMoto.clsL2_MotoProc.funcMotoStop(self)
 
 
 
@@ -395,13 +395,22 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
 
     def slot_calib_pilot_move_n(self):
         try:
-            boardNbr = int(self.lineEdit_pilot_move_n.text())
+            holeNbr = int(self.lineEdit_pilot_move_n.text())
         except Exception: 
-            boardNbr = 1;
-        self.instL3CalibProc.funcCalibPilotMoven(boardNbr);
-
+            holeNbr = 1;
+        self.instL3CalibProc.funcCalibPilotMoven(holeNbr);
+    
+    #CAMERA ENABLE: Not support any more!
     def slot_calib_pilot_camera_enable(self):
         self.instL3CalibProc.funcCalibPilotCameraEnable();
+
+    #CAMERA CAPTURE: new function support
+    def slot_calib_pilot_camera_cap(self):
+        try:
+            holeNbr = int(self.lineEdit_pilot_move_n.text())
+        except Exception: 
+            holeNbr = 1;        
+        self.instL3CalibProc.funcCalibPilotCameraCapture(holeNbr);
 
     def slot_calib_fm_up(self):
         self.instL3CalibProc.funcCalibForceMove('UP');

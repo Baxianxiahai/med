@@ -37,6 +37,9 @@ from PkgCebsHandler import ModCebsVision
 from PkgCebsHandler import ModCebsMoto
 
 
+zCebsCamPicCapInHole = 0
+zCebsCamPicCapAction = False
+
 #校准处理过程
 #模块只能被CalibForm调用，所以打印只会打到CalibForm上去
 class clsL3_CalibProc(ModCebsCom.clsL0_MedCFlib):
@@ -159,7 +162,22 @@ class clsL3_CalibProc(ModCebsCom.clsL0_MedCFlib):
         self.instL2CalibCamDisThd.start();
         self.instL2CalibCamDisThd.funcCalibCameraDispStart()
         self.camerEnableFlag = True
-
+    
+    '''
+    NEW FUN: 捕获VIDEO中的图像
+    '''
+    def funcCalibPilotCameraCapture(self, holeNbr):
+        if (holeNbr <= 0 ) or (holeNbr > ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH):
+            self.funcCalibLogTrace("L3CALIB: Camera capture function, holeNbr = %d not in right range!" % (holeNbr))
+            return -1
+        if (self.instL2CalibCamDisThd.funcCalibCameraDispChkVidCap() == False):
+            self.funcCalibLogTrace("L3CALIB: Camera capture function, display task not in right state and can not make capture!")
+            return -1          
+        #Transfer state
+        global zCebsCamPicCapInHole
+        zCebsCamPicCapInHole = holeNbr;
+        self.instL2CalibCamDisThd.funcCalibCameraDispSetVidCap();
+            
     #FINISH all the pilot functions
     #完成校准，准备离开
     def funcCtrlCalibComp(self):
@@ -171,6 +189,11 @@ class clsL3_CalibProc(ModCebsCom.clsL0_MedCFlib):
         ModCebsCom.clsL0_MedCFlib.med_update_plate_parameter(self)
         #暂时不做过于复杂的MOTO控制，交给界面手动来进行
         #self.funcRecoverWorkingEnv()
+        #如果发生了图像截取操作，需要更新批次号
+        global zCebsCamPicCapAction
+        if (zCebsCamPicCapAction == True):
+            ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX += 1
+            self.instL1ConfigOpr.updateCtrlCntInfo()
 
     def funcCalibMove(self, parMoveScale, parMoveDir):
         self.instL2MotoProc.funcMotoCalaMoveOneStep(parMoveScale, parMoveDir);
@@ -285,9 +308,10 @@ class clsL2_CalibCamDispThread(threading.Thread):
     __CEBS_STM_CDT_INIT =      1;
     __CEBS_STM_CDT_CAM_INIT =  2;
     __CEBS_STM_CDT_VID_SHOW =  3;
-    __CEBS_STM_CDT_STOP =      4;
-    __CEBS_STM_CDT_ERR =       5;
-    __CEBS_STM_CDT_FIN =       6; #为了主动让任务退出的
+    __CEBS_STM_CDT_VID_CAP =   4;
+    __CEBS_STM_CDT_STOP =      5;
+    __CEBS_STM_CDT_ERR =       6;
+    __CEBS_STM_CDT_FIN =       7; #为了主动让任务退出的
     __CEBS_STM_CDT_INVALID =   0xFF;
     
     def __init__(self, father, startOption):
@@ -312,6 +336,15 @@ class clsL2_CalibCamDispThread(threading.Thread):
 
     def funcCalibCameraDispStateGet(self):
         return self.CDT_STM_STATE
+    
+    def funcCalibCameraDispChkVidCap(self):
+        if (self.CDT_STM_STATE == self.__CEBS_STM_CDT_VID_SHOW):
+            return True
+        else:
+            return False
+
+    def funcCalibCameraDispSetVidCap(self):
+        self.CDT_STM_STATE = self.__CEBS_STM_CDT_VID_CAP
     
     #启动状态必须严格检查
     def funcCalibCameraDispStart(self):
@@ -351,6 +384,7 @@ class clsL2_CalibCamDispThread(threading.Thread):
                 
     #主任务
     def run(self):
+        self.capFrame = ''
         while True:
             #创建即退出
             if (self.CDT_STM_STATE == self.__CEBS_STM_CDT_FIN):
@@ -390,8 +424,38 @@ class clsL2_CalibCamDispThread(threading.Thread):
                     temp_image = QtGui.QImage(rgb.flatten(), width, height, QtGui.QImage.Format_RGB888)
                     temp_pixmap = QtGui.QPixmap.fromImage(temp_image)
                     self.instL4CalibForm.label_calib_RtCam_Fill.setPixmap(temp_pixmap.scaled(self.camRtFillWidth, self.camRtFillHeight))
-                    waitKey(50)  
+                    self.capFrame = frame
+                    waitKey(50)
 
+            #将数据存入到文件中    
+            elif (self.CDT_STM_STATE == self.__CEBS_STM_CDT_VID_CAP):
+                #白平衡算法
+                B,G,R = cv.split(self.capFrame)
+                bMean = cv.mean(B)
+                gMean = cv.mean(G)
+                rMean = cv.mean(R)
+                kb = (bMean[0] + gMean[0] + rMean[0])/(3*bMean[0]+0.0001)
+                kg = (bMean[0] + gMean[0] + rMean[0])/(3*gMean[0]+0.0001)
+                kr = (bMean[0] + gMean[0] + rMean[0])/(3*rMean[0]+0.0001)
+                B = B * kb
+                G = G * kg
+                R = R * kr
+                outputFrame = cv.merge([B, G, R])
+                obj=ModCebsCfg.clsL1_ConfigOpr();
+                global zCebsCamPicCapInHole
+                fileName = obj.combineFileNameWithDir(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, zCebsCamPicCapInHole)
+                global zCebsCamPicCapAction
+                if (zCebsCamPicCapAction == False):
+                    self.instL1ConfigOpr.createBatch(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX);
+                self.instL1ConfigOpr.addBatchFile(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, zCebsCamPicCapInHole)
+                cv.imwrite(fileName, outputFrame)
+                ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT += 1
+                #最终退出校准之前，需要将批次号+1
+                zCebsCamPicCapAction = True #这个设置为TRUE，才表示真的干了这件事
+                self.funcCalibCamDisLogTrace("L2CALCMDI: Capture and save file, batch=%d, fileNbr=%d" % (ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, zCebsCamPicCapInHole));
+                #某个批次的文件存储
+                self.CDT_STM_STATE = self.__CEBS_STM_CDT_VID_SHOW
+            
             #销毁现场摄像头
             elif (self.CDT_STM_STATE == self.__CEBS_STM_CDT_STOP):
                 time.sleep(0.2)

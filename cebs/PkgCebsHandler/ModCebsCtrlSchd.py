@@ -109,11 +109,17 @@ class clsL3_CtrlSchdThread(QThread):
                 self.funcCtrlSchdDebugPrint("L3CTRLST: Moto movement error！")
                 self.funcCtrlSchdDebugPrint(string)
                 return -2;
-        self.capTimes = ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH+1;
-        self.funcCtrlSchdDebugPrint("L3CTRLST: Start to take picture, remaining TIMES=%d." %(self.capTimes-1))
         self.instL1ConfigOpr.createBatch(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX);
         #NEW STATE
         self.instL2VisCapProc.funcVisBatCapStart();
+        #去掉初始3-4张黑屏幕的照片
+        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH);
+        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH);
+        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH);
+        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH);
+        self.funcCtrlSchdDebugPrint("L3CTRLST: Remove first part of un-valid picture accomplished!")
+        self.capTimes = ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH+1;
+        self.funcCtrlSchdDebugPrint("L3CTRLST: Start to take picture, remaining TIMES=%d." %(self.capTimes-1))
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CAP_PIC;
 
     #STOP TAKING PICTURE
