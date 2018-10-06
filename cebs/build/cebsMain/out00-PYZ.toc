@@ -3,21 +3,49 @@
    'c:\\program '
    'files\\python36\\lib\\site-packages\\pkg_resources\\__init__.py',
    'PYMODULE'),
-  ('pkg_resources._vendor.packaging._compat',
+  ('pkg_resources._vendor',
    'c:\\program '
-   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\_compat.py',
+   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\__init__.py',
    'PYMODULE'),
-  ('pkg_resources._vendor.packaging.requirements',
+  ('pkg_resources._vendor.packaging._structures',
    'c:\\program '
-   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\requirements.py',
+   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\_structures.py',
    'PYMODULE'),
   ('pkg_resources._vendor.appdirs',
    'c:\\program '
    'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\appdirs.py',
    'PYMODULE'),
-  ('pkg_resources._vendor.packaging._structures',
+  ('pkg_resources._vendor.packaging',
    'c:\\program '
-   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\_structures.py',
+   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\__init__.py',
+   'PYMODULE'),
+  ('pkg_resources._vendor.packaging.__about__',
+   'c:\\program '
+   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\__about__.py',
+   'PYMODULE'),
+  ('pkg_resources._vendor.packaging.requirements',
+   'c:\\program '
+   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\requirements.py',
+   'PYMODULE'),
+  ('pkg_resources._vendor.six',
+   'c:\\program '
+   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\six.py',
+   'PYMODULE'),
+  ('pkg_resources._vendor.packaging.specifiers',
+   'c:\\program '
+   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\specifiers.py',
+   'PYMODULE'),
+  ('pkg_resources._vendor.packaging.utils',
+   'c:\\program '
+   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\utils.py',
+   'PYMODULE'),
+  ('pkg_resources._vendor.packaging._compat',
+   'c:\\program '
+   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\_compat.py',
+   'PYMODULE'),
+  ('pkg_resources._vendor.packaging.markers',
+   'c:\\program '
+   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\markers.py',
    'PYMODULE'),
   ('pkg_resources._vendor.pyparsing',
    'c:\\program '
@@ -42,34 +70,6 @@
   ('pkg_resources._vendor.packaging.version',
    'c:\\program '
    'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\version.py',
-   'PYMODULE'),
-  ('pkg_resources._vendor.packaging.utils',
-   'c:\\program '
-   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\utils.py',
-   'PYMODULE'),
-  ('pkg_resources._vendor.packaging',
-   'c:\\program '
-   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\__init__.py',
-   'PYMODULE'),
-  ('pkg_resources._vendor.packaging.specifiers',
-   'c:\\program '
-   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\specifiers.py',
-   'PYMODULE'),
-  ('pkg_resources._vendor.six',
-   'c:\\program '
-   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\six.py',
-   'PYMODULE'),
-  ('pkg_resources._vendor.packaging.markers',
-   'c:\\program '
-   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\markers.py',
-   'PYMODULE'),
-  ('pkg_resources._vendor.packaging.__about__',
-   'c:\\program '
-   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\packaging\\__about__.py',
-   'PYMODULE'),
-  ('pkg_resources._vendor',
-   'c:\\program '
-   'files\\python36\\lib\\site-packages\\pkg_resources\\_vendor\\__init__.py',
    'PYMODULE'),
   ('__main__',
    'C:\\Program Files\\Python36\\Scripts\\pyinstaller.exe\\__main__.py',
@@ -1963,6 +1963,7 @@
    'PYMODULE'),
   ('posixpath', 'c:\\program files\\python36\\lib\\posixpath.py', 'PYMODULE'),
   ('fnmatch', 'c:\\program files\\python36\\lib\\fnmatch.py', 'PYMODULE'),
+  ('struct', 'c:\\program files\\python36\\lib\\struct.py', 'PYMODULE'),
   ('_compat_pickle',
    'c:\\program files\\python36\\lib\\_compat_pickle.py',
    'PYMODULE'),
@@ -2006,6 +2007,8 @@
    'PYMODULE'),
   ('plistlib', 'c:\\program files\\python36\\lib\\plistlib.py', 'PYMODULE'),
   ('platform', 'c:\\program files\\python36\\lib\\platform.py', 'PYMODULE'),
+  ('token', 'c:\\program files\\python36\\lib\\token.py', 'PYMODULE'),
+  ('tokenize', 'c:\\program files\\python36\\lib\\tokenize.py', 'PYMODULE'),
   ('urllib.parse',
    'c:\\program files\\python36\\lib\\urllib\\parse.py',
    'PYMODULE'),
@@ -2142,6 +2145,10 @@
    'c:\\program files\\python36\\lib\\unittest\\__init__.py',
    'PYMODULE'),
   ('doctest', 'c:\\program files\\python36\\lib\\doctest.py', 'PYMODULE'),
+  ('copy', 'c:\\program files\\python36\\lib\\copy.py', 'PYMODULE'),
+  ('textwrap', 'c:\\program files\\python36\\lib\\textwrap.py', 'PYMODULE'),
+  ('gettext', 'c:\\program files\\python36\\lib\\gettext.py', 'PYMODULE'),
+  ('argparse', 'c:\\program files\\python36\\lib\\argparse.py', 'PYMODULE'),
   ('pprint', 'c:\\program files\\python36\\lib\\pprint.py', 'PYMODULE'),
   ('pickle', 'c:\\program files\\python36\\lib\\pickle.py', 'PYMODULE'),
   ('tracemalloc',
@@ -2163,13 +2170,6 @@
    'c:\\program files\\python36\\lib\\dummy_threading.py',
    'PYMODULE'),
   ('subprocess', 'c:\\program files\\python36\\lib\\subprocess.py', 'PYMODULE'),
-  ('token', 'c:\\program files\\python36\\lib\\token.py', 'PYMODULE'),
-  ('copy', 'c:\\program files\\python36\\lib\\copy.py', 'PYMODULE'),
-  ('textwrap', 'c:\\program files\\python36\\lib\\textwrap.py', 'PYMODULE'),
-  ('struct', 'c:\\program files\\python36\\lib\\struct.py', 'PYMODULE'),
-  ('gettext', 'c:\\program files\\python36\\lib\\gettext.py', 'PYMODULE'),
-  ('argparse', 'c:\\program files\\python36\\lib\\argparse.py', 'PYMODULE'),
-  ('tokenize', 'c:\\program files\\python36\\lib\\tokenize.py', 'PYMODULE'),
   ('PkgCebsHandler.ModCebsGpar',
    'D:\\IHUSRC\\med\\cebs\\PkgCebsHandler\\ModCebsGpar.py',
    'PYMODULE'),

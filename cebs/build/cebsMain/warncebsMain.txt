@@ -1,14 +1,14 @@
 missing module named pyimod03_importers - imported by PyInstaller.loader.pyimod02_archive, c:\program files\python36\lib\site-packages\PyInstaller\loader\rthooks\pyi_rth_pkgres.py
-missing module named 'pkg_resources.extern.pyparsing' - imported by pkg_resources._vendor.packaging.markers, pkg_resources._vendor.packaging.requirements
 missing module named 'com.sun' - imported by pkg_resources._vendor.appdirs
 missing module named com - imported by pkg_resources._vendor.appdirs
 missing module named win32api - imported by distutils.msvccompiler, pkg_resources._vendor.appdirs
 missing module named win32com.shell - imported by pkg_resources._vendor.appdirs
+missing module named 'pkg_resources.extern.pyparsing' - imported by pkg_resources._vendor.packaging.markers, pkg_resources._vendor.packaging.requirements
+missing module named StringIO - imported by PyQt5.uic.port_v2.string_io, numpy.lib.utils, numpy.testing.nose_tools.utils, PyInstaller.lib.modulegraph._compat, PyInstaller.lib.modulegraph.zipio, six, scipy._lib.six, numpy.lib.format, pkg_resources._vendor.six, py._io.capture
 missing module named netbios - imported by uuid
 missing module named win32wnet - imported by uuid
 missing module named __builtin__ - imported by numpy.core.numerictypes, numpy.core.numeric, scipy._lib.six, numpy.distutils.misc_util, numpy.lib.function_base, numpy.lib._iotools, numpy.ma.core, numpy, pkg_resources._vendor.pyparsing, py._builtin
 missing module named ordereddict - imported by pkg_resources._vendor.pyparsing
-missing module named StringIO - imported by PyQt5.uic.port_v2.string_io, numpy.lib.utils, numpy.testing.nose_tools.utils, PyInstaller.lib.modulegraph._compat, PyInstaller.lib.modulegraph.zipio, six, scipy._lib.six, numpy.lib.format, pkg_resources._vendor.six, py._io.capture
 missing module named _scproxy - imported by urllib.request
 missing module named 'macholib.compat' - imported by macholib.MachO
 missing module named _pkgutil - imported by PyInstaller.lib.modulegraph.modulegraph
@@ -138,7 +138,7 @@ missing module named 'multiprocessing.forking' - imported by c:\program files\py
 missing module named resource - imported by posix, D:\IHUSRC\med\cebs\cebsMain.py
 missing module named posix - imported by os, D:\IHUSRC\med\cebs\cebsMain.py
 missing module named _posixsubprocess - imported by subprocess, multiprocessing.util, D:\IHUSRC\med\cebs\cebsMain.py
-missing module named org - imported by pickle, D:\IHUSRC\med\cebs\cebsMain.py
+missing module named 'org.python' - imported by pickle, setuptools.sandbox, xml.sax, D:\IHUSRC\med\cebs\cebsMain.py
 missing module named readline - imported by cmd, code, pdb, D:\IHUSRC\med\cebs\cebsMain.py, _pytest.capture
 excluded module named _frozen_importlib - imported by importlib, importlib.abc, PyInstaller.loader.pyimod02_archive, D:\IHUSRC\med\cebs\cebsMain.py
 missing module named _frozen_importlib_external - imported by importlib._bootstrap, importlib, importlib.abc, D:\IHUSRC\med\cebs\cebsMain.py
@@ -149,8 +149,8 @@ missing module named vms_lib - imported by platform, D:\IHUSRC\med\cebs\cebsMain
 missing module named termios - imported by tty, serial.serialposix, getpass, D:\IHUSRC\med\cebs\cebsMain.py, py._io.terminalwriter
 missing module named grp - imported by shutil, tarfile, pathlib, distutils.archive_util, D:\IHUSRC\med\cebs\cebsMain.py, py._path.local
 missing module named pwd - imported by posixpath, shutil, tarfile, http.server, webbrowser, pathlib, distutils.util, distutils.archive_util, netrc, getpass, psutil, D:\IHUSRC\med\cebs\cebsMain.py, py._path.local
+missing module named org - imported by copy, D:\IHUSRC\med\cebs\cebsMain.py
 missing module named _dummy_threading - imported by dummy_threading, D:\IHUSRC\med\cebs\cebsMain.py
-missing module named 'org.python' - imported by copy, setuptools.sandbox, xml.sax, D:\IHUSRC\med\cebs\cebsMain.py
 missing module named asyncio.DefaultEventLoopPolicy - imported by asyncio, asyncio.events
 missing module named port_v2 - imported by PyQt5.uic.properties
 missing module named 'System.IO' - imported by serial.serialcli
