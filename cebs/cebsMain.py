@@ -138,9 +138,11 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.instL3CtrlSchdThd = ModCebsCtrlSchd.clsL3_CtrlSchdThread(self)
         self.instL3CtrlSchdThd.setIdentity("TASK_CtrlScheduleThread")
         self.instL3CtrlSchdThd.sgL4MainWinPrtLog.connect(self.slot_print_trigger)
-        self.instL3CtrlSchdThd.sgL3CtrlCapStart.connect(self.instL3CtrlSchdThd.funcTakePicStart)
+        self.instL3CtrlSchdThd.sgL3CtrlCapStartNormal.connect(self.instL3CtrlSchdThd.funcTakePicStartNormal)
+        self.instL3CtrlSchdThd.sgL3CtrlCapStartFlu.connect(self.instL3CtrlSchdThd.funcTakePicStartFlu)
         self.instL3CtrlSchdThd.sgL3CtrlCapStop.connect(self.instL3CtrlSchdThd.funcTakePicStop)
-        self.instL3CtrlSchdThd.sgL3CtrlClfyStart.connect(self.instL3CtrlSchdThd.funcVisionClasStart)
+        self.instL3CtrlSchdThd.sgL3CtrlClfyStartNormal.connect(self.instL3CtrlSchdThd.funcVisionClasStartNormal)
+        self.instL3CtrlSchdThd.sgL3CtrlClfyStartFlu.connect(self.instL3CtrlSchdThd.funcVisionClasStartFlu)
         self.instL3CtrlSchdThd.sgL3CtrlClfyStop.connect(self.instL3CtrlSchdThd.funcVisionClasStop)
         self.instL3CtrlSchdThd.sgL3CtrlCalibStart.connect(self.instL3CtrlSchdThd.funcCtrlCalibStart)
         self.instL3CtrlSchdThd.sgL3CtrlCalibStop.connect(self.instL3CtrlSchdThd.funcCtrlCalibStop)
@@ -186,13 +188,18 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.med_debug_print(info)
 
     #Start taking picture
-    def slot_ctrl_start(self):
-        self.med_debug_print("L4MAIN: Taking Picture start......")
-        self.instL3CtrlSchdThd.sgL3CtrlCapStart.emit()
+    def slot_ctrl_start_normal(self):
+        self.med_debug_print("L4MAIN: Taking normal picture start......")
+        self.instL3CtrlSchdThd.sgL3CtrlCapStartNormal.emit()
+
+    #Start taking picture
+    def slot_ctrl_start_flu(self):
+        self.med_debug_print("L4MAIN: Taking Fluorescen picture start......")
+        self.instL3CtrlSchdThd.sgL3CtrlCapStartFlu.emit()
     
     #Stop taking picture
     def slot_ctrl_stop(self):
-        self.med_debug_print("L4MAIN: Taking Picture stop......")
+        self.med_debug_print("L4MAIN: Taking picture stop......")
         self.instL3CtrlSchdThd.sgL3CtrlCapStop.emit()
 
     #Control moto run to Zero position
@@ -201,9 +208,14 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
 
     #Start vision classification
-    def slot_ctrl_vclas_start(self):
-        self.med_debug_print("L4MAIN: Picture classification starting......")
-        self.instL3CtrlSchdThd.sgL3CtrlClfyStart.emit()
+    def slot_ctrl_vclas_start_normal(self):
+        self.med_debug_print("L4MAIN: Normal picture classification starting......")
+        self.instL3CtrlSchdThd.sgL3CtrlClfyStartNormal.emit()
+
+    #Start vision classification
+    def slot_ctrl_vclas_start_flu(self):
+        self.med_debug_print("L4MAIN: Fluorescen picture classification starting......")
+        self.instL3CtrlSchdThd.sgL3CtrlClfyStartFlu.emit()
 
     #Stop vision classification
     def slot_ctrl_vclas_stop(self):

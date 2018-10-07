@@ -459,14 +459,14 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
         batch, fileNbr = self.findFluUnclasFileBatchAndNbr();
         if (batch < 0):
             ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT = 0;
-            self.funcVisCfyLogTrace("L2VISCFY: Picture flu classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+            self.funcVisCfyLogTrace("L2VISCFY: Picture flu classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT))
             self.updateCtrlCntInfo();
             return;
         fileName = self.getStoredFileName(batch, fileNbr);
         fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
         if (fileName == None) or (fileNukeName == None):
             ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = 0;
-            self.funcVisCfyLogTrace("L2VISCFY: Picture flu classification finished: remaining NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+            self.funcVisCfyLogTrace("L2VISCFY: Picture flu classification finished: remaining NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT))
             self.updateCtrlCntInfo();
             return;
         #REAL PROCESSING PROCEDURE
@@ -475,13 +475,14 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
         ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT -= 1;
         #Update classified files
         self.updateUnclasFileAsClassified(batch, fileNbr);
-        self.funcVisCfyLogTrace("L2VISCFY: Flu picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+        self.funcVisCfyLogTrace("L2VISCFY: Flu picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT))
         self.updateCtrlCntInfo();
         return;
     
     #荧光处理算法过程
     def algoVisFluWormCaculate(self, fileName, fileNukeName):
         pass
+        self.funcVisCfyLogTrace("L2VISCFY: Flu picture classification simulation algorithms demo, to be finsihed!")
 
 
 

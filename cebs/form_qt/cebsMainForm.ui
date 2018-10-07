@@ -76,12 +76,12 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>161</width>
+      <width>101</width>
       <height>71</height>
      </rect>
     </property>
     <property name="text">
-     <string>启动拍摄</string>
+     <string>启动白光拍摄</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_runProgress">
@@ -100,9 +100,9 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="pushButton_ctrl_stop">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>260</x>
       <y>20</y>
-      <width>161</width>
+      <width>101</width>
       <height>71</height>
      </rect>
     </property>
@@ -170,20 +170,20 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>200</y>
-      <width>151</width>
+      <width>101</width>
       <height>71</height>
      </rect>
     </property>
     <property name="text">
-     <string>启动图像识别</string>
+     <string>白光图像识别</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_ctrl_vclas_stop">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>260</x>
       <y>200</y>
-      <width>161</width>
+      <width>101</width>
       <height>71</height>
      </rect>
     </property>
@@ -202,6 +202,32 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>参数设定</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_ctrl_start_flu">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>20</y>
+      <width>101</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>启动荧光拍摄</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_ctrl_vclas_start_flu">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>200</y>
+      <width>101</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>荧光图像识别</string>
     </property>
    </widget>
   </widget>
@@ -298,8 +324,8 @@ p, li { white-space: pre-wrap; }
      <y>113</y>
     </hint>
     <hint type="destinationlabel">
-     <x>321</x>
-     <y>121</y>
+     <x>356</x>
+     <y>123</y>
     </hint>
    </hints>
   </connection>
@@ -307,15 +333,15 @@ p, li { white-space: pre-wrap; }
    <sender>pushButton_ctrl_start</sender>
    <signal>clicked()</signal>
    <receiver>cebsMainWindow</receiver>
-   <slot>slot_ctrl_start()</slot>
+   <slot>slot_ctrl_start_normal()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>136</x>
+     <x>120</x>
      <y>113</y>
     </hint>
     <hint type="destinationlabel">
-     <x>189</x>
-     <y>34</y>
+     <x>66</x>
+     <y>123</y>
     </hint>
    </hints>
   </connection>
@@ -355,15 +381,15 @@ p, li { white-space: pre-wrap; }
    <sender>pushButton_ctrl_vclas_start</sender>
    <signal>clicked()</signal>
    <receiver>cebsMainWindow</receiver>
-   <slot>slot_ctrl_vclas_start()</slot>
+   <slot>slot_ctrl_vclas_start_normal()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>135</x>
-     <y>260</y>
+     <x>120</x>
+     <y>283</y>
     </hint>
     <hint type="destinationlabel">
-     <x>178</x>
-     <y>285</y>
+     <x>85</x>
+     <y>302</y>
     </hint>
    </hints>
   </connection>
@@ -399,18 +425,52 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_ctrl_start_flu</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsMainWindow</receiver>
+   <slot>slot_ctrl_start_flu()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>187</x>
+     <y>90</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>191</x>
+     <y>124</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_ctrl_vclas_start_flu</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsMainWindow</receiver>
+   <slot>slot_ctrl_vclas_start_flu()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>215</x>
+     <y>282</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>250</x>
+     <y>303</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>slot_runpg_test()</slot>
   <slot>slot_runpg_clear()</slot>
   <slot>slot_ctrl_stop()</slot>
-  <slot>slot_ctrl_start()</slot>
+  <slot>slot_ctrl_start_normal()</slot>
   <slot>slot_print_trigger()</slot>
   <slot>slot_ctrl_zero()</slot>
   <slot>slot_ctrl_null()</slot>
   <slot>slot_ctrl_calib()</slot>
-  <slot>slot_ctrl_vclas_start()</slot>
+  <slot>slot_ctrl_vclas_start_normal()</slot>
   <slot>slot_ctrl_vclas_stop()</slot>
   <slot>slot_gpar_start()</slot>
+  <slot>slot_ctrl_start_flu()</slot>
+  <slot>slot_ctrl_vclas_start_flu()</slot>
  </slots>
 </ui>
