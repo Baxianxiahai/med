@@ -447,7 +447,7 @@ class clsL2_CalibCamDispThread(threading.Thread):
                 global zCebsCamPicCapAction
                 if (zCebsCamPicCapAction == False):
                     self.instL1ConfigOpr.createBatch(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX);
-                self.instL1ConfigOpr.addBatchFile(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, zCebsCamPicCapInHole)
+                self.instL1ConfigOpr.addNormalBatchFile(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, zCebsCamPicCapInHole)
                 cv.imwrite(fileName, outputFrame)
                 ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT += 1
                 #最终退出校准之前，需要将批次号+1

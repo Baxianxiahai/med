@@ -67,18 +67,28 @@ class clsL1_ConfigOpr(object):
             self.CReader.set("Counter","PicBatchCnt", "0")
             self.CReader.set("Counter","PicBatchClas", "0")
             self.CReader.set("Counter","PicRemainCnt", "0")
+            self.CReader.set("Counter","PicBatFluClas", "0")
+            self.CReader.set("Counter","PicRemFluCnt", "0")
             self.CReader.write(open(self.filePath, "w"))
         #REWRITE FILE TO AVOID INI FILE ERROR
         if (self.CReader['Env']['workdir'] != str(os.getcwd()+ self.osDifferentStr())):
             self.updateSectionPar()
 
 
+    '''
+    * STEP1:
+    *    控制参数读取及更新过程
+    *
+    '''   
+    #初始化读取全局图像
     def readGlobalPar(self):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
         ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX = int(self.CReader['Counter']['PicBatchCnt']);
         ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX = int(self.CReader['Counter']['PicBatchClas']);
         ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = int(self.CReader['Counter']['PicRemainCnt']);
+        ModCebsCom.GL_CEBS_PIC_FLU_CLAS_INDEX = int(self.CReader['Counter']['PicBatFluClas']);
+        ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT = int(self.CReader['Counter']['PicRemFluCnt']);
         ModCebsCom.GL_CEBS_HB_TARGET_TYPE = self.CReader['Env']['holeboard_type'];
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] = int(self.CReader['Env']['holeboard, left_bot X-axis']);
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] = int(self.CReader['Env']['holeboard, left_bot Y-axis']);
@@ -116,15 +126,20 @@ class clsL1_ConfigOpr(object):
         else:
             ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE = False
         ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC = int(self.CReader['Env']['video capture dur in sec']);
-        
         #In case of store error, re-caculate remaining unclas-pictures
         #为了防止统计错误，重新根据
-        res = self.recheckRemaingUnclasBatchFile()
+        res = self.recheckRemaingUnclasBatchFile(ModCebsCom.GL_CEBS_FILE_ATT_NORMAL)
         if (res != ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT):
-            print("CFG: Error find during re-check remaining un-clas pictures! Stored=%d, actual=%d." % (ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT, res))
+            print("CFG: Error find during re-check remaining un-clas normal pictures and recovered! Stored=%d, actual=%d." % (ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT, res))
             ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = res
             self.updateSectionPar()
-
+        #为了防止统计错误，重新扫描并计算荧光图像数量
+        res = self.recheckRemaingUnclasBatchFile(ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN)
+        if (res != ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT):
+            print("CFG: Error find during re-check remaining un-clas Fluorescen pictures and recovered! Stored=%d, actual=%d." % (ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT, res))
+            ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT = res
+            self.updateSectionPar()
+            
     def getSection(self):
         return self.CReader.sections()
 
@@ -168,7 +183,6 @@ class clsL1_ConfigOpr(object):
             self.CReader.set("Env","vision res addup set", str(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET))
             self.CReader.set("Env","video capture enable set", str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE))
             self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC))
-            
         else:
             self.CReader.remove_section("Env")
             self.CReader.add_section("Env")        
@@ -192,7 +206,7 @@ class clsL1_ConfigOpr(object):
             self.CReader.set("Env","vision res addup set", str(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET))
             self.CReader.set("Env","video capture enable set", str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE))
             self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC))
-                            
+        #回写                    
         fd = open(self.filePath, 'w')
         self.CReader.write(fd)
         fd.close()
@@ -204,19 +218,34 @@ class clsL1_ConfigOpr(object):
         if (self.CReader.has_section("Counter") == False):
             self.CReader.add_section("Counter")
             self.CReader.set("Counter","PicBatchCnt", str(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX))
+            #普通图像
             self.CReader.set("Counter","PicBatchClas", str(ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX))
             self.CReader.set("Counter","PicRemainCnt", str(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+            #荧光图像控制参数
+            self.CReader.set("Counter","PicBatFluClas", str(ModCebsCom.GL_CEBS_PIC_FLU_CLAS_INDEX))
+            self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT))
             
         else:
             self.CReader.remove_section("Counter")
             self.CReader.add_section("Counter")
             self.CReader.set("Counter","PicBatchCnt", str(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX))
+            #普通图像
             self.CReader.set("Counter","PicBatchClas", str(ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX))
             self.CReader.set("Counter","PicRemainCnt", str(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+            #荧光图像控制参数
+            self.CReader.set("Counter","PicBatFluClas", str(ModCebsCom.GL_CEBS_PIC_FLU_CLAS_INDEX))
+            self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT))
         fd = open(self.filePath, 'w')
         self.CReader.write(fd)
         fd.close()
 
+
+    '''
+    * STEP2:
+    *    单个文件处理过程
+    *
+    '''   
+    #新增加一个批次时，需要创建批次表头
     def createBatch(self, batch):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
@@ -232,14 +261,24 @@ class clsL1_ConfigOpr(object):
         self.CReader.write(fd)
         fd.close()
 
-    def addBatchFile(self, batch, fileNbr):
+    #增加普通文件
+    def addNormalBatchFile(self, batch, fileNbr):
+        return self.addBatchFileInElement(batch, fileNbr, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL)
+    
+    #增加荧光文件
+    def addFluBatchFile(self, batch, fileNbr):
+        return self.addBatchFileInElement(batch, fileNbr, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN)
+    
+    def addBatchFileInElement(self, batch, fileNbr, eleTag):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
         batchStr = "batch#" + str(batch)
         fileName = self.combineFileName(batch, fileNbr)
         fileClas = str("batchFileClas#" + str(fileNbr))
+        fileAtt = str("batchFileAtt#" + str(fileNbr))
         self.CReader.set(batchStr, fileName, self.combineFileNameWithDir(batch, fileNbr))
         self.CReader.set(batchStr, fileClas, 'no')
+        self.CReader.set(batchStr, fileAtt, eleTag)
         try:
             fd = open(self.filePath, 'w')
         except Exception as err:  
@@ -249,6 +288,11 @@ class clsL1_ConfigOpr(object):
             self.CReader.write(fd)
             fd.close()
 
+    '''
+    * STEP3:
+    *    文件名字处理过程
+    *
+    '''   
     #READ CONTROL FILE
     def getStoredFileName(self, batch, fileNbr):
         self.CReader=configparser.ConfigParser()
@@ -262,7 +306,6 @@ class clsL1_ConfigOpr(object):
     def getStoredFileNukeName(self, batch, fileNbr):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
-        batchStr = "batch#" + str(batch)
         fileName = self.combineFileName(batch, fileNbr)
         res = fileName + '.jpg'
         return res;
@@ -279,65 +322,99 @@ class clsL1_ConfigOpr(object):
         return str(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH) + fileName + '.mp4'  #.mp4, .avi
 
 
-    #FETCH UN-CLASSIFIED FILE FOR ONE BATCH, WITH FIRST TARGET ONLY
-    #这个函数只是用来找到最后一个未识别图像的起点，而并不是总共还有多少图像未识别
-    def getUnclasBatchFileAtFirstIndex(self, batch):
-        self.CReader=configparser.ConfigParser()
-        self.CReader.read(self.filePath, encoding='utf8')
-        batchStr = "batch#" + str(batch)
-        if (self.CReader.has_section(batchStr) == False):
-            return -1;
-        #SEARCH ALL CONFIGURATION KEY and 'DEFAULT' key
-        for key in self.CReader[batchStr]:
-            #print("key = %s, Creader = %s" %(str(key), str(self.CReader[batchStr][key])))
-            if (('batchfileclas#' in key) and (self.CReader[batchStr][key] == 'no')):
-                temps = key[len('batchfileclas#'):]
-                tempi = int(temps)
-                return tempi;
-        #NOT FIND
-        return -2;
-
+    '''
+    * STEP4:
+    *    搜索某种特性的批次和文件名字
+    *
     #SEARCH GLOBAL WETHER UN-FINISHED PICTURE EXIST
-    #目标是找到未识别图像的第一个目标
-    def findUnclasFileBatchAndFileNbr(self):
+    #TARGET to find the very first picture
+    * 目标是找到第一个满足条件的函数
+    * 为了方便复制该函数，将这个函数中原先使用的子函数集合进来，简化函数的编写，不然显得过于累赘
+    * 将该函数改造为通用函数，简化设计
+    * 这是本模块内部函数，从而将字符串等信息影藏在本模块内部，简化其它模块的设计，以及未来的维护
+    *
+    * 输入条件：eleTag = {'normal'，'flu'}
+    * 输出：    BatchIndex, fileNbrIndex
+    '''
+    def findUnclasFileBatchAndFileNbr(self, eleTag):
         start = ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX;
         end = ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX;
-        #搜索的时候，可能会出现start==end的情况，然后就停止了
+        #Refresh CReader to be lastest one
+        self.CReader=configparser.ConfigParser()
+        self.CReader.read(self.filePath, encoding='utf8')
+        #Under searching start==end, it is stop. So we extend the range a little bit bigger.
+        fileNbr = -1
         for index in range(start, end+1):
-            fileNbr = self.getUnclasBatchFileAtFirstIndex(index);
-            if (fileNbr >= 0):
-                ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX = index;
-                self.updateCtrlCntInfo()
-                return index, fileNbr;
-        return -1, -1;
+            #Find the very first picture which fulfill the condition, but not the whole number of unclassified pictures.
+            batchStr = "batch#" + str(index)
+            if (self.CReader.has_section(batchStr) == False):
+                return -1, -1;
+            #SEARCH ALL CONFIGURATION KEY and 'DEFAULT' key
+            flag = False
+            for key in self.CReader[batchStr]:
+                #Find the very first element
+                if (('batchfileclas#' in key) and (self.CReader[batchStr][key] == 'no')):
+                    temps = key[len('batchfileclas#'):]
+                    tempi = int(temps)
+                    if (self.CReader[batchStr][str("batchfileatt#" + str(tempi))] == eleTag):
+                        fileNbr = tempi;
+                        flag = True;
+                        break;
+            #YES and FOUND!
+            if (flag == True):
+                break;
+        #Find the result!
+        if (fileNbr >= 0):
+            ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX = index;
+            self.updateCtrlCntInfo()
+            return index, fileNbr;
+        else:
+            return -2, -2;
 
+    #可以被其它模块调用的函数
+    def findNormalUnclasFileBatchAndNbr(self):
+        return self.findUnclasFileBatchAndFileNbr(ModCebsCom.GL_CEBS_FILE_ATT_NORMAL)
+
+    #可以被其它模块调用的函数
+    def findFluUnclasFileBatchAndNbr(self):
+        return self.findUnclasFileBatchAndFileNbr(ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN)
+
+
+    '''
+    * STEP5:
+    *    寻找某种特性的总文件数量，目的是复核，防止各种原因造成的错误
+    *
+    *
     #FETCH UN-CLASSIFIED FILE FOR ONE BATCH, WITH TOTAL NUMBER
     #寻找所有未识别图像数量
-    def getUnclasBatchFileWithTotalNbr(self, batch):
-        self.CReader=configparser.ConfigParser()
-        self.CReader.read(self.filePath, encoding='utf8')
-        batchStr = "batch#" + str(batch)
-        if (self.CReader.has_section(batchStr) == False):
-            return -1;
-        #SEARCH ALL CONFIGURATION KEY and 'DEFAULT' key
-        totalNbr = 0
-        for key in self.CReader[batchStr]:
-            #print("key = %s, Creader = %s" %(str(key), str(self.CReader[batchStr][key])))
-            if (('batchfileclas#' in key) and (self.CReader[batchStr][key] == 'no')):
-                totalNbr +=1
-        #FINAL RESULT
-        return totalNbr
-    
+    *
     #FETCH ALL REMAINING UNCLAS BATCH FILES TOTAL NUMBER
     #寻找所有还未识别图像的总数
-    def recheckRemaingUnclasBatchFile(self):
+    *
+    * 输入条件：eleTag = {'normal'，'flu'}
+    * 输出：totalUnclassBatchFiles，总未识别的文件数量
+    '''
+    def recheckRemaingUnclasBatchFile(self, eleTag):
         start = ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX;
         end = ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX;
+        self.CReader=configparser.ConfigParser()
+        self.CReader.read(self.filePath, encoding='utf8')
         res = 0;
         for index in range(start, end+1):
-            fileNbr = self.getUnclasBatchFileWithTotalNbr(index);
-            if (fileNbr > 0):
-                res += fileNbr
+            batchStr = "batch#" + str(index)
+            #如果发现不合法就结束
+            if (self.CReader.has_section(batchStr) == False):
+                break
+            #SEARCH ALL CONFIGURATION KEY and 'DEFAULT' key
+            totalNbr = 0
+            for key in self.CReader[batchStr]:
+                if (('batchfileclas#' in key) and (self.CReader[batchStr][key] == 'no')):
+                    temps = key[len('batchfileclas#'):]
+                    tempi = int(temps)
+                    if (self.CReader[batchStr][str("batchfileatt#" + str(tempi))] == eleTag):
+                        totalNbr +=1
+            if (totalNbr > 0):
+                res += totalNbr
         return res
                 
     #UPDATE CATEGORY PICTURE INFORMATION
@@ -352,7 +429,30 @@ class clsL1_ConfigOpr(object):
         fd = open(self.filePath, 'w')
         self.CReader.write(fd)
         fd.close()
+            
+    def updEleUncFileAsClf(self, batch, fileNbr, eleTag):
+        self.CReader=configparser.ConfigParser()
+        self.CReader.read(self.filePath, encoding='utf8')
+        batchStr = "batch#" + str(batch)
+        fileName = self.combineFileName(batch, fileNbr)
+        fileClas = str("batchFileClas#" + str(fileNbr))
+        self.CReader.set(batchStr, fileName, self.combineFileNameWithDir(batch, fileNbr))
+        self.CReader.set(batchStr, fileClas, 'yes')
+        fd = open(self.filePath, 'w')
+        self.CReader.write(fd)
+        fd.close()
 
+    def updateNormalUnclasFileAsClassified(self, batch, fileNbr):
+        return self.updEleUncFileAsClf(batch, fileNbr, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL)
+
+    def updateFluUnclasFileAsClassified(self, batch, fileNbr):
+        return self.updEleUncFileAsClf(batch, fileNbr, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN)
+
+    '''
+    * STEP6:
+    *    公共的打印及错误处理过程
+    *
+    '''   
     #RECORD ERROR LOG FILE SAVING, WITH YMDHMS and basic information!
     def medErrorLog(self, inputStr):
         head = '\r[CEBS] ' + time.strftime("%Y/%m/%d %H:%M:%S") + ' [ERR] '

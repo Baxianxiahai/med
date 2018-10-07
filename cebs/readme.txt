@@ -10,6 +10,8 @@
 
 
 
+//=ZJL, 2018/10/7, CURRENT_SW_DELIVERY R1.24 =>CEBS
+= 完善cfg模块中对于各种图像的处理，增加荧光处理功能
 
 
 //=ZJL, 2018/10/6, CURRENT_SW_DELIVERY R1.23 =>CEBS

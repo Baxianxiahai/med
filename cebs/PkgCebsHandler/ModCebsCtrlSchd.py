@@ -187,7 +187,7 @@ class clsL3_CtrlSchdThread(QThread):
             return -1;
         self.instL2VisCapProc.funcVisionCapture(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne);
         print("L3CTRLST: Taking picture once! Current Batch=%d and Index =%d" % (ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne));
-        self.instL1ConfigOpr.addBatchFile(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne)
+        self.instL1ConfigOpr.addNormalBatchFile(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne)
         #MOVINT TO NEXT WORKIN POSITION IN ADVANCE
         nextOne = curOne + 1;
         
@@ -246,7 +246,7 @@ class clsL3_CtrlSchdThread(QThread):
              
             #批量处理识别照片
             elif (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_CFY_PROC):
-                self.instL2VisCfyProc.funcVisionProc();
+                self.instL2VisCfyProc.funcVisionClassifyProc();
                 if (ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT <= 0):
                     self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CFY_CMPL
              

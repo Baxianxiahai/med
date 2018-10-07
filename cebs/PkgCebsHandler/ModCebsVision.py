@@ -225,9 +225,12 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
         
     def funcVisCfyLogTrace(self, myString):
         self.instL4WinForm.med_debug_print(myString)
-        
-    def funcVisionProc(self):
-        batch, fileNbr = self.findUnclasFileBatchAndFileNbr();
+    
+    '''
+    * 核心的识别函数，其它任务调用的主入口
+    '''    
+    def funcVisionClassifyProc(self):
+        batch, fileNbr = self.findNormalUnclasFileBatchAndNbr();
         if (batch < 0):
             ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = 0;
             self.funcVisCfyLogTrace("L2VISCFY: Picture classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
@@ -244,6 +247,7 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
         print("L2VISCFY: Batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
         self.funcVisionClassify(fileName, fileNukeName);
         ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT -= 1;
+        #Update classified files
         self.updateUnclasFileAsClassified(batch, fileNbr);
         self.funcVisCfyLogTrace("L2VISCFY: Picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
         self.updateCtrlCntInfo();
