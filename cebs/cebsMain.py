@@ -23,7 +23,7 @@ MAIN => 主入口
             |---clsL2_MotoProc => 马达控制任务
                 |---clsL1_MotoDrvApi => 马达驱动接口
     |---SEUI_L4_GparForm => 参数设置界面
-        |---clsL1_GparProc => 参数填写接口
+        |---clsL3_GparProc => 参数填写接口
     |---CommonLib
         |---clsL1_ConfigOpr => 本地配置文件接口
             |---clsL0_MedCFlib => 公共函数库
@@ -55,6 +55,7 @@ from ctypes import *
 import serial
 import serial.tools.list_ports
 import string
+import platform
 
 #System lib
 from PyQt5 import QtWidgets, QtGui, QtCore
@@ -459,7 +460,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
     def __init__(self):    
         super(SEUI_L4_GparForm, self).__init__()  
         self.setupUi(self)
-        self.instL1GparProc = ModCebsGpar.clsL1_GparProc(self)
+        self.instL3GparProc = ModCebsGpar.clsL3_GparProc(self)
         self.instL1ConfigOpr2=ModCebsCfg.clsL1_ConfigOpr()
         #Update UI interface last time parameter setting
         self.funcGlobalParReadSet2Ui()
@@ -478,6 +479,25 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
     def slot_gpar_giveup(self):
         self.sgL4MainWinVisible.emit()
         self.close()
+    
+    '''
+    *得到文件目录
+    directory1 = QFileDialog.getExistingDirectory(self, "选取文件夹", "C:/")
+    * 打开文件
+    files, ok1 = QFileDialog.getOpenFileNames(self, "多文件选择", "C:/", "All Files (*);;Text Files (*.txt)")
+    * 存储文件
+    fileName2, ok2 = QFileDialog.getSaveFileName(self, 文件保存", "C:/", "All Files (*);;Text Files (*.txt)")    
+    '''
+    def slot_gpar_pic_file_load(self):
+        if ('Windows' in platform.system()):
+            fileName, _ = QFileDialog.getOpenFileName(self, "选取文件", "D:\\", "All Files (*);;Text Files (*.txt)")   #设置文件扩展名过滤,注意用双分号间隔
+        else:
+            fileName, _ = QFileDialog.getOpenFileName(self, "选取文件", "/home/", "All Files (*);;Text Files (*.txt)")   #设置文件扩展名过滤,注意用双分号间隔
+        #将文件导入到目标框中
+        self.instL3GparProc.funcPicFileLoad(fileName)
+
+    def slot_gpar_pic_train(self):
+        self.instL3GparProc.funcPicFileTrain()
 
     #
     #  SERVICE FUNCTION PART, 业务函数部分
@@ -575,7 +595,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         
     #Give up and not save parameters
     def closeEvent(self, event):
-        self.instL1GparProc.funcRecoverWorkingEnv()
+        self.instL3GparProc.funcRecoverWorkingEnv()
         self.sgL4MainWinVisible.emit()
         self.close()
 

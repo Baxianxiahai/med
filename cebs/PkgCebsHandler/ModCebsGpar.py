@@ -26,14 +26,53 @@ from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
 
 
-class clsL1_GparProc(object):
+class clsL3_GparProc(object):
     def __init__(self, father):
-        super(clsL1_GparProc, self).__init__()
+        super(clsL3_GparProc, self).__init__()
         self.identity = None;
-        self.gparForm = father
+        self.instL4GparForm = father
         self.objInitCfg=ModCebsCfg.clsL1_ConfigOpr();
-    
+        rect = self.instL4GparForm.label_gpar_pic_origin_fill.geometry()
+        self.orgPicWidth = rect.width()
+        self.orgPicHeight = rect.height()
+        rect = self.instL4GparForm.label_gpar_pic_cfy_fill.geometry()
+        self.cfyPicWidth = rect.width()
+        self.cfyPicHeight = rect.height()
+        self.picFile = ''
+        
     #Do nothting
     def funcRecoverWorkingEnv(self):
         pass
     
+    #Load file
+    def funcPicFileLoad(self, fn):
+        self.picFile = fn
+        img = QtGui.QPixmap(fn)
+        img=img.scaled(self.orgPicWidth,self.orgPicHeight)
+        self.instL4GparForm.label_gpar_pic_origin_fill.setPixmap(img)
+        
+        
+    #Train files
+    def funcPicFileTrain(self):
+        if (self.picFile == ''):
+            return -1
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
