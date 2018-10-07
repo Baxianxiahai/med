@@ -269,6 +269,7 @@ class clsL1_ConfigOpr(object):
     def addFluBatchFile(self, batch, fileNbr):
         return self.addBatchFileInElement(batch, fileNbr, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN)
     
+    #基础函数过程
     def addBatchFileInElement(self, batch, fileNbr, eleTag):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
@@ -276,9 +277,29 @@ class clsL1_ConfigOpr(object):
         fileName = self.combineFileName(batch, fileNbr)
         fileClas = str("batchFileClas#" + str(fileNbr))
         fileAtt = str("batchFileAtt#" + str(fileNbr))
+        fileVideoClag = str("batchFileVidFlag#" + str(fileNbr))
         self.CReader.set(batchStr, fileName, self.combineFileNameWithDir(batch, fileNbr))
         self.CReader.set(batchStr, fileClas, 'no')
         self.CReader.set(batchStr, fileAtt, eleTag)
+        self.CReader.set(batchStr, fileVideoClag, 'no')
+        try:
+            fd = open(self.filePath, 'w')
+        except Exception as err:  
+            print("CFG: Open file failure, err = " + str(err))
+            return -1;
+        finally:
+            self.CReader.write(fd)
+            fd.close()
+    
+    #更新文件的视频属性
+    def updBatchFileVideo(self, batch, fileNbr):
+        self.CReader=configparser.ConfigParser()
+        self.CReader.read(self.filePath, encoding='utf8')
+        batchStr = "batch#" + str(batch)
+        fileVidFlag = str("batchFileVidFlag#" + str(fileNbr))
+        videoName = self.combineVideoName(batch, fileNbr)
+        self.CReader.set(batchStr, fileVidFlag, 'yes')
+        self.CReader.set(batchStr, videoName, self.combineFileNameVideoWithDir(batch, fileNbr))
         try:
             fd = open(self.filePath, 'w')
         except Exception as err:  
@@ -312,6 +333,9 @@ class clsL1_ConfigOpr(object):
 
     def combineFileName(self, batch, fileNbr):
         return str("batch#" + str(batch) + "FileName#" + str(fileNbr))
+
+    def combineVideoName(self, batch, fileNbr):
+        return str("batch#" + str(batch) + "VideoName#" + str(fileNbr))
 
     def combineFileNameWithDir(self, batch, fileNbr):
         fileName = str("batch#" + str(batch) + "FileName#" + str(fileNbr))
@@ -430,23 +454,26 @@ class clsL1_ConfigOpr(object):
         self.CReader.write(fd)
         fd.close()
             
-    def updEleUncFileAsClf(self, batch, fileNbr, eleTag):
-        self.CReader=configparser.ConfigParser()
-        self.CReader.read(self.filePath, encoding='utf8')
-        batchStr = "batch#" + str(batch)
-        fileName = self.combineFileName(batch, fileNbr)
-        fileClas = str("batchFileClas#" + str(fileNbr))
-        self.CReader.set(batchStr, fileName, self.combineFileNameWithDir(batch, fileNbr))
-        self.CReader.set(batchStr, fileClas, 'yes')
-        fd = open(self.filePath, 'w')
-        self.CReader.write(fd)
-        fd.close()
-
+    #下面三个函数暂时没有使用起来
     def updateNormalUnclasFileAsClassified(self, batch, fileNbr):
         return self.updEleUncFileAsClf(batch, fileNbr, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL)
 
     def updateFluUnclasFileAsClassified(self, batch, fileNbr):
         return self.updEleUncFileAsClf(batch, fileNbr, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN)
+    
+    def updEleUncFileAsClf(self, batch, fileNbr, eleTag):
+        self.CReader=configparser.ConfigParser()
+        self.CReader.read(self.filePath, encoding='utf8')
+        batchStr = "batch#" + str(batch)
+        fileName = self.combineFileName(batch, fileNbr)
+        fileClas = str("batchfileclas#" + str(fileNbr))
+        fileAttr = str("batchfileatt#" + str(fileNbr))
+        self.CReader.set(batchStr, fileName, self.combineFileNameWithDir(batch, fileNbr))
+        self.CReader.set(batchStr, fileClas, 'yes')
+        self.CReader.set(batchStr, fileAttr, eleTag)
+        fd = open(self.filePath, 'w')
+        self.CReader.write(fd)
+        fd.close()
 
     '''
     * STEP6:

@@ -110,8 +110,11 @@ class clsL2_VisCapProc(object):
     #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
     #cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
     #Check if the webcam is opened correctly
+    *
+    * forFlag: 使用这个来对付初始化时的跳过标签，不然在视频模式下需要等待太长时间
+    *
     '''
-    def funcVisionCapture(self, batch, fileNbr):
+    def funcVisionCapture(self, batch, fileNbr, forceFlag):
         if not self.capInit.isOpened():
             #raise IOError("Cannot open webcam")
             self.instL1ConfigOpr.medErrorLog("L2VISCAP: Cannot open webcam!")
@@ -165,6 +168,8 @@ class clsL2_VisCapProc(object):
         #Video capture
         #Ref: http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_video_display/py_video_display.html
         #fourcc code: http://www.fourcc.org/codecs.php
+        if (forceFlag == True):
+            return 1;
         if (ret == True) and (ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE == True):
             #Video capture with 3 second
             fourcc = cv.VideoWriter_fourcc(*'mp4v')  #mp4v(.mp4), XVID(.avi)
@@ -185,6 +190,7 @@ class clsL2_VisCapProc(object):
                 else:
                     break
             out.release()
+            return 2;
         return 1;
       
         
@@ -228,8 +234,11 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
     
     '''
     * 核心的识别函数，其它任务调用的主入口
+    *
+    *    用于普通白光照片的识别处理过程
+    *
     '''    
-    def funcVisionClassifyProc(self):
+    def funcVisionNormalClassifyProc(self):
         batch, fileNbr = self.findNormalUnclasFileBatchAndNbr();
         if (batch < 0):
             ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = 0;
@@ -244,17 +253,17 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
             self.updateCtrlCntInfo();
             return;
         #REAL PROCESSING PROCEDURE
-        print("L2VISCFY: Batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
-        self.funcVisionClassify(fileName, fileNukeName);
+        print("L2VISCFY: Normal picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
+        self.funcVisWormClassify(fileName, fileNukeName);
         ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT -= 1;
         #Update classified files
         self.updateUnclasFileAsClassified(batch, fileNbr);
-        self.funcVisCfyLogTrace("L2VISCFY: Picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+        self.funcVisCfyLogTrace("L2VISCFY: Normal picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
         self.updateCtrlCntInfo();
         return;
        
-    #PIC PROC
-    def funcVisionClassify(self, fileName, fileNukeName):
+    #NORMAL PIC PROC
+    def funcVisWormClassify(self, fileName, fileNukeName):
         #time.sleep(random.random()*10)
         self.func_vision_worm_clasification(fileName, fileNukeName)
         
@@ -438,6 +447,49 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
         
         #Show result or not: 根据指令，是否显示文件
         cv.destroyAllWindows()
+
+
+    '''
+    * 核心的识别函数，其它任务调用的主入口
+    *
+    *    用于荧光照片的识别处理过程
+    *
+    '''    
+    def funcVisionFluClassifyProc(self):
+        batch, fileNbr = self.findFluUnclasFileBatchAndNbr();
+        if (batch < 0):
+            ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT = 0;
+            self.funcVisCfyLogTrace("L2VISCFY: Picture flu classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+            self.updateCtrlCntInfo();
+            return;
+        fileName = self.getStoredFileName(batch, fileNbr);
+        fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
+        if (fileName == None) or (fileNukeName == None):
+            ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = 0;
+            self.funcVisCfyLogTrace("L2VISCFY: Picture flu classification finished: remaining NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+            self.updateCtrlCntInfo();
+            return;
+        #REAL PROCESSING PROCEDURE
+        print("L2VISCFY: Flu picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
+        self.algoVisFluWormCaculate(fileName, fileNukeName);
+        ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT -= 1;
+        #Update classified files
+        self.updateUnclasFileAsClassified(batch, fileNbr);
+        self.funcVisCfyLogTrace("L2VISCFY: Flu picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+        self.updateCtrlCntInfo();
+        return;
+    
+    #荧光处理算法过程
+    def algoVisFluWormCaculate(self, fileName, fileNukeName):
+        pass
+
+
+
+
+
+
+
+
 
 
 

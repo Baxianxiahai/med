@@ -113,11 +113,11 @@ class clsL3_CtrlSchdThread(QThread):
         #NEW STATE
         self.instL2VisCapProc.funcVisBatCapStart();
         #去掉初始3-4张黑屏幕的照片
-        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH);
-        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH);
-        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH);
-        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH);
-        self.funcCtrlSchdDebugPrint("L3CTRLST: Remove first part of un-valid picture accomplished!")
+        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH, True);
+        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH, True);
+        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH, True);
+        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH, True);
+        self.funcCtrlSchdDebugPrint("L3CTRLST: Picture starting progress...")
         self.capTimes = ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH+1;
         self.funcCtrlSchdDebugPrint("L3CTRLST: Start to take picture, remaining TIMES=%d." %(self.capTimes-1))
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CAP_PIC;
@@ -177,17 +177,22 @@ class clsL3_CtrlSchdThread(QThread):
             return 1;
         
     '''
-          支持函数部分
+    * 支持函数部分
+    * 
+    * Input: forceFlag, 指明是否跳过视频部分
     '''                        
     #LOCAL FUNCTIONS  
-    def funcCamCapInBatch(self, capIndex):
+    def funcCamCapInBatch(self, capIndex, forceFlag):
         curOne = ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH + 1 - capIndex;
         if ((curOne > ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH) or (curOne < 1)):
             self.funcCtrlSchdDebugPrint("L3CTRLST: Taking picture but serial number error!")
             return -1;
-        self.instL2VisCapProc.funcVisionCapture(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne);
+        ret = self.instL2VisCapProc.funcVisionCapture(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne, forceFlag);
         print("L3CTRLST: Taking picture once! Current Batch=%d and Index =%d" % (ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne));
         self.instL1ConfigOpr.addNormalBatchFile(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne)
+        #Video captured
+        if (ret == 2):
+            self.instL1ConfigOpr.updBatchFileVideo(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne)
         #MOVINT TO NEXT WORKIN POSITION IN ADVANCE
         nextOne = curOne + 1;
         
@@ -230,7 +235,7 @@ class clsL3_CtrlSchdThread(QThread):
                 self.capTimes -= 1;
                 if (self.capTimes > 0):
                     self.funcCtrlSchdDebugPrint(str("L3CTRLST: Taking picture, remaining TIMES=" + str(self.capTimes)))
-                    self.funcCamCapInBatch(self.capTimes);
+                    self.funcCamCapInBatch(self.capTimes, False);
                     ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT += 1;
                 #CONTROL STOP ACTIONS
                 else:
@@ -246,7 +251,7 @@ class clsL3_CtrlSchdThread(QThread):
              
             #批量处理识别照片
             elif (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_CFY_PROC):
-                self.instL2VisCfyProc.funcVisionClassifyProc();
+                self.instL2VisCfyProc.funcVisionNormalClassifyProc();
                 if (ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT <= 0):
                     self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CFY_CMPL
              
