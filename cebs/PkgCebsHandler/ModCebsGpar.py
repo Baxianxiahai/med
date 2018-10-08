@@ -38,28 +38,37 @@ class clsL3_GparProc(object):
         rect = self.instL4GparForm.label_gpar_pic_cfy_fill.geometry()
         self.cfyPicWidth = rect.width()
         self.cfyPicHeight = rect.height()
-        self.picFile = ''
-        
+        self.picDirFile = ''
+
+    def funcCtrlSchdDebugPrint(self, myString):
+        self.instL4GparForm.med_debug_print(myString)
+                
     #Do nothting
     def funcRecoverWorkingEnv(self):
         pass
     
     #Load file
-    def funcPicFileLoad(self, fn):
-        self.picFile = fn
-        img = QtGui.QPixmap(fn)
+    def funcPicFileLoad(self, dirFn):
+        self.picDirFile = dirFn
+        img = QtGui.QPixmap(dirFn)
         img=img.scaled(self.orgPicWidth,self.orgPicHeight)
         self.instL4GparForm.label_gpar_pic_origin_fill.setPixmap(img)
-        
+        self.funcCtrlSchdDebugPrint("Load once!")
         
     #Train files
     def funcPicFileTrain(self):
-        if (self.picFile == ''):
+        if (self.picDirFile == ''):
             return -1
+        obj = ModCebsVision.clsL2_VisCfyProc(self.instL4GparForm)
+        obj.funcVisionNormalClassifyDirect(self.picDirFile, 'tempPic.jpg')
+        if (os.path.exists('tempPic.jpg') == False):
+            return -2
+        img = QtGui.QPixmap('tempPic.jpg')
+        img=img.scaled(self.cfyPicWidth,self.cfyPicHeight)
+        self.instL4GparForm.label_gpar_pic_cfy_fill.setPixmap(img)
+        self.funcCtrlSchdDebugPrint("Done once!")
         
-
-
-
+        
 
 
 

@@ -247,18 +247,21 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
             return;
         #REAL PROCESSING PROCEDURE
         print("L2VISCFY: Normal picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
-        self.funcVisWormClassify(fileName, fileNukeName);
+        self.func_vision_worm_clasification(fileName, fileNukeName, False);
         ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT -= 1;
         #Update classified files
         self.updateUnclasFileAsClassified(batch, fileNbr);
         self.funcVisCfyLogTrace("L2VISCFY: Normal picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
         self.updateCtrlCntInfo();
         return;
+
+    def funcVisionNormalClassifyDirect(self, dirFn, tmpFn):
+        return self.func_vision_worm_clasification(dirFn, tmpFn, True);
        
-    #NORMAL PIC PROC
-    def funcVisWormClassify(self, fileName, fileNukeName):
-        #time.sleep(random.random()*10)
-        self.func_vision_worm_clasification(fileName, fileNukeName)
+#     #NORMAL PIC PROC
+#     def funcVisWormClassify(self, fileName, fileNukeName):
+#         #time.sleep(random.random()*10)
+#         self.func_vision_worm_clasification(fileName, fileNukeName)
         
     def func_vision_worm_input_processing(self, inputStr):
         try:
@@ -409,8 +412,9 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
         return outputImg;
         pass;
 
-    #Classified processing: 分类总处理    
-    def func_vision_worm_clasification(self, fileName, fileNukeName):
+    #Classified processing: 分类总处理
+    #outCtrlFlag: 控制输出方式，是否直接使用fileNukeName而不增加文件名字选项
+    def func_vision_worm_clasification(self, fileName, fileNukeName, outCtrlFlag):
         #Reading file: 读取文件
         if (os.path.exists(fileName) == False):
             errStr = "L2VISCFY: File %s not exist!" % (fileName)
@@ -428,7 +432,10 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
         binImg = self.func_vision_worm_binvalue_test(inputImg)
         nfImg = self.func_vision_worm_remove_noise_test(binImg)
         outputImg = self.func_vision_worm_find_contours(nfImg, inputImg)
-        outputFn = self.HST_VISION_WORM_CLASSIFY_pic_filepath + "result_" + fileNukeName
+        if (outCtrlFlag == True):
+            outputFn = fileNukeName
+        else:
+            outputFn = self.HST_VISION_WORM_CLASSIFY_pic_filepath + "result_" + fileNukeName
         print("L2VISCFY: OutputFn = %s, nuke name = %s" %(outputFn, fileNukeName))
         cv.imwrite(outputFn, outputImg)
             

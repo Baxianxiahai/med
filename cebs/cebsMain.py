@@ -464,7 +464,13 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         self.instL1ConfigOpr2=ModCebsCfg.clsL1_ConfigOpr()
         #Update UI interface last time parameter setting
         self.funcGlobalParReadSet2Ui()
-        
+
+    def med_debug_print(self, info):
+        strOut = ">> " + time.asctime() + " " + info;
+        self.textEdit_eng_input.append(strOut);
+        self.textEdit_eng_input.moveCursor(QtGui.QTextCursor.End)
+        self.textEdit_eng_input.ensureCursorVisible()
+        self.textEdit_eng_input.insertPlainText("")        
     #
     #  SLOT FUNCTION, 槽函数部分
     #    DO NOT MODIFY FUNCTION NAMES, 以下部分为系统接口对应的槽函数，函数命名不得动
@@ -494,7 +500,8 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         else:
             fileName, _ = QFileDialog.getOpenFileName(self, "选取文件", "/home/", "All Files (*);;Text Files (*.txt)")   #设置文件扩展名过滤,注意用双分号间隔
         #将文件导入到目标框中
-        self.instL3GparProc.funcPicFileLoad(fileName)
+        if (fileName != ''):
+            self.instL3GparProc.funcPicFileLoad(fileName)
 
     def slot_gpar_pic_train(self):
         self.instL3GparProc.funcPicFileTrain()
