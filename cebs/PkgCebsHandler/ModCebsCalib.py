@@ -49,7 +49,7 @@ class clsL3_CalibProc(ModCebsCom.clsL0_MedCFlib):
         self.instL4CalibForm = father
         self.camerEnableFlag = False;
         self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr();
-        self.instL2MotoProc=ModCebsMoto.clsL2_MotoProc(self.instL4CalibForm, 2);
+        self.instL2MotoProc=ModCebsMoto.clsL2_MotoProc(self.instL4CalibForm);
         self.initParameter();
 
     def initParameter(self):
@@ -82,7 +82,7 @@ class clsL3_CalibProc(ModCebsCom.clsL0_MedCFlib):
         self.identity = text
 
     def funcCalibLogTrace(self, myString):
-        self.instL4CalibForm.calib_print_log(myString)
+        self.instL4CalibForm.med_debug_print(myString)
 
     def funcActiveTrig(self):
         self.funcCalibPilotCameraEnable()
@@ -264,7 +264,7 @@ class clsL2_CalibPilotThread(QThread):
         self.identity = text
 
     def funcCalibPiLogTrace(self, myString):
-        self.instL4CalibForm.calib_print_log(myString)
+        self.instL4CalibForm.med_debug_print(myString)
                 
     def funcCalibMotoPilotStart(self):
         self.cntCtrl = ModCebsCom.GL_CEBS_PILOT_WOKING_ROUNDS_MAX+1;
@@ -332,7 +332,7 @@ class clsL2_CalibCamDispThread(threading.Thread):
         self.identity = text
 
     def funcCalibCamDisLogTrace(self, myString):
-        self.instL4CalibForm.calib_print_log(myString)
+        self.instL4CalibForm.med_debug_print(myString)
 
     def funcCalibCameraDispStateGet(self):
         return self.CDT_STM_STATE

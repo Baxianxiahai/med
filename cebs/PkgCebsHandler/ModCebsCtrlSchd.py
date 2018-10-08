@@ -61,8 +61,8 @@ class clsL3_CtrlSchdThread(QThread):
         self.capTimes = -1;
         self.instL4WinMainForm = father
         self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr();
-        self.instL2MotoProc=ModCebsMoto.clsL2_MotoProc(self.instL4WinMainForm, 1);
-        self.instL2VisCapProc=ModCebsVision.clsL2_VisCapProc(self.instL4WinMainForm, 1);
+        self.instL2MotoProc=ModCebsMoto.clsL2_MotoProc(self.instL4WinMainForm);
+        self.instL2VisCapProc=ModCebsVision.clsL2_VisCapProc(self.instL4WinMainForm);
         self.instL2VisCfyProc=ModCebsVision.clsL2_VisCfyProc(self.instL4WinMainForm);
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_NULL;
         

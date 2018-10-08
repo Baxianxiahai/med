@@ -44,13 +44,10 @@ MOTO处理过程的L3模块
 #模块可能被WinMain和Calib调用，所以初始化需要传入Father进去
 '''
 class clsL2_MotoProc(ModCebsCom.clsL0_MedCFlib):
-    #附带的prtFlag参数，用来表示是哪一种窗体调用的，这样MOTO过程才能得到正确的父句柄，并执行打印函数
-    #prtFlag=1: WinMainForm,  prtFlag=2: CalibForm
-    def __init__(self, father, prtFlag):
+    def __init__(self, father):
         super(clsL2_MotoProc, self).__init__()
         self.identity = None;
         self.instL4WinForm = father
-        self.prtFlag = prtFlag
         ModCebsCom.clsL0_MedCFlib.med_init_plate_parameter(self)       
         self.motoSpsDrvVer = -2
         #打印到文件专用
@@ -68,12 +65,7 @@ class clsL2_MotoProc(ModCebsCom.clsL0_MedCFlib):
         #print("Test")
 
     def funcMotoLogTrace(self, myString):
-        if (self.prtFlag == 1):
-            self.instL4WinForm.med_debug_print(myString)
-        elif (self.prtFlag == 2):
-            self.instL4WinForm.calib_print_log(myString)
-        else:
-            pass
+        self.instL4WinForm.med_debug_print(myString)
         
     #Normal moving with limitation    
     def funcMotoCalaMoveOneStep(self, scale, dir):

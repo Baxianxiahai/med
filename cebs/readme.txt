@@ -10,6 +10,11 @@
 
 
 
+
+//=ZJL, 2018/10/8, CURRENT_SW_DELIVERY R1.25 =>CEBS
+= 尝试使用重载功能，对付打印函数，非常好
+
+
 //=ZJL, 2018/10/7, CURRENT_SW_DELIVERY R1.24 =>CEBS
 = 完善cfg模块中对于各种图像的处理，增加荧光处理功能
 = 增加视频文件的控制信息

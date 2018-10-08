@@ -296,7 +296,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.sgL4CalibFormActiveTrig.connect(self.instL3CalibProc.funcActiveTrig)
         self.instL1ConfigOpr1 = ModCebsCfg.clsL1_ConfigOpr()
         
-    def calib_print_log(self, info):
+    def med_debug_print(self, info):
         strOut = ">> " + time.asctime() + " " + info;
         self.textEdit_calib_runProgress.append(strOut);
         self.textEdit_calib_runProgress.moveCursor(QtGui.QTextCursor.End)

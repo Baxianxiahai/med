@@ -61,23 +61,16 @@ from cv2 import waitKey
 
 '''
 class clsL2_VisCapProc(object):
-    #prtFlag=1: WinMainForm,  prtFlag=2: CalibForm
-    def __init__(self, winFormHandler, prtFlag):
+    def __init__(self, winFormHandler):
         super(clsL2_VisCapProc, self).__init__()
         self.identity = None;
         self.instL4WinForm = winFormHandler
-        self.prtFlag = prtFlag
         self.instL1ConfigOpr = ModCebsCfg.clsL1_ConfigOpr()
         self.capInit = ''
         self.funcVisCapLogTrace("L2VISCAP: Instance start test!")
         
     def funcVisCapLogTrace(self, myString):
-        if (self.prtFlag == 1):
-            self.instL4WinForm.med_debug_print(myString)
-        elif (self.prtFlag == 2):
-            self.instL4WinForm.calib_print_log(myString)
-        else:
-            pass
+        self.instL4WinForm.med_debug_print(myString)
         
     def funcVisionDetectAllCamera(self):
         MaxDetectNbr = ModCebsCom.GL_CEBS_VISION_MAX_CAMERA_SEARCH
