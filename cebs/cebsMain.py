@@ -128,8 +128,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         '''
         #STEP1: INI FILE CONFIGURATION, 初始化配置文件
         self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr()
-        self.instL1ConfigOpr.readGlobalPar();
-        self.instL1ConfigOpr.updateCtrlCntInfo()
+        self.instL1ConfigOpr.func_read_global_par_from_cfg_file();  #读取本地文件的配置数据，并写入全局变量中来
+        self.instL1ConfigOpr.updateCtrlCntInfo() #更新进度控制参量
         #STEP2: START SUB-UI, 启动子界面        
         self.instL4CalibForm = SEUI_L4_CalibForm()
         self.instL4GparForm = SEUI_L4_GparForm()
@@ -508,6 +508,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
     def slot_gpar_pic_train(self):
         #Firstly read parameter into classified variable sets, to let Train Func use.
         self.funcReadVisParToCfySets();
+        #在训练之前，需要将系统参数保存在临时变量中，借助于全局变量的传递，进行算法训练。一旦完成，还要再回写。
         savetmp = ModCebsCom.GLVIS_PAR_OFC
         ModCebsCom.GLVIS_PAR_OFC = ModCebsCom.GLVIS_PAR_SAV
         self.instL3GparProc.funcPicFileTrain()

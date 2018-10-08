@@ -81,7 +81,7 @@ class clsL1_ConfigOpr(object):
     *
     '''   
     #初始化读取全局图像
-    def readGlobalPar(self):
+    def func_read_global_par_from_cfg_file(self):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
         #config par
