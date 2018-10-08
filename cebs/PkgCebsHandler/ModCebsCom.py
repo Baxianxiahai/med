@@ -48,8 +48,8 @@ class clsL0_MedComCfgPar():
     PIC_PROC_BATCH_INDEX = 0;
     PIC_PROC_CLAS_INDEX = 0;  #Pointer to the batch of not yet classified.
     PIC_PROC_REMAIN_CNT = 0;  #Pointer to remaining un-classified pictures
-    PIC_FLU_CLAS_INDEX = 0
-    PIC_FLU_REMAIN_CNT = 0
+    PIC_FLU_CLAS_INDEX = 0    #指向FLU的指针起点
+    PIC_FLU_REMAIN_CNT = 0    #剩余的FLU数量
     PIC_ORIGIN_PATH = r"pic_origin";
     PIC_MIDDLE_PATH = r"pic_middle";
     PIC_ABS_ORIGIN_PATH = "";
@@ -253,6 +253,28 @@ PART3: 图像相关的参量
 方便对参数进行维护，包括增删
 '''
 class clsL0_MedComPicPar():
+    #Fix point to take picture or not? Formally auto-working shall set as False.
+    #定点拍照
+    PIC_TAKING_FIX_POINT_SET = False; 
+    #After taking picture, whether the pic identification will be run automatically
+    #拍照后是否自动识别
+    PIC_CLASSIFIED_AFTER_TAKE_SET = True;
+    #Whether taking picture will be happened automatically after starting.
+    #设备启动后是否自动工作
+    PIC_AUTO_WORKING_AFTER_START_SET = True;
+    #Auto taking picture TTI times in minutes
+    #定时工作时长间隔
+    PIC_AUTO_WORKING_TTI_IN_MIN = 60;
+    #CAMERA NUMBER
+    VISION_CAMBER_NBR = -1;
+    #896*684 is basic resolution! 896*684 / 1792*1374 / 3584*2748
+    VISION_CAMBER_RES_WITDH = 3584; #1792;
+    VISION_CAMBER_RES_HEIGHT = 2748; #1374;
+    #TEMP USAGE VARIABLES => 用于浮动式界面展示，暂时不用
+    #CAMERA_DISPLAY_POS_X = 0;
+    #CAMERA_DISPLAY_POS_Y = 0;
+    #MAX search window of camera
+    VISION_MAX_CAMERA_SEARCH = 15;
     #VISION calibration set
     SMALL_LOW_LIMIT = 200;
     SMALL_MID_LIMIT = 500;
@@ -263,26 +285,12 @@ class clsL0_MedComPicPar():
     #VIDEO CAPTURE ENABLE OR NOT (视频录制参数)
     CAPTURE_ENABLE = True;
     CAPTURE_DUR_IN_SEC = 3;
-
-    #Fix point to take picture or not? Formally auto-working shall set as False.
-    PIC_TAKING_FIX_POINT_SET = False; 
-    #After taking picture, whether the pic identification will be run automatically
-    PIC_CLASSIFIED_AFTER_TAKE_SET = True;
-    #Whether taking picture will be happened automatically after starting.
-    PIC_AUTO_WORKING_AFTER_START_SET = True;
-    #Auto taking picture TTI times in minutes
-    PIC_AUTO_WORKING_TTI_IN_MIN = 60;
-    #CAMERA NUMBER
-    VISION_CAMBER_NBR = -1;
-    #896*684 is basic resolution! 896*684 / 1792*1374 / 3584*2748
-    VISION_CAMBER_RES_WITDH = 3584; #1792;
-    VISION_CAMBER_RES_HEIGHT = 2748; #1374;
-    #TEMP USAGE VARIABLES
-    CAMERA_DISPLAY_POS_X = 0;
-    CAMERA_DISPLAY_POS_Y = 0;
-    #MAX search window of camera
-    VISION_MAX_CAMERA_SEARCH = 15;
-
+    #图像识别中所用到的部分参数：将根据算法演进，待完善
+    CFY_THD_PAR1 = 1
+    CFY_THD_PAR2 = 2
+    CFY_THD_PAR3 = 3
+    CFY_THD_PAR4 = 4
+    
     
     def __init__(self):    
         super(clsL0_MedComPicPar, self).__init__()  

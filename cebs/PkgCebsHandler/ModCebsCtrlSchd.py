@@ -126,11 +126,11 @@ class clsL3_CtrlSchdThread(QThread):
         self.funcCtrlSchdDebugPrint("L3CTRLST: Normal picture starting progress...")
         self.capTimes = ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH+1;
         self.funcCtrlSchdDebugPrint("L3CTRLST: Start to take normal picture, remaining TIMES=%d." %(self.capTimes-1))
-        self.CTRL_STM_STATE = self._CEBS_STM_CTRL_CAP_PIC_NOR;
+        self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CAP_PIC_NOR;
 
     #TAKE PICTURE FLU
     def funcTakePicStartFlu(self):
-        if (self.CTRL_STM_STATE != self._CEBS_STM_CTRL_INIT):
+        if (self.CTRL_STM_STATE != self.__CEBS_STM_CTRL_INIT):
             self.funcCtrlSchdDebugPrint("L3CTRLST: Please finish last action firstly！")
             return -1;
         #JUDGE WHETHER TAKING PICTURE IS FIXED POSITION OR NOT
@@ -285,7 +285,7 @@ class clsL3_CtrlSchdThread(QThread):
             elif (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_CAP_PIC_NOR):
                 self.capTimes -= 1;
                 if (self.capTimes > 0):
-                    self.funcCtrlSchdDebugPrint(str("L3CTRLST: Taking normal picture, remaining TIMES=" + str(self.capTimes)))
+                    self.funcCtrlSchdDebugPrint(str("L3CTRLST: Taking normal picture, remaining TIMES=" + str(self.capTimes-1)))
                     self.funcCamCapInBatch(self.capTimes, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, False);
                     ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT += 1;
                 #CONTROL STOP ACTIONS
@@ -294,7 +294,7 @@ class clsL3_CtrlSchdThread(QThread):
              
             #批量抓取完成，需要做最后一次的清理工作 NORMAL
             elif (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_CAP_NOR_CMPL):
-                self.funcCtrlSchdDebugPrint("L3CTRLST: Stop taking normal picture, remaining  TIMES=%d." %(self.capTimes))
+                self.funcCtrlSchdDebugPrint("L3CTRLST: Stop taking normal picture, remaining  TIMES=%d." %(self.capTimes-1))
                 ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX +=1;
                 self.instL1ConfigOpr.updateCtrlCntInfo();
                 self.instL2VisCapProc.funcVisBatCapStop();
@@ -316,7 +316,7 @@ class clsL3_CtrlSchdThread(QThread):
             elif (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_CAP_PIC_FLU):
                 self.capTimes -= 1;
                 if (self.capTimes > 0):
-                    self.funcCtrlSchdDebugPrint(str("L3CTRLST: Taking flu picture, remaining TIMES=" + str(self.capTimes)))
+                    self.funcCtrlSchdDebugPrint(str("L3CTRLST: Taking flu picture, remaining TIMES=" + str(self.capTimes-1)))
                     self.funcCamCapInBatch(self.capTimes, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN, False);
                     ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT += 1;
                 #CONTROL STOP ACTIONS
@@ -325,7 +325,7 @@ class clsL3_CtrlSchdThread(QThread):
             
             #批量抓取完成，需要做最后一次的清理工作 FLU
             elif (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_CAP_FLU_CMPL):
-                self.funcCtrlSchdDebugPrint("L3CTRLST: Stop taking flu picture, remaining  TIMES=%d." %(self.capTimes))
+                self.funcCtrlSchdDebugPrint("L3CTRLST: Stop taking flu picture, remaining  TIMES=%d." %(self.capTimes-1))
                 ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX +=1;
                 self.instL1ConfigOpr.updateCtrlCntInfo();
                 self.instL2VisCapProc.funcVisBatCapStop();

@@ -92,7 +92,7 @@ class clsL2_VisCapProc(object):
             self.capInit = cv.VideoCapture(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
             self.capInit.set(3, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
             self.capInit.set(4, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
-            time.sleep(5)
+            #time.sleep(5)
             return 1;
 
     def funcVisBatCapStop(self):
@@ -457,6 +457,7 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
     '''    
     def funcVisionFluClassifyProc(self):
         batch, fileNbr = self.findFluUnclasFileBatchAndNbr();
+        print("batch/FileNbr=%d/%d" % (batch, fileNbr))
         if (batch < 0):
             ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT = 0;
             self.funcVisCfyLogTrace("L2VISCFY: Picture flu classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))

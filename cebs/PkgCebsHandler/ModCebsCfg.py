@@ -364,7 +364,10 @@ class clsL1_ConfigOpr(object):
     * 输出：    BatchIndex, fileNbrIndex
     '''
     def findUnclasFileBatchAndFileNbr(self, eleTag):
-        start = ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX;
+        if (eleTag == ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL):
+            start = ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX;
+        if (eleTag == ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN):
+            start = ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX;
         end = ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX;
         #Refresh CReader to be lastest one
         self.CReader=configparser.ConfigParser()
@@ -375,7 +378,7 @@ class clsL1_ConfigOpr(object):
             #Find the very first picture which fulfill the condition, but not the whole number of unclassified pictures.
             batchStr = "batch#" + str(index)
             if (self.CReader.has_section(batchStr) == False):
-                return -1, -1;
+                continue;
             #SEARCH ALL CONFIGURATION KEY and 'DEFAULT' key
             flag = False
             for key in self.CReader[batchStr]:
@@ -391,8 +394,12 @@ class clsL1_ConfigOpr(object):
             if (flag == True):
                 break;
         #Find the result!
-        if (fileNbr >= 0):
+        if ((fileNbr >= 0) and (eleTag == ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL)):
             ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX = index;
+            self.updateCtrlCntInfo()
+            return index, fileNbr;
+        elif ((fileNbr >= 0) and (eleTag == ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN)):
+            ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX = index;
             self.updateCtrlCntInfo()
             return index, fileNbr;
         else:
@@ -422,16 +429,19 @@ class clsL1_ConfigOpr(object):
     * 输出：totalUnclassBatchFiles，总未识别的文件数量
     '''
     def recheckRemaingUnclasBatchFile(self, eleTag):
-        start = ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX;
+        if (eleTag == ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL):
+            start = ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX;
+        if (eleTag == ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN):
+            start = ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX;
         end = ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX;
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
         res = 0;
         for index in range(start, end+1):
             batchStr = "batch#" + str(index)
-            #如果发现不合法就结束
+            #如果发现不合法就继续，因为有可能出现批次中断的情况
             if (self.CReader.has_section(batchStr) == False):
-                break
+                continue
             #SEARCH ALL CONFIGURATION KEY and 'DEFAULT' key
             totalNbr = 0
             for key in self.CReader[batchStr]:
