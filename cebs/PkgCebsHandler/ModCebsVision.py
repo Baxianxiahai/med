@@ -46,7 +46,7 @@ from cv2 import waitKey
 #模块可能被WinMain和Calib调用，所以初始化需要传入Father进去
 
 #         #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
-#         self.cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
+#         self.cap = cv.VideoCapture(ModCebsCom.GLPIC_PAR_OFC.VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
 #         if not self.cap.isOpened():
 #             self.instL1ConfigOpr.medErrorLog("L2VISCAP: Cannot open webcam!")
 #             print("L2VISCAP: Cannot open webcam!")
@@ -73,7 +73,7 @@ class clsL2_VisCapProc(object):
         self.instL4WinForm.med_debug_print(myString)
         
     def funcVisionDetectAllCamera(self):
-        MaxDetectNbr = ModCebsCom.GL_CEBS_VISION_MAX_CAMERA_SEARCH
+        MaxDetectNbr = ModCebsCom.GLVIS_PAR_OFC.VISION_MAX_CAMERA_SEARCH
         res = "L2VISCAP: Valid camera number = "
         for index in range(0, MaxDetectNbr):
             cap = cv.VideoCapture(index)
@@ -85,13 +85,13 @@ class clsL2_VisCapProc(object):
     
     #Init the camera resolution, iso set every capture time. 这样可以避免每次对焦的长时间消耗
     def funcVisBatCapStart(self):
-        if (ModCebsCom.GL_CEBS_VISION_CAMBER_NBR < 0):
+        if (ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR < 0):
             self.funcVisCapLogTrace("L2VISCAP: Camera not yet installed!");
             return -1;
         else:
-            self.capInit = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
-            self.capInit.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
-            self.capInit.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)
+            self.capInit = cv.VideoCapture(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
+            self.capInit.set(3, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
+            self.capInit.set(4, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
             time.sleep(5)
             return 1;
 
@@ -101,7 +101,7 @@ class clsL2_VisCapProc(object):
     
     '''     
     #SELFCT CAMERA，#0-NOTEBOOK INTERNAL CAMERA，#1,#2 - EXTERNAL CAMERA
-    #cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
+    #cap = cv.VideoCapture(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
     #Check if the webcam is opened correctly
     *
     * forFlag: 使用这个来对付初始化时的跳过标签，不然在视频模式下需要等待太长时间
@@ -217,7 +217,7 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
         self.HST_VISION_WORM_CLASSIFY_small2mid = ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT;
         self.HST_VISION_WORM_CLASSIFY_mid2big = ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT;
         self.HST_VISION_WORM_CLASSIFY_big2top = ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_pic_filepath = ModCebsCom.GL_CEBS_PIC_MIDDLE_PATH + '/'
+        self.HST_VISION_WORM_CLASSIFY_pic_filepath = ModCebsCom.GLCFG_PAR_OFC.PIC_MIDDLE_PATH + '/'
         self.HST_VISION_WORM_CLASSIFY_pic_filename = "1.jpg"
         self.HST_VISION_WORM_CLASSIFY_pic_sta_output = {'totalNbr':0, 'bigAlive':0, 'bigDead':0, 'middleAlive':0, 'middleDead':0, 'smallAlive':0, 'smallDead':0, 'totalAlive':0, 'totalDead':0}
         self.funcVisCfyLogTrace("L2VISCFY: Instance start test!")
@@ -234,24 +234,24 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
     def funcVisionNormalClassifyProc(self):
         batch, fileNbr = self.findNormalUnclasFileBatchAndNbr();
         if (batch < 0):
-            ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = 0;
-            self.funcVisCfyLogTrace("L2VISCFY: Picture classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+            ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
+            self.funcVisCfyLogTrace("L2VISCFY: Picture classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
             self.updateCtrlCntInfo();
             return;
         fileName = self.getStoredFileName(batch, fileNbr);
         fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
         if (fileName == None) or (fileNukeName == None):
-            ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = 0;
-            self.funcVisCfyLogTrace("L2VISCFY: Picture classification finished: remaining NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+            ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
+            self.funcVisCfyLogTrace("L2VISCFY: Picture classification finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
             self.updateCtrlCntInfo();
             return;
         #REAL PROCESSING PROCEDURE
         print("L2VISCFY: Normal picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
         self.func_vision_worm_clasification(fileName, fileNukeName, False);
-        ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT -= 1;
+        ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT -= 1;
         #Update classified files
         self.updateUnclasFileAsClassified(batch, fileNbr);
-        self.funcVisCfyLogTrace("L2VISCFY: Normal picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+        self.funcVisCfyLogTrace("L2VISCFY: Normal picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
         self.updateCtrlCntInfo();
         return;
 
@@ -458,24 +458,24 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
     def funcVisionFluClassifyProc(self):
         batch, fileNbr = self.findFluUnclasFileBatchAndNbr();
         if (batch < 0):
-            ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT = 0;
-            self.funcVisCfyLogTrace("L2VISCFY: Picture flu classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT))
+            ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT = 0;
+            self.funcVisCfyLogTrace("L2VISCFY: Picture flu classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
             self.updateCtrlCntInfo();
             return;
         fileName = self.getStoredFileName(batch, fileNbr);
         fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
         if (fileName == None) or (fileNukeName == None):
-            ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = 0;
-            self.funcVisCfyLogTrace("L2VISCFY: Picture flu classification finished: remaining NUMBERS=%d." %(ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT))
+            ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
+            self.funcVisCfyLogTrace("L2VISCFY: Picture flu classification finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
             self.updateCtrlCntInfo();
             return;
         #REAL PROCESSING PROCEDURE
         print("L2VISCFY: Flu picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
         self.algoVisFluWormCaculate(fileName, fileNukeName);
-        ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT -= 1;
+        ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT -= 1;
         #Update classified files
         self.updateUnclasFileAsClassified(batch, fileNbr);
-        self.funcVisCfyLogTrace("L2VISCFY: Flu picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT))
+        self.funcVisCfyLogTrace("L2VISCFY: Flu picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
         self.updateCtrlCntInfo();
         return;
     

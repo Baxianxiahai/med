@@ -20,23 +20,23 @@ from PkgCebsHandler import ModCebsCom
 '''
 class clsL1_ConfigOpr(object):
     def __init__(self):
-        self.filePath = ModCebsCom.GL_CEBS_CFG_FILE_NAME
+        self.filePath = ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME
         self.initGlobalPar()
 
     #INIT ALL STORAGE AREA
     def initGlobalPar(self):
         #JUDGE WORKING DIR
-        ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH = os.getcwd()+ self.osDifferentStr() + ModCebsCom.GL_CEBS_PIC_ORIGIN_PATH
-        flag = os.path.exists(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH)
+        ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH = os.getcwd()+ self.osDifferentStr() + ModCebsCom.GLCFG_PAR_OFC.PIC_ORIGIN_PATH
+        flag = os.path.exists(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH)
         if (flag == False):
-            os.mkdir(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH)
-        ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH += self.osDifferentStr()
+            os.mkdir(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH)
+        ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH += self.osDifferentStr()
         #JUDGE MID PIC WOKRING DIR
-        ModCebsCom.GL_CEBS_PIC_ABS_MIDDLE_PATH = os.getcwd()+ self.osDifferentStr() + ModCebsCom.GL_CEBS_PIC_MIDDLE_PATH
-        flag = os.path.exists(ModCebsCom.GL_CEBS_PIC_ABS_MIDDLE_PATH)
+        ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH = os.getcwd()+ self.osDifferentStr() + ModCebsCom.GLCFG_PAR_OFC.PIC_MIDDLE_PATH
+        flag = os.path.exists(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH)
         if (flag == False):
-            os.mkdir(ModCebsCom.GL_CEBS_PIC_ABS_MIDDLE_PATH)
-        ModCebsCom.GL_CEBS_PIC_ABS_MIDDLE_PATH += self.osDifferentStr()
+            os.mkdir(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH)
+        ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH += self.osDifferentStr()
         #JUDGE CREATE INIT FILE OR NOT
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
@@ -44,18 +44,18 @@ class clsL1_ConfigOpr(object):
         if (flag == False):
             self.CReader.add_section("Env")
             self.CReader.set("Env","workdir", str(os.getcwd()+ self.osDifferentStr()))
-            self.CReader.set("Env","pic_origin", str(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH))
-            self.CReader.set("Env","pic_middle", str(ModCebsCom.GL_CEBS_PIC_ABS_MIDDLE_PATH))
+            self.CReader.set("Env","pic_origin", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH))
+            self.CReader.set("Env","pic_middle", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH))
             self.CReader.set("Env","holeboard_type", str(ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE))
             self.CReader.set("Env","holeboard, left_bot X-axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0]))
             self.CReader.set("Env","holeboard, left_bot Y-axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1]))
             self.CReader.set("Env","holeboard, right_up X-Axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2]))
             self.CReader.set("Env","holeboard, right_up Y-Axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3]))
-            self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET))
-            self.CReader.set("Env","pic classification set", str(ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET))
-            self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET))
-            self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN))
-            self.CReader.set("Env","vision camera nbr", str(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR))
+            self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET))
+            self.CReader.set("Env","pic classification set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET))
+            self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET))
+            self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN))
+            self.CReader.set("Env","vision camera nbr", str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR))
             self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
             self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
             self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))
@@ -84,11 +84,13 @@ class clsL1_ConfigOpr(object):
     def readGlobalPar(self):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
-        ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX = int(self.CReader['Counter']['PicBatchCnt']);
-        ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX = int(self.CReader['Counter']['PicBatchClas']);
-        ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = int(self.CReader['Counter']['PicRemainCnt']);
-        ModCebsCom.GL_CEBS_PIC_FLU_CLAS_INDEX = int(self.CReader['Counter']['PicBatFluClas']);
-        ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT = int(self.CReader['Counter']['PicRemFluCnt']);
+        #config par
+        ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX = int(self.CReader['Counter']['PicBatchCnt']);
+        ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX = int(self.CReader['Counter']['PicBatchClas']);
+        ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = int(self.CReader['Counter']['PicRemainCnt']);
+        ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX = int(self.CReader['Counter']['PicBatFluClas']);
+        ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT = int(self.CReader['Counter']['PicRemFluCnt']);
+        #Platform par
         ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = self.CReader['Env']['holeboard_type'];
         ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0] = int(self.CReader['Env']['holeboard, left_bot X-axis']);
         ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1] = int(self.CReader['Env']['holeboard, left_bot Y-axis']);
@@ -96,21 +98,21 @@ class clsL1_ConfigOpr(object):
         ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3] = int(self.CReader['Env']['holeboard, right_up Y-axis']);
         tmp = self.CReader['Env']['pic taking fix point set']
         if (tmp == 'True'):
-            ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET = True
+            ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET = True
         else:
-            ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET = False
+            ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET = False
         tmp = self.CReader['Env']['pic classification set']
         if (tmp == 'True'):
-            ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET = True
+            ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET = True
         else:
-            ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET = False
+            ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET = False
         tmp = self.CReader['Env']['pic auto-work after start set']
         if (tmp == 'True'):
-            ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET = True
+            ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET = True
         else:
-            ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET = False
-        ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = int(self.CReader['Env']['pic auto-work tti']);
-        ModCebsCom.GL_CEBS_VISION_CAMBER_NBR = int(self.CReader['Env']['vision camera nbr']);
+            ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET = False
+        ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN = int(self.CReader['Env']['pic auto-work tti']);
+        ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = int(self.CReader['Env']['vision camera nbr']);
         #New def
         ModCebsCom.GLVIS_PAR_OFC.saveLowLimit(int(self.CReader['Env']['vision small-low limit']));
         ModCebsCom.GLVIS_PAR_OFC.saveMidLimit(int(self.CReader['Env']['vision small-mid limit']));
@@ -129,16 +131,16 @@ class clsL1_ConfigOpr(object):
         ModCebsCom.GLVIS_PAR_OFC.saveCapDur(int(self.CReader['Env']['video capture dur in sec']))
         #In case of store error, re-caculate remaining unclas-pictures
         #为了防止统计错误，重新根据
-        res = self.recheckRemaingUnclasBatchFile(ModCebsCom.GL_CEBS_FILE_ATT_NORMAL)
-        if (res != ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT):
-            print("CFG: Error find during re-check remaining un-clas normal pictures and recovered! Stored=%d, actual=%d." % (ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT, res))
-            ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT = res
+        res = self.recheckRemaingUnclasBatchFile(ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL)
+        if (res != ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT):
+            print("CFG: Error find during re-check remaining un-clas normal pictures and recovered! Stored=%d, actual=%d." % (ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT, res))
+            ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = res
             self.updateSectionPar()
         #为了防止统计错误，重新扫描并计算荧光图像数量
-        res = self.recheckRemaingUnclasBatchFile(ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN)
-        if (res != ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT):
-            print("CFG: Error find during re-check remaining un-clas Fluorescen pictures and recovered! Stored=%d, actual=%d." % (ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT, res))
-            ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT = res
+        res = self.recheckRemaingUnclasBatchFile(ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN)
+        if (res != ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT):
+            print("CFG: Error find during re-check remaining un-clas Fluorescen pictures and recovered! Stored=%d, actual=%d." % (ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT, res))
+            ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT = res
             self.updateSectionPar()
             
     def getSection(self):
@@ -165,18 +167,18 @@ class clsL1_ConfigOpr(object):
         if (self.CReader.has_section("Env") == False):
             self.CReader.add_section("Env")
             self.CReader.set("Env","workdir", str(os.getcwd()+ self.osDifferentStr()))
-            self.CReader.set("Env","pic_origin", str(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH))
-            self.CReader.set("Env","pic_middle", str(ModCebsCom.GL_CEBS_PIC_ABS_MIDDLE_PATH))
+            self.CReader.set("Env","pic_origin", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH))
+            self.CReader.set("Env","pic_middle", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH))
             self.CReader.set("Env","holeboard_type", str(ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE))
             self.CReader.set("Env","holeboard, left_bot X-axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0]))
             self.CReader.set("Env","holeboard, left_bot Y-axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1]))
             self.CReader.set("Env","holeboard, right_up X-Axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2]))
             self.CReader.set("Env","holeboard, right_up Y-Axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3]))
-            self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET))
-            self.CReader.set("Env","pic classification set", str(ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET))
-            self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET))
-            self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN))
-            self.CReader.set("Env","vision camera nbr", str(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR))
+            self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET))
+            self.CReader.set("Env","pic classification set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET))
+            self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET))
+            self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN))
+            self.CReader.set("Env","vision camera nbr", str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR))
             self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
             self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
             self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))
@@ -188,18 +190,18 @@ class clsL1_ConfigOpr(object):
             self.CReader.remove_section("Env")
             self.CReader.add_section("Env")        
             self.CReader.set("Env","workdir", str(os.getcwd()+ self.osDifferentStr()))
-            self.CReader.set("Env","pic_origin", str(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH))
-            self.CReader.set("Env","pic_middle", str(ModCebsCom.GL_CEBS_PIC_ABS_MIDDLE_PATH))
+            self.CReader.set("Env","pic_origin", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH))
+            self.CReader.set("Env","pic_middle", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH))
             self.CReader.set("Env","holeboard_type", str(ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE))
             self.CReader.set("Env","holeboard, left_bot X-axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0]))
             self.CReader.set("Env","holeboard, left_bot Y-axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1]))
             self.CReader.set("Env","holeboard, right_up X-Axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2]))
             self.CReader.set("Env","holeboard, right_up Y-Axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3]))
-            self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET))
-            self.CReader.set("Env","pic classification set", str(ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET))
-            self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET))
-            self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN))
-            self.CReader.set("Env","vision camera nbr", str(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR))
+            self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET))
+            self.CReader.set("Env","pic classification set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET))
+            self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET))
+            self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN))
+            self.CReader.set("Env","vision camera nbr", str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR))
             self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
             self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
             self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))
@@ -218,24 +220,24 @@ class clsL1_ConfigOpr(object):
         self.CReader.read(self.filePath, encoding='utf8')
         if (self.CReader.has_section("Counter") == False):
             self.CReader.add_section("Counter")
-            self.CReader.set("Counter","PicBatchCnt", str(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX))
+            self.CReader.set("Counter","PicBatchCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX))
             #普通图像
-            self.CReader.set("Counter","PicBatchClas", str(ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX))
-            self.CReader.set("Counter","PicRemainCnt", str(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+            self.CReader.set("Counter","PicBatchClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX))
+            self.CReader.set("Counter","PicRemainCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
             #荧光图像控制参数
-            self.CReader.set("Counter","PicBatFluClas", str(ModCebsCom.GL_CEBS_PIC_FLU_CLAS_INDEX))
-            self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT))
+            self.CReader.set("Counter","PicBatFluClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX))
+            self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
             
         else:
             self.CReader.remove_section("Counter")
             self.CReader.add_section("Counter")
-            self.CReader.set("Counter","PicBatchCnt", str(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX))
+            self.CReader.set("Counter","PicBatchCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX))
             #普通图像
-            self.CReader.set("Counter","PicBatchClas", str(ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX))
-            self.CReader.set("Counter","PicRemainCnt", str(ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT))
+            self.CReader.set("Counter","PicBatchClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX))
+            self.CReader.set("Counter","PicRemainCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
             #荧光图像控制参数
-            self.CReader.set("Counter","PicBatFluClas", str(ModCebsCom.GL_CEBS_PIC_FLU_CLAS_INDEX))
-            self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT))
+            self.CReader.set("Counter","PicBatFluClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX))
+            self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
         fd = open(self.filePath, 'w')
         self.CReader.write(fd)
         fd.close()
@@ -264,11 +266,11 @@ class clsL1_ConfigOpr(object):
 
     #增加普通文件
     def addNormalBatchFile(self, batch, fileNbr):
-        return self.addBatchFileInElement(batch, fileNbr, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL)
+        return self.addBatchFileInElement(batch, fileNbr, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL)
     
     #增加荧光文件
     def addFluBatchFile(self, batch, fileNbr):
-        return self.addBatchFileInElement(batch, fileNbr, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN)
+        return self.addBatchFileInElement(batch, fileNbr, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN)
     
     #基础函数过程
     def addBatchFileInElement(self, batch, fileNbr, eleTag):
@@ -340,11 +342,11 @@ class clsL1_ConfigOpr(object):
 
     def combineFileNameWithDir(self, batch, fileNbr):
         fileName = str("batch#" + str(batch) + "FileName#" + str(fileNbr))
-        return str(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
+        return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
     
     def combineFileNameVideoWithDir(self, batch, fileNbr):
         fileName = str("batch#" + str(batch) + "FileName#" + str(fileNbr))
-        return str(ModCebsCom.GL_CEBS_PIC_ABS_ORIGIN_PATH) + fileName + '.mp4'  #.mp4, .avi
+        return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.mp4'  #.mp4, .avi
 
 
     '''
@@ -362,8 +364,8 @@ class clsL1_ConfigOpr(object):
     * 输出：    BatchIndex, fileNbrIndex
     '''
     def findUnclasFileBatchAndFileNbr(self, eleTag):
-        start = ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX;
-        end = ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX;
+        start = ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX;
+        end = ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX;
         #Refresh CReader to be lastest one
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
@@ -390,7 +392,7 @@ class clsL1_ConfigOpr(object):
                 break;
         #Find the result!
         if (fileNbr >= 0):
-            ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX = index;
+            ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX = index;
             self.updateCtrlCntInfo()
             return index, fileNbr;
         else:
@@ -398,11 +400,11 @@ class clsL1_ConfigOpr(object):
 
     #可以被其它模块调用的函数
     def findNormalUnclasFileBatchAndNbr(self):
-        return self.findUnclasFileBatchAndFileNbr(ModCebsCom.GL_CEBS_FILE_ATT_NORMAL)
+        return self.findUnclasFileBatchAndFileNbr(ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL)
 
     #可以被其它模块调用的函数
     def findFluUnclasFileBatchAndNbr(self):
-        return self.findUnclasFileBatchAndFileNbr(ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN)
+        return self.findUnclasFileBatchAndFileNbr(ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN)
 
 
     '''
@@ -420,8 +422,8 @@ class clsL1_ConfigOpr(object):
     * 输出：totalUnclassBatchFiles，总未识别的文件数量
     '''
     def recheckRemaingUnclasBatchFile(self, eleTag):
-        start = ModCebsCom.GL_CEBS_PIC_PROC_CLAS_INDEX;
-        end = ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX;
+        start = ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX;
+        end = ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX;
         self.CReader=configparser.ConfigParser()
         self.CReader.read(self.filePath, encoding='utf8')
         res = 0;
@@ -457,10 +459,10 @@ class clsL1_ConfigOpr(object):
             
     #下面三个函数暂时没有使用起来
     def updateNormalUnclasFileAsClassified(self, batch, fileNbr):
-        return self.updEleUncFileAsClf(batch, fileNbr, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL)
+        return self.updEleUncFileAsClf(batch, fileNbr, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL)
 
     def updateFluUnclasFileAsClassified(self, batch, fileNbr):
-        return self.updEleUncFileAsClf(batch, fileNbr, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN)
+        return self.updEleUncFileAsClf(batch, fileNbr, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN)
     
     def updEleUncFileAsClf(self, batch, fileNbr, eleTag):
         self.CReader=configparser.ConfigParser()

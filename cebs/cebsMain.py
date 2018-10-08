@@ -26,7 +26,9 @@ MAIN => 主入口
         |---clsL3_GparProc => 参数填写接口
     |---CommonLib
         |---clsL1_ConfigOpr => 本地配置文件接口
-            |---clsL0_MedCFlib => 公共函数库
+            |---clsL0_MedComCfgPar => 配置参数
+            |---clsL0_MedComPlatePar => 托盘参数
+            |---clsL0_MedComPicPar=> 图像参数
 
 线程启动过程
     SEUI_L4_MainWindow
@@ -517,17 +519,17 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
     #
     #Local function
     def funcGlobalParReadSave(self):
-        ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET = self.checkBox_gpar_autoIdf.isChecked();
-        ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET = self.checkBox_gpar_autoPic.isChecked();
-        ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET = self.checkBox_gpar_picFixPos.isChecked();
+        ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET = self.checkBox_gpar_autoIdf.isChecked();
+        ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET = self.checkBox_gpar_autoPic.isChecked();
+        ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET = self.checkBox_gpar_picFixPos.isChecked();
         try: 
-            ModCebsCom.GL_CEBS_VISION_CAMBER_NBR = int(self.lineEdit_gpar_camera_nbr.text());
+            ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = int(self.lineEdit_gpar_camera_nbr.text());
         except Exception: 
-            ModCebsCom.GL_CEBS_VISION_CAMBER_NBR = -1;
+            ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = -1;
         try: 
-            ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = int(self.lineEdit_gpar_picTti.text());
+            ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN = int(self.lineEdit_gpar_picTti.text());
         except Exception: 
-            ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = 60;
+            ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN = 60;
         try: 
             ModCebsCom.GLVIS_PAR_OFC.saveLowLimit(int(self.lineEdit_gpar_vision_small_low_limit.text()))
         except Exception: 
@@ -558,32 +560,32 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         radioGparHts6 = self.radioButton_gpar_bts_6.isChecked();
         if (radioGparHts96 == 1):
             ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_STANDARD;
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX;
+            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX;
         elif (radioGparHts48 == 1):
             ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_STANDARD;
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_SD_BATCH_MAX;
+            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_SD_BATCH_MAX;
         elif (radioGparHts24 == 1):
             ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_STANDARD;
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_SD_BATCH_MAX;
+            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_SD_BATCH_MAX;
         elif (radioGparHts12 == 1):
             ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_STANDARD;
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_SD_BATCH_MAX;
+            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_SD_BATCH_MAX;
         elif (radioGparHts6 == 1):
             ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_STANDARD;
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_SD_BATCH_MAX;
+            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_SD_BATCH_MAX;
         else:
             ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_STANDARD;
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX;
+            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX;
         #FINAL UPDATE         
         self.instL1ConfigOpr2.updateSectionPar()
 
     #Using global parameter set to UI during launch
     def funcGlobalParReadSet2Ui(self):
-        self.checkBox_gpar_picFixPos.setChecked(ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET)
-        self.checkBox_gpar_autoIdf.setChecked(ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET)
-        self.checkBox_gpar_autoPic.setChecked(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET)
-        self.lineEdit_gpar_camera_nbr.setText(str(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR))
-        self.lineEdit_gpar_picTti.setText(str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN))
+        self.checkBox_gpar_picFixPos.setChecked(ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET)
+        self.checkBox_gpar_autoIdf.setChecked(ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET)
+        self.checkBox_gpar_autoPic.setChecked(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET)
+        self.lineEdit_gpar_camera_nbr.setText(str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR))
+        self.lineEdit_gpar_picTti.setText(str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN))
         self.lineEdit_gpar_vision_small_low_limit.setText(str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
         self.lineEdit_gpar_vision_small_mid_limit.setText(str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
         self.lineEdit_gpar_vision_mid_big_limit.setText(str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))

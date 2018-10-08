@@ -48,8 +48,7 @@ class clsL2_MotoProc(object):
         super(clsL2_MotoProc, self).__init__()
         self.identity = None;
         self.instL4WinForm = father
-        self.instL0MedComPlatePar = ModCebsCom.clsL0_MedComPlatePar()
-        self.instL0MedComPlatePar.med_init_plate_parameter()
+        ModCebsCom.GLPLT_PAR_OFC.med_init_plate_parameter()
         self.motoSpsDrvVer = -2
         #打印到文件专用
         self.instL1ConfigOpr = ModCebsCfg.clsL1_ConfigOpr()

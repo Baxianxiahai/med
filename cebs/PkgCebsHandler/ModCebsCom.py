@@ -27,32 +27,47 @@ PART1: 全局定义的变量，不需要封装
 GL_CEBS_ERR_LOG_FILE_NAME_SET = r"cebsErrLog.txt"
 GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET = r"cebsVsClas.log";
 GL_CEBS_CMD_LOG_FILE_NAME_SET = r"cebsCmdLog.txt"
-GL_CEBS_VISION_MAX_CAMERA_SEARCH = 15;
-
-#FILE ATTRIBUTE
-GL_CEBS_FILE_ATT_NORMAL = 'normal';
-GL_CEBS_FILE_ATT_FLUORESCEN = 'flu';  #荧光 Fluorescen
-
-#FOLLOWING DYNAMIC PARAMETERS SET
-#Global parameter set for PICTURE
-GL_CEBS_PIC_PROC_BATCH_INDEX = 0;
-GL_CEBS_PIC_PROC_CLAS_INDEX = 0;  #Pointer to the batch of not yet classified.
-GL_CEBS_PIC_PROC_REMAIN_CNT = 0;  #Pointer to remaining un-classified pictures
-GL_CEBS_PIC_FLU_CLAS_INDEX = 0
-GL_CEBS_PIC_FLU_REMAIN_CNT = 0
-GL_CEBS_CFG_FILE_NAME = r"cebsConfig.ini";
-GL_CEBS_PIC_ORIGIN_PATH = r"pic_origin";
-GL_CEBS_PIC_MIDDLE_PATH = r"pic_middle";
-GL_CEBS_PIC_ABS_ORIGIN_PATH = "";
-GL_CEBS_PIC_ABS_MIDDLE_PATH = "";
-
 #ROUNDS of auto-pilot run
 GL_CEBS_PILOT_WOKING_ROUNDS_MAX = 5;
-
 #SERIAL COM NUMBER => THIS NEED SET IN THE BEGINNING, CAN NOT WAIT UNTIL SYSTEM START!
 #SO WHOLE DESIGN LOGIC OF MOTO-API SHOULD RE-DONE!
 #NOT YET USE FOLLOWING PORT SETTING.
 GL_CEBS_COM_NUMBER_SET = 11;
+
+
+
+'''
+
+PART2: 配置文件及控制参数
+
+'''
+
+class clsL0_MedComCfgPar():
+    #FOLLOWING DYNAMIC PARAMETERS SET
+    #Global parameter set for PICTURE
+    PIC_PROC_BATCH_INDEX = 0;
+    PIC_PROC_CLAS_INDEX = 0;  #Pointer to the batch of not yet classified.
+    PIC_PROC_REMAIN_CNT = 0;  #Pointer to remaining un-classified pictures
+    PIC_FLU_CLAS_INDEX = 0
+    PIC_FLU_REMAIN_CNT = 0
+    PIC_ORIGIN_PATH = r"pic_origin";
+    PIC_MIDDLE_PATH = r"pic_middle";
+    PIC_ABS_ORIGIN_PATH = "";
+    PIC_ABS_MIDDLE_PATH = "";
+    #FILE ATTRIBUTE
+    FILE_ATT_NORMAL = 'normal';
+    FILE_ATT_FLUORESCEN = 'flu';  #荧光 Fluorescen
+    CFG_FILE_NAME = r"cebsConfig.ini";
+    
+    #初始化
+    def __init__(self):    
+        super(clsL0_MedComCfgPar, self).__init__()  
+        pass
+    
+    def funcTest(self):
+        pass
+    
+GLCFG_PAR_OFC = clsL0_MedComCfgPar()
 
 
 
@@ -203,7 +218,7 @@ class clsL0_MedComPlatePar():
 
     #UPDATE PLATE PARAMETERS, 更新孔板参数
     def med_update_plate_parameter(self):
-        if (self.HB_self.self.HB_GET_TYPE == self.HB_TARGET_96_STANDARD):
+        if (self.HB_TARGET_TYPE == self.HB_TARGET_96_STANDARD):
             self.HB_HOLE_X_NUM = self.HB_TARGET_96_SD_XDIR_NBR;
             self.HB_HOLE_Y_NUM = self.HB_TARGET_96_SD_YDIR_NBR;
         elif (self.HB_TARGET_TYPE == self.HB_TARGET_48_STANDARD):
@@ -223,6 +238,7 @@ class clsL0_MedComPlatePar():
             self.HB_HOLE_Y_NUM = self.HB_TARGET_96_SD_YDIR_NBR;
         self.HB_WIDTH_X_SCALE = (self.HB_POS_IN_UM[2] - self.HB_POS_IN_UM[0]) / (self.HB_HOLE_X_NUM-1);
         self.HB_HEIGHT_Y_SCALE = (self.HB_POS_IN_UM[3] - self.HB_POS_IN_UM[1]) / (self.HB_HOLE_Y_NUM-1);
+        
 #定义全局变量以及操作函数
 GLPLT_PAR_OFC = clsL0_MedComPlatePar()
 
@@ -236,24 +252,6 @@ PART3: 图像相关的参量
 视频图像识别参数的封装，方便对整个参数集合进行操作
 方便对参数进行维护，包括增删
 '''
-#Fix point to take picture or not? Formally auto-working shall set as False.
-GL_CEBS_PIC_TAKING_FIX_POINT_SET = False; 
-#After taking picture, whether the pic identification will be run automatically
-GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET = True;
-#Whether taking picture will be happened automatically after starting.
-GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET = True;
-#Auto taking picture TTI times in minutes
-GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = 60;
-#CAMERA NUMBER
-GL_CEBS_VISION_CAMBER_NBR = -1;
-#896*684 is basic resolution! 896*684 / 1792*1374 / 3584*2748
-GL_CEBS_VISION_CAMBER_RES_WITDH = 3584; #1792;
-GL_CEBS_VISION_CAMBER_RES_HEIGHT = 2748; #1374;
-#TEMP USAGE VARIABLES
-GL_CEBS_CAMERA_DISPLAY_POS_X = 0;
-GL_CEBS_CAMERA_DISPLAY_POS_Y = 0;
-
-
 class clsL0_MedComPicPar():
     #VISION calibration set
     SMALL_LOW_LIMIT = 200;
@@ -265,6 +263,26 @@ class clsL0_MedComPicPar():
     #VIDEO CAPTURE ENABLE OR NOT (视频录制参数)
     CAPTURE_ENABLE = True;
     CAPTURE_DUR_IN_SEC = 3;
+
+    #Fix point to take picture or not? Formally auto-working shall set as False.
+    PIC_TAKING_FIX_POINT_SET = False; 
+    #After taking picture, whether the pic identification will be run automatically
+    PIC_CLASSIFIED_AFTER_TAKE_SET = True;
+    #Whether taking picture will be happened automatically after starting.
+    PIC_AUTO_WORKING_AFTER_START_SET = True;
+    #Auto taking picture TTI times in minutes
+    PIC_AUTO_WORKING_TTI_IN_MIN = 60;
+    #CAMERA NUMBER
+    VISION_CAMBER_NBR = -1;
+    #896*684 is basic resolution! 896*684 / 1792*1374 / 3584*2748
+    VISION_CAMBER_RES_WITDH = 3584; #1792;
+    VISION_CAMBER_RES_HEIGHT = 2748; #1374;
+    #TEMP USAGE VARIABLES
+    CAMERA_DISPLAY_POS_X = 0;
+    CAMERA_DISPLAY_POS_Y = 0;
+    #MAX search window of camera
+    VISION_MAX_CAMERA_SEARCH = 15;
+
     
     def __init__(self):    
         super(clsL0_MedComPicPar, self).__init__()  

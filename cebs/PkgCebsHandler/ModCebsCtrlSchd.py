@@ -108,47 +108,47 @@ class clsL3_CtrlSchdThread(QThread):
             self.funcCtrlSchdDebugPrint("L3CTRLST: Please finish last action firstly！")
             return -1;
         #JUDGE WHETHER TAKING PICTURE IS FIXED POSITION OR NOT
-        if (ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET == False):
+        if (ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == False):
             #MOTO START POINT
             res, string = self.instL2MotoProc.funcMotoMove2Start()
             if (res < 0):
                 self.funcCtrlSchdDebugPrint("L3CTRLST: Moto movement error！")
                 self.funcCtrlSchdDebugPrint(string)
                 return -2;
-        self.instL1ConfigOpr.createBatch(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX);
+        self.instL1ConfigOpr.createBatch(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
         #NEW STATE
         self.instL2VisCapProc.funcVisBatCapStart();
         #去掉初始3-4张黑屏幕的照片
-        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL, True);
-        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL, True);
-        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL, True);
-        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL, True);
+        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
+        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
+        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
+        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
         self.funcCtrlSchdDebugPrint("L3CTRLST: Normal picture starting progress...")
         self.capTimes = ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH+1;
         self.funcCtrlSchdDebugPrint("L3CTRLST: Start to take normal picture, remaining TIMES=%d." %(self.capTimes-1))
-        self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CAP_PIC_NOR;
+        self.CTRL_STM_STATE = self._CEBS_STM_CTRL_CAP_PIC_NOR;
 
     #TAKE PICTURE FLU
     def funcTakePicStartFlu(self):
-        if (self.CTRL_STM_STATE != self.__CEBS_STM_CTRL_INIT):
+        if (self.CTRL_STM_STATE != self._CEBS_STM_CTRL_INIT):
             self.funcCtrlSchdDebugPrint("L3CTRLST: Please finish last action firstly！")
             return -1;
         #JUDGE WHETHER TAKING PICTURE IS FIXED POSITION OR NOT
-        if (ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET == False):
+        if (ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == False):
             #MOTO START POINT
             res, string = self.instL2MotoProc.funcMotoMove2Start()
             if (res < 0):
                 self.funcCtrlSchdDebugPrint("L3CTRLST: Moto movement error！")
                 self.funcCtrlSchdDebugPrint(string)
                 return -2;
-        self.instL1ConfigOpr.createBatch(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX);
+        self.instL1ConfigOpr.createBatch(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
         #NEW STATE
         self.instL2VisCapProc.funcVisBatCapStart();
         #去掉初始3-4张黑屏幕的照片
-        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN, True);
-        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN, True);
-        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN, True);
-        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN, True);
+        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN, True);
+        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN, True);
+        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN, True);
+        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN, True);
         self.funcCtrlSchdDebugPrint("L3CTRLST: Flu picture starting progress...")
         self.capTimes = ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH+1;
         self.funcCtrlSchdDebugPrint("L3CTRLST: Start to take flu picture, remaining TIMES=%d." %(self.capTimes-1))
@@ -170,7 +170,7 @@ class clsL3_CtrlSchdThread(QThread):
         if (self.CTRL_STM_STATE != self.__CEBS_STM_CTRL_INIT):
             self.funcCtrlSchdDebugPrint("L3CTRLST: funcVisionClasStartNormal Please finish last action firstly！")
             return -1;
-        if (ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT <=0):
+        if (ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT <=0):
             self.funcCtrlSchdDebugPrint("L3CTRLST: No remaining normal picture to classify, no action!")
             return -2;
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CFY_PROC_NOR;
@@ -180,7 +180,7 @@ class clsL3_CtrlSchdThread(QThread):
         if (self.CTRL_STM_STATE != self.__CEBS_STM_CTRL_INIT):
             self.funcCtrlSchdDebugPrint("L3CTRLST: funcVisionClasStartNormal Please finish last action firstly！")
             return -1;
-        if (ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT <=0):
+        if (ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT <=0):
             self.funcCtrlSchdDebugPrint("L3CTRLST: No remaining flu picture to classify, no action!")
             return -2;
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CFY_PROC_FLU;
@@ -236,20 +236,20 @@ class clsL3_CtrlSchdThread(QThread):
             self.funcCtrlSchdDebugPrint("L3CTRLST: Taking picture but serial number error!")
             return -1;
         #获取图像
-        ret = self.instL2VisCapProc.funcVisionCapture(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne, forceFlag);
-        print("L3CTRLST: Taking picture once! Current Batch=%d and Index =%d" % (ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne));
+        ret = self.instL2VisCapProc.funcVisionCapture(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, curOne, forceFlag);
+        print("L3CTRLST: Taking picture once! Current Batch=%d and Index =%d" % (ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, curOne));
         #存盘
-        if (fmFlag == ModCebsCom.GL_CEBS_FILE_ATT_NORMAL):
-            self.instL1ConfigOpr.addNormalBatchFile(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne)
-        if (fmFlag == ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN):
-            self.instL1ConfigOpr.addFluBatchFile(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne)
+        if (fmFlag == ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL):
+            self.instL1ConfigOpr.addNormalBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, curOne)
+        if (fmFlag == ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN):
+            self.instL1ConfigOpr.addFluBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, curOne)
         #Video captured
         if (ret == 2):
-            self.instL1ConfigOpr.updBatchFileVideo(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, curOne)
+            self.instL1ConfigOpr.updBatchFileVideo(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, curOne)
         #MOVINT TO NEXT WORKIN POSITION IN ADVANCE
         nextOne = curOne + 1;
         #Using FIX Point set to un-make the moto moving step
-        if (ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET == True):
+        if (ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == True):
             return 1;
         #IF ALREADY LAST POSITION, RUN TO ZERO
         if ((nextOne <= ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH) and (nextOne >=1)):
@@ -286,8 +286,8 @@ class clsL3_CtrlSchdThread(QThread):
                 self.capTimes -= 1;
                 if (self.capTimes > 0):
                     self.funcCtrlSchdDebugPrint(str("L3CTRLST: Taking normal picture, remaining TIMES=" + str(self.capTimes)))
-                    self.funcCamCapInBatch(self.capTimes, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL, False);
-                    ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT += 1;
+                    self.funcCamCapInBatch(self.capTimes, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, False);
+                    ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT += 1;
                 #CONTROL STOP ACTIONS
                 else:
                     self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CAP_NOR_CMPL
@@ -295,7 +295,7 @@ class clsL3_CtrlSchdThread(QThread):
             #批量抓取完成，需要做最后一次的清理工作 NORMAL
             elif (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_CAP_NOR_CMPL):
                 self.funcCtrlSchdDebugPrint("L3CTRLST: Stop taking normal picture, remaining  TIMES=%d." %(self.capTimes))
-                ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX +=1;
+                ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX +=1;
                 self.instL1ConfigOpr.updateCtrlCntInfo();
                 self.instL2VisCapProc.funcVisBatCapStop();
                 self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
@@ -303,7 +303,7 @@ class clsL3_CtrlSchdThread(QThread):
             #批量处理识别照片 NORMAL
             elif (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_CFY_PROC_NOR):
                 self.instL2VisCfyProc.funcVisionNormalClassifyProc();
-                if (ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT <= 0):
+                if (ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT <= 0):
                     self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CFY_CMPL_NOR
              
             #批量识别完毕 NORMAL
@@ -317,8 +317,8 @@ class clsL3_CtrlSchdThread(QThread):
                 self.capTimes -= 1;
                 if (self.capTimes > 0):
                     self.funcCtrlSchdDebugPrint(str("L3CTRLST: Taking flu picture, remaining TIMES=" + str(self.capTimes)))
-                    self.funcCamCapInBatch(self.capTimes, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN, False);
-                    ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT += 1;
+                    self.funcCamCapInBatch(self.capTimes, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN, False);
+                    ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT += 1;
                 #CONTROL STOP ACTIONS
                 else:
                     self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CAP_FLU_CMPL           
@@ -326,7 +326,7 @@ class clsL3_CtrlSchdThread(QThread):
             #批量抓取完成，需要做最后一次的清理工作 FLU
             elif (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_CAP_FLU_CMPL):
                 self.funcCtrlSchdDebugPrint("L3CTRLST: Stop taking flu picture, remaining  TIMES=%d." %(self.capTimes))
-                ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX +=1;
+                ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX +=1;
                 self.instL1ConfigOpr.updateCtrlCntInfo();
                 self.instL2VisCapProc.funcVisBatCapStop();
                 self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
@@ -334,7 +334,7 @@ class clsL3_CtrlSchdThread(QThread):
             #批量处理识别照片 FLU
             elif (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_CFY_PROC_FLU):
                 self.instL2VisCfyProc.funcVisionFluClassifyProc();
-                if (ModCebsCom.GL_CEBS_PIC_FLU_REMAIN_CNT <= 0):
+                if (ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT <= 0):
                     self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CFY_CMPL_FLU
              
             #批量识别完毕 FLU

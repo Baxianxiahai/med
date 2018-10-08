@@ -48,17 +48,15 @@ class clsL3_CalibProc(object):
         self.identity = None;
         self.instL4CalibForm = father
         self.camerEnableFlag = False;
-        self.instL0MedComPlatePar = ModCebsCom.clsL0_MedComPlatePar()
         self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr();
         self.instL2MotoProc=ModCebsMoto.clsL2_MotoProc(self.instL4CalibForm);
         self.initParameter();
 
     def initParameter(self):
         #STEP1: 判定产品型号
-        self.instL0MedComPlatePar.med_init_plate_product_type()
+        ModCebsCom.GLPLT_PAR_OFC.med_init_plate_product_type()
         #STEP2：初始化工作环境
-        self.instL0MedComPlatePar.med_init_plate_parameter()
-        #self.funcInitHoleBoardPar();
+        ModCebsCom.GLPLT_PAR_OFC.med_init_plate_parameter()
         self.funcCleanWorkingEnv()
         #STEP3：初始化Pilot任务
         self.instL2CalibPiThd = clsL2_CalibPilotThread(self.instL4CalibForm, self.instL2MotoProc)
@@ -151,10 +149,10 @@ class clsL3_CalibProc(object):
         self.funcCalibLogTrace("L3CALIB: Pilot camera start to open...")
         #再取得位置信息
         pos = self.instL4CalibForm.geometry()
-        ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_X = pos.x() + 420
-        ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y = pos.y() + 10
+        ModCebsCom.GLVIS_PAR_OFC.CAMERA_DISPLAY_POS_X = pos.x() + 420
+        ModCebsCom.GLVIS_PAR_OFC.CAMERA_DISPLAY_POS_Y = pos.y() + 10
         #做必要的判定，放置是无效摄像头，实际上，没整到位
-        if (ModCebsCom.GL_CEBS_VISION_CAMBER_NBR < 0):
+        if (ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR < 0):
             self.funcCalibLogTrace("L3CALIB: Camera is not yet installed!")
             return -1;
         #真正启动
@@ -186,14 +184,11 @@ class clsL3_CalibProc(object):
             self.instL2CalibCamDisThd.funcCalibCameraDispStop()
             self.camerEnableFlag = False
         #准备替换为基础库函数
-        #self.funcUpdateHoleBoardPar()
-        self.instL0MedComPlatePar.med_update_plate_parameter()
-        #暂时不做过于复杂的MOTO控制，交给界面手动来进行
-        #self.funcRecoverWorkingEnv()
+        ModCebsCom.GLPLT_PAR_OFC.med_update_plate_parameter()
         #如果发生了图像截取操作，需要更新批次号
         global zCebsCamPicCapAction
         if (zCebsCamPicCapAction == True):
-            ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX += 1
+            ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX += 1
             self.instL1ConfigOpr.updateCtrlCntInfo()
 
     def funcCalibMove(self, parMoveScale, parMoveDir):
@@ -216,7 +211,7 @@ class clsL3_CalibProc(object):
         ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1];
         #准备去掉，替换为简化库函数
         #self.funcUpdateHoleBoardPar()
-        self.instL0MedComPlatePar.med_update_plate_parameter()
+        ModCebsCom.GLPLT_PAR_OFC.med_update_plate_parameter()
         iniObj = ModCebsCfg.clsL1_ConfigOpr();
         iniObj.updateSectionPar();
         self.funcCalibLogTrace("L3CALIB: LeftDown Axis set! XY=%d/%d." % (ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1]))
@@ -227,7 +222,7 @@ class clsL3_CalibProc(object):
         ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1];
         #准备去掉，替换为简化库函数
         #self.funcUpdateHoleBoardPar()
-        self.instL0MedComPlatePar.med_update_plate_parameter()
+        ModCebsCom.GLPLT_PAR_OFC.med_update_plate_parameter()
         iniObj = ModCebsCfg.clsL1_ConfigOpr();
         iniObj.updateSectionPar();
         self.funcCalibLogTrace("L3CALIB: RightUp Axis set!  XY=%d/%d." % (ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2], ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3]))       
@@ -360,12 +355,12 @@ class clsL2_CalibCamDispThread(threading.Thread):
 
     def funcCamDisRtInit(self):
         #确定是否安装
-        if (ModCebsCom.GL_CEBS_VISION_CAMBER_NBR < 0):
+        if (ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR < 0):
             return -1;
         #正常打开
-        self.cap = cv.VideoCapture(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR)
-        self.cap.set(3, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_WITDH)
-        self.cap.set(4, ModCebsCom.GL_CEBS_VISION_CAMBER_RES_HEIGHT)
+        self.cap = cv.VideoCapture(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR)
+        self.cap.set(3, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
+        self.cap.set(4, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
         rect = self.instL4CalibForm.label_calib_RtCam_Fill.geometry()
         self.camRtFillWidth = rect.width()
         self.camRtFillHeight = rect.height()
@@ -380,7 +375,7 @@ class clsL2_CalibCamDispThread(threading.Thread):
         #cv.namedWindow('CAMERA CAPTURED', 0)
         #cv.resizeWindow('CAMERA CAPTURED', 800, 600);
         #Not yet able to embed vision into UI, so has to put at another side
-        #cv.moveWindow('CAMERA CAPTURED', 0, ModCebsCom.GL_CEBS_CAMERA_DISPLAY_POS_Y)
+        #cv.moveWindow('CAMERA CAPTURED', 0, ModCebsCom.GLVIS_PAR_OFC.CAMERA_DISPLAY_POS_Y)
         return 1
                 
     #主任务
@@ -444,16 +439,17 @@ class clsL2_CalibCamDispThread(threading.Thread):
                 outputFrame = cv.merge([B, G, R])
                 obj=ModCebsCfg.clsL1_ConfigOpr();
                 global zCebsCamPicCapInHole
-                fileName = obj.combineFileNameWithDir(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, zCebsCamPicCapInHole)
+                fileName = obj.combineFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, zCebsCamPicCapInHole)
                 global zCebsCamPicCapAction
                 if (zCebsCamPicCapAction == False):
-                    self.instL1ConfigOpr.createBatch(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX);
-                self.instL1ConfigOpr.addNormalBatchFile(ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, zCebsCamPicCapInHole)
+                    self.instL1ConfigOpr.createBatch(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
+                self.instL1ConfigOpr.addNormalBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, zCebsCamPicCapInHole)
                 cv.imwrite(fileName, outputFrame)
-                ModCebsCom.GL_CEBS_PIC_PROC_REMAIN_CNT += 1
+                ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT += 1
+                print("Remaining counter = ", ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT)
                 #最终退出校准之前，需要将批次号+1
                 zCebsCamPicCapAction = True #这个设置为TRUE，才表示真的干了这件事
-                self.funcCalibCamDisLogTrace("L2CALCMDI: Capture and save file, batch=%d, fileNbr=%d" % (ModCebsCom.GL_CEBS_PIC_PROC_BATCH_INDEX, zCebsCamPicCapInHole));
+                self.funcCalibCamDisLogTrace("L2CALCMDI: Capture and save file, batch=%d, fileNbr=%d" % (ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, zCebsCamPicCapInHole));
                 #某个批次的文件存储
                 self.CDT_STM_STATE = self.__CEBS_STM_CDT_VID_SHOW
             
