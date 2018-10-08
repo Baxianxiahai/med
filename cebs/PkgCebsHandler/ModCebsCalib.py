@@ -42,21 +42,22 @@ zCebsCamPicCapAction = False
 
 #校准处理过程
 #模块只能被CalibForm调用，所以打印只会打到CalibForm上去
-class clsL3_CalibProc(ModCebsCom.clsL0_MedCFlib):
+class clsL3_CalibProc(object):
     def __init__(self, father):
         super(clsL3_CalibProc, self).__init__()
         self.identity = None;
         self.instL4CalibForm = father
         self.camerEnableFlag = False;
+        self.instL0MedComPlatePar = ModCebsCom.clsL0_MedComPlatePar()
         self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr();
         self.instL2MotoProc=ModCebsMoto.clsL2_MotoProc(self.instL4CalibForm);
         self.initParameter();
 
     def initParameter(self):
         #STEP1: 判定产品型号
-        ModCebsCom.clsL0_MedCFlib.med_init_plate_product_type(self)
+        self.instL0MedComPlatePar.med_init_plate_product_type()
         #STEP2：初始化工作环境
-        ModCebsCom.clsL0_MedCFlib.med_init_plate_parameter(self)
+        self.instL0MedComPlatePar.med_init_plate_parameter()
         #self.funcInitHoleBoardPar();
         self.funcCleanWorkingEnv()
         #STEP3：初始化Pilot任务
@@ -186,7 +187,7 @@ class clsL3_CalibProc(ModCebsCom.clsL0_MedCFlib):
             self.camerEnableFlag = False
         #准备替换为基础库函数
         #self.funcUpdateHoleBoardPar()
-        ModCebsCom.clsL0_MedCFlib.med_update_plate_parameter(self)
+        self.instL0MedComPlatePar.med_update_plate_parameter()
         #暂时不做过于复杂的MOTO控制，交给界面手动来进行
         #self.funcRecoverWorkingEnv()
         #如果发生了图像截取操作，需要更新批次号
@@ -215,7 +216,7 @@ class clsL3_CalibProc(ModCebsCom.clsL0_MedCFlib):
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1];
         #准备去掉，替换为简化库函数
         #self.funcUpdateHoleBoardPar()
-        ModCebsCom.clsL0_MedCFlib.med_update_plate_parameter(self)
+        self.instL0MedComPlatePar.med_update_plate_parameter()
         iniObj = ModCebsCfg.clsL1_ConfigOpr();
         iniObj.updateSectionPar();
         self.funcCalibLogTrace("L3CALIB: LeftDown Axis set! XY=%d/%d." % (ModCebsCom.GL_CEBS_HB_POS_IN_UM[0], ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
@@ -226,7 +227,7 @@ class clsL3_CalibProc(ModCebsCom.clsL0_MedCFlib):
         ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1];
         #准备去掉，替换为简化库函数
         #self.funcUpdateHoleBoardPar()
-        ModCebsCom.clsL0_MedCFlib.med_update_plate_parameter(self)
+        self.instL0MedComPlatePar.med_update_plate_parameter()
         iniObj = ModCebsCfg.clsL1_ConfigOpr();
         iniObj.updateSectionPar();
         self.funcCalibLogTrace("L3CALIB: RightUp Axis set!  XY=%d/%d." % (ModCebsCom.GL_CEBS_HB_POS_IN_UM[2], ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))       

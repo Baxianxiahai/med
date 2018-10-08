@@ -43,12 +43,13 @@ MOTO处理过程的L3模块
 
 #模块可能被WinMain和Calib调用，所以初始化需要传入Father进去
 '''
-class clsL2_MotoProc(ModCebsCom.clsL0_MedCFlib):
+class clsL2_MotoProc(object):
     def __init__(self, father):
         super(clsL2_MotoProc, self).__init__()
         self.identity = None;
         self.instL4WinForm = father
-        ModCebsCom.clsL0_MedCFlib.med_init_plate_parameter(self)       
+        self.instL0MedComPlatePar = ModCebsCom.clsL0_MedComPlatePar()
+        self.instL0MedComPlatePar.med_init_plate_parameter()
         self.motoSpsDrvVer = -2
         #打印到文件专用
         self.instL1ConfigOpr = ModCebsCfg.clsL1_ConfigOpr()
