@@ -102,69 +102,69 @@ class clsL2_MotoProc(object):
             actualScale = 50000;
         #radioCalaH96l: 99000
         elif (scale == 11):
-            actualScale = (ModCebsCom.GL_CEBS_HB_TARGET_96_SD_XDIR_NBR-1) * (ModCebsCom.GL_CEBS_HB_TARGET_96_SD_HOLE_DIS)
+            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_XDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_HOLE_DIS)
         #radioCalaH96s: 63000
         elif (scale == 12):
-            actualScale = (ModCebsCom.GL_CEBS_HB_TARGET_96_SD_YDIR_NBR-1) * (ModCebsCom.GL_CEBS_HB_TARGET_96_SD_HOLE_DIS)
+            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_YDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_HOLE_DIS)
         #radioCalaH48l
         elif (scale == 13):
-            actualScale = (ModCebsCom.GL_CEBS_HB_TARGET_48_SD_XDIR_NBR-1) * (ModCebsCom.GL_CEBS_HB_TARGET_48_SD_HOLE_DIS)
+            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_SD_XDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_SD_HOLE_DIS)
         #radioCalaH48s
         elif (scale == 14):
-            actualScale = (ModCebsCom.GL_CEBS_HB_TARGET_48_SD_YDIR_NBR-1) * (ModCebsCom.GL_CEBS_HB_TARGET_48_SD_HOLE_DIS)
+            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_SD_YDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_SD_HOLE_DIS)
         #radioCalaH24l: 19.3*5 = 96.5mm
         elif (scale == 15):
-            actualScale = (ModCebsCom.GL_CEBS_HB_TARGET_24_SD_XDIR_NBR-1) * (ModCebsCom.GL_CEBS_HB_TARGET_24_SD_HOLE_DIS)
+            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_SD_XDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_SD_HOLE_DIS)
         #radioCalaH24s: 85.25 - 13.67*2 = 57.91
         elif (scale == 16):
-            actualScale = (ModCebsCom.GL_CEBS_HB_TARGET_24_SD_YDIR_NBR-1) * (ModCebsCom.GL_CEBS_HB_TARGET_24_SD_HOLE_DIS)
+            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_SD_YDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_SD_HOLE_DIS)
         #radioCalaH12l
         elif (scale == 17):
-            actualScale = (ModCebsCom.GL_CEBS_HB_TARGET_12_SD_XDIR_NBR-1) * (ModCebsCom.GL_CEBS_HB_TARGET_12_SD_HOLE_DIS)
+            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_SD_XDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_SD_HOLE_DIS)
         #radioCalaH12s
         elif (scale == 18):
-            actualScale = (ModCebsCom.GL_CEBS_HB_TARGET_12_SD_YDIR_NBR-1) * (ModCebsCom.GL_CEBS_HB_TARGET_12_SD_HOLE_DIS)
+            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_SD_YDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_SD_HOLE_DIS)
         #radioCalaH6l: 127.5-24.5*2 = 78.4mm
         elif (scale == 19):
-            actualScale = (ModCebsCom.GL_CEBS_HB_TARGET_6_SD_XDIR_NBR-1) * (ModCebsCom.GL_CEBS_HB_TARGET_6_SD_HOLE_DIS)
+            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_SD_XDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_SD_HOLE_DIS)
         #radioCalaH6s: 85.3-23.05*2 = 39.2mm
         elif (scale == 20):
-            actualScale = (ModCebsCom.GL_CEBS_HB_TARGET_6_SD_YDIR_NBR-1) * (ModCebsCom.GL_CEBS_HB_TARGET_6_SD_HOLE_DIS)
+            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_SD_YDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_SD_HOLE_DIS)
         else:
             actualScale = 10;
-        Old_Px = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] #X-Axis
-        Old_Py = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] #Y-Axis
+        Old_Px = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] #X-Axis
+        Old_Py = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] #Y-Axis
 
         #Not specify this action to each real plastic board, but addiction to mechanical platform.
         #UP DIRECTION - Y add
         if (dir == "UP"):
-            ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] += actualScale;
-            if (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] > ModCebsCom.GL_CEBS_HB_MECHNICAL_PLATFORM_Y_MAX):
-                ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] = ModCebsCom.GL_CEBS_HB_MECHNICAL_PLATFORM_Y_MAX;
+            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] += actualScale;
+            if (ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] > ModCebsCom.GLPLT_PAR_OFC.HB_MECHNICAL_PLATFORM_Y_MAX):
+                ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] = ModCebsCom.GLPLT_PAR_OFC.HB_MECHNICAL_PLATFORM_Y_MAX;
                 
         #DOWN DIRECTION - Y sub
         elif (dir == "DOWN"):
-            ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] -= actualScale;
-            if (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] < 0):
-                ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] = 0;
+            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] -= actualScale;
+            if (ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] < 0):
+                ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] = 0;
                 
         #LEFT DIRECTION - X sub
         elif (dir == "LEFT"):
-            ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] -= actualScale;
-            if (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] < 0):
-                ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] = 0;
+            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] -= actualScale;
+            if (ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] < 0):
+                ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] = 0;
                 
         #RIGHT DIRECTION - X add
         elif (dir == "RIGHT"):
-            ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] += actualScale;
-            if (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] > ModCebsCom.GL_CEBS_HB_MECHNICAL_PLATFORM_X_MAX):
-                ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] = ModCebsCom.GL_CEBS_HB_MECHNICAL_PLATFORM_X_MAX;
+            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] += actualScale;
+            if (ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] > ModCebsCom.GLPLT_PAR_OFC.HB_MECHNICAL_PLATFORM_X_MAX):
+                ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] = ModCebsCom.GLPLT_PAR_OFC.HB_MECHNICAL_PLATFORM_X_MAX;
         
         #Error case
         else:
             pass
-        print("L2MOTO: Moving one step! Scale=%d, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (scale, dir, Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]));
-        if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]) > 0):
+        print("L2MOTO: Moving one step! Scale=%d, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (scale, dir, Old_Px, Old_Py, ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]));
+        if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]) > 0):
             return 1;
         else:
             self.instL1ConfigOpr.medErrorLog("L2MOTO: funcMotoCalaMoveOneStep error!")
@@ -173,31 +173,31 @@ class clsL2_MotoProc(object):
     #Force Moving function, with scale = 1cm=10mm=10000um
     def funcMotoFmCalaMoveOneStep(self, dir):
         actualScale = 10000;
-        Old_Px = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] #X-Axis
-        Old_Py = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] #Y-Axis
+        Old_Px = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] #X-Axis
+        Old_Py = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] #Y-Axis
 
         #Not specify this action to each real plastic board, but addiction to mechanical platform.
         #UP DIRECTION - Y add
         if (dir == "UP"):
-            ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] += actualScale;
+            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] += actualScale;
                 
         #DOWN DIRECTION - Y sub
         elif (dir == "DOWN"):
-            ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] -= actualScale;
+            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] -= actualScale;
                 
         #LEFT DIRECTION - X sub
         elif (dir == "LEFT"):
-            ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] -= actualScale;
+            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] -= actualScale;
                 
         #RIGHT DIRECTION - X add
         elif (dir == "RIGHT"):
-            ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] += actualScale;
+            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] += actualScale;
         
         #Error case
         else:
             pass
-        print("L2MOTO: Moving one step! Scale=1cm, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (dir, Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]));
-        if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]) > 0):
+        print("L2MOTO: Moving one step! Scale=1cm, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (dir, Old_Px, Old_Py, ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]));
+        if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]) > 0):
             return 1;
         else:
             self.instL1ConfigOpr.medErrorLog("L2MOTO: funcMotoFmCalaMoveOneStep error!")
@@ -209,8 +209,8 @@ class clsL2_MotoProc(object):
 
     def funcMotoMove2Start(self):
         print("L2MOTO: Move to start position - Left/up!")
-        xWidth = ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[2];
-        yHeight = ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] - ModCebsCom.GL_CEBS_HB_POS_IN_UM[3];
+        xWidth = ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0] - ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2];
+        yHeight = ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1] - ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3];
         if (xWidth <= 0 or yHeight <= 0):
             print("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight))
             return -1, ("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight));
@@ -254,14 +254,14 @@ class clsL2_MotoProc(object):
             newPosX = 0;
             newPosY = 0;
         else:
-            xTargetHoleNbr = ((holeIndex-1) % ModCebsCom.GL_CEBS_HB_HOLE_X_NUM) + 1;
-            yTargetHoleNbr = ((holeIndex-1) // ModCebsCom.GL_CEBS_HB_HOLE_X_NUM) + 1;
-            newPosX = int(ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] + (xTargetHoleNbr-1)*ModCebsCom.GL_CEBS_HB_WIDTH_X_SCALE);
-            newPosY = int(ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] - (yTargetHoleNbr-1)*ModCebsCom.GL_CEBS_HB_HEIGHT_Y_SCALE);
+            xTargetHoleNbr = ((holeIndex-1) % ModCebsCom.GLPLT_PAR_OFC.HB_HOLE_X_NUM) + 1;
+            yTargetHoleNbr = ((holeIndex-1) // ModCebsCom.GLPLT_PAR_OFC.HB_HOLE_X_NUM) + 1;
+            newPosX = int(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0] + (xTargetHoleNbr-1)*ModCebsCom.GLPLT_PAR_OFC.HB_WIDTH_X_SCALE);
+            newPosY = int(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3] - (yTargetHoleNbr-1)*ModCebsCom.GLPLT_PAR_OFC.HB_HEIGHT_Y_SCALE);
         print("L2MOTO: Moving to working hole=%d, newPosX/Y=%d/%d." % (holeIndex, newPosX, newPosY))
-        if (self.funcMotoMove2AxisPos(ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1], newPosX, newPosY) > 0):
-            ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0] = newPosX;
-            ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1] = newPosY;
+        if (self.funcMotoMove2AxisPos(ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1], newPosX, newPosY) > 0):
+            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] = newPosX;
+            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] = newPosY;
             print("L2MOTO: Finished once!")
             return 1;
         else:

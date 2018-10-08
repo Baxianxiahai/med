@@ -505,9 +505,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
 
     def slot_gpar_pic_train(self):
         #Firstly read parameter into classified variable sets, to let Train Func use.
-        print("Original small = ", ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT)
         self.funcReadVisParToCfySets();
-        print("used small = ", ModCebsCom.GLVIS_PAR_SAV.SMALL_LOW_LIMIT)
         savetmp = ModCebsCom.GLVIS_PAR_OFC
         ModCebsCom.GLVIS_PAR_OFC = ModCebsCom.GLVIS_PAR_SAV
         self.instL3GparProc.funcPicFileTrain()
@@ -559,23 +557,23 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         radioGparHts12 = self.radioButton_gpar_bts_12.isChecked();
         radioGparHts6 = self.radioButton_gpar_bts_6.isChecked();
         if (radioGparHts96 == 1):
-            ModCebsCom.GL_CEBS_HB_TARGET_TYPE = ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD;
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX;
+            ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_STANDARD;
+            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX;
         elif (radioGparHts48 == 1):
-            ModCebsCom.GL_CEBS_HB_TARGET_TYPE = ModCebsCom.GL_CEBS_HB_TARGET_48_STANDARD;
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_48_SD_BATCH_MAX;
+            ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_STANDARD;
+            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_SD_BATCH_MAX;
         elif (radioGparHts24 == 1):
-            ModCebsCom.GL_CEBS_HB_TARGET_TYPE = ModCebsCom.GL_CEBS_HB_TARGET_24_STANDARD;
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_24_SD_BATCH_MAX;
+            ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_STANDARD;
+            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_SD_BATCH_MAX;
         elif (radioGparHts12 == 1):
-            ModCebsCom.GL_CEBS_HB_TARGET_TYPE = ModCebsCom.GL_CEBS_HB_TARGET_12_STANDARD;
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_12_SD_BATCH_MAX;
+            ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_STANDARD;
+            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_SD_BATCH_MAX;
         elif (radioGparHts6 == 1):
-            ModCebsCom.GL_CEBS_HB_TARGET_TYPE = ModCebsCom.GL_CEBS_HB_TARGET_6_STANDARD;
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_6_SD_BATCH_MAX;
+            ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_STANDARD;
+            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_SD_BATCH_MAX;
         else:
-            ModCebsCom.GL_CEBS_HB_TARGET_TYPE = ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD;
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX;
+            ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_STANDARD;
+            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX;
         #FINAL UPDATE         
         self.instL1ConfigOpr2.updateSectionPar()
 
@@ -593,15 +591,15 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         self.checkBox_gpar_vision_res_addup.setChecked(ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET)
         self.checkBox_gpar_video_enable.setChecked(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE)
         self.lineEdit_gpar_video_input.setText(str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC))
-        if (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD):
+        if (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_STANDARD):
             self.radioButton_gpar_bts_96.setChecked(True)
-        elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_48_STANDARD):
+        elif (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_STANDARD):
             self.radioButton_gpar_bts_48.setChecked(True)
-        elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_24_STANDARD):
+        elif (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_STANDARD):
             self.radioButton_gpar_bts_24.setChecked(True)
-        elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_12_STANDARD):
+        elif (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_STANDARD):
             self.radioButton_gpar_bts_12.setChecked(True)
-        elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_6_STANDARD):
+        elif (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_STANDARD):
             self.radioButton_gpar_bts_6.setChecked(True)
         else:
             self.radioButton_gpar_bts_96.setChecked(True)

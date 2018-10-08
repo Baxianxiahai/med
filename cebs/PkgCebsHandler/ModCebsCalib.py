@@ -98,8 +98,8 @@ class clsL3_CalibProc(object):
     def funcCheckHoldNumber(self, holeNbr):
         if (holeNbr <= 0):
             return 1;
-        if (holeNbr >= ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH):
-            return ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH
+        if (holeNbr >= ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH):
+            return ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH
         return holeNbr
 
     def funcCalibPilotStart(self):
@@ -168,7 +168,7 @@ class clsL3_CalibProc(object):
     NEW FUN: 捕获VIDEO中的图像
     '''
     def funcCalibPilotCameraCapture(self, holeNbr):
-        if (holeNbr <= 0 ) or (holeNbr > ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH):
+        if (holeNbr <= 0 ) or (holeNbr > ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH):
             self.funcCalibLogTrace("L3CALIB: Camera capture function, holeNbr = %d not in right range!" % (holeNbr))
             return -1
         if (self.instL2CalibCamDisThd.funcCalibCameraDispChkVidCap() == False):
@@ -198,11 +198,11 @@ class clsL3_CalibProc(object):
 
     def funcCalibMove(self, parMoveScale, parMoveDir):
         self.instL2MotoProc.funcMotoCalaMoveOneStep(parMoveScale, parMoveDir);
-        self.funcCalibLogTrace("L3CALIB: Moving one step. Current position XY=[%d/%d]." % (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]))
+        self.funcCalibLogTrace("L3CALIB: Moving one step. Current position XY=[%d/%d]." % (ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]))
 
     def funcCalibForceMove(self, parMoveDir):
         self.instL2MotoProc.funcMotoFmCalaMoveOneStep(parMoveDir);
-        self.funcCalibLogTrace("L3CALIB: Force moving one step. Current position XY=[%d/%d]." % (ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0], ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1]))
+        self.funcCalibLogTrace("L3CALIB: Force moving one step. Current position XY=[%d/%d]." % (ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]))
 
     '''
           左下角的坐标，存在X1/Y1上， 右上角的坐标，存在X2/Y2上 
@@ -212,25 +212,25 @@ class clsL3_CalibProc(object):
 
     '左下角的坐标，存在X1/Y1上'    
     def funcCalibLeftDown(self):
-        ModCebsCom.GL_CEBS_HB_POS_IN_UM[0] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0];
-        ModCebsCom.GL_CEBS_HB_POS_IN_UM[1] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1];
+        ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0];
+        ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1];
         #准备去掉，替换为简化库函数
         #self.funcUpdateHoleBoardPar()
         self.instL0MedComPlatePar.med_update_plate_parameter()
         iniObj = ModCebsCfg.clsL1_ConfigOpr();
         iniObj.updateSectionPar();
-        self.funcCalibLogTrace("L3CALIB: LeftDown Axis set! XY=%d/%d." % (ModCebsCom.GL_CEBS_HB_POS_IN_UM[0], ModCebsCom.GL_CEBS_HB_POS_IN_UM[1]))
+        self.funcCalibLogTrace("L3CALIB: LeftDown Axis set! XY=%d/%d." % (ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1]))
     
     '右上角的坐标，存在X2/Y2上'
     def funcCalibRightUp(self):
-        ModCebsCom.GL_CEBS_HB_POS_IN_UM[2] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[0];
-        ModCebsCom.GL_CEBS_HB_POS_IN_UM[3] = ModCebsCom.GL_CEBS_CUR_POS_IN_UM[1];
+        ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0];
+        ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1];
         #准备去掉，替换为简化库函数
         #self.funcUpdateHoleBoardPar()
         self.instL0MedComPlatePar.med_update_plate_parameter()
         iniObj = ModCebsCfg.clsL1_ConfigOpr();
         iniObj.updateSectionPar();
-        self.funcCalibLogTrace("L3CALIB: RightUp Axis set!  XY=%d/%d." % (ModCebsCom.GL_CEBS_HB_POS_IN_UM[2], ModCebsCom.GL_CEBS_HB_POS_IN_UM[3]))       
+        self.funcCalibLogTrace("L3CALIB: RightUp Axis set!  XY=%d/%d." % (ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2], ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3]))       
 
 
 
@@ -276,9 +276,9 @@ class clsL2_CalibPilotThread(QThread):
     #OPTIMIZE PILOT WORKING METHOD
     def funcMotoCalibPilotWorkingOnces(self):
         self.instMotoHandler.funcMotoMove2HoleNbr(1);
-        self.instMotoHandler.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_HOLE_X_NUM);
-        self.instMotoHandler.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX);
-        self.instMotoHandler.funcMotoMove2HoleNbr(ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX - ModCebsCom.GL_CEBS_HB_HOLE_X_NUM + 1);
+        self.instMotoHandler.funcMotoMove2HoleNbr(ModCebsCom.GLPLT_PAR_OFC.HB_HOLE_X_NUM);
+        self.instMotoHandler.funcMotoMove2HoleNbr(ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX);
+        self.instMotoHandler.funcMotoMove2HoleNbr(ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX - ModCebsCom.GLPLT_PAR_OFC.HB_HOLE_X_NUM + 1);
                 
     def run(self):
         while True:

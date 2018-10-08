@@ -67,18 +67,18 @@ class clsL3_CtrlSchdThread(QThread):
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_NULL;
         
         #INIT DIFFERENT TARGET BOARDS AND NUMBERS
-        if (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD):
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX;
-        elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_48_STANDARD):
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_48_SD_BATCH_MAX;
-        elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_24_STANDARD):
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_24_SD_BATCH_MAX;
-        elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_12_STANDARD):
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_12_SD_BATCH_MAX;
-        elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_6_STANDARD):
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_6_SD_BATCH_MAX;
+        if (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_STANDARD):
+            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX;
+        elif (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_STANDARD):
+            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_SD_BATCH_MAX;
+        elif (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_STANDARD):
+            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_SD_BATCH_MAX;
+        elif (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_STANDARD):
+            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_SD_BATCH_MAX;
+        elif (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_STANDARD):
+            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_SD_BATCH_MAX;
         else:
-            ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH = ModCebsCom.GL_CEBS_HB_TARGET_96_SD_BATCH_MAX;
+            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX;
 
         #INIT STM
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
@@ -119,12 +119,12 @@ class clsL3_CtrlSchdThread(QThread):
         #NEW STATE
         self.instL2VisCapProc.funcVisBatCapStart();
         #去掉初始3-4张黑屏幕的照片
-        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL, True);
-        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL, True);
-        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL, True);
-        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL, True);
+        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL, True);
+        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL, True);
+        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL, True);
+        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_NORMAL, True);
         self.funcCtrlSchdDebugPrint("L3CTRLST: Normal picture starting progress...")
-        self.capTimes = ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH+1;
+        self.capTimes = ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH+1;
         self.funcCtrlSchdDebugPrint("L3CTRLST: Start to take normal picture, remaining TIMES=%d." %(self.capTimes-1))
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CAP_PIC_NOR;
 
@@ -145,12 +145,12 @@ class clsL3_CtrlSchdThread(QThread):
         #NEW STATE
         self.instL2VisCapProc.funcVisBatCapStart();
         #去掉初始3-4张黑屏幕的照片
-        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN, True);
-        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN, True);
-        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN, True);
-        self.funcCamCapInBatch(ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN, True);
+        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN, True);
+        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN, True);
+        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN, True);
+        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GL_CEBS_FILE_ATT_FLUORESCEN, True);
         self.funcCtrlSchdDebugPrint("L3CTRLST: Flu picture starting progress...")
-        self.capTimes = ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH+1;
+        self.capTimes = ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH+1;
         self.funcCtrlSchdDebugPrint("L3CTRLST: Start to take flu picture, remaining TIMES=%d." %(self.capTimes-1))
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CAP_PIC_FLU;
     
@@ -231,8 +231,8 @@ class clsL3_CtrlSchdThread(QThread):
     #LOCAL FUNCTIONS  
     def funcCamCapInBatch(self, capIndex, fmFlag, forceFlag):
         #计算当前批次
-        curOne = ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH + 1 - capIndex;
-        if ((curOne > ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH) or (curOne < 1)):
+        curOne = ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH + 1 - capIndex;
+        if ((curOne > ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH) or (curOne < 1)):
             self.funcCtrlSchdDebugPrint("L3CTRLST: Taking picture but serial number error!")
             return -1;
         #获取图像
@@ -252,7 +252,7 @@ class clsL3_CtrlSchdThread(QThread):
         if (ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET == True):
             return 1;
         #IF ALREADY LAST POSITION, RUN TO ZERO
-        if ((nextOne <= ModCebsCom.GL_CEBS_PIC_ONE_WHOLE_BATCH) and (nextOne >=1)):
+        if ((nextOne <= ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH) and (nextOne >=1)):
             if (self.instL2MotoProc.funcMotoMove2HoleNbr(nextOne) < 0):
                 self.funcCtrlSchdDebugPrint("L3CTRLST: Moto run error!")
                 return -1;
