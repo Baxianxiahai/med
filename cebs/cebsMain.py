@@ -504,8 +504,15 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
             self.instL3GparProc.funcPicFileLoad(fileName)
 
     def slot_gpar_pic_train(self):
+        #Firstly read parameter into classified variable sets, to let Train Func use.
+        print("Original small = ", ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT)
+        self.funcReadVisParToCfySets();
+        print("used small = ", ModCebsCom.GLVIS_PAR_SAV.SMALL_LOW_LIMIT)
+        savetmp = ModCebsCom.GLVIS_PAR_OFC
+        ModCebsCom.GLVIS_PAR_OFC = ModCebsCom.GLVIS_PAR_SAV
         self.instL3GparProc.funcPicFileTrain()
-
+        ModCebsCom.GLVIS_PAR_OFC = savetmp
+        
     #
     #  SERVICE FUNCTION PART, 业务函数部分
     #
@@ -516,35 +523,35 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET = self.checkBox_gpar_autoPic.isChecked();
         ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET = self.checkBox_gpar_picFixPos.isChecked();
         try: 
+            ModCebsCom.GL_CEBS_VISION_CAMBER_NBR = int(self.lineEdit_gpar_camera_nbr.text());
+        except Exception: 
+            ModCebsCom.GL_CEBS_VISION_CAMBER_NBR = -1;
+        try: 
             ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = int(self.lineEdit_gpar_picTti.text());
         except Exception: 
             ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = 60;
         try: 
-            ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT = int(self.lineEdit_gpar_vision_small_low_limit.text());
+            ModCebsCom.GLVIS_PAR_OFC.saveLowLimit(int(self.lineEdit_gpar_vision_small_low_limit.text()))
         except Exception: 
-            ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT = 200;
+            ModCebsCom.GLVIS_PAR_OFC.saveLowLimit(200)
         try: 
-            ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT = int(self.lineEdit_gpar_vision_small_mid_limit.text());
+            ModCebsCom.GLVIS_PAR_OFC.saveMidLimit(int(self.lineEdit_gpar_vision_small_mid_limit.text()))
         except Exception: 
-            ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT = 500;
+            ModCebsCom.GLVIS_PAR_OFC.saveMidLimit(500)
         try: 
-            ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT = int(self.lineEdit_gpar_vision_mid_big_limit.text());
+            ModCebsCom.GLVIS_PAR_OFC.saveBigLimit(int(self.lineEdit_gpar_vision_mid_big_limit.text()))
         except Exception: 
-            ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT = 2000;
+            ModCebsCom.GLVIS_PAR_OFC.saveBigLimit(2000)
         try: 
-            ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT = int(self.lineEdit_gpar_vision_big_upper_limit.text());
+            ModCebsCom.GLVIS_PAR_OFC.saveUpperLimit(int(self.lineEdit_gpar_vision_big_upper_limit.text()))
         except Exception: 
-            ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT = 2000;
+            ModCebsCom.GLVIS_PAR_OFC.saveUpperLimit(2000)
+        ModCebsCom.GLVIS_PAR_OFC.saveAddupSet(self.checkBox_gpar_vision_res_addup.isChecked())
+        ModCebsCom.GLVIS_PAR_OFC.saveCapEnable(self.checkBox_gpar_video_enable.isChecked())
         try: 
-            ModCebsCom.GL_CEBS_VISION_CAMBER_NBR = int(self.lineEdit_gpar_camera_nbr.text());
+            ModCebsCom.GLVIS_PAR_OFC.saveCapDur(int(self.lineEdit_gpar_video_input.text()))
         except Exception: 
-            ModCebsCom.GL_CEBS_VISION_CAMBER_NBR = -1;
-        ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET = self.checkBox_gpar_vision_res_addup.isChecked();
-        ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE = self.checkBox_gpar_video_enable.isChecked();
-        try: 
-            ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC = int(self.lineEdit_gpar_video_input.text());
-        except Exception: 
-            ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC = 3;
+            ModCebsCom.GLVIS_PAR_OFC.saveCapDur(3)
         #HB-TYPE SELECTION
         radioGparHts96 = self.radioButton_gpar_bts_96.isChecked();
         radioGparHts48 = self.radioButton_gpar_bts_48.isChecked();
@@ -577,15 +584,15 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         self.checkBox_gpar_picFixPos.setChecked(ModCebsCom.GL_CEBS_PIC_TAKING_FIX_POINT_SET)
         self.checkBox_gpar_autoIdf.setChecked(ModCebsCom.GL_CEBS_PIC_CLASSIFIED_AFTER_TAKE_SET)
         self.checkBox_gpar_autoPic.setChecked(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET)
-        self.lineEdit_gpar_picTti.setText(str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN))
-        self.lineEdit_gpar_vision_small_low_limit.setText(str(ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT))
-        self.lineEdit_gpar_vision_small_mid_limit.setText(str(ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT))
-        self.lineEdit_gpar_vision_mid_big_limit.setText(str(ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT))
-        self.lineEdit_gpar_vision_big_upper_limit.setText(str(ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT))
-        self.checkBox_gpar_vision_res_addup.setChecked(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET)
         self.lineEdit_gpar_camera_nbr.setText(str(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR))
-        self.checkBox_gpar_video_enable.setChecked(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE)
-        self.lineEdit_gpar_video_input.setText(str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC))
+        self.lineEdit_gpar_picTti.setText(str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN))
+        self.lineEdit_gpar_vision_small_low_limit.setText(str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
+        self.lineEdit_gpar_vision_small_mid_limit.setText(str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
+        self.lineEdit_gpar_vision_mid_big_limit.setText(str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))
+        self.lineEdit_gpar_vision_big_upper_limit.setText(str(ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT))
+        self.checkBox_gpar_vision_res_addup.setChecked(ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET)
+        self.checkBox_gpar_video_enable.setChecked(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE)
+        self.lineEdit_gpar_video_input.setText(str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC))
         if (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_96_STANDARD):
             self.radioButton_gpar_bts_96.setChecked(True)
         elif (ModCebsCom.GL_CEBS_HB_TARGET_TYPE == ModCebsCom.GL_CEBS_HB_TARGET_48_STANDARD):
@@ -599,6 +606,29 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         else:
             self.radioButton_gpar_bts_96.setChecked(True)
 
+    def funcReadVisParToCfySets(self):
+        try: 
+            ModCebsCom.GLVIS_PAR_SAV.saveLowLimit(int(self.lineEdit_gpar_vision_small_low_limit.text()))
+        except Exception: 
+            ModCebsCom.GLVIS_PAR_SAV.saveLowLimit(200)
+        try: 
+            ModCebsCom.GLVIS_PAR_SAV.saveMidLimit(int(self.lineEdit_gpar_vision_small_mid_limit.text()))
+        except Exception: 
+            ModCebsCom.GLVIS_PAR_SAV.saveMidLimit(500)
+        try: 
+            ModCebsCom.GLVIS_PAR_SAV.saveBigLimit(int(self.lineEdit_gpar_vision_mid_big_limit.text()))
+        except Exception: 
+            ModCebsCom.GLVIS_PAR_SAV.saveBigLimit(2000)
+        try: 
+            ModCebsCom.GLVIS_PAR_SAV.saveUpperLimit(int(self.lineEdit_gpar_vision_big_upper_limit.text()))
+        except Exception: 
+            ModCebsCom.GLVIS_PAR_SAV.saveUpperLimit(2000)
+        ModCebsCom.GLVIS_PAR_SAV.saveAddupSet(self.checkBox_gpar_vision_res_addup.isChecked())
+        ModCebsCom.GLVIS_PAR_SAV.saveCapEnable(self.checkBox_gpar_video_enable.isChecked())
+        try: 
+            ModCebsCom.GLVIS_PAR_SAV.saveCapDur(int(self.lineEdit_gpar_video_input.text()))
+        except Exception: 
+            ModCebsCom.GLVIS_PAR_SAV.saveCapDur(3)    
         
     #Give up and not save parameters
     def closeEvent(self, event):

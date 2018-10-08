@@ -163,13 +163,13 @@ class clsL2_VisCapProc(object):
         #fourcc code: http://www.fourcc.org/codecs.php
         if (forceFlag == True):
             return 1;
-        if (ret == True) and (ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE == True):
+        if (ret == True) and (ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE == True):
             #Video capture with 3 second
             fourcc = cv.VideoWriter_fourcc(*'mp4v')  #mp4v(.mp4), XVID(.avi)
             fileNameVideo = obj.combineFileNameVideoWithDir(batch, fileNbr)
             out = cv.VideoWriter(fileNameVideo, fourcc, fps, (width, height))
             cnt = 0
-            targetCnt = fps * ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC
+            targetCnt = fps * ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC
             while self.capInit.isOpened():
                 cnt += 1
                 ret, frame = self.capInit.read()
@@ -213,10 +213,10 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
         super(clsL2_VisCfyProc, self).__init__()
         self.identity = None;
         self.instL4WinForm = father
-        self.HST_VISION_WORM_CLASSIFY_base = ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_small2mid = ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_mid2big = ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_big2top = ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_base = ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_small2mid = ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_mid2big = ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_big2top = ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT;
         self.HST_VISION_WORM_CLASSIFY_pic_filepath = ModCebsCom.GL_CEBS_PIC_MIDDLE_PATH + '/'
         self.HST_VISION_WORM_CLASSIFY_pic_filename = "1.jpg"
         self.HST_VISION_WORM_CLASSIFY_pic_sta_output = {'totalNbr':0, 'bigAlive':0, 'bigDead':0, 'middleAlive':0, 'middleDead':0, 'smallAlive':0, 'smallDead':0, 'totalAlive':0, 'totalDead':0}
@@ -406,11 +406,11 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
                     self.HST_VISION_WORM_CLASSIFY_pic_sta_output['bigAlive'] +=1
                     self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalAlive'] +=1                        
                 cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
-        
-        font = cv.FONT_HERSHEY_SIMPLEX
-        cv.putText(outputImg, str(self.HST_VISION_WORM_CLASSIFY_pic_sta_output), (10, 30), font, 0.7, (0, 0, 255), 2, cv.LINE_AA)
+        #叠加统计结果
+        if (ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET == True):
+            font = cv.FONT_HERSHEY_SIMPLEX
+            cv.putText(outputImg, str(self.HST_VISION_WORM_CLASSIFY_pic_sta_output), (10, 30), font, 0.7, (0, 0, 255), 2, cv.LINE_AA)
         return outputImg;
-        pass;
 
     #Classified processing: 分类总处理
     #outCtrlFlag: 控制输出方式，是否直接使用fileNukeName而不增加文件名字选项

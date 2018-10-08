@@ -56,13 +56,13 @@ class clsL1_ConfigOpr(object):
             self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET))
             self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN))
             self.CReader.set("Env","vision camera nbr", str(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR))
-            self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT))
-            self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT))
-            self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT))
-            self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT))
-            self.CReader.set("Env","vision res addup set", str(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET))
-            self.CReader.set("Env","video capture enable set", str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE))
-            self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC))
+            self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
+            self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
+            self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))
+            self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT))
+            self.CReader.set("Env","vision res addup set", str(ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET))
+            self.CReader.set("Env","video capture enable set", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE))
+            self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC))
             self.CReader.add_section("Counter")
             self.CReader.set("Counter","PicBatchCnt", "0")
             self.CReader.set("Counter","PicBatchClas", "0")
@@ -111,21 +111,22 @@ class clsL1_ConfigOpr(object):
             ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET = False
         ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN = int(self.CReader['Env']['pic auto-work tti']);
         ModCebsCom.GL_CEBS_VISION_CAMBER_NBR = int(self.CReader['Env']['vision camera nbr']);
-        ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT = int(self.CReader['Env']['vision small-low limit']);
-        ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT = int(self.CReader['Env']['vision small-mid limit']);
-        ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT = int(self.CReader['Env']['vision mid-big limit']);
-        ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT = int(self.CReader['Env']['vision big-upper limit']);
+        #New def
+        ModCebsCom.GLVIS_PAR_OFC.saveLowLimit(int(self.CReader['Env']['vision small-low limit']));
+        ModCebsCom.GLVIS_PAR_OFC.saveMidLimit(int(self.CReader['Env']['vision small-mid limit']));
+        ModCebsCom.GLVIS_PAR_OFC.saveBigLimit(int(self.CReader['Env']['vision mid-big limit']));
+        ModCebsCom.GLVIS_PAR_OFC.saveUpperLimit(int(self.CReader['Env']['vision big-upper limit']));
         tmp = self.CReader['Env']['vision res addup set']
         if (tmp == 'True'):
-            ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET = True
+            ModCebsCom.GLVIS_PAR_OFC.saveAddupSet(True)
         else:
-            ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET = False
+            ModCebsCom.GLVIS_PAR_OFC.saveAddupSet(False)
         tmp = self.CReader['Env']['video capture enable set']
         if (tmp == 'True'):
-            ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE = True
+            ModCebsCom.GLVIS_PAR_OFC.saveCapEnable(True)
         else:
-            ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE = False
-        ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC = int(self.CReader['Env']['video capture dur in sec']);
+            ModCebsCom.GLVIS_PAR_OFC.saveCapEnable(False)
+        ModCebsCom.GLVIS_PAR_OFC.saveCapDur(int(self.CReader['Env']['video capture dur in sec']))
         #In case of store error, re-caculate remaining unclas-pictures
         #为了防止统计错误，重新根据
         res = self.recheckRemaingUnclasBatchFile(ModCebsCom.GL_CEBS_FILE_ATT_NORMAL)
@@ -176,13 +177,13 @@ class clsL1_ConfigOpr(object):
             self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET))
             self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN))
             self.CReader.set("Env","vision camera nbr", str(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR))
-            self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT))
-            self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT))
-            self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT))
-            self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT))
-            self.CReader.set("Env","vision res addup set", str(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET))
-            self.CReader.set("Env","video capture enable set", str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE))
-            self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC))
+            self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
+            self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
+            self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))
+            self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT))
+            self.CReader.set("Env","vision res addup set", str(ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET))
+            self.CReader.set("Env","video capture enable set", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE))
+            self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC))
         else:
             self.CReader.remove_section("Env")
             self.CReader.add_section("Env")        
@@ -199,13 +200,13 @@ class clsL1_ConfigOpr(object):
             self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_AFTER_START_SET))
             self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GL_CEBS_PIC_AUTO_WORKING_TTI_IN_MIN))
             self.CReader.set("Env","vision camera nbr", str(ModCebsCom.GL_CEBS_VISION_CAMBER_NBR))
-            self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GL_CEBS_VISION_SMALL_LOW_LIMIT))
-            self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GL_CEBS_VISION_SMALL_MID_LIMIT))
-            self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GL_CEBS_VISION_MID_BIG_LIMIT))
-            self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GL_CEBS_VISION_BIG_UPPER_LIMIT))
-            self.CReader.set("Env","vision res addup set", str(ModCebsCom.GL_CEBS_VISION_CLAS_RES_ADDUP_SET))
-            self.CReader.set("Env","video capture enable set", str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_ENABLE))
-            self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC))
+            self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
+            self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
+            self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))
+            self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT))
+            self.CReader.set("Env","vision res addup set", str(ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET))
+            self.CReader.set("Env","video capture enable set", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE))
+            self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC))
         #回写                    
         fd = open(self.filePath, 'w')
         self.CReader.write(fd)

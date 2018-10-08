@@ -55,17 +55,6 @@ GL_CEBS_VISION_CAMBER_NBR = -1;
 GL_CEBS_VISION_CAMBER_RES_WITDH = 3584; #1792;
 GL_CEBS_VISION_CAMBER_RES_HEIGHT = 2748; #1374;
 
-#VISION calibration set
-GL_CEBS_VISION_SMALL_LOW_LIMIT = 200;
-GL_CEBS_VISION_SMALL_MID_LIMIT = 500;
-GL_CEBS_VISION_MID_BIG_LIMIT = 2000;
-GL_CEBS_VISION_BIG_UPPER_LIMIT = 5000;
-#VISION CLASSIFICATION RESULT ADDUP (输出图像叠加标记)
-GL_CEBS_VISION_CLAS_RES_ADDUP_SET = True;
-#VIDEO CAPTURE ENABLE OR NOT (视频录制参数)
-GL_CEBS_VIDEO_CAPTURE_ENABLE = True;
-GL_CEBS_VIDEO_CAPTURE_DUR_IN_SEC = 3;
-
 #ROUNDS of auto-pilot run
 GL_CEBS_PILOT_WOKING_ROUNDS_MAX = 5;
 
@@ -310,11 +299,52 @@ class clsL0_MedCFlib():
         GL_CEBS_HB_HEIGHT_Y_SCALE = (GL_CEBS_HB_POS_IN_UM[3] - GL_CEBS_HB_POS_IN_UM[1]) / (GL_CEBS_HB_HOLE_Y_NUM-1);
 
 
+'''
+#封装
+#VISION calibration set
+视频图像识别参数的封装，方便对整个参数集合进行操作
+方便对参数进行维护，包括增删
+'''
+class clsL0_MedComPicPar():
+    #VISION calibration set
+    SMALL_LOW_LIMIT = 200;
+    SMALL_MID_LIMIT = 500;
+    MID_BIG_LIMIT = 2000;
+    BIG_UPPER_LIMIT = 5000;
+    #VISION CLASSIFICATION RESULT ADDUP (输出图像叠加标记)
+    CLAS_RES_ADDUP_SET = True;
+    #VIDEO CAPTURE ENABLE OR NOT (视频录制参数)
+    CAPTURE_ENABLE = True;
+    CAPTURE_DUR_IN_SEC = 3;
+    
+    def __init__(self):    
+        super(clsL0_MedComPicPar, self).__init__()  
+        pass
+    
+    def saveLowLimit(self, par):
+        self.SMALL_LOW_LIMIT = par
 
+    def saveMidLimit(self, par):
+        self.SMALL_MID_LIMIT = par
 
+    def saveBigLimit(self, par):
+        self.MID_BIG_LIMIT = par
 
+    def saveUpperLimit(self, par):
+        self.BIG_UPPER_LIMIT = par
 
+    def saveAddupSet(self, par):
+        self.CLAS_RES_ADDUP_SET = par
 
+    def saveCapEnable(self, par):
+        self.CAPTURE_ENABLE = par
+
+    def saveCapDur(self, par):
+        self.CAPTURE_DUR_IN_SEC = par
+                
+#定义全局变量以及操作函数
+GLVIS_PAR_OFC = clsL0_MedComPicPar()
+GLVIS_PAR_SAV = clsL0_MedComPicPar()
 
 
 
