@@ -251,6 +251,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
     def slot_runpg_test(self):
         res = {}
         self.med_debug_print("TEST: " + str(res))
+        obj = ModCebsVision.clsL2_VisCfyProc(self)
+        obj.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), "ref.jpg")
 
 
     #
@@ -271,16 +273,15 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
             self.hide()
             self.med_debug_print("L4MAIN: Main form hide!")
 
+    '''采用简化模式，省的启动那么多类的Instance
+    #self.instL2MotoProc = ModCebsMoto.clsL2_MotoProc(self, 1) #第一种选择
+    #if (self.instL2MotoProc.funcMotoRunningStatusInquery() == True):
+    #    self.instL2MotoProc.funcMotoStop()
+    '''
     #Local function
     def funcMainFormSetEquInitStatus(self):
-        '''采用简化模式，省的启动那么多类的Instance
-        #self.instL2MotoProc = ModCebsMoto.clsL2_MotoProc(self, 1) #第一种选择
-        #if (self.instL2MotoProc.funcMotoRunningStatusInquery() == True):
-        #    self.instL2MotoProc.funcMotoStop()
-        '''
         if (ModCebsMoto.clsL2_MotoProc.funcMotoRunningStatusInquery(self) == True):
             ModCebsMoto.clsL2_MotoProc.funcMotoStop(self)
-
 
 
 
@@ -559,24 +560,14 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         radioGparHts24 = self.radioButton_gpar_bts_24.isChecked();
         radioGparHts12 = self.radioButton_gpar_bts_12.isChecked();
         radioGparHts6 = self.radioButton_gpar_bts_6.isChecked();
-        if (radioGparHts96 == 1):
-            ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_STANDARD;
-            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX;
-        elif (radioGparHts48 == 1):
-            ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_STANDARD;
-            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_SD_BATCH_MAX;
-        elif (radioGparHts24 == 1):
-            ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_STANDARD;
-            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_SD_BATCH_MAX;
-        elif (radioGparHts12 == 1):
-            ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_STANDARD;
-            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_SD_BATCH_MAX;
-        elif (radioGparHts6 == 1):
-            ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_STANDARD;
-            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_SD_BATCH_MAX;
-        else:
-            ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_STANDARD;
-            ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX;
+        option = 0;
+        if (radioGparHts96 == 1): option = 96
+        elif (radioGparHts48 == 1): option = 48
+        elif (radioGparHts24 == 1): option = 24
+        elif (radioGparHts12 == 1): option = 12
+        elif (radioGparHts6 == 1): option = 6
+        else: option = 6
+        ModCebsCom.GLPLT_PAR_OFC.med_select_plate_board_type(option)
         #FINAL UPDATE         
         self.instL1ConfigOpr2.updateSectionPar()
 

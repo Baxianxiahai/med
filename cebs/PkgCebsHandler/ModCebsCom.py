@@ -95,6 +95,7 @@ class clsL0_MedComPlatePar():
     HB_TARGET_96_SD_XDIR_NBR = 12;
     HB_TARGET_96_SD_YDIR_NBR = 8;
     HB_TARGET_96_SD_HOLE_DIS = 9000;  #in UM
+    HB_TARGET_96_SD_HOLE_RAD = 6500;  #中值直径in UM，(顶+底)/2
      
     HB_TARGET_48_STANDARD = "48_STANDARD";
     HB_TARGET_48_SD_X_MAX = 120000;
@@ -103,6 +104,7 @@ class clsL0_MedComPlatePar():
     HB_TARGET_48_SD_XDIR_NBR = 8;
     HB_TARGET_48_SD_YDIR_NBR = 6;
     HB_TARGET_48_SD_HOLE_DIS = 12000;  #in UM
+    HB_TARGET_48_SD_HOLE_RAD = 8500;  #中值直径in UM，(顶+底)/2
      
     HB_TARGET_24_STANDARD = "24_STANDARD";
     HB_TARGET_24_SD_X_MAX = 120000;
@@ -111,6 +113,7 @@ class clsL0_MedComPlatePar():
     HB_TARGET_24_SD_XDIR_NBR = 8;
     HB_TARGET_24_SD_YDIR_NBR = 6;
     HB_TARGET_24_SD_HOLE_DIS = 20000;  #in UM
+    HB_TARGET_24_SD_HOLE_RAD = 15000;  #中值直径in UM，(顶+底)/2
      
     HB_TARGET_12_STANDARD = "12_STANDARD";
     HB_TARGET_12_SD_X_MAX = 120000;
@@ -119,6 +122,7 @@ class clsL0_MedComPlatePar():
     HB_TARGET_12_SD_XDIR_NBR = 4;
     HB_TARGET_12_SD_YDIR_NBR = 3;
     HB_TARGET_12_SD_HOLE_DIS = 27000;  #in UM
+    HB_TARGET_12_SD_HOLE_RAD = 19000;  #中值直径in UM，(顶+底)/2
      
     HB_TARGET_6_STANDARD = "6_STANDARD";
     HB_TARGET_6_SD_X_MAX = 120000;
@@ -127,6 +131,7 @@ class clsL0_MedComPlatePar():
     HB_TARGET_6_SD_XDIR_NBR = 3;
     HB_TARGET_6_SD_YDIR_NBR = 2;
     HB_TARGET_6_SD_HOLE_DIS = 40000;  #in UM
+    HB_TARGET_6_SD_HOLE_RAD = 30000;  #中值直径in UM，(顶+底)/2
     
     #ACTION SELCTION
     HB_TARGET_TYPE = HB_TARGET_96_STANDARD;
@@ -238,6 +243,58 @@ class clsL0_MedComPlatePar():
             self.HB_HOLE_Y_NUM = self.HB_TARGET_96_SD_YDIR_NBR;
         self.HB_WIDTH_X_SCALE = (self.HB_POS_IN_UM[2] - self.HB_POS_IN_UM[0]) / (self.HB_HOLE_X_NUM-1);
         self.HB_HEIGHT_Y_SCALE = (self.HB_POS_IN_UM[3] - self.HB_POS_IN_UM[1]) / (self.HB_HOLE_Y_NUM-1);
+    
+    def med_select_plate_board_type(self, option):
+        if (option == 96):
+            self.HB_TARGET_TYPE = self.HB_TARGET_96_STANDARD;
+            self.HB_PIC_ONE_WHOLE_BATCH = self.HB_TARGET_96_SD_BATCH_MAX;
+        elif (option == 48):
+            self.HB_TARGET_TYPE = self.HB_TARGET_48_STANDARD;
+            self.HB_PIC_ONE_WHOLE_BATCH = self.HB_TARGET_48_SD_BATCH_MAX;
+        elif (option == 24):
+            self.HB_TARGET_TYPE = self.HB_TARGET_24_STANDARD;
+            self.HB_PIC_ONE_WHOLE_BATCH = self.HB_TARGET_24_SD_BATCH_MAX;
+        elif (option == 12):
+            self.HB_TARGET_TYPE = self.HB_TARGET_12_STANDARD;
+            self.HB_PIC_ONE_WHOLE_BATCH = self.HB_TARGET_12_SD_BATCH_MAX;
+        elif (option == 6):
+            self.HB_TARGET_TYPE = self.HB_TARGET_6_STANDARD;
+            self.HB_PIC_ONE_WHOLE_BATCH = self.HB_TARGET_6_SD_BATCH_MAX;
+        else:
+            self.HB_TARGET_TYPE = self.HB_TARGET_96_STANDARD;
+            self.HB_PIC_ONE_WHOLE_BATCH = self.HB_TARGET_96_SD_BATCH_MAX;
+    
+    #获取弧长的参考基准长度，使用us为单位
+    #实际是一度条件下的定点连线长度，考虑到误差，1度条件下不再去区分直线与弧线的差异
+    def med_get_std_one_degree_radians_len_in_us(self):
+        pi = 3.1415926
+        if (self.HB_TARGET_TYPE == self.HB_TARGET_96_STANDARD):
+            return (self.HB_TARGET_96_SD_HOLE_RAD *pi)/360
+        elif (self.HB_TARGET_TYPE == self.HB_TARGET_48_STANDARD):
+            return (self.HB_TARGET_48_SD_HOLE_RAD *pi)/360
+        elif (self.HB_TARGET_TYPE == self.HB_TARGET_24_STANDARD):
+            return (self.HB_TARGET_24_SD_HOLE_RAD *pi)/360
+        elif (self.HB_TARGET_TYPE == self.HB_TARGET_12_STANDARD):
+            return (self.HB_TARGET_12_SD_HOLE_RAD *pi)/360
+        elif (self.HB_TARGET_TYPE == self.HB_TARGET_6_STANDARD):
+            return (self.HB_TARGET_6_SD_HOLE_RAD *pi)/360
+        else:
+            return (self.HB_TARGET_96_SD_HOLE_RAD *pi)/360
+    
+    #半径
+    def med_get_radians_len_in_us(self):
+        if (self.HB_TARGET_TYPE == self.HB_TARGET_96_STANDARD):
+            return self.HB_TARGET_96_SD_HOLE_RAD/2
+        elif (self.HB_TARGET_TYPE == self.HB_TARGET_48_STANDARD):
+            return self.HB_TARGET_48_SD_HOLE_RAD/2
+        elif (self.HB_TARGET_TYPE == self.HB_TARGET_24_STANDARD):
+            return self.HB_TARGET_24_SD_HOLE_RAD/2
+        elif (self.HB_TARGET_TYPE == self.HB_TARGET_12_STANDARD):
+            return self.HB_TARGET_12_SD_HOLE_RAD/2
+        elif (self.HB_TARGET_TYPE == self.HB_TARGET_6_STANDARD):
+            return self.HB_TARGET_6_SD_HOLE_RAD/2
+        else:
+            return self.HB_TARGET_96_SD_HOLE_RAD/2
         
 #定义全局变量以及操作函数
 GLPLT_PAR_OFC = clsL0_MedComPlatePar()

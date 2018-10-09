@@ -3,7 +3,6 @@
 【已知BUG LIST】
 1. 如果将MOTOAPI的指令反馈到界面上
 2. 荧光识别算法：待定
-3. 校准尺寸通过圆弧定标
 
 
 
@@ -12,6 +11,8 @@
 
 
 
+//=ZJL, 2018/10/9, CURRENT_SW_DELIVERY R1.26 =>CEBS
+= 校准尺寸通过圆弧定标：基础算法搞定了一个，未来待跟实际结合起来使用
 
 
 //=ZJL, 2018/10/8, CURRENT_SW_DELIVERY R1.25 =>CEBS

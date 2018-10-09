@@ -21,8 +21,9 @@ import string
 import ctypes 
 import random
 import cv2 as cv
-import numpy as np  
-#import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
+import math
 #import imutils
 from ctypes import c_uint8
 #import argparse
@@ -186,6 +187,8 @@ class clsL2_VisCapProc(object):
             return 2;
         return 1;
       
+      
+      
         
 '''
 
@@ -225,6 +228,8 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
     def funcVisCfyLogTrace(self, myString):
         self.instL4WinForm.med_debug_print(myString)
     
+    
+    
     '''
     * 核心的识别函数，其它任务调用的主入口
     *
@@ -255,13 +260,10 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
         self.updateCtrlCntInfo();
         return;
 
+
     def funcVisionNormalClassifyDirect(self, dirFn, tmpFn):
         return self.func_vision_worm_clasification(dirFn, tmpFn, True);
-       
-#     #NORMAL PIC PROC
-#     def funcVisWormClassify(self, fileName, fileNukeName):
-#         #time.sleep(random.random()*10)
-#         self.func_vision_worm_clasification(fileName, fileNukeName)
+        
         
     def func_vision_worm_input_processing(self, inputStr):
         try:
@@ -277,7 +279,9 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
             text = "L2VISCFY: func_vision_worm_input_processing on input error = %s" % str(err)
             print(text);
 
-    def func_vision_worm_binvalue_test(self, img):
+
+
+    def func_vision_worm_binvalue_proc(self, img):
         new = np.zeros(img.shape, np.uint8)    
     
         #Gray transaction: 灰度化
@@ -298,7 +302,9 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
         #cv.imshow('Adaptive Bin', binRes)
         return binRes;
     
-    def func_vision_worm_remove_noise_test(self, img):
+    
+    
+    def func_vision_worm_remove_noise_proc(self, img):
         #Enlarge + Erosion: shape translation 膨胀+腐蚀等形态学变化  
         kerne1 = np.ones((7, 7), np.uint8)  
         img_erosin = cv.erode(img, kerne1, iterations=1)
@@ -429,8 +435,8 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
             return;
 
         #Processing procedure: 处理过程
-        binImg = self.func_vision_worm_binvalue_test(inputImg)
-        nfImg = self.func_vision_worm_remove_noise_test(binImg)
+        binImg = self.func_vision_worm_binvalue_proc(inputImg)
+        nfImg = self.func_vision_worm_remove_noise_proc(binImg)
         outputImg = self.func_vision_worm_find_contours(nfImg, inputImg)
         if (outCtrlFlag == True):
             outputFn = fileNukeName
@@ -482,9 +488,115 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
     
     #荧光处理算法过程
     def algoVisFluWormCaculate(self, fileName, fileNukeName):
-        pass
         self.funcVisCfyLogTrace("L2VISCFY: Flu picture classification simulation algorithms demo, to be finsihed!")
 
+    #计算弧度的方式
+    #INPUT: refRadInUm, 孔半径长度，um单位
+    #OUTPUT: 对应比例关系
+    def algoVisGetRadians(self, refRadInUm, dirFn):
+        #Reading file: 读取文件
+        if (os.path.exists(dirFn) == False):
+            errStr = "L2VISCFY: File %s not exist!" % (dirFn)
+            self.medErrorLog(errStr);
+            print("L2VISCFY: File %s not exist!" % (dirFn))
+            return;
+        self.HST_VISION_WORM_CLASSIFY_pic_filename = dirFn
+        try:
+            inputImg = cv.imread(dirFn)
+        except Exception as err:
+            print("L2VISCFY: Read file error, errinfo = ", str(err))
+            return;
+        #self.algoVisFindMaxEdge(refRadInUs, inputImg)
+        #图像分块
+        orgH = inputImg.shape[0]
+        orgW = inputImg.shape[1]
+        imgLeftUp = inputImg[0:orgH//3, 0:orgW//3]
+        imgRightUp = inputImg[0:orgH//3, orgW*2//3:orgW]
+        imgLeftBot = inputImg[orgH*2//3:orgH, 0:orgW//3]
+        imgRightBot = inputImg[orgH*2//3:orgH, orgW*2//3:orgW]
+        res0, res1, resImgLU = self.algoVisFindMaxEdge(refRadInUm, imgLeftUp)
+        print("Length/baseline = %f/%f" % (res0, res1))
+        res0, res1, resImgRU = self.algoVisFindMaxEdge(refRadInUm, imgRightUp)
+        print("Length/baseline = %f/%f" % (res0, res1))
+        res0, res1, resImgLB = self.algoVisFindMaxEdge(refRadInUm, imgLeftBot)
+        print("Length/baseline = %f/%f" % (res0, res1))
+        res0, res1, resImgRB = self.algoVisFindMaxEdge(refRadInUm, imgRightBot)
+        print("Length/baseline = %f/%f" % (res0, res1))
+        thdMax = math.sqrt((orgH//3) * (orgH//3) + (orgW//3) * (orgW//3))*2
+        print("Max Arc length = ", thdMax)
+        cv.imshow("resImgLU", resImgLU)
+        cv.imshow("resImgRU", resImgRU)
+        cv.imshow("resImgLB", resImgLB)
+        cv.imshow("resImgRB", resImgRB)
+        
+    '''
+    * 参考文档： https://blog.csdn.net/sinat_36458870/article/details/78825571
+    #寻找边缘算法，待优化
+    '''
+    def algoVisFindMaxEdge(self, refRadInUm, inputImg):
+        #噪声处理过程
+        new = np.zeros(inputImg.shape, np.uint8)    
+        #Gray transaction: 灰度化
+        for i in range(new.shape[0]):  #Axis-y/height/Rows
+            for j in range(new.shape[1]):
+                (b,g,r) = inputImg[i,j]
+                #加权平均法
+                new[i,j] = int(0.3*float(b) + 0.59*float(g) + 0.11*float(r))&0xFF
+        #Middle value filter: 中值滤波
+        blur= cv.medianBlur(new, 5)
+        midGray = cv.cvtColor(blur, cv.COLOR_BGR2GRAY)
+        #Adaptive bin-translation: 自适应二值化
+        binGray = cv.adaptiveThreshold(midGray, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 43, 5)   # ADAPTIVE_THRESH_MEAN_C ADAPTIVE_THRESH_GAUSSIAN_C
+        binRes= cv.GaussianBlur(binGray, (5,5), 1.5) #medianBlur
+        #cv.imshow('Adaptive Bin', binRes)
+        corImg = cv.cvtColor(binRes, cv.COLOR_GRAY2BGR)
+        #高斯模糊,降低噪声  
+        blurred = cv.GaussianBlur(corImg,(3, 3), 0)  
+        #灰度图像  
+        gray=cv.cvtColor(blurred, cv.COLOR_RGB2GRAY)  
+        #图像梯度  
+        xgrad=cv.Sobel(gray, cv.CV_16SC1, 1, 0)   #cv.CV_32F
+        ygrad=cv.Sobel(gray, cv.CV_16SC1, 0, 1)  
+        #计算边缘  
+        #50和150参数必须符合1：3或者1：2  
+        edge_output=cv.Canny(xgrad, ygrad, 50, 100)  
+        #cv.imshow("edge", edge_output)
+        _, contours, _ = cv.findContours(edge_output, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+        #Output graphic: 输出图形
+        outputImg = cv.cvtColor(edge_output, cv.COLOR_GRAY2BGR)
+        mask = np.zeros((edge_output.shape[0]+2, edge_output.shape[1]+2), np.uint8)
+        mask[:] = 1
+        maxC = ''
+        #求最大弧长
+        arcLenMax = 0
+        for c in contours:
+            arcLen = cv.arcLength(c,True)
+            #cArea = cv.contourArea(c)
+            if (arcLen > arcLenMax):
+                maxC = c
+                arcLenMax = arcLen
+        #print("arcLenMax = ", arcLenMax)
+        # compute the center of the contour
+        M = cv.moments(maxC)
+        cX = int(M["m10"] / (M["m00"]+0.01))
+        cY = int(M["m01"] / (M["m00"]+0.01))
+        #4th method: 第四种方法
+        rect = cv.minAreaRect(maxC)
+        width, height = rect[1]
+        if (width > height):
+            cE = height / (width+0.001)
+        else:
+            cE = width / (height+0.001)
+        #print("cE = %d, width/Height=%d/%d" % (cE, width, height))
+        cE = round(cE, 2)
+        cv.drawContours(outputImg, maxC, -1, (0, 0, 255), 2)                    
+        cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+        #cv.imshow("result", outputImg)  
+        newRadians = height * height / (4 * width) + width
+        baseLine = newRadians/refRadInUm
+        #print("baseLine = ", baseLine)
+        return arcLenMax, baseLine, outputImg
+    
 
 
 
@@ -497,4 +609,10 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
 
 
 
+
+
+
+
+    
+    
         
