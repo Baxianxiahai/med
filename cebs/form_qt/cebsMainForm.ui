@@ -157,7 +157,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>290</y>
-      <width>341</width>
+      <width>161</width>
       <height>71</height>
      </rect>
     </property>
@@ -194,9 +194,9 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="pushButton_gpar_set">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>380</y>
-      <width>341</width>
+      <x>200</x>
+      <y>290</y>
+      <width>161</width>
       <height>71</height>
      </rect>
     </property>
@@ -228,6 +228,32 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>荧光图像识别</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_meng_sel">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>380</y>
+      <width>161</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>工程模式</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_saht_sel">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>380</y>
+      <width>161</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>激活板孔选择</string>
     </property>
    </widget>
   </widget>
@@ -416,12 +442,12 @@ p, li { white-space: pre-wrap; }
    <slot>slot_gpar_start()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>236</x>
-     <y>434</y>
+     <x>360</x>
+     <y>367</y>
     </hint>
     <hint type="destinationlabel">
-     <x>370</x>
-     <y>481</y>
+     <x>348</x>
+     <y>394</y>
     </hint>
    </hints>
   </connection>
@@ -457,6 +483,38 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_meng_sel</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsMainWindow</receiver>
+   <slot>slot_meng_sel()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>123</x>
+     <y>445</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>121</x>
+     <y>493</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_saht_sel</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsMainWindow</receiver>
+   <slot>slot_saht_sel()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>306</x>
+     <y>441</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>320</x>
+     <y>484</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>slot_runpg_test()</slot>
@@ -472,5 +530,7 @@ p, li { white-space: pre-wrap; }
   <slot>slot_gpar_start()</slot>
   <slot>slot_ctrl_start_flu()</slot>
   <slot>slot_ctrl_vclas_start_flu()</slot>
+  <slot>slot_meng_sel()</slot>
+  <slot>slot_saht_sel()</slot>
  </slots>
 </ui>

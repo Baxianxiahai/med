@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>cebsMengForm</class>
+ <widget class="QWidget" name="cebsMengForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1185</width>
+    <height>558</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GLOBAL PARAMETER</string>
+  </property>
+  <widget class="QLabel" name="label_meng_cmd_sel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>50</y>
+     <width>54</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>命令选择</string>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="listWidget_meng_cmd">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>70</y>
+     <width>421</width>
+     <height>151</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>设备握手（shake_hand）</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>设置工作模式（set_wk_mode）</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>设置加速度（set_acc）</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>设置减速度（set_deacc）</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>设置一圈步伐（set_pules_per_cycle）</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>设置移动速度（set_mv_spd）</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>设置归零速度（set_zero_spd）</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>设置归零加速度（set_zero_acc）</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>设置靠边后退步伐（set_int_steps）</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>移动步伐（mv_pules）</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>移动速度（mv_spd）</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>归零（mv_zero）</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>立即停止（stop_imd）</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>缓慢停止（stop_nor)</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>查询激活状态（inq_enable）</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>查询运行状态（inq_run）</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="label_meng_par1">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>240</y>
+     <width>54</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>参数1</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_meng_par2">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>240</y>
+     <width>54</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>参数2</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_meng_par3">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>240</y>
+     <width>54</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>参数3</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_meng_par4">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>240</y>
+     <width>54</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>参数4</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_meng_cmd_send">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>300</y>
+     <width>121</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>命令发送</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="textEdit_meng_trace_log">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>30</y>
+     <width>691</width>
+     <height>401</height>
+    </rect>
+   </property>
+   <property name="html">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;TRACE LOG&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_meng_trace_log">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>10</y>
+     <width>54</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>信息窗口</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_ctrl_giveup_3">
+   <property name="geometry">
+    <rect>
+     <x>1070</x>
+     <y>440</y>
+     <width>81</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>清除</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_ctrl_giveup_4">
+   <property name="geometry">
+    <rect>
+     <x>970</x>
+     <y>440</y>
+     <width>81</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>完成</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_meng_par1">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>260</y>
+     <width>91</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_meng_par2">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>260</y>
+     <width>91</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_meng_par3">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>260</y>
+     <width>91</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_meng_par4">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>260</y>
+     <width>91</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_meng_sps_port">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>54</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>串口端口</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_meng_sps_port">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>16</y>
+     <width>51</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>1</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButton_meng_cmd_send</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsMengForm</receiver>
+   <slot>slot_meng_cmd_send()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>359</x>
+     <y>300</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>386</x>
+     <y>331</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_ctrl_giveup_3</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsMengForm</receiver>
+   <slot>slot_meng_trace_clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1104</x>
+     <y>463</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1044</x>
+     <y>455</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_ctrl_giveup_4</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsMengForm</receiver>
+   <slot>slot_meng_compl()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1013</x>
+     <y>466</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>940</x>
+     <y>487</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>slot_meng_compl()</slot>
+  <slot>slot_meng_giveup()</slot>
+  <slot>slot_meng_cmd_send()</slot>
+  <slot>slot_meng_trace_clear()</slot>
+ </slots>
+</ui>

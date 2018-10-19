@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1185</width>
-    <height>738</height>
+    <height>791</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -366,9 +366,9 @@
    <property name="geometry">
     <rect>
      <x>330</x>
-     <y>630</y>
+     <y>670</y>
      <width>171</width>
-     <height>71</height>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
@@ -378,22 +378,22 @@
   <widget class="QGroupBox" name="groupBox_eng">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>470</y>
+     <x>20</x>
+     <y>400</y>
      <width>471</width>
-     <height>131</height>
+     <height>251</height>
     </rect>
    </property>
    <property name="title">
-    <string>工程模式命令</string>
+    <string>命令信息</string>
    </property>
-   <widget class="QTextEdit" name="textEdit_eng_input">
+   <widget class="QTextEdit" name="textEdit_gpar_cmd_log">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>30</y>
-      <width>341</width>
-      <height>91</height>
+      <x>10</x>
+      <y>20</y>
+      <width>451</width>
+      <height>161</height>
      </rect>
     </property>
     <property name="mouseTracking">
@@ -428,33 +428,33 @@
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Q01&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_eng_send">
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>30</y>
-      <width>71</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>发送</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;TRACE LOG&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_eng_clear">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>80</y>
-      <width>71</width>
-      <height>41</height>
+      <x>210</x>
+      <y>190</y>
+      <width>121</width>
+      <height>51</height>
      </rect>
     </property>
     <property name="text">
-     <string>清除</string>
+     <string>命令清除</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_gpar_pic_classify">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>190</y>
+      <width>121</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>图像训练</string>
     </property>
    </widget>
   </widget>
@@ -462,9 +462,9 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>630</y>
+     <y>670</y>
      <width>171</width>
-     <height>71</height>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
@@ -752,19 +752,6 @@ p, li { white-space: pre-wrap; }
     <string>图像文件</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_gpar_pic_classify">
-   <property name="geometry">
-    <rect>
-     <x>340</x>
-     <y>410</y>
-     <width>151</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>图像训练</string>
-   </property>
-  </widget>
  </widget>
  <resources/>
  <connections>
@@ -795,8 +782,8 @@ p, li { white-space: pre-wrap; }
      <y>630</y>
     </hint>
     <hint type="destinationlabel">
-     <x>239</x>
-     <y>714</y>
+     <x>241</x>
+     <y>735</y>
     </hint>
    </hints>
   </connection>
@@ -832,17 +819,28 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_eng_clear</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsGparForm</receiver>
+   <slot>slot_gpar_clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>470</x>
+     <y>576</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>476</x>
+     <y>612</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
-  <slot>slot_calib_close()</slot>
-  <slot>slot_calib_move()</slot>
-  <slot>slot_calib_left_up()</slot>
-  <slot>slot_calib_right_bottom()</slot>
-  <slot>slot_calib_pilot()</slot>
-  <slot>slot_calib_pilot_stop()</slot>
   <slot>slot_gpar_compl()</slot>
   <slot>slot_gpar_giveup()</slot>
   <slot>slot_gpar_pic_train()</slot>
   <slot>slot_gpar_pic_file_load()</slot>
+  <slot>slot_gpar_clear()</slot>
  </slots>
 </ui>

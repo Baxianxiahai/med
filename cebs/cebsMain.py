@@ -29,6 +29,8 @@ MAIN => 主入口
             |---clsL0_MedComCfgPar => 配置参数
             |---clsL0_MedComPlatePar => 托盘参数
             |---clsL0_MedComPicPar=> 图像参数
+    |---SEUI_L4_MengForm => 马达工程模式界面
+        |---clsL3_MengProc => 马达工程模式参数填写接口
 
 线程启动过程
     SEUI_L4_MainWindow
@@ -38,6 +40,7 @@ MAIN => 主入口
             -> clsL2_CalibPilotThread  =>巡游任务，静态，简单的工作任务，使用信号槽触发，不需要状态机
             -> clsL2_CalibCamDispThread  => 摄像头显示图像任务，动态
     -> SEUI_L4_GparForm
+    -> SEUI_L4_MengForm
 
 注意：信号槽，只能在线程和任务之间传递，所以普通的CLASS是不能增加信号槽的，设计机制时需要注意
 
@@ -73,6 +76,7 @@ from PyQt5.QtGui import QIcon
 from form_qt.cebsmainform import Ui_cebsMainWindow
 from form_qt.cebscalibform import Ui_cebsCalibForm
 from form_qt.cebsgparform import Ui_cebsGparForm
+from form_qt.cebsmengform import Ui_cebsMengForm
 
 #Local Class
 from PkgCebsHandler import ModCebsCom  #Common Support module
@@ -82,6 +86,7 @@ from PkgCebsHandler import ModCebsVision
 from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsCalib
 from PkgCebsHandler import ModCebsGpar
+from PkgCebsHandler import ModCebsMeng
 
 '''
 #SEUI => System Entry UI，表示系统级的主入口
@@ -133,10 +138,12 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         #STEP2: START SUB-UI, 启动子界面        
         self.instL4CalibForm = SEUI_L4_CalibForm()
         self.instL4GparForm = SEUI_L4_GparForm()
+        self.instL4MengForm = SEUI_L4_MengForm()
         #STEP3: CONNECT SIGNAL SLOT, 连接信号槽
+        self.sgL4MainWinUnvisible.connect(self.funcMainWinUnvisible);
         self.instL4CalibForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.instL4GparForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
-        self.sgL4MainWinUnvisible.connect(self.funcMainWinUnvisible);
+        self.instL4MengForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         #STEP4: CONTROL SCHEDULE MODULE INIT, 控制调度模块初始化
         self.instL3CtrlSchdThd = ModCebsCtrlSchd.clsL3_CtrlSchdThread(self)
         self.instL3CtrlSchdThd.setIdentity("TASK_CtrlScheduleThread")
@@ -242,6 +249,20 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         if not self.instL4GparForm.isVisible():
             self.sgL4MainWinUnvisible.emit()
             self.instL4GparForm.show()
+
+    #Enter Moto Engineering Mode
+    def slot_meng_sel(self):
+        self.med_debug_print("L4MAIN: Moto Engineering start......")
+        if not self.instL4MengForm.isVisible():
+            self.sgL4MainWinUnvisible.emit()
+            self.instL4MengForm.show()
+
+    #Enter Selection Active Hole Target Mode
+    def slot_saht_sel(self):
+        self.med_debug_print("L4MAIN: Active Hole Selection start......")
+#         if not self.instL4GparForm.isVisible():
+#             self.sgL4MainWinUnvisible.emit()
+#             self.instL4GparForm.show()
 
     #Clean log window
     def slot_runpg_clear(self):
@@ -470,10 +491,10 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
 
     def med_debug_print(self, info):
         strOut = ">> " + time.asctime() + " " + info;
-        self.textEdit_eng_input.append(strOut);
-        self.textEdit_eng_input.moveCursor(QtGui.QTextCursor.End)
-        self.textEdit_eng_input.ensureCursorVisible()
-        self.textEdit_eng_input.insertPlainText("")        
+        self.textEdit_gpar_cmd_log.append(strOut);
+        self.textEdit_gpar_cmd_log.moveCursor(QtGui.QTextCursor.End)
+        self.textEdit_gpar_cmd_log.ensureCursorVisible()
+        self.textEdit_gpar_cmd_log.insertPlainText("")        
     #
     #  SLOT FUNCTION, 槽函数部分
     #    DO NOT MODIFY FUNCTION NAMES, 以下部分为系统接口对应的槽函数，函数命名不得动
@@ -488,6 +509,11 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
     def slot_gpar_giveup(self):
         self.sgL4MainWinVisible.emit()
         self.close()
+
+    #Clear the command log text box
+    def slot_gpar_clear(self):
+        self.textEdit_gpar_cmd_log.clear();
+
     
     '''
     *得到文件目录
@@ -627,6 +653,109 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         self.instL3GparProc.funcRecoverWorkingEnv()
         self.sgL4MainWinVisible.emit()
         self.close()
+
+
+#4rd Main Entry, 第四主入口
+#Meng Widget
+class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
+    sgL4MainWinUnvisible = pyqtSignal()
+    sgL4MainWinVisible = pyqtSignal()
+
+    def __init__(self):    
+        super(SEUI_L4_MengForm, self).__init__()  
+        self.setupUi(self)
+        self.instL3MengProc = ModCebsMeng.clsL3_MengProc(self)
+        self.instL1ConfigOpr3=ModCebsCfg.clsL1_ConfigOpr()
+
+    def med_debug_print(self, info):
+        strOut = ">> " + time.asctime() + " " + info;
+        self.textEdit_meng_trace_log.append(strOut);
+        self.textEdit_meng_trace_log.moveCursor(QtGui.QTextCursor.End)
+        self.textEdit_meng_trace_log.ensureCursorVisible()
+        self.textEdit_meng_trace_log.insertPlainText("")        
+    #
+    #  SLOT FUNCTION, 槽函数部分
+    #    DO NOT MODIFY FUNCTION NAMES, 以下部分为系统接口对应的槽函数，函数命名不得动
+    #
+    #    
+    def slot_meng_compl(self):
+        self.sgL4MainWinVisible.emit()
+        self.close()
+
+    #Give up and not save parameters
+    def slot_meng_giveup(self):
+        self.sgL4MainWinVisible.emit()
+        self.close()
+
+    #Send the command out
+    def slot_meng_cmd_send(self):
+        text_list = self.listWidget_meng_cmd.selectedItems()
+        text = [i.text() for i in list(text_list)]
+        if (str(text).find('设备握手（shake_hand）') > 0):
+            cmd = 0x20
+        elif (str(text).find('设置工作模式（set_wk_mode）') > 0):
+            cmd = 0x21
+        elif (str(text).find('设置加速度（set_acc）') > 0):
+            cmd = 0x22
+        elif (str(text).find('设置减速度（set_deacc）') > 0):
+            cmd = 0x23
+        elif (str(text).find('设置一圈步伐（set_pules_per_cycle）') > 0):
+            cmd = 0x24
+        elif (str(text).find('设置移动速度（set_mv_spd）') > 0):
+            cmd = 0x25
+        elif (str(text).find('设置归零速度（set_zero_spd）') > 0):
+            cmd = 0x26
+        elif (str(text).find('设置归零加速度（set_zero_acc）') > 0):
+            cmd = 0x27
+        elif (str(text).find('设置靠边后退步伐（set_int_steps）') > 0):
+            cmd = 0x28
+        elif (str(text).find('移动步伐（mv_pules）') > 0):
+            cmd = 0x30
+        elif (str(text).find('移动速度（mv_spd）') > 0):
+            cmd = 0x31
+        elif (str(text).find('归零（mv_zero）') > 0):
+            cmd = 0x32
+        elif (str(text).find('立即停止（stop_imd）') > 0):
+            cmd = 0x33
+        elif (str(text).find('缓慢停止（stop_nor)') > 0):
+            cmd = 0x34
+        elif (str(text).find('查询激活状态（inq_enable）') > 0):
+            cmd = 0x35
+        elif (str(text).find('查询运行状态（inq_run）') > 0):
+            cmd = 0x36
+        else:
+            cmd = 0x20
+        
+        try: 
+            par1 = int(self.lineEdit_meng_par1.text());
+        except Exception: 
+            par1 = -1;
+        try: 
+            par2 = int(self.lineEdit_meng_par2.text());
+        except Exception: 
+            par2 = -1;
+        try: 
+            par3 = int(self.lineEdit_meng_par3.text());
+        except Exception: 
+            par3 = -1;
+        try: 
+            par4 = int(self.lineEdit_meng_par4.text());
+        except Exception: 
+            par4 = -1;            
+                       
+        #self.med_debug_print("MENG: Cmd = %d, Par1/2/3/4=%d/%d/%d/%d" % (cmd, par1, par2, par3, par4))
+        self.instL3MengProc.funcSendCmd2Moto(cmd, par1, par2, par3, par4)
+        
+    #Clear the command log text box
+    def slot_meng_trace_clear(self):
+        self.textEdit_meng_trace_log.clear();
+
+    #Give up and not save parameters
+    def closeEvent(self, event):
+        self.sgL4MainWinVisible.emit()
+        self.close()
+
+
 
 
 '''

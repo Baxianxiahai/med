@@ -9,11 +9,19 @@
 
 
 
+//=ZJL, 2018/10/18, CURRENT_SW_DELIVERY R1.27 =>CEBS
+  cd form_qt, 
+  pyuic5 -o  cebsmainform.py cebsMainform.ui    
+  pyuic5 -o  cebscalibform.py cebsCalibform.ui
+  pyuic5 -o  cebsgparform.py cebsGparform.ui
+  pyuic5 -o  cebsmengform.py cebsMengform.ui  //Moto Engineering Command
+  pyuic5 -o  cebssahtform.py cebsSahtform.ui  //Set Active Hole Target
+  d:, cd \IHUSRC\med\cebs
+  pyinstaller -F -w --icon=.\icon_res\cebs.ico cebsMain.py
 
 
 //=ZJL, 2018/10/9, CURRENT_SW_DELIVERY R1.26 =>CEBS
 = 校准尺寸通过圆弧定标：基础算法搞定了一个，未来待跟实际结合起来使用
-
 
 //=ZJL, 2018/10/8, CURRENT_SW_DELIVERY R1.25 =>CEBS
 = 尝试使用重载功能，对付打印函数，非常好
