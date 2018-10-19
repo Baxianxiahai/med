@@ -642,7 +642,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.timer.timeout.connect(self.onTimerOutRight) 
     def slot_calib_pilot_move_right_released(self):
         self.timer.stop()          
-               
+    '''          
     def slot_calib_move(self):
         #SCALE
         radioCala10um = self.radioButton_calib_10um.isChecked();
@@ -725,7 +725,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         else:
             parMoveDir = "UP";
         self.instL3CalibProc.funcCalibMove(parMoveScale, parMoveDir);
-    
+    '''
     def slot_calib_right_up(self):
         self.instL3CalibProc.funcCalibRightUp();
     

@@ -323,9 +323,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>170</y>
+      <y>180</y>
       <width>381</width>
-      <height>91</height>
+      <height>131</height>
      </rect>
     </property>
     <property name="title">
@@ -335,9 +335,9 @@
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>10</y>
+       <y>20</y>
        <width>75</width>
-       <height>21</height>
+       <height>23</height>
       </rect>
      </property>
      <property name="text">
@@ -348,7 +348,7 @@
      <property name="geometry">
       <rect>
        <x>50</x>
-       <y>40</y>
+       <y>60</y>
        <width>75</width>
        <height>23</height>
       </rect>
@@ -361,7 +361,7 @@
      <property name="geometry">
       <rect>
        <x>250</x>
-       <y>40</y>
+       <y>60</y>
        <width>75</width>
        <height>23</height>
       </rect>
@@ -383,7 +383,7 @@
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>60</y>
+       <y>90</y>
        <width>75</width>
        <height>23</height>
       </rect>
@@ -396,8 +396,8 @@
    <widget class="QPushButton" name="pushButton_calib_left_down">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>270</y>
+      <x>40</x>
+      <y>320</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -409,7 +409,7 @@
    <widget class="QPushButton" name="pushButton_calib_right_up">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>230</x>
       <y>320</y>
       <width>151</width>
       <height>41</height>
@@ -417,19 +417,6 @@
     </property>
     <property name="text">
      <string>设定右上</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_calib_move">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>270</y>
-      <width>201</width>
-      <height>91</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>移动</string>
     </property>
    </widget>
   </widget>
@@ -735,22 +722,6 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>338</x>
      <y>522</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_calib_move</sender>
-   <signal>clicked()</signal>
-   <receiver>cebsCalibForm</receiver>
-   <slot>slot_calib_move()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>861</x>
-     <y>189</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>942</x>
-     <y>174</y>
     </hint>
    </hints>
   </connection>
