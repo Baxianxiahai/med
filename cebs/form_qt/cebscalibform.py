@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'cebsCalibform.ui'
+# Form implementation generated from reading ui file 'cebscalibform.ui'
 #
-# Created by: PyQt5 UI code generator 5.10
+# Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -86,22 +86,23 @@ class Ui_cebsCalibForm(object):
         self.radioButton_calib_hole6_l.setGeometry(QtCore.QRect(230, 110, 71, 21))
         self.radioButton_calib_hole6_l.setObjectName("radioButton_calib_hole6_l")
         self.groupBox_calib_move_dir = QtWidgets.QGroupBox(self.groupBox_calib_set)
-        self.groupBox_calib_move_dir.setGeometry(QtCore.QRect(20, 190, 381, 61))
+        self.groupBox_calib_move_dir.setGeometry(QtCore.QRect(20, 170, 381, 91))
         self.groupBox_calib_move_dir.setObjectName("groupBox_calib_move_dir")
-        self.radioButton_calib_y_plus = QtWidgets.QRadioButton(self.groupBox_calib_move_dir)
-        self.radioButton_calib_y_plus.setGeometry(QtCore.QRect(10, 20, 61, 21))
-        self.radioButton_calib_y_plus.setChecked(True)
-        self.radioButton_calib_y_plus.setObjectName("radioButton_calib_y_plus")
-        self.radioButton_calib_x_plus = QtWidgets.QRadioButton(self.groupBox_calib_move_dir)
-        self.radioButton_calib_x_plus.setGeometry(QtCore.QRect(280, 20, 61, 21))
-        self.radioButton_calib_x_plus.setObjectName("radioButton_calib_x_plus")
-        self.radioButton_calib_y_minus = QtWidgets.QRadioButton(self.groupBox_calib_move_dir)
-        self.radioButton_calib_y_minus.setGeometry(QtCore.QRect(100, 20, 61, 21))
-        self.radioButton_calib_y_minus.setChecked(False)
-        self.radioButton_calib_y_minus.setObjectName("radioButton_calib_y_minus")
-        self.radioButton_calib_x_minus = QtWidgets.QRadioButton(self.groupBox_calib_move_dir)
-        self.radioButton_calib_x_minus.setGeometry(QtCore.QRect(190, 20, 61, 21))
-        self.radioButton_calib_x_minus.setObjectName("radioButton_calib_x_minus")
+        self.pushButton_calib_pilot_move_up = QtWidgets.QPushButton(self.groupBox_calib_move_dir)
+        self.pushButton_calib_pilot_move_up.setGeometry(QtCore.QRect(150, 10, 75, 21))
+        self.pushButton_calib_pilot_move_up.setObjectName("pushButton_calib_pilot_move_up")
+        self.pushButton_calib_pilot_move_left = QtWidgets.QPushButton(self.groupBox_calib_move_dir)
+        self.pushButton_calib_pilot_move_left.setGeometry(QtCore.QRect(50, 40, 75, 23))
+        self.pushButton_calib_pilot_move_left.setObjectName("pushButton_calib_pilot_move_left")
+        self.pushButton_calib_pilot_move_right = QtWidgets.QPushButton(self.groupBox_calib_move_dir)
+        self.pushButton_calib_pilot_move_right.setGeometry(QtCore.QRect(250, 40, 75, 23))
+        self.pushButton_calib_pilot_move_right.setAutoDefault(False)
+        self.pushButton_calib_pilot_move_right.setDefault(False)
+        self.pushButton_calib_pilot_move_right.setFlat(False)
+        self.pushButton_calib_pilot_move_right.setObjectName("pushButton_calib_pilot_move_right")
+        self.pushButton_calib_pilot_move_down = QtWidgets.QPushButton(self.groupBox_calib_move_dir)
+        self.pushButton_calib_pilot_move_down.setGeometry(QtCore.QRect(150, 60, 75, 23))
+        self.pushButton_calib_pilot_move_down.setObjectName("pushButton_calib_pilot_move_down")
         self.pushButton_calib_left_down = QtWidgets.QPushButton(self.groupBox_calib_set)
         self.pushButton_calib_left_down.setGeometry(QtCore.QRect(20, 270, 151, 41))
         self.pushButton_calib_left_down.setObjectName("pushButton_calib_left_down")
@@ -196,6 +197,14 @@ class Ui_cebsCalibForm(object):
         self.pushButton_calib_pilot_move_0.clicked.connect(cebsCalibForm.slot_calib_pilot_move_0)
         self.pushButton_calib_pilot_move_n.clicked.connect(cebsCalibForm.slot_calib_pilot_move_n)
         self.pushButton_calib_pilot_camera_cap.clicked.connect(cebsCalibForm.slot_calib_pilot_camera_cap)
+        self.pushButton_calib_pilot_move_right.pressed.connect(cebsCalibForm.slot_calib_pilot_move_right)
+        self.pushButton_calib_pilot_move_down.pressed.connect(cebsCalibForm.slot_calib_pilot_move_down)
+        self.pushButton_calib_pilot_move_up.pressed.connect(cebsCalibForm.slot_calib_pilot_move_up)
+        self.pushButton_calib_pilot_move_left.pressed.connect(cebsCalibForm.slot_calib_pilot_move_left)
+        self.pushButton_calib_pilot_move_right.released.connect(cebsCalibForm.slot_calib_pilot_move_right_released)
+        self.pushButton_calib_pilot_move_down.released.connect(cebsCalibForm.slot_calib_pilot_move_down_released)
+        self.pushButton_calib_pilot_move_up.released.connect(cebsCalibForm.slot_calib_pilot_move_up_released)
+        self.pushButton_calib_pilot_move_left.released.connect(cebsCalibForm.slot_calib_pilot_move_left_released)
         QtCore.QMetaObject.connectSlotsByName(cebsCalibForm)
 
     def retranslateUi(self, cebsCalibForm):
@@ -224,10 +233,10 @@ class Ui_cebsCalibForm(object):
         self.radioButton_calib_hole6_s.setText(_translate("cebsCalibForm", "6孔短边"))
         self.radioButton_calib_hole6_l.setText(_translate("cebsCalibForm", "6孔长边"))
         self.groupBox_calib_move_dir.setTitle(_translate("cebsCalibForm", "运动方向"))
-        self.radioButton_calib_y_plus.setText(_translate("cebsCalibForm", "上(Y+)"))
-        self.radioButton_calib_x_plus.setText(_translate("cebsCalibForm", "右(X+)"))
-        self.radioButton_calib_y_minus.setText(_translate("cebsCalibForm", "下(Y-)"))
-        self.radioButton_calib_x_minus.setText(_translate("cebsCalibForm", "左(X-)"))
+        self.pushButton_calib_pilot_move_up.setText(_translate("cebsCalibForm", "Up"))
+        self.pushButton_calib_pilot_move_left.setText(_translate("cebsCalibForm", "Left"))
+        self.pushButton_calib_pilot_move_right.setText(_translate("cebsCalibForm", "Right"))
+        self.pushButton_calib_pilot_move_down.setText(_translate("cebsCalibForm", "Down"))
         self.pushButton_calib_left_down.setText(_translate("cebsCalibForm", "设定左下"))
         self.pushButton_calib_right_up.setText(_translate("cebsCalibForm", "设定右上"))
         self.pushButton_calib_move.setText(_translate("cebsCalibForm", "移动"))
