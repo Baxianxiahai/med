@@ -1,7 +1,6 @@
 ﻿====CEBS=====
 
 【已知BUG LIST】
-1. 如果将MOTOAPI的指令反馈到界面上
 2. 荧光识别算法：待定
 
 
@@ -19,7 +18,9 @@
   d:, cd \IHUSRC\med\cebs
   pyinstaller -F -w --icon=.\icon_res\cebs.ico cebsMain.py
 = 增加clsL1_MdcThd模块和功能
-
+= 解决了重复关闭MAIN窗口的问题
+= 解决了MOTO界面反馈的问题
+1. 如果将MOTOAPI的指令反馈到界面上
 
 
 //=ZJL, 2018/10/9, CURRENT_SW_DELIVERY R1.26 =>CEBS

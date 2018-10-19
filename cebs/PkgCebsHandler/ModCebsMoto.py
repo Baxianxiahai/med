@@ -65,6 +65,11 @@ class clsL2_MotoProc(object):
             self.funcMotoLogTrace("L2MOTO: Fetch moto hardware driver ver nbr (%s), but can not read success!" % str(self.motoSpsDrvVer))
         else:
             self.funcMotoLogTrace("L2MOTO: Fetch moto hardware driver ver nbr = %s" % str(self.motoSpsDrvVer))
+        #第二部分：启动马达控制的具体逻辑
+        self.objMdcThd = ModCebsMoto.clsL1_MdcThd(self.instL4WinForm, 2);
+        self.objMdcThd.setIdentity("TASK_MotoDrvCtrlThread"+str(self.instL4WinForm))
+        self.objMdcThd.sgL4MainWinPrtLog.connect(self.funcMotoLogTrace)
+        self.objMdcThd.start();
 
     def funcMotoLogTrace(self, myString):
         self.instL4WinForm.med_debug_print(myString)
@@ -283,12 +288,22 @@ class clsL2_MotoProc(object):
         else:
             return 2
     
+    def funcGetSpsRights(self, par):
+        self.objMdcThd.funcGetSpsRights(par);
+
+    def funcRelSpsRights(self, par):
+        self.objMdcThd.funcRelSpsRights(par);    
+    
+    
+    
     
 '''
+
 自研马达控制器的驱动API函数
 考虑到马达的外部控制命令必须使用状态机和异步式，所以这里采用状态机来操控
 接口支持MODBUS协议，自定义格式，未来可以考虑扩充支持其它格式
-'''    
+
+'''        
 class clsL1_MdcThd(QThread):
     sgL4MainWinPrtLog = pyqtSignal(str) #DECLAR SIGNAL
     
@@ -296,22 +311,28 @@ class clsL1_MdcThd(QThread):
     __CEBS_STM_MDCT_NULL =      0;
     __CEBS_STM_MDCT_INIT =      1;
     __CEBS_STM_MDCT_SPS_RGT =   2;
-    __CEBS_STM_MDCT_CMD_SND =   3;
-    __CEBS_STM_MDCT_CMD_EXEC =  4;
+    __CEBS_STM_MDCT_CMD_SND =   3;  #单控发送指令
+    __CEBS_STM_MDCT_CMD_EXEC =  4;  #批量指令模式
     __CEBS_STM_MDCT_CMD_CMPL =  5;
     __CEBS_STM_MDCT_REL_RGT =   6;
     __CEBS_STM_MDCT_INVALID =   0xFF;
     MDCT_STM_STATE = 0;
 
+    __CEBS_MDCT_SPS_USAGE_MAIN_CTRL =   1;
+    __CEBS_MDCT_SPS_USAGE_CALIB_UI =    2;
+    __CEBS_MDCT_SPS_USAGE_MENG_UI =     3;
+    MDCT_SPS_USAGE = 0;
+
     IsSerialOpenOk = False
     serialFd = serial.Serial()
     targetComPortString = ''
 
-    def __init__(self, father):
+    def __init__(self, father, flag):
         super(clsL1_MdcThd, self).__init__()
         self.identity = None;
         self.capTimes = -1;
         self.instL4WinMainForm = father
+        self.triggerFlag = flag
         self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr();
         self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_INIT;
         
@@ -327,15 +348,30 @@ class clsL1_MdcThd(QThread):
 
     def funcCtrlStateGet(self):
         return self.MDCT_STM_STATE
-
-    def funcGetSpsRights(self):
-        self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_SPS_RGT;
-
-    def funcRelSpsRights(self):
-        self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_REL_RGT;
-
+    
     def funcMdctdDebugPrint(self, string):
-        self.sgL4MainWinPrtLog.emit(string)
+        if self.triggerFlag == 1:
+            self.sgL4MainWinPrtLog.emit(string)
+        if self.triggerFlag == 2:
+            self.sgL4MainWinPrtLog.emit(string)
+
+    '''
+    1: MAIN UI and CTRL SCHEDULE task called
+    2: CALIB UI called
+    3: MENG engineering UI called
+    '''
+    def funcGetSpsRights(self, par):
+        self.MDCT_SPS_USAGE = par
+        if (self.MDCT_SPS_USAGE != 0):
+            time.sleep(0.5)
+        self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_SPS_RGT;
+        self.funcMdctdDebugPrint("L1MDCT: Initialize SPS port, called father = %d" % (self.MDCT_SPS_USAGE))
+
+    def funcRelSpsRights(self, par):
+        if (self.MDCT_SPS_USAGE != par):
+            self.funcMdctdDebugPrint("L1MDCT: Not same father called release procedure!")
+        self.MDCT_SPS_USAGE = 0;
+        self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_REL_RGT;
 
     def funcResetWkStatus(self):
         self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_INIT;    
@@ -368,41 +404,6 @@ class clsL1_MdcThd(QThread):
             i += 1
         return wCRCIn;
 
-    #价值命令   
-    def funcCmdSend(self, cmd):
-        if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_SND):
-            self.funcMdctdDebugPrint("L1MDCT: Not in SND state and can not continue support this command!")
-            return -1,0
-        #正常状态
-        if(self.IsSerialOpenOk == False):
-            self.funcMdctdDebugPrint("L1MDCT: Serial not opened, cant not send command!")
-            return -2,0
-        #串口的确已经被打开了
-        self.serialFd.write(cmd)
-        rcvBuf = self.serialFd.readline()
-        length = len(rcvBuf)
-        if (length <=0):
-            self.funcMdctdDebugPrint("L1MDCT: Nothing received. RCV BUF = " + str(rcvBuf))
-            return -3,0
-        outBuf = ''
-        for i in range(length):
-            outBuf += ("%02X "%(rcvBuf[i]))
-        self.funcMdctdDebugPrint("L1MDCT: RCV BUF = " + outBuf)
-        #Check CRC
-        targetCrc = rcvBuf[length-2] + (rcvBuf[length-1]<<8)
-        rcvCrc = self.funcCacCrc(rcvBuf, length-2)
-        if (rcvCrc != targetCrc):
-            self.funcMdctdDebugPrint("L1MDCT: Receive CRC Error!")
-            return -4,0
-        if (rcvBuf[0] != cmd[0]):
-            self.funcMdctdDebugPrint("L1MDCT: Receive EquId Error!")
-            return -5,0
-        outPar=0
-        fmt = ">i";
-        upBuf = rcvBuf[3:7]
-        outPar = struct.unpack(fmt, upBuf)
-        return 1, outPar[0]
-    
     #初始化串口
     def funcInitSps(self):
         self.IsSerialOpenOk = False
@@ -442,6 +443,98 @@ class clsL1_MdcThd(QThread):
             self.IsSerialOpenOk = True
             self.funcMdctdDebugPrint("L1MDCT: Success open serial port!")
             return 1
+    
+    #用于支持单个任务模式
+    def funcSendMengCmd(self, cmdId, par1, par2, par3, par4):
+        if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_SND):
+            self.funcMdctdDebugPrint("L1MDCT: Not in SND state and can not continue support this command!")
+            return -1,0
+        return self.funcSendCmdPack(cmdId, par1, par2, par3, par4)
+    
+    #命令打包
+    def funcSendCmdPack(self, cmdId, par1, par2, par3, par4):
+        #Build MODBUS COMMAND:系列化
+        fmt = ">BBiiii";
+        byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, par1, par2, par3, par4)
+        crc = self.funcCacCrc(byteDataBuf, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
+        fmt = "<H";
+        byteCrc = struct.pack(fmt, crc)
+        byteDataBuf += byteCrc
+        #打印完整的BYTE系列
+        index=0
+        outBuf=''
+        while index < (ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
+            outBuf += str("%02X " % (byteDataBuf[index]))
+            index+=1
+        self.funcMdctdDebugPrint("L1MDCT: SND CMD = " + outBuf)
+        res, Buf = self.funcCmdSend(byteDataBuf)
+        if (res > 0):
+            return Buf
+        else:
+            return res
+
+    #单条命令的执行
+    def funcCmdSend(self, cmd):
+        #正常状态
+        if(self.IsSerialOpenOk == False):
+            self.funcMdctdDebugPrint("L1MDCT: Serial not opened, cant not send command!")
+            return -2,0
+        #串口的确已经被打开了
+        self.serialFd.write(cmd)
+        rcvBuf = self.serialFd.readline()
+        length = len(rcvBuf)
+        if (length <=0):
+            self.funcMdctdDebugPrint("L1MDCT: Nothing received. RCV BUF = " + str(rcvBuf))
+            return -3,0
+        outBuf = ''
+        for i in range(length):
+            outBuf += ("%02X "%(rcvBuf[i]))
+        self.funcMdctdDebugPrint("L1MDCT: RCV BUF = " + outBuf)
+        #Check CRC
+        targetCrc = rcvBuf[length-2] + (rcvBuf[length-1]<<8)
+        rcvCrc = self.funcCacCrc(rcvBuf, length-2)
+        if (rcvCrc != targetCrc):
+            self.funcMdctdDebugPrint("L1MDCT: Receive CRC Error!")
+            return -4,0
+        if (rcvBuf[0] != cmd[0]):
+            self.funcMdctdDebugPrint("L1MDCT: Receive EquId Error!")
+            return -5,0
+        fmt = ">i";
+        upBuf = rcvBuf[3:7]
+        outPar = struct.unpack(fmt, upBuf)
+        return 1, outPar[0]
+    
+    #批量处理时的初始化
+    def funcBatInitPar(self):
+        if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_EXEC):
+            self.funcMdctdDebugPrint("L1MDCT: Not in EXEC state and can not continue support this command!")
+            return -1,0
+        #设置一圈步伐
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_PPC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_ROUND, 0, 0, 0)
+        #设置激活
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_WK_MODE_CMID, 1, 1, 0, 0)
+        #设置速度
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_SPD_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, 0, 0)
+        #设置加速度
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ACC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_ACC, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_ACC, 0, 0)
+        #设置加速度
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_DEACC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_DEACC, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_DEACC, 0, 0)
+        #设置归零速度
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ZO_SPD_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, 0, 0)
+        #设置归零加速度
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ZO_ACC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_ACC, ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_ACC, 0, 0)
+        #全部停止
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_STP_IMD_CMID, 1, 1, 0, 0)
+    
+    #连续带监控的命令执行
+    def funcExecMoveZero(self):
+        pass
+
+    #连续带监控的命令执行
+    def funcExecMoveAction(self, par1, par2, par3, par4):
+        pass
+
+
 
     
     '''
@@ -452,26 +545,30 @@ class clsL1_MdcThd(QThread):
             
             #初始化等待
             if (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_INIT):
-                self.funcMdctdDebugPrint("L1MDCT: I am alive! State = %d" % (self.MDCT_STM_STATE))
+                #self.funcMdctdDebugPrint("L1MDCT: I am alive! State = %d" % (self.MDCT_STM_STATE))
                 time.sleep(1)
 
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_SPS_RGT):
                 self.funcMdctdDebugPrint("L1MDCT: Get communication rights and start init port!")
                 if (self.funcInitSps() > 0):
                     self.funcMdctdDebugPrint("L1MDCT: Init sps port successful!")
-                    self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_SND
+                    if (self.MDCT_SPS_USAGE == self.__CEBS_MDCT_SPS_USAGE_MENG_UI):
+                        self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_SND
+                    else:
+                        self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXEC
+                        self.funcBatInitPar()
                 else:
                     self.funcMdctdDebugPrint("L1MDCT: Init sps port failured!")
                     self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_INIT
 
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_SND):
                 #self.funcMdctdDebugPrint("L1MDCT: I am in SND state, waiting for command coming!")
-                time.sleep(0.1)
+                time.sleep(1)
             
             #暂时未用的状态：可能用来被其它之用
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_EXEC):
-                self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_CMPL
-                self.funcMdctdDebugPrint("L1MDCT: I am in EXEC state!")
+                #self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_CMPL
+                #self.funcMdctdDebugPrint("L1MDCT: I am in EXEC state!")
                 time.sleep(1)
 
             #暂时未用的状态：可能用来被其它之用

@@ -229,7 +229,11 @@ class clsL3_CalibProc(object):
         iniObj.updateSectionPar();
         self.funcCalibLogTrace("L3CALIB: RightUp Axis set!  XY=%d/%d." % (ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2], ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3]))       
 
+    def funcCalibGetSpsRights(self, par):
+        self.instL2MotoProc.funcGetSpsRights(par);
 
+    def funcCalibRelSpsRights(self, par):
+        self.instL2MotoProc.funcRelSpsRights(par);
 
 
 '''

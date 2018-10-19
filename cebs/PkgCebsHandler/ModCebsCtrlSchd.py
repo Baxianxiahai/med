@@ -271,6 +271,14 @@ class clsL3_CtrlSchdThread(QThread):
         else:
             return -1;
 
+    def funcCtrlGetSpsRights(self, par):
+        self.instL2MotoProc.funcGetSpsRights(par);
+
+    def funcCtrlRelSpsRights(self, par):
+        self.instL2MotoProc.funcRelSpsRights(par);
+
+
+
     '''
           任务主程序
     '''                        

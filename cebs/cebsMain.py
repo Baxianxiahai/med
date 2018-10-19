@@ -16,14 +16,12 @@ MAIN => 主入口
             |---clsL2_VisCfyProc => 图像识别线程
             |---clsL2_MotoProc => 马达控制任务
                 |---clsL1_MotoDrvApi => 马达驱动接口
-                |---clsL1_MdcThd => 自研马达控制器任务
     |---SEUI_L4_CalibForm => 校准界面
         |---clsL3_CalibProc => 校准任务
             |---clsL2_CalibPilotThread => 校准巡游线程
             |---clsL2_CalibCamDispThread => 摄像头显示视频线程
             |---clsL2_MotoProc => 马达控制任务
                 |---clsL1_MotoDrvApi => 马达驱动接口
-                |---clsL1_MdcThd => 自研马达控制器任务
     |---SEUI_L4_GparForm => 参数设置界面
         |---clsL3_GparProc => 参数填写接口
     |---CommonLib
@@ -33,19 +31,20 @@ MAIN => 主入口
             |---clsL0_MedComPicPar=> 图像参数
     |---SEUI_L4_MengForm => 马达工程模式界面
         |---clsL3_MengProc => 马达工程模式参数填写接口
-            |---clsL2_MotoProc => 马达控制任务
                 |---clsL1_MdcThd => 自研马达控制器任务
 
 线程启动过程
     SEUI_L4_MainWindow
         -> clsL3_CtrlSchdThread  => 调度任务，静态，已经完善对该状态的改造
+                |---clsL1_MdcThd => 自研马达控制器任务 - 被启动第一个线程
     -> SEUI_L4_CalibForm
         -> clsL3_CalibProc
             -> clsL2_CalibPilotThread  =>巡游任务，静态，简单的工作任务，使用信号槽触发，不需要状态机
             -> clsL2_CalibCamDispThread  => 摄像头显示图像任务，动态
+                |---clsL1_MdcThd => 自研马达控制器任务 - 被启动第二个线程
     -> SEUI_L4_GparForm
     -> SEUI_L4_MengForm
-                |---clsL1_MdcThd => 自研马达控制器任务
+                |---clsL1_MdcThd => 自研马达控制器任务 - 被启动第三个线程
 
 注意：信号槽，只能在线程和任务之间传递，所以普通的CLASS是不能增加信号槽的，设计机制时需要注意
 
@@ -175,6 +174,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.slot_print_trigger(res)
         #STEP8: SEND BACK-ZERO SIGNAL TO MOTO, 发送归零信号给马达 #MAKE MOTO GO BACK TO ZERO
         self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
+        #STEP9:抢占硬件资源
+        self.instL3CtrlSchdThd.funcCtrlGetSpsRights(1)
     
     def aboutCompanyBox(self):
         QMessageBox.about(self, '公司信息', '上海小慧智能科技有限公司, 上海纳贤路800号，科海大厦3楼')   
@@ -246,6 +247,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.instL3CtrlSchdThd.sgL3CtrlCalibStart.emit()
         if not self.instL4CalibForm.isVisible():
             self.sgL4MainWinUnvisible.emit()
+            #抢占硬件资源
+            self.instL4CalibForm.instL3CalibProc.funcCalibGetSpsRights(2);
             self.instL4CalibForm.show()
 
     #Enter parameter setting session
@@ -261,7 +264,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         if not self.instL4MengForm.isVisible():
             self.sgL4MainWinUnvisible.emit()
             #抢占硬件资源
-            self.instL4MengForm.funcGetLowLevelResource();
+            self.instL4MengForm.funcGetLowLevelResource(3);
             self.instL4MengForm.show()
 
     #Enter Selection Active Hole Target Mode
@@ -293,6 +296,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         if not self.isVisible():
             self.show()
         self.instL3CtrlSchdThd.sgL3CtrlCalibStop.emit()
+        #抢占硬件资源
+        self.instL3CtrlSchdThd.funcCtrlGetSpsRights(1)
         self.med_debug_print("L4MAIN: Main form welcome to come back!")
 
     #Control UI un-visible
@@ -300,6 +305,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         if self.isVisible():
             self.hide()
             self.med_debug_print("L4MAIN: Main form hide!")
+        #释放硬件资源
+        self.instL3CtrlSchdThd.funcCtrlRelSpsRights(1)
 
     '''采用简化模式，省的启动那么多类的Instance
     #self.instL2MotoProc = ModCebsMoto.clsL2_MotoProc(self, 1) #第一种选择
@@ -616,6 +623,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.timer.setInterval(1)
         self.timer.start()
         self.timer.timeout.connect(self.onTimerOutUp) 
+        
     def slot_calib_pilot_move_up_released(self):
         self.timer.stop()    
     
@@ -624,6 +632,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.timer.setInterval(1)
         self.timer.start()
         self.timer.timeout.connect(self.onTimerOutDown) 
+        
     def slot_calib_pilot_move_down_released(self):
         self.timer.stop()
         
@@ -632,6 +641,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.timer.setInterval(1)
         self.timer.start()
         self.timer.timeout.connect(self.onTimerOutLeft) 
+        
     def slot_calib_pilot_move_left_released(self):
         self.timer.stop()
         
@@ -639,7 +649,8 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.timer=QTimer()
         self.timer.setInterval(1)
         self.timer.start()
-        self.timer.timeout.connect(self.onTimerOutRight) 
+        self.timer.timeout.connect(self.onTimerOutRight)
+        
     def slot_calib_pilot_move_right_released(self):
         self.timer.stop()          
     '''          
@@ -777,11 +788,12 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
             self.instL3CalibProc.funcCtrlCalibComp()
         except Exception:
             self.instL1ConfigOpr1.medErrorLog("L4CALIBMAIN: Execute instL3CalibProc.funcCtrlCalibComp() get error feedback.")
-        self.sgL4MainWinVisible.emit()
         self.close()
 
     def closeEvent(self, event):
         self.instL3CalibProc.funcRecoverWorkingEnv()
+        #释放硬件资源
+        self.instL3CalibProc.funcCalibRelSpsRights(2)
         self.sgL4MainWinVisible.emit()
         self.close()
 
@@ -990,53 +1002,50 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
     #
     #    
     def slot_meng_compl(self):
-        self.sgL4MainWinVisible.emit()
         self.close()
 
     #Give up and not save parameters
     def slot_meng_giveup(self):
-        self.funcRelLowLevelResource()
-        self.sgL4MainWinVisible.emit()
         self.close()
 
     #Send the command out
     def slot_meng_cmd_send(self):
         text_list = self.listWidget_meng_cmd.selectedItems()
         text = [i.text() for i in list(text_list)]
-        if (str(text).find('设备握手（shake_hand）') > 0):
-            cmd = 0x20
-        elif (str(text).find('设置工作模式（set_wk_mode）') > 0):
-            cmd = 0x21
-        elif (str(text).find('设置加速度（set_acc）') > 0):
-            cmd = 0x22
-        elif (str(text).find('设置减速度（set_deacc）') > 0):
-            cmd = 0x23
-        elif (str(text).find('设置一圈步伐（set_pules_per_cycle）') > 0):
-            cmd = 0x24
-        elif (str(text).find('设置移动速度（set_mv_spd）') > 0):
-            cmd = 0x25
-        elif (str(text).find('设置归零速度（set_zero_spd）') > 0):
-            cmd = 0x26
-        elif (str(text).find('设置归零加速度（set_zero_acc）') > 0):
-            cmd = 0x27
-        elif (str(text).find('设置靠边后退步伐（set_int_steps）') > 0):
-            cmd = 0x28
-        elif (str(text).find('移动步伐（mv_pules）') > 0):
-            cmd = 0x30
-        elif (str(text).find('移动速度（mv_spd）') > 0):
-            cmd = 0x31
-        elif (str(text).find('归零（mv_zero）') > 0):
-            cmd = 0x32
-        elif (str(text).find('立即停止（stop_imd）') > 0):
-            cmd = 0x33
-        elif (str(text).find('缓慢停止（stop_nor)') > 0):
-            cmd = 0x34
-        elif (str(text).find('查询激活状态（inq_enable）') > 0):
-            cmd = 0x35
-        elif (str(text).find('查询运行状态（inq_run）') > 0):
-            cmd = 0x36
+        if (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SHK_HAND) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SHK_HAND_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_WK_MODE) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_WK_MODE_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ACC) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ACC_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_DEACC) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_DEACC_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_PPC) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_PPC_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_SPD) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_SPD_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ZO_SPD) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ZO_SPD_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ZO_ACC) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ZO_ACC_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_INT_SP) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_INT_SP_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_PULS) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_PULS_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_SPD) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_SPD_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_ZERO) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_ZERO_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_STP_IMD) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_STP_IMD_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_STP_NOR) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_STP_NOR_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_INQ_EN) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_INQ_EN_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_INQ_RUN) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_INQ_RUN_CMID
         else:
-            cmd = 0x20
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SHK_HAND_CMID
         
         try: 
             par1 = int(self.lineEdit_meng_par1.text());
@@ -1065,15 +1074,15 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
 
     #Give up and not save parameters
     def closeEvent(self, event):
-        self.funcRelLowLevelResource()
+        self.funcRelLowLevelResource(3)
         self.sgL4MainWinVisible.emit()
         self.close()
 
-    def funcGetLowLevelResource(self):
-        self.instL3MengProc.funcGetSpsRights()
+    def funcGetLowLevelResource(self, par):
+        self.instL3MengProc.funcGetSpsRights(par)
 
-    def funcRelLowLevelResource(self):
-        self.instL3MengProc.funcRelSpsRights()
+    def funcRelLowLevelResource(self, par):
+        self.instL3MengProc.funcRelSpsRights(par)
 
 
 '''

@@ -379,6 +379,69 @@ GLVIS_PAR_OFC = clsL0_MedComPicPar()
 GLVIS_PAR_SAV = clsL0_MedComPicPar()
 
 
+'''
+PART3: 串口指令
 
+#封装
+方便对参数进行维护，包括增删
+'''
+class clsL0_MedSpsPar():
+
+    SPS_SHK_HAND = '设备握手（shake_hand）'
+    SPS_SET_WK_MODE = '设置工作模式（set_wk_mode）'
+    SPS_SET_ACC = '设置加速度（set_acc）'
+    SPS_SET_DEACC = '设置减速度（set_deacc）'
+    SPS_SET_PPC = '设置一圈步伐（set_pules_per_cycle）'
+    SPS_SET_MV_SPD = '设置移动速度（set_mv_spd）'
+    SPS_SET_ZO_SPD = '设置归零速度（set_zero_spd）'
+    SPS_SET_ZO_ACC = '设置归零加速度（set_zero_acc）'
+    SPS_SET_INT_SP = '设置靠边后退步伐（set_int_steps）'
+    SPS_SET_MV_PULS = '移动步伐（mv_pules）'
+    SPS_SET_MV_SPD = '移动速度（mv_spd）'
+    SPS_SET_MV_ZERO = '归零（mv_zero）'
+    SPS_SET_STP_IMD = '立即停止（stop_imd）'
+    SPS_SET_STP_NOR = '缓慢停止（stop_nor)'
+    SPS_SET_INQ_EN = '查询激活状态（inq_enable）'
+    SPS_SET_INQ_RUN = '查询运行状态（inq_run）'
+
+    SPS_SHK_HAND_CMID = 0x20
+    SPS_SET_WK_MODE_CMID = 0x21
+    SPS_SET_ACC_CMID = 0x22
+    SPS_SET_DEACC_CMID = 0x23
+    SPS_SET_PPC_CMID = 0x24
+    SPS_SET_MV_SPD_CMID = 0x25
+    SPS_SET_ZO_SPD_CMID = 0x26
+    SPS_SET_ZO_ACC_CMID = 0x27
+    SPS_SET_INT_SP_CMID = 0x28
+    SPS_SET_MV_PULS_CMID = 0x30
+    SPS_SET_MV_SPD_CMID = 0x31
+    SPS_SET_MV_ZERO_CMID = 0x32
+    SPS_SET_STP_IMD_CMID = 0x33
+    SPS_SET_STP_NOR_CMID = 0x34
+    SPS_SET_INQ_EN_CMID = 0x35
+    SPS_SET_INQ_RUN_CMID = 0x36
+    
+    SPS_MENGPAR_ADDR  = 0x77
+    SPS_MENGPAR_CMD_LEN = 18
+    
+    MOTOR_STEPS_PER_ROUND = 12800   #NF0
+    MOTOR_DIS_MM_PER_ROUND = 3.1415926*20*1.05 #*106/50
+    MOTOR_MAX_SPD = 10  #NF1
+    MOTOR_MAX_ACC = 10  #NF1
+    MOTOR_MAX_DEACC = 10  #NF1
+    MOTOR_ZERO_SPD = 10 #NF1
+    MOTOR_ZERO_ACC = 10 #NF1
+    MOTOR_STEPS_PER_DISTANCE_MM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND
+    MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND / 1000    
+    
+    def __init__(self):    
+        super(clsL0_MedSpsPar, self).__init__()  
+        pass
+    
+    def funcTest(self, par):
+        pass
+                
+#定义全局变量以及操作函数
+GLSPS_PAR_OFC = clsL0_MedSpsPar()
 
 
