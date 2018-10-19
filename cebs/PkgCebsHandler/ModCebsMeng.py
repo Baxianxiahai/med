@@ -36,17 +36,28 @@ class clsL3_MengProc(object):
         self.identity = None;
         self.instL4MengForm = father
         self.objInitCfg=ModCebsCfg.clsL1_ConfigOpr();
+        #启动专属服务
+        self.objMdcThd = ModCebsMoto.clsL1_MdcThd(self);
+        self.objMdcThd.setIdentity("TASK_MotoDrvCtrlThread")
+        self.objMdcThd.sgL4MainWinPrtLog.connect(self.funcDebugPrint)
+        self.objMdcThd.start();
 
     def funcDebugPrint(self, myString):
         self.instL4MengForm.med_debug_print(myString)
+
+    def funcGetSpsRights(self):
+        self.objMdcThd.funcGetSpsRights();
+
+    def funcRelSpsRights(self):
+        self.objMdcThd.funcRelSpsRights();
     
     #命令生成    
     def funcSendCmd2Moto(self, cmdId, par1, par2, par3, par4):
-        self.funcDebugPrint("MPC: CmdId=%d, par1/2/3/4=%d/%d/%d/%d" %(cmdId, par1, par2, par3, par4))
+        #self.funcDebugPrint("MPC: CmdId=%d, par1/2/3/4=%d/%d/%d/%d" %(cmdId, par1, par2, par3, par4))
         #Build MODBUS COMMAND:系列化
         fmt = ">BBiiii";
         byteDataBuf = struct.pack(fmt, MENGPAR_ADDR, cmdId, par1, par2, par3, par4)
-        print("0x%x - 0x%x" % (byteDataBuf[0], byteDataBuf[1]))
+        #print("0x%x - 0x%x" % (byteDataBuf[0], byteDataBuf[1]))
         crc = self.funcCacCrc(byteDataBuf, MENGPAR_CMD_LEN)
         fmt = "<H";
         byteCrc = struct.pack(fmt, crc)
@@ -57,7 +68,8 @@ class clsL3_MengProc(object):
         while index < MENGPAR_CMD_LEN+2:
             outBuf += str("%X " % (byteDataBuf[index]))
             index+=1
-        self.instL4MengForm.med_debug_print("MENGPAR: SND CMD = " + outBuf)
+        self.instL4MengForm.med_debug_print("L3MEP: SND CMD = " + outBuf)
+        self.objMdcThd.funcCmdSend(byteDataBuf)
         
     def funcCacCrc(self, buf, length):
         wCRC = 0xFFFF;

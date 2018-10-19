@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_cebsMengForm(object):
     def setupUi(self, cebsMengForm):
         cebsMengForm.setObjectName("cebsMengForm")
-        cebsMengForm.resize(1185, 558)
+        cebsMengForm.resize(1185, 521)
         self.label_meng_cmd_sel = QtWidgets.QLabel(cebsMengForm)
         self.label_meng_cmd_sel.setGeometry(QtCore.QRect(20, 50, 54, 12))
         self.label_meng_cmd_sel.setObjectName("label_meng_cmd_sel")
@@ -104,7 +104,7 @@ class Ui_cebsMengForm(object):
 
     def retranslateUi(self, cebsMengForm):
         _translate = QtCore.QCoreApplication.translate
-        cebsMengForm.setWindowTitle(_translate("cebsMengForm", "GLOBAL PARAMETER"))
+        cebsMengForm.setWindowTitle(_translate("cebsMengForm", "SPS COMMAND"))
         self.label_meng_cmd_sel.setText(_translate("cebsMengForm", "命令选择"))
         __sortingEnabled = self.listWidget_meng_cmd.isSortingEnabled()
         self.listWidget_meng_cmd.setSortingEnabled(False)

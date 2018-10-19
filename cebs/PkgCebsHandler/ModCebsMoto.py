@@ -62,7 +62,6 @@ class clsL2_MotoProc(object):
             self.funcMotoLogTrace("L2MOTO: Fetch moto hardware driver ver nbr (%s), but can not read success!" % str(self.motoSpsDrvVer))
         else:
             self.funcMotoLogTrace("L2MOTO: Fetch moto hardware driver ver nbr = %s" % str(self.motoSpsDrvVer))
-        #print("Test")
 
     def funcMotoLogTrace(self, myString):
         self.instL4WinForm.med_debug_print(myString)
@@ -282,8 +281,105 @@ class clsL2_MotoProc(object):
             return 2
     
     
+'''
+自研马达控制器的驱动API函数
+考虑到马达的外部控制命令必须使用状态机和异步式，所以这里采用状态机来操控
+接口支持MODBUS协议，自定义格式，未来可以考虑扩充支持其它格式
+'''    
+class clsL1_MdcThd(QThread):
+    sgL4MainWinPrtLog = pyqtSignal(str) #DECLAR SIGNAL
     
+    #STATE MACHINE
+    __CEBS_STM_MDCT_NULL =      0;
+    __CEBS_STM_MDCT_INIT =      1;
+    __CEBS_STM_MDCT_SPS_RGT =   2;
+    __CEBS_STM_MDCT_CMD_SND =   3;
+    __CEBS_STM_MDCT_CMD_EXEC =  4;
+    __CEBS_STM_MDCT_CMD_CMPL =  5;
+    __CEBS_STM_MDCT_REL_RGT =   6;
+    __CEBS_STM_MDCT_INVALID =   0xFF;
+    MDCT_STM_STATE = 0;
+
+    def __init__(self, father):
+        super(clsL1_MdcThd, self).__init__()
+        self.identity = None;
+        self.capTimes = -1;
+        self.instL4WinMainForm = father
+        self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr();
+        self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_INIT;
+        
+        #INIT STM
+        self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_INIT;
+        self.funcMdctdDebugPrint("L1MDCT: Instance start!")
     
+    '''
+          基础函数部分
+    '''        
+    def setIdentity(self,text):
+        self.identity = text
+
+    def funcCtrlStateGet(self):
+        return self.MDCT_STM_STATE
+
+    def funcGetSpsRights(self):
+        self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_SPS_RGT;
+
+    def funcRelSpsRights(self):
+        self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_REL_RGT;
+
+    def funcMdctdDebugPrint(self, string):
+        self.sgL4MainWinPrtLog.emit(string)
+
+    def funcResetWkStatus(self):
+        self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_INIT;    
+
+    def funcCmdSend(self, cmd):
+        if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_SND):
+            self.funcMdctdDebugPrint("L1MDCT: Not in SND state!")
+            return -1
+        else:
+            pass
+
+
     
-    
+    '''
+          任务主程序
+    '''                        
+    def run(self):
+        while True:
+            
+            #初始化等待
+            if (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_INIT):
+                self.funcMdctdDebugPrint("L1MDCT: I am alive! State = %d" % (self.MDCT_STM_STATE))
+                time.sleep(1)
+
+            elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_SPS_RGT):
+                self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_SND
+                self.funcMdctdDebugPrint("L1MDCT: Get communication rights and start init port!")
+                time.sleep(1)
+
+            elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_SND):
+                self.funcMdctdDebugPrint("L1MDCT: I am in SND state, waiting for command coming!")
+                time.sleep(1)
+                #self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXEC
+
+            elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_EXEC):
+                self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_CMPL
+                self.funcMdctdDebugPrint("L1MDCT: I am in EXEC state!")
+                time.sleep(1)
+
+            elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_CMPL):
+                self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_SND
+                self.funcMdctdDebugPrint("L1MDCT: I am in CMPL state!")
+                time.sleep(1)
+
+            elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_REL_RGT):
+                self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_INIT
+                self.funcMdctdDebugPrint("L1MDCT: Release Resource!")
+                time.sleep(1)
+
+            else:
+                self.funcMdctdDebugPrint("L1MDCT: Error state!")
+
+
         

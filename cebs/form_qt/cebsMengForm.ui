@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>1185</width>
-    <height>558</height>
+    <height>521</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>GLOBAL PARAMETER</string>
+   <string>SPS COMMAND</string>
   </property>
   <widget class="QLabel" name="label_meng_cmd_sel">
    <property name="geometry">

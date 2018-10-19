@@ -16,12 +16,14 @@ MAIN => 主入口
             |---clsL2_VisCfyProc => 图像识别线程
             |---clsL2_MotoProc => 马达控制任务
                 |---clsL1_MotoDrvApi => 马达驱动接口
+                |---clsL1_MdcThd => 自研马达控制器任务
     |---SEUI_L4_CalibForm => 校准界面
         |---clsL3_CalibProc => 校准任务
             |---clsL2_CalibPilotThread => 校准巡游线程
             |---clsL2_CalibCamDispThread => 摄像头显示视频线程
             |---clsL2_MotoProc => 马达控制任务
                 |---clsL1_MotoDrvApi => 马达驱动接口
+                |---clsL1_MdcThd => 自研马达控制器任务
     |---SEUI_L4_GparForm => 参数设置界面
         |---clsL3_GparProc => 参数填写接口
     |---CommonLib
@@ -31,6 +33,8 @@ MAIN => 主入口
             |---clsL0_MedComPicPar=> 图像参数
     |---SEUI_L4_MengForm => 马达工程模式界面
         |---clsL3_MengProc => 马达工程模式参数填写接口
+            |---clsL2_MotoProc => 马达控制任务
+                |---clsL1_MdcThd => 自研马达控制器任务
 
 线程启动过程
     SEUI_L4_MainWindow
@@ -41,6 +45,7 @@ MAIN => 主入口
             -> clsL2_CalibCamDispThread  => 摄像头显示图像任务，动态
     -> SEUI_L4_GparForm
     -> SEUI_L4_MengForm
+                |---clsL1_MdcThd => 自研马达控制器任务
 
 注意：信号槽，只能在线程和任务之间传递，所以普通的CLASS是不能增加信号槽的，设计机制时需要注意
 
@@ -255,6 +260,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.med_debug_print("L4MAIN: Moto Engineering start......")
         if not self.instL4MengForm.isVisible():
             self.sgL4MainWinUnvisible.emit()
+            #抢占硬件资源
+            self.instL4MengForm.funcGetLowLevelResource();
             self.instL4MengForm.show()
 
     #Enter Selection Active Hole Target Mode
@@ -684,6 +691,7 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
 
     #Give up and not save parameters
     def slot_meng_giveup(self):
+        self.funcRelLowLevelResource()
         self.sgL4MainWinVisible.emit()
         self.close()
 
@@ -752,10 +760,15 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
 
     #Give up and not save parameters
     def closeEvent(self, event):
+        self.funcRelLowLevelResource()
         self.sgL4MainWinVisible.emit()
         self.close()
 
+    def funcGetLowLevelResource(self):
+        self.instL3MengProc.funcGetSpsRights()
 
+    def funcRelLowLevelResource(self):
+        self.instL3MengProc.funcRelSpsRights()
 
 
 '''
