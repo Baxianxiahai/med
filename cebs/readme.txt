@@ -18,6 +18,8 @@
   pyuic5 -o  cebssahtform.py cebsSahtform.ui  //Set Active Hole Target
   d:, cd \IHUSRC\med\cebs
   pyinstaller -F -w --icon=.\icon_res\cebs.ico cebsMain.py
+= 增加clsL1_MdcThd模块和功能
+
 
 
 //=ZJL, 2018/10/9, CURRENT_SW_DELIVERY R1.26 =>CEBS

@@ -16,6 +16,9 @@ import re
 import urllib
 import http
 import socket
+import serial
+import serial.tools.list_ports
+import struct
 
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
@@ -300,6 +303,10 @@ class clsL1_MdcThd(QThread):
     __CEBS_STM_MDCT_INVALID =   0xFF;
     MDCT_STM_STATE = 0;
 
+    IsSerialOpenOk = False
+    serialFd = serial.Serial()
+    targetComPortString = ''
+
     def __init__(self, father):
         super(clsL1_MdcThd, self).__init__()
         self.identity = None;
@@ -332,14 +339,109 @@ class clsL1_MdcThd(QThread):
 
     def funcResetWkStatus(self):
         self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_INIT;    
+    
+    #计算CRC
+    def funcCacCrc(self, buf, length):
+        wCRC = 0xFFFF;
+        index=0
+        while index < length:
+            wCRCOut = self.funcCrcOneChar(buf[index], wCRC)
+            wCRC = wCRCOut
+            index += 1
+        wHi = wCRC // 256;
+        wLo = wCRC % 256;
+        wCRC = (wHi << 8) | wLo;
+        return wCRC;
 
+    #计算CRC支持功能
+    def funcCrcOneChar(self, cDataIn, wCRCIn):
+        wCheck = 0;
+        wCRCIn = wCRCIn ^ cDataIn;
+        i=0;
+        while i<8:
+            wCheck = wCRCIn & 1;
+            wCRCIn = wCRCIn >> 1;
+            wCRCIn = wCRCIn & 0x7fff;
+            if (wCheck == 1):
+                wCRCIn = wCRCIn ^ 0xa001;
+            wCRCIn = wCRCIn & 0xffff;
+            i += 1
+        return wCRCIn;
+
+    #价值命令   
     def funcCmdSend(self, cmd):
         if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_SND):
-            self.funcMdctdDebugPrint("L1MDCT: Not in SND state!")
-            return -1
+            self.funcMdctdDebugPrint("L1MDCT: Not in SND state and can not continue support this command!")
+            return -1,0
+        #正常状态
+        if(self.IsSerialOpenOk == False):
+            self.funcMdctdDebugPrint("L1MDCT: Serial not opened, cant not send command!")
+            return -2,0
+        #串口的确已经被打开了
+        self.serialFd.write(cmd)
+        rcvBuf = self.serialFd.readline()
+        length = len(rcvBuf)
+        if (length <=0):
+            self.funcMdctdDebugPrint("L1MDCT: Nothing received. RCV BUF = " + str(rcvBuf))
+            return -3,0
+        outBuf = ''
+        for i in range(length):
+            outBuf += ("%02X "%(rcvBuf[i]))
+        self.funcMdctdDebugPrint("L1MDCT: RCV BUF = " + outBuf)
+        #Check CRC
+        targetCrc = rcvBuf[length-2] + (rcvBuf[length-1]<<8)
+        rcvCrc = self.funcCacCrc(rcvBuf, length-2)
+        if (rcvCrc != targetCrc):
+            self.funcMdctdDebugPrint("L1MDCT: Receive CRC Error!")
+            return -4,0
+        if (rcvBuf[0] != cmd[0]):
+            self.funcMdctdDebugPrint("L1MDCT: Receive EquId Error!")
+            return -5,0
+        outPar=0
+        fmt = ">i";
+        upBuf = rcvBuf[3:7]
+        outPar = struct.unpack(fmt, upBuf)
+        return 1, outPar[0]
+    
+    #初始化串口
+    def funcInitSps(self):
+        self.IsSerialOpenOk = False
+        plist = list(serial.tools.list_ports.comports())
+        self.targetComPortString = 'Silicon Labs CP210x USB to UART Bridge ('
+        self.drvVerNbr = -1
+        if len(plist) <= 0:
+            self.instL1ConfigOpr.medErrorLog("L1MDCT: Not serial device installed!")
+            self.funcMdctdDebugPrint("L1MDCT: Not serial device installed!")
         else:
-            pass
-
+            maxList = len(plist)
+            searchComPartString = ''
+            for index in range(0, maxList):
+                self.instL1ConfigOpr.medErrorLog("L1MDCT: " + str(plist[index]))
+                plistIndex =list(plist[index])
+                print(plistIndex)
+                #Find right COM#
+                for comPortStr in plistIndex:
+                    indexStart = comPortStr.find(self.targetComPortString)
+                    indexEnd = comPortStr.find(')')
+                    if (indexStart >= 0) and (indexEnd >=0) and (indexEnd > len(self.targetComPortString)):
+                        searchComPartString = comPortStr[len(self.targetComPortString):indexEnd]
+            if searchComPartString == '':
+                self.funcMdctdDebugPrint("L1MDCT: Can not find right serial port!")
+                self.instL1ConfigOpr.medErrorLog("L1MDCT: Can not find right serial port!")
+                return -1
+            else:
+                print("L1MDCT: Serial port is to open = ", searchComPartString)
+                self.funcMdctdDebugPrint("L1MDCT: Serial port is to open = " + str(searchComPartString))
+                serialName = searchComPartString
+            try:
+                self.serialFd = serial.Serial(serialName, 9600, timeout = 0.3)
+            except Exception:
+                self.IsSerialOpenOk = False
+                self.funcMdctdDebugPrint("L1MDCT: Serial exist, but can't open!")
+                return -1
+            self.IsSerialOpenOk = True
+            self.funcMdctdDebugPrint("L1MDCT: Success open serial port!")
+            return 1
 
     
     '''
@@ -354,26 +456,33 @@ class clsL1_MdcThd(QThread):
                 time.sleep(1)
 
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_SPS_RGT):
-                self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_SND
                 self.funcMdctdDebugPrint("L1MDCT: Get communication rights and start init port!")
-                time.sleep(1)
+                if (self.funcInitSps() > 0):
+                    self.funcMdctdDebugPrint("L1MDCT: Init sps port successful!")
+                    self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_SND
+                else:
+                    self.funcMdctdDebugPrint("L1MDCT: Init sps port failured!")
+                    self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_INIT
 
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_SND):
-                self.funcMdctdDebugPrint("L1MDCT: I am in SND state, waiting for command coming!")
-                time.sleep(1)
-                #self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXEC
-
+                #self.funcMdctdDebugPrint("L1MDCT: I am in SND state, waiting for command coming!")
+                time.sleep(0.1)
+            
+            #暂时未用的状态：可能用来被其它之用
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_EXEC):
                 self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_CMPL
                 self.funcMdctdDebugPrint("L1MDCT: I am in EXEC state!")
                 time.sleep(1)
 
+            #暂时未用的状态：可能用来被其它之用
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_CMPL):
                 self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_SND
                 self.funcMdctdDebugPrint("L1MDCT: I am in CMPL state!")
                 time.sleep(1)
 
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_REL_RGT):
+                self.IsSerialOpenOk = False
+                self.serialFd.close()
                 self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_INIT
                 self.funcMdctdDebugPrint("L1MDCT: Release Resource!")
                 time.sleep(1)

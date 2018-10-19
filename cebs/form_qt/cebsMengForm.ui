@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>50</y>
+     <y>10</y>
      <width>54</width>
      <height>12</height>
     </rect>
@@ -30,7 +30,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>70</y>
+     <y>30</y>
      <width>421</width>
      <height>151</height>
     </rect>
@@ -120,7 +120,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>240</y>
+     <y>200</y>
      <width>54</width>
      <height>12</height>
     </rect>
@@ -133,7 +133,7 @@
    <property name="geometry">
     <rect>
      <x>130</x>
-     <y>240</y>
+     <y>200</y>
      <width>54</width>
      <height>12</height>
     </rect>
@@ -146,7 +146,7 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>240</y>
+     <y>200</y>
      <width>54</width>
      <height>12</height>
     </rect>
@@ -159,7 +159,7 @@
    <property name="geometry">
     <rect>
      <x>350</x>
-     <y>240</y>
+     <y>200</y>
      <width>54</width>
      <height>12</height>
     </rect>
@@ -172,7 +172,7 @@
    <property name="geometry">
     <rect>
      <x>320</x>
-     <y>300</y>
+     <y>260</y>
      <width>121</width>
      <height>51</height>
     </rect>
@@ -241,7 +241,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>260</y>
+     <y>220</y>
      <width>91</width>
      <height>20</height>
     </rect>
@@ -254,7 +254,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>130</x>
-     <y>260</y>
+     <y>220</y>
      <width>91</width>
      <height>20</height>
     </rect>
@@ -267,7 +267,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>260</y>
+     <y>220</y>
      <width>91</width>
      <height>20</height>
     </rect>
@@ -280,7 +280,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>350</x>
-     <y>260</y>
+     <y>220</y>
      <width>91</width>
      <height>20</height>
     </rect>
@@ -289,30 +289,30 @@ p, li { white-space: pre-wrap; }
     <string>0</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_meng_sps_port">
+  <widget class="QLineEdit" name="lineEdit_meng_cmd_par">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>54</width>
-     <height>12</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>串口端口</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit_meng_sps_port">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>16</y>
-     <width>51</width>
+     <x>320</x>
+     <y>340</y>
+     <width>121</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>1</string>
+    <string>0</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_meng_cmd_par">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>320</y>
+     <width>81</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>命令返回参数</string>
    </property>
   </widget>
  </widget>

@@ -752,7 +752,8 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
             par4 = -1;            
                        
         #self.med_debug_print("MENG: Cmd = %d, Par1/2/3/4=%d/%d/%d/%d" % (cmd, par1, par2, par3, par4))
-        self.instL3MengProc.funcSendCmd2Moto(cmd, par1, par2, par3, par4)
+        res = self.instL3MengProc.funcSendCmd2Moto(cmd, par1, par2, par3, par4)
+        self.lineEdit_meng_cmd_par.setText(str(res))
         
     #Clear the command log text box
     def slot_meng_trace_clear(self):
