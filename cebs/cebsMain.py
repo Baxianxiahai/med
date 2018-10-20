@@ -1030,20 +1030,20 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
             cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ZO_ACC_CMID
         elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_INT_SP) > 0):
             cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_INT_SP_CMID
-        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_PULS) > 0):
-            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_PULS_CMID
-        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_SPD) > 0):
-            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_SPD_CMID
-        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_ZERO) > 0):
-            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_ZERO_CMID
-        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_STP_IMD) > 0):
-            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_STP_IMD_CMID
-        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_STP_NOR) > 0):
-            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_STP_NOR_CMID
-        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_INQ_EN) > 0):
-            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_INQ_EN_CMID
-        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_INQ_RUN) > 0):
-            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_INQ_RUN_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_PULS) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_MV_PULS_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_SPD) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_MV_SPD_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_ZERO) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_MV_ZERO_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_STP_IMD) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_STP_IMD_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_STP_NOR) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_STP_NOR_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_INQ_EN) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_INQ_EN_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_INQ_RUN) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_INQ_RUN_CMID
         else:
             cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SHK_HAND_CMID
         

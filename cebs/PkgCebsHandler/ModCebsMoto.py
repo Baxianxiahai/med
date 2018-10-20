@@ -33,12 +33,18 @@ from PkgCebsHandler import ModCebsMotorApi
 全局变量初始化
 全局变量设定，从而只干一次，不然每次随着moto模块的初始化，要搞两次，这就会出问题了
 '''
-instL1MotoDrvApiFlag = True
-try:
-    instL1MotoDrvApi = ModCebsMotorApi.clsL1_MotoDrvApi()
-except Exception:
+L1MOTO_API_SELECTION = False  #外购API方式-True，自研驱动-False
+
+if L1MOTO_API_SELECTION == True:
+    instL1MotoDrvApiFlag = True
+    try:
+        instL1MotoDrvApi = ModCebsMotorApi.clsL1_MotoDrvApi()
+    except Exception:
+        instL1MotoDrvApiFlag = False
+    print("L2MOTO: Status of Moto driver =", instL1MotoDrvApiFlag)
+else:
     instL1MotoDrvApiFlag = False
-print("L2MOTO: Status of Moto driver =", instL1MotoDrvApiFlag)
+    print("L2MOTO: Using self-designed board!")
 
 
 '''
@@ -55,17 +61,20 @@ class clsL2_MotoProc(object):
         self.motoSpsDrvVer = -2
         #打印到文件专用
         self.instL1ConfigOpr = ModCebsCfg.clsL1_ConfigOpr()
-        if (instL1MotoDrvApiFlag == True):
-            self.motoSpsDrvVer = instL1MotoDrvApi.getDrvVerNbr()
-        #Trigger
-        self.funcMotoLogTrace("L2MOTO: Instance start test!")
-        if (self.motoSpsDrvVer == -2):
-            self.funcMotoLogTrace("L2MOTO: Fetch moto hardware driver ver nbr (%s), but initialize failure!" % str(self.motoSpsDrvVer))
-        elif (self.motoSpsDrvVer == -1):
-            self.funcMotoLogTrace("L2MOTO: Fetch moto hardware driver ver nbr (%s), but can not read success!" % str(self.motoSpsDrvVer))
-        else:
-            self.funcMotoLogTrace("L2MOTO: Fetch moto hardware driver ver nbr = %s" % str(self.motoSpsDrvVer))
+        #外购方式
+        if L1MOTO_API_SELECTION == True:
+            if (instL1MotoDrvApiFlag == True):
+                self.motoSpsDrvVer = instL1MotoDrvApi.getDrvVerNbr()
+            #Trigger
+            self.funcMotoLogTrace("L2MOTO: Instance start test!")
+            if (self.motoSpsDrvVer == -2):
+                self.funcMotoLogTrace("L2MOTO: Fetch moto hardware driver ver nbr (%s), but initialize failure!" % str(self.motoSpsDrvVer))
+            elif (self.motoSpsDrvVer == -1):
+                self.funcMotoLogTrace("L2MOTO: Fetch moto hardware driver ver nbr (%s), but can not read success!" % str(self.motoSpsDrvVer))
+            else:
+                self.funcMotoLogTrace("L2MOTO: Fetch moto hardware driver ver nbr = %s" % str(self.motoSpsDrvVer))
         #第二部分：启动马达控制的具体逻辑
+        #自研部分肯定启动，简化程序的设计
         self.objMdcThd = ModCebsMoto.clsL1_MdcThd(self.instL4WinForm, 2);
         self.objMdcThd.setIdentity("TASK_MotoDrvCtrlThread"+str(self.instL4WinForm))
         self.objMdcThd.sgL4MainWinPrtLog.connect(self.funcMotoLogTrace)
@@ -210,8 +219,13 @@ class clsL2_MotoProc(object):
             return -2;
     
     def funcMotoBackZero(self):
-        return self.funcMotoMove2HoleNbr(0);
-        #print("L2MOTO: Running Zero Position!")
+        print("L2MOTO: Running Zero Position!")
+        #自研
+        if (L1MOTO_API_SELECTION == False):
+            return self.objMdcThd.funcExecMoveZero()
+        #外购
+        else:
+            return self.funcMotoMove2HoleNbr(0);
 
     def funcMotoMove2Start(self):
         print("L2MOTO: Move to start position - Left/up!")
@@ -235,12 +249,17 @@ class clsL2_MotoProc(object):
 
     def funcMotoStop(self):
         self.instL1ConfigOpr.medCmdLog("L2MOTO: Send full stop command to moto!")
-        if (instL1MotoDrvApiFlag == True):
-            res = instL1MotoDrvApi.moto_proc_full_stop()
-            if (res < 0):
-                print("L2MOTO: funcMotoStop() execute error!")
-                return -1
-        return 1
+        #自研部分
+        if (L1MOTO_API_SELECTION == False):
+            return self.objMdcThd.funcExecStopNormal()
+        #外部采购
+        else:
+            if (instL1MotoDrvApiFlag == True):
+                res = instL1MotoDrvApi.moto_proc_full_stop()
+                if (res < 0):
+                    print("L2MOTO: funcMotoStop() execute error!")
+                    return -1
+            return -2
     
     def funcMotoResume(self):
         print("L2MOTO: Resume action running...")
@@ -277,16 +296,22 @@ class clsL2_MotoProc(object):
 
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy):
         print("L2MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy))
-        if (instL1MotoDrvApiFlag == True):
-            self.instL1ConfigOpr.medCmdLog(("L2MOTO: Send command to moto, with par in (um): current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy)));
-            if (instL1MotoDrvApi.moto_proc_move_to_axis_postion(curPx, curPy, newPx, newPy) < 0):
-                print("L2MOTO: funcMotoMove2AxisPos() run error!")
-                self.instL1ConfigOpr.medErrorLog("L2MOTO: funcMotoMove2AxisPos get error!")
-                return -1
-            else:
-                return 1
+        #自研部分
+        if (L1MOTO_API_SELECTION == False):
+            self.objMdcThd.funcExecMoveDistance((newPx-curPx)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM, (newPy-curPy)**ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM);
+            return 1
+        #外购部分
         else:
-            return 2
+            if (instL1MotoDrvApiFlag == True):
+                self.instL1ConfigOpr.medCmdLog(("L2MOTO: Send command to moto, with par in (um): current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy)));
+                if (instL1MotoDrvApi.moto_proc_move_to_axis_postion(curPx, curPy, newPx, newPy) < 0):
+                    print("L2MOTO: funcMotoMove2AxisPos() run error!")
+                    self.instL1ConfigOpr.medErrorLog("L2MOTO: funcMotoMove2AxisPos get error!")
+                    return -1
+                else:
+                    return 1
+            else:
+                return 2
     
     def funcGetSpsRights(self, par):
         self.objMdcThd.funcGetSpsRights(par);
@@ -308,21 +333,28 @@ class clsL1_MdcThd(QThread):
     sgL4MainWinPrtLog = pyqtSignal(str) #DECLAR SIGNAL
     
     #STATE MACHINE
-    __CEBS_STM_MDCT_NULL =      0;
-    __CEBS_STM_MDCT_INIT =      1;
-    __CEBS_STM_MDCT_SPS_RGT =   2;
-    __CEBS_STM_MDCT_CMD_SND =   3;  #单控发送指令
-    __CEBS_STM_MDCT_CMD_EXEC =  4;  #批量指令模式
-    __CEBS_STM_MDCT_CMD_CMPL =  5;
-    __CEBS_STM_MDCT_REL_RGT =   6;
+    __CEBS_STM_MDCT_NULL =      0
+    __CEBS_STM_MDCT_INIT =      1
+    __CEBS_STM_MDCT_SPS_RGT =   2
+    __CEBS_STM_MDCT_CMD_SND =   3   #单控发送指令
+    __CEBS_STM_MDCT_CMD_EXEC =  4   #批量指令模式
+    __CEBS_STM_MDCT_CMD_EXE_ZO =  5
+    __CEBS_STM_MDCT_CMD_EXE_MV =  6
+    __CEBS_STM_MDCT_CMD_CMPL =  7
+    __CEBS_STM_MDCT_REL_RGT =   8
     __CEBS_STM_MDCT_INVALID =   0xFF;
     MDCT_STM_STATE = 0;
 
+    #CONTROL MDCT USAGE
     __CEBS_MDCT_SPS_USAGE_MAIN_CTRL =   1;
     __CEBS_MDCT_SPS_USAGE_CALIB_UI =    2;
     __CEBS_MDCT_SPS_USAGE_MENG_UI =     3;
     MDCT_SPS_USAGE = 0;
-
+    
+    #CONTROL EXEC WORK STATE
+    MDCT_CTRL_CNT = 0;
+    
+    #Kernal control parameter of serial port usage
     IsSerialOpenOk = False
     serialFd = serial.Serial()
     targetComPortString = ''
@@ -514,7 +546,7 @@ class clsL1_MdcThd(QThread):
         #设置激活
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_WK_MODE_CMID, 1, 1, 0, 0)
         #设置速度
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_SPD_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, 0, 0)
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_SPD_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, 0, 0)
         #设置加速度
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ACC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_ACC, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_ACC, 0, 0)
         #设置加速度
@@ -524,15 +556,60 @@ class clsL1_MdcThd(QThread):
         #设置归零加速度
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ZO_ACC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_ACC, ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_ACC, 0, 0)
         #全部停止
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_STP_IMD_CMID, 1, 1, 0, 0)
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_STP_IMD_CMID, 1, 1, 0, 0)
     
     #连续带监控的命令执行
     def funcExecMoveZero(self):
-        pass
+        if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_EXEC):
+            self.funcMdctdDebugPrint("L1MDCT: Exec move zero, not in EXEC state and can not continue support this command!")
+            return -1
+        self.MDCT_CTRL_CNT = 30
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_ZERO_CMID, 1, 1, 0, 0)
+        self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXE_ZO
+        return 1
 
-    #连续带监控的命令执行
-    def funcExecMoveAction(self, par1, par2, par3, par4):
-        pass
+    def funcExecStopNormal(self):
+        if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_EXEC):
+            self.funcMdctdDebugPrint("L1MDCT: Exec stop normal, not in EXEC state and can not continue support this command!")
+            return -1
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_STP_NOR_CMID, 1, 1, 0, 0)
+        return 1
+
+    #连续带监控的命令执行：速度模式
+    def funcExecMoveSpeed(self, par1, par2):
+        if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_EXEC):
+            self.funcMdctdDebugPrint("L1MDCT: Exec move speed, not in EXEC state and can not continue support this command!")
+            return -1
+        #定标10
+        input1 = int(par1 * 10)
+        input2 = int(par2 * 10)
+        self.MDCT_CTRL_CNT = 30
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_SPD_CMID, input1, input2, 0, 0)
+        self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXE_MV
+        return 1
+
+    #连续带监控的命令执行：距离模式
+    def funcExecMoveDistance(self, par1, par2):
+        if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_EXEC):
+            self.funcMdctdDebugPrint("L1MDCT: Exec move distance, not in EXEC state and can not continue support this command!")
+            return -1
+        #定标NF0
+        input1 = int(par1)
+        input2 = int(par2)
+        self.MDCT_CTRL_CNT = 30
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_PULS_CMID, input1, input2, 0, 0)
+        self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXE_MV
+        return 1
+    
+    #标准指令
+    def funcInqueryRunningStatus(self):
+        res = self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_INQ_RUN_CMID, 1, 1, 1, 1)
+        print("Res = ", res)
+        if res == 0:
+            return True
+        else:
+            return False
+
 
 
 
@@ -560,22 +637,52 @@ class clsL1_MdcThd(QThread):
                 else:
                     self.funcMdctdDebugPrint("L1MDCT: Init sps port failured!")
                     self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_INIT
-
+            
+            #MENG working state
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_SND):
                 #self.funcMdctdDebugPrint("L1MDCT: I am in SND state, waiting for command coming!")
                 time.sleep(1)
             
-            #暂时未用的状态：可能用来被其它之用
+            #Moto working state
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_EXEC):
                 #self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_CMPL
                 #self.funcMdctdDebugPrint("L1MDCT: I am in EXEC state!")
                 time.sleep(1)
 
+            #Batch working mode, ZERO moving
+            elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_EXE_ZO):
+                self.MDCT_CTRL_CNT -= 1
+                if (self.MDCT_CTRL_CNT >0):
+                    if (self.funcInqueryRunningStatus() == False):
+                        self.funcMdctdDebugPrint("L1MDCT: Waiting for ZERO task complete, counter = %d!" % (self.MDCT_CTRL_CNT))
+                        time.sleep(1)
+                    else:
+                        self.MDCT_CTRL_CNT = 0
+                        self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXEC
+                        self.funcMdctdDebugPrint("L1MDCT: Task complete!")
+                else:
+                    self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXEC
+                    self.funcMdctdDebugPrint("L1MDCT: Time out reached, go back to EXEC state!")
+
+            #Batch working mode, Normal moving
+            elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_EXE_MV):
+                self.MDCT_CTRL_CNT -= 1
+                if (self.MDCT_CTRL_CNT >0):
+                    if (self.funcInqueryRunningStatus() == False):
+                        self.funcMdctdDebugPrint("L1MDCT: Waiting for move task complete, counter = %d!" % (self.MDCT_CTRL_CNT))
+                        time.sleep(1)
+                    else:
+                        self.MDCT_CTRL_CNT = 0
+                        self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXEC
+                        self.funcMdctdDebugPrint("L1MDCT: Move task complete!")
+                else:
+                    self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXEC
+                    self.funcMdctdDebugPrint("L1MDCT: Time out reached, go back to EXEC state!")
+
             #暂时未用的状态：可能用来被其它之用
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_CMPL):
-                self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_SND
-                self.funcMdctdDebugPrint("L1MDCT: I am in CMPL state!")
-                time.sleep(1)
+                self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXEC
+                self.funcMdctdDebugPrint("L1MDCT: I am in CMPL state, now go back to EXEC state!")
 
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_REL_RGT):
                 self.IsSerialOpenOk = False

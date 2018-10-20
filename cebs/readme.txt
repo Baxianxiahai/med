@@ -6,7 +6,8 @@
 
 
 
-
+//=ZJL, 2018/10/20, CURRENT_SW_DELIVERY R1.28 =>CEBS
+= 基本完成
 
 //=ZJL, 2018/10/18, CURRENT_SW_DELIVERY R1.27 =>CEBS
   cd form_qt, 
@@ -21,7 +22,6 @@
 = 解决了重复关闭MAIN窗口的问题
 = 解决了MOTO界面反馈的问题
 1. 如果将MOTOAPI的指令反馈到界面上
-
 
 //=ZJL, 2018/10/9, CURRENT_SW_DELIVERY R1.26 =>CEBS
 = 校准尺寸通过圆弧定标：基础算法搞定了一个，未来待跟实际结合起来使用
