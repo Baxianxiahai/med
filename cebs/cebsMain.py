@@ -67,7 +67,7 @@ import string
 import platform
 
 #System lib
-from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5 import QtWidgets, QtGui, QtCore,QtWebEngineWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, qApp, QAction, QFileDialog, QTextEdit
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import pyqtSlot
@@ -81,6 +81,7 @@ from form_qt.cebsmainform import Ui_cebsMainWindow
 from form_qt.cebscalibform import Ui_cebsCalibForm
 from form_qt.cebsgparform import Ui_cebsGparForm
 from form_qt.cebsmengform import Ui_cebsMengForm
+from form_qt.cebsBroswerForm import Ui_BroswerForm
 
 #Local Class
 from PkgCebsHandler import ModCebsCom  #Common Support module
@@ -143,11 +144,13 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.instL4CalibForm = SEUI_L4_CalibForm()
         self.instL4GparForm = SEUI_L4_GparForm()
         self.instL4MengForm = SEUI_L4_MengForm()
+        # self.instL4BroserForm=SEUI_L4_BroswerForm()
         #STEP3: CONNECT SIGNAL SLOT, 连接信号槽
         self.sgL4MainWinUnvisible.connect(self.funcMainWinUnvisible);
         self.instL4CalibForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.instL4GparForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.instL4MengForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
+        # self.instL4BroserForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         #STEP4: CONTROL SCHEDULE MODULE INIT, 控制调度模块初始化
         self.instL3CtrlSchdThd = ModCebsCtrlSchd.clsL3_CtrlSchdThread(self)
         self.instL3CtrlSchdThd.setIdentity("TASK_CtrlScheduleThread")
@@ -174,9 +177,18 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.slot_print_trigger(res)
         #STEP8: SEND BACK-ZERO SIGNAL TO MOTO, 发送归零信号给马达 #MAKE MOTO GO BACK TO ZERO
         self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
+<<<<<<< HEAD
         #STEP9:抢占硬件资源
         self.instL3CtrlSchdThd.funcCtrlGetSpsRights(1)
     
+=======
+
+    # def selectPloatHole(self):
+    #     print("Selection Ploat Hole")
+    #     self.instL4BroserForm=SEUI_L4_BroswerForm()
+    #     self.instL4BroserForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
+
+>>>>>>> feature
     def aboutCompanyBox(self):
         QMessageBox.about(self, '公司信息', '上海小慧智能科技有限公司, 上海纳贤路800号，科海大厦3楼')   
         
@@ -269,10 +281,12 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 
     #Enter Selection Active Hole Target Mode
     def slot_saht_sel(self):
+        self.instL4BroserForm = SEUI_L4_BroswerForm()
+        self.instL4BroserForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.med_debug_print("L4MAIN: Active Hole Selection start......")
-#         if not self.instL4GparForm.isVisible():
-#             self.sgL4MainWinUnvisible.emit()
-#             self.instL4GparForm.show()
+        if not self.instL4BroserForm.isVisible():
+            self.sgL4MainWinUnvisible.emit()
+            self.instL4BroserForm.show()
 
     #Clean log window
     def slot_runpg_clear(self):
@@ -1078,7 +1092,35 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
         self.funcRelLowLevelResource(3)
         self.sgL4MainWinVisible.emit()
         self.close()
+class SEUI_L4_BroswerForm(QtWidgets.QMainWindow, Ui_BroswerForm):
+    sgL4MainWinUnvisible = pyqtSignal()
+    sgL4MainWinVisible = pyqtSignal()
+    def __init__(self):
+        super(SEUI_L4_BroswerForm, self).__init__()
+        self.setupUi(self)
+        self.openBroswer()
+    def openBroswer(self):
+        print("[CEBS]  Open Broswer is Start")
+        config=ModCebsCfg.clsL1_ConfigOpr()
+        name,configure=config.GetMachineTagandConfigure()
+        number=int(configure.split("_")[0])
+        if number==96:
+            row=8
+            column=12
+        else:
+            row=0
+            column=0
+        url="http://127.0.0.1/work/QtWeb1.html?row="+str(row)+"&column="+str(column)+"&name="+name
+        self.broswer=QtWebEngineWidgets.QWebEngineView()
+        self.broswer.load(QtCore.QUrl(url))
+        self.setCentralWidget(self.broswer)
+    def closeEvent(self, event):
+        config = ModCebsCfg.clsL1_ConfigOpr()
+        config.SetDishRowandColumn()
+        self.sgL4MainWinVisible.emit()
+        self.close()
 
+<<<<<<< HEAD
     def funcGetLowLevelResource(self, par):
         self.instL3MengProc.funcGetSpsRights(par)
 
@@ -1086,6 +1128,13 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
         self.instL3MengProc.funcRelSpsRights(par)
 
 
+=======
+    def funcMainWinVisible(self):
+        if not self.isVisible():
+            self.show()
+        self.instL3CtrlSchdThd.sgL3CtrlCalibStop.emit()
+        self.med_debug_print("L4MAIN: Main form welcome to come back!")
+>>>>>>> feature
 '''
 '高级技巧，还未搞定'
 'https://www.cnblogs.com/WSX1994/articles/9092331.html'
@@ -1117,5 +1166,3 @@ def main_form():
 if __name__ == '__main__':
     print("[CEBS] ", time.asctime(), ", System starting...\n" );
     main_form()
-    
-    

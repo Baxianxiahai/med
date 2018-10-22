@@ -13,6 +13,8 @@ import os
 import platform
 import time
 from PkgCebsHandler import ModCebsCom
+import urllib3
+import json
 
 
 '''
@@ -73,8 +75,6 @@ class clsL1_ConfigOpr(object):
         #REWRITE FILE TO AVOID INI FILE ERROR
         if (self.CReader['Env']['workdir'] != str(os.getcwd()+ self.osDifferentStr())):
             self.updateSectionPar()
-
-
     '''
     * STEP1:
     *    控制参数读取及更新过程
@@ -506,6 +506,54 @@ class clsL1_ConfigOpr(object):
         outputStr = head + inputStr
         with open(ModCebsCom.GL_CEBS_CMD_LOG_FILE_NAME_SET, 'a+') as f:
             f.write(outputStr)
+
+    '''获取机器标签和配置'''
+    def GetMachineTagandConfigure(self):
+        config=configparser.ConfigParser()
+        config.read(self.filePath,encoding="utf-8")
+        tag=config.get("NAME",'name')
+        configure=config.get("Env",'holeboard_type')
+        return tag,configure
+    def SetDishRowandColumn(self):
+        config=configparser.ConfigParser()
+        config.read(self.filePath,encoding='utf-8')
+        if "RowAndColumn" in config:
+            pass
+        else:
+            config.add_section("RowAndColumn")
+            config.write(open(self.filePath,'w'))
+        tag,configerture=self.GetMachineTagandConfigure()
+        url="http://127.0.0.1/"+tag+".txt"
+        http=urllib3.PoolManager()
+        response=http.request("GET",url)
+        data=response.data
+        JsonData=json.loads(data)
+        ColumnArray=[]
+        for i in range(9):
+            Column=[]
+            for j in range(len(JsonData)):
+                row=int(JsonData[j].split('_')[0])
+                column=int(JsonData[j].split('_')[1])
+                if i==row-1:
+                    Column.append(column)
+            ColumnArray.append(Column)
+        config.set("RowAndColumn","Row1",json.dumps(ColumnArray[0]))
+        config.set("RowAndColumn","Row2",json.dumps(ColumnArray[1]))
+        config.set("RowAndColumn","Row3",json.dumps(ColumnArray[2]))
+        config.set("RowAndColumn","Row4",json.dumps(ColumnArray[3]))
+        config.set("RowAndColumn","Row5",json.dumps(ColumnArray[4]))
+        config.set("RowAndColumn","Row6",json.dumps(ColumnArray[5]))
+        config.set("RowAndColumn","Row7",json.dumps(ColumnArray[6]))
+        config.set("RowAndColumn","Row8",json.dumps(ColumnArray[7]))
+        config.set("RowAndColumn","Row9",json.dumps(ColumnArray[8]))
+        config.write(open(self.filePath, 'w'))
+        # for i in range(len(RowArray)):
+        #     for j in range
+# if __name__=="__main__":
+#     a=clsL1_ConfigOpr()
+#     name,config=a.GetMachineTagandConfigure()
+#     print(name)
+#     print(config)
 
 
 
