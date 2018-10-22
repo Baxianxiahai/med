@@ -424,7 +424,7 @@ class clsL0_MedSpsPar():
     SPS_MENGPAR_ADDR  = 0x77
     SPS_MENGPAR_CMD_LEN = 18
     
-    MOTOR_STEPS_PER_ROUND = 12800   #NF0
+    MOTOR_STEPS_PER_ROUND = 6400   #NF0
     MOTOR_MAX_SPD = 10  #NF1 rad/s
     MOTOR_MAX_ACC = 10  #NF1 rad/s2
     MOTOR_MAX_DEACC = 10  #NF1 rad/s2

@@ -193,14 +193,10 @@ class Ui_cebsCalibForm(object):
         self.pushButton_calib_pilot_move_0.clicked.connect(cebsCalibForm.slot_calib_pilot_move_0)
         self.pushButton_calib_pilot_move_n.clicked.connect(cebsCalibForm.slot_calib_pilot_move_n)
         self.pushButton_calib_pilot_camera_cap.clicked.connect(cebsCalibForm.slot_calib_pilot_camera_cap)
-        self.pushButton_calib_pilot_move_right.pressed.connect(cebsCalibForm.slot_calib_pilot_move_right)
-        self.pushButton_calib_pilot_move_down.pressed.connect(cebsCalibForm.slot_calib_pilot_move_down)
-        self.pushButton_calib_pilot_move_up.pressed.connect(cebsCalibForm.slot_calib_pilot_move_up)
-        self.pushButton_calib_pilot_move_left.pressed.connect(cebsCalibForm.slot_calib_pilot_move_left)
-        self.pushButton_calib_pilot_move_right.released.connect(cebsCalibForm.slot_calib_pilot_move_right_released)
-        self.pushButton_calib_pilot_move_down.released.connect(cebsCalibForm.slot_calib_pilot_move_down_released)
-        self.pushButton_calib_pilot_move_up.released.connect(cebsCalibForm.slot_calib_pilot_move_up_released)
-        self.pushButton_calib_pilot_move_left.released.connect(cebsCalibForm.slot_calib_pilot_move_left_released)
+        self.pushButton_calib_pilot_move_right.clicked.connect(cebsCalibForm.slot_calib_pilot_move_right)
+        self.pushButton_calib_pilot_move_down.clicked.connect(cebsCalibForm.slot_calib_pilot_move_down)
+        self.pushButton_calib_pilot_move_up.clicked.connect(cebsCalibForm.slot_calib_pilot_move_up)
+        self.pushButton_calib_pilot_move_left.clicked.connect(cebsCalibForm.slot_calib_pilot_move_left)
         QtCore.QMetaObject.connectSlotsByName(cebsCalibForm)
 
     def retranslateUi(self, cebsCalibForm):

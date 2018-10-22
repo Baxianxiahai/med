@@ -903,7 +903,7 @@ p, li { white-space: pre-wrap; }
   </connection>
   <connection>
    <sender>pushButton_calib_pilot_move_right</sender>
-   <signal>pressed()</signal>
+   <signal>clicked()</signal>
    <receiver>cebsCalibForm</receiver>
    <slot>slot_calib_pilot_move_right()</slot>
    <hints>
@@ -919,7 +919,7 @@ p, li { white-space: pre-wrap; }
   </connection>
   <connection>
    <sender>pushButton_calib_pilot_move_down</sender>
-   <signal>pressed()</signal>
+   <signal>clicked()</signal>
    <receiver>cebsCalibForm</receiver>
    <slot>slot_calib_pilot_move_down()</slot>
    <hints>
@@ -935,7 +935,7 @@ p, li { white-space: pre-wrap; }
   </connection>
   <connection>
    <sender>pushButton_calib_pilot_move_up</sender>
-   <signal>pressed()</signal>
+   <signal>clicked()</signal>
    <receiver>cebsCalibForm</receiver>
    <slot>slot_calib_pilot_move_up()</slot>
    <hints>
@@ -951,7 +951,7 @@ p, li { white-space: pre-wrap; }
   </connection>
   <connection>
    <sender>pushButton_calib_pilot_move_left</sender>
-   <signal>pressed()</signal>
+   <signal>clicked()</signal>
    <receiver>cebsCalibForm</receiver>
    <slot>slot_calib_pilot_move_left()</slot>
    <hints>

@@ -346,7 +346,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
     #    DO NOT MODIFY SLOT FUNCTION NAMES, 以下部分为系统接口对应的槽函数，函数命名不得动
     #
     # 
-    def onTimerOutUp(self):
+    def slot_calib_pilot_move_up(self):
         time.sleep(0.1)
         radioCala10um = self.radioButton_calib_10um.isChecked();
         radioCala100um = self.radioButton_calib_100um.isChecked();
@@ -414,7 +414,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         
         self.instL3CalibProc.funcCalibMove(parMoveScale, "UP");
         
-    def onTimerOutDown(self):
+    def slot_calib_pilot_move_down(self):
         time.sleep(0.1)
         radioCala10um = self.radioButton_calib_10um.isChecked();
         radioCala100um = self.radioButton_calib_100um.isChecked();
@@ -482,7 +482,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         
         self.instL3CalibProc.funcCalibMove(parMoveScale, "DOWN");    
         
-    def onTimerOutLeft(self):
+    def slot_calib_pilot_move_left(self):
         time.sleep(0.1)
         radioCala10um = self.radioButton_calib_10um.isChecked();
         radioCala100um = self.radioButton_calib_100um.isChecked();
@@ -550,7 +550,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         
         self.instL3CalibProc.funcCalibMove(parMoveScale, "LEFT"); 
         
-    def onTimerOutRight(self):
+    def slot_calib_pilot_move_right(self):
         time.sleep(0.1)
         radioCala10um = self.radioButton_calib_10um.isChecked();
         radioCala100um = self.radioButton_calib_100um.isChecked();
@@ -617,7 +617,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
             parMoveScale = 1;
         
         self.instL3CalibProc.funcCalibMove(parMoveScale, "RIGHT"); 
-    
+    '''
     def slot_calib_pilot_move_up(self): 
         self.timer=QTimer()
         self.timer.setInterval(1)
@@ -653,7 +653,8 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         
     def slot_calib_pilot_move_right_released(self):
         self.timer.stop()          
-    '''          
+    ''' 
+    '''            
     def slot_calib_move(self):
         #SCALE
         radioCala10um = self.radioButton_calib_10um.isChecked();
