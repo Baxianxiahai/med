@@ -28,7 +28,8 @@ import math
 from ctypes import c_uint8
 #import argparse
 #import math
-
+import win32com.client  #pip install pyWin32
+import usb.core
 
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
@@ -74,15 +75,32 @@ class clsL2_VisCapProc(object):
         self.instL4WinForm.med_debug_print(myString)
         
     def funcVisionDetectAllCamera(self):
-        MaxDetectNbr = ModCebsCom.GLVIS_PAR_OFC.VISION_MAX_CAMERA_SEARCH
         res = "L2VISCAP: Valid camera number = "
-        for index in range(0, MaxDetectNbr):
-            cap = cv.VideoCapture(index)
-            if cap.isOpened():
-                res = res + str(index) + ", "
-                cap.release()
-            cv.destroyAllWindows()
-        return res
+#         MaxDetectNbr = ModCebsCom.GLVIS_PAR_OFC.VISION_MAX_CAMERA_SEARCH
+#         for index in range(0, MaxDetectNbr):
+#             cap = cv.VideoCapture(index)
+#             if cap.isOpened():
+#                 res = res + str(index) + ", "
+#                 cap.release()
+#             cv.destroyAllWindows()
+        #New finding camaer way
+        wmi = win32com.client.GetObject ("winmgmts:")
+        for usb in wmi.InstancesOf ("win32_usbcontrollerdevice"):
+            if "VID_0547&PID_6010" in usb.Dependent:
+                searchText = "VID_0547&PID_6010"
+                indexStart = usb.Dependent.find(searchText)
+                textLen = len(searchText)
+                textContent = usb.Dependent[indexStart+textLen:]
+                result={}
+                step=0;
+                for item in textContent.split('&'):
+                    result[step] = item
+                    step+=1
+                try:
+                    ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = result[2]
+                except Exception:
+                    ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = -1
+        return res + str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR)
     
     #Init the camera resolution, iso set every capture time. 这样可以避免每次对焦的长时间消耗
     def funcVisBatCapStart(self):
