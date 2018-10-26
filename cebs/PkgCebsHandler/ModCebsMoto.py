@@ -645,7 +645,7 @@ class clsL1_MdcThd(QThread):
             
             #Moto working state
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_EXEC):
-                #self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_CMPL
+                self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_CMPL
                 #self.funcMdctdDebugPrint("L1MDCT: I am in EXEC state!")
                 time.sleep(1)
 
@@ -682,7 +682,7 @@ class clsL1_MdcThd(QThread):
             #暂时未用的状态：可能用来被其它之用
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_CMPL):
                 self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXEC
-                self.funcMdctdDebugPrint("L1MDCT: I am in CMPL state, now go back to EXEC state!")
+                #self.funcMdctdDebugPrint("L1MDCT: I am in CMPL state, now go back to EXEC state!")
 
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_REL_RGT):
                 self.IsSerialOpenOk = False

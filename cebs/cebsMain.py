@@ -1083,6 +1083,14 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
         self.funcRelLowLevelResource(3)
         self.sgL4MainWinVisible.emit()
         self.close()
+
+    def funcGetLowLevelResource(self, par):
+        self.instL3MengProc.funcGetSpsRights(par)
+
+    def funcRelLowLevelResource(self, par):
+        self.instL3MengProc.funcRelSpsRights(par)
+        
+                
 class SEUI_L4_BroswerForm(QtWidgets.QMainWindow, Ui_BroswerForm):
     sgL4MainWinUnvisible = pyqtSignal()
     sgL4MainWinVisible = pyqtSignal()
@@ -1105,17 +1113,14 @@ class SEUI_L4_BroswerForm(QtWidgets.QMainWindow, Ui_BroswerForm):
         self.broswer=QtWebEngineWidgets.QWebEngineView()
         self.broswer.load(QtCore.QUrl(url))
         self.setCentralWidget(self.broswer)
+
     def closeEvent(self, event):
         config = ModCebsCfg.clsL1_ConfigOpr()
         config.SetDishRowandColumn()
         self.sgL4MainWinVisible.emit()
         self.close()
-    def funcGetLowLevelResource(self, par):
-        self.instL3MengProc.funcGetSpsRights(par)
 
-    def funcRelLowLevelResource(self, par):
-        self.instL3MengProc.funcRelSpsRights(par)
-
+        
 '''
 '高级技巧，还未搞定'
 'https://www.cnblogs.com/WSX1994/articles/9092331.html'
