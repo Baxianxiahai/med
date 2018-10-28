@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1185</width>
-    <height>521</height>
+    <height>643</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,7 +32,7 @@
      <x>20</x>
      <y>30</y>
      <width>421</width>
-     <height>151</height>
+     <height>231</height>
     </rect>
    </property>
    <item>
@@ -115,12 +115,17 @@
      <string>查询运行状态（inq_run）</string>
     </property>
    </item>
+   <item>
+    <property name="text">
+     <string>查询一般状态（inq_status）</string>
+    </property>
+   </item>
   </widget>
   <widget class="QLabel" name="label_meng_par1">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>200</y>
+     <y>270</y>
      <width>54</width>
      <height>12</height>
     </rect>
@@ -133,7 +138,7 @@
    <property name="geometry">
     <rect>
      <x>130</x>
-     <y>200</y>
+     <y>270</y>
      <width>54</width>
      <height>12</height>
     </rect>
@@ -146,7 +151,7 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>200</y>
+     <y>270</y>
      <width>54</width>
      <height>12</height>
     </rect>
@@ -159,7 +164,7 @@
    <property name="geometry">
     <rect>
      <x>350</x>
-     <y>200</y>
+     <y>270</y>
      <width>54</width>
      <height>12</height>
     </rect>
@@ -172,7 +177,7 @@
    <property name="geometry">
     <rect>
      <x>320</x>
-     <y>260</y>
+     <y>330</y>
      <width>121</width>
      <height>51</height>
     </rect>
@@ -241,7 +246,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>220</y>
+     <y>290</y>
      <width>91</width>
      <height>20</height>
     </rect>
@@ -254,7 +259,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>130</x>
-     <y>220</y>
+     <y>290</y>
      <width>91</width>
      <height>20</height>
     </rect>
@@ -267,7 +272,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>220</y>
+     <y>290</y>
      <width>91</width>
      <height>20</height>
     </rect>
@@ -280,7 +285,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>350</x>
-     <y>220</y>
+     <y>290</y>
      <width>91</width>
      <height>20</height>
     </rect>
@@ -293,7 +298,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>320</x>
-     <y>340</y>
+     <y>410</y>
      <width>121</width>
      <height>20</height>
     </rect>
@@ -306,7 +311,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>320</x>
-     <y>320</y>
+     <y>390</y>
      <width>81</width>
      <height>16</height>
     </rect>

@@ -285,7 +285,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
 
     #Test functions
     def slot_runpg_test(self):
-        res = {}
+        res = {'nothing!'}
         self.med_debug_print("TEST: " + str(res))
         obj = ModCebsVision.clsL2_VisCfyProc(self)
         obj.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), "ref.jpg")
@@ -1050,6 +1050,8 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
             cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_INQ_EN_CMID
         elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_INQ_RUN) > 0):
             cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_INQ_RUN_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_INQ_STATUS) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_INQ_STATUS_CMID
         else:
             cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SHK_HAND_CMID
         
