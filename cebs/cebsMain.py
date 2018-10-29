@@ -287,8 +287,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
     def slot_runpg_test(self):
         res = {'nothing!'}
         self.med_debug_print("TEST: " + str(res))
-        obj = ModCebsVision.clsL2_VisCfyProc(self)
-        obj.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), "ref.jpg")
+        obj = ModCebsVision.clsL2_VisCapProc(self)
+        obj.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), "ref.jpg", "scale_ref.jpg")
 
     #
     #  SLOT FUNCTION, 槽函数部分

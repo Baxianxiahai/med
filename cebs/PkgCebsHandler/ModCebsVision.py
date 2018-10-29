@@ -176,6 +176,10 @@ class clsL2_VisCapProc(object):
             #cv.imshow("Final output", frame)
             #waitKey(2000)
             #time.sleep(2)
+            
+            #存储scale文件
+            scaleFn = obj.combineScaleFileNameWithDir(batch, fileNbr)
+            self.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), fileName, scaleFn)
         
         #Video capture
         #Ref: http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_video_display/py_video_display.html
@@ -206,6 +210,173 @@ class clsL2_VisCapProc(object):
         return 1;
       
       
+    #计算弧度的方式
+    #INPUT: refRadInUm, 孔半径长度，um单位
+    #OUTPUT: 对应比例关系
+    def algoVisGetRadians(self, refRadInUm, dirFn, newFileFn):
+        #Reading file: 读取文件
+        if (os.path.exists(dirFn) == False):
+            errStr = "L2VISCFY: File %s not exist!" % (dirFn)
+            self.medErrorLog(errStr);
+            print("L2VISCFY: File %s not exist!" % (dirFn))
+            return;
+        self.HST_VISION_WORM_CLASSIFY_pic_filename = dirFn
+        try:
+            inputImg = cv.imread(dirFn)
+        except Exception as err:
+            print("L2VISCFY: Read file error, errinfo = ", str(err))
+            return;
+        #图像分块
+        orgH = inputImg.shape[0]
+        orgW = inputImg.shape[1]
+        imgLeftUp = inputImg[0:orgH//3, 0:orgW//3]
+        imgRightUp = inputImg[0:orgH//3, orgW*2//3:orgW]
+        imgLeftBot = inputImg[orgH*2//3:orgH, 0:orgW//3]
+        imgRightBot = inputImg[orgH*2//3:orgH, orgW*2//3:orgW]
+        arcLenMax = math.sqrt((orgH//3) * (orgH//3) + (orgW//3) * (orgW//3))*2
+        #print("Max Arc length = ", arcLenMax)
+        
+        #比较
+        flagIndex = 0
+        arcSave = 0
+        stdRatio = 0
+        #PART1
+        arcLen, lenSqrRatio, resImgLU = self.algoVisFindMaxEdge(refRadInUm, imgLeftUp)
+        #print("LU Length/baseline = %f/%f" % (arcLen, lenSqrRatio))
+        if (arcLen < arcLenMax) and (lenSqrRatio < 1) and (lenSqrRatio > 0.1) and (arcLen > arcSave):
+            flagIndex = 1
+            arcSave = arcLen
+            stdRatio = lenSqrRatio
+        #PART2
+        arcLen, lenSqrRatio, resImgRU = self.algoVisFindMaxEdge(refRadInUm, imgRightUp)
+        #print("RU Length/baseline = %f/%f" % (arcLen, lenSqrRatio))
+        if (arcLen < arcLenMax) and (lenSqrRatio < 1) and (lenSqrRatio > 0.1) and (arcLen > arcSave):
+            flagIndex = 2
+            arcSave = arcLen
+            stdRatio = lenSqrRatio
+        #PART3
+        arcLen, lenSqrRatio, resImgLB = self.algoVisFindMaxEdge(refRadInUm, imgLeftBot)
+        #print("LB Length/baseline = %f/%f" % (arcLen, lenSqrRatio))
+        if (arcLen < arcLenMax) and (lenSqrRatio < 1) and (lenSqrRatio > 0.1) and (arcLen > arcSave):
+            flagIndex = 3
+            arcSave = arcLen
+            stdRatio = lenSqrRatio
+        #PART4
+        arcLen, lenSqrRatio, resImgRB = self.algoVisFindMaxEdge(refRadInUm, imgRightBot)
+        #print("RB Length/baseline = %f/%f" % (arcLen, lenSqrRatio))
+        if (arcLen < arcLenMax) and (lenSqrRatio < 1) and (lenSqrRatio > 0.1) and (arcLen > arcSave):
+            flagIndex = 4
+            arcSave = arcLen
+            stdRatio = lenSqrRatio
+        #SHOW
+        '''
+        if (flagIndex == 1):
+            print("Result = resImgLU")
+            #cv.line(resImgLU, start, end, (0, 0, 255))
+            cv.imshow("resImgLU", resImgLU)
+        if (flagIndex == 2):
+            print("Result = resImgRU")
+            #cv.line(resImgRU, start, end, (0, 0, 255))
+            cv.imshow("resImgRU", resImgRU)
+        if (flagIndex == 3):
+            print("Result = resImgLB")
+            #cv.line(resImgLB, start, end, (0, 0, 255))
+            cv.imshow("resImgLB", resImgLB)
+        if (flagIndex == 4):
+            print("Result = resImgRB")
+            #cv.line(resImgRB, start, end, (0, 0, 255))
+            cv.imshow("resImgRB", resImgRB)
+        '''
+        #1mm = 1000um的标尺
+        ptLen = int(500*stdRatio)
+        sp = inputImg.shape
+        start = (sp[1]-100, sp[0]-20)
+        end = (start[0] + ptLen, start[1])
+        #原始图像
+        cv.line(inputImg, start, end, (0, 0, 255))
+        cv.putText(inputImg, '500um', (start[0], start[1]-10), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+        #cv.imshow("inputImg", inputImg)
+        cv.imwrite(newFileFn, inputImg)
+        
+    '''
+    * 参考文档： https://blog.csdn.net/sinat_36458870/article/details/78825571
+    #寻找边缘算法，待优化
+    '''
+    def algoVisFindMaxEdge(self, refRadInUm, inputImg):
+        #噪声处理过程
+        new = np.zeros(inputImg.shape, np.uint8)    
+        #Gray transaction: 灰度化
+        for i in range(new.shape[0]):  #Axis-y/height/Rows
+            for j in range(new.shape[1]):
+                (b,g,r) = inputImg[i,j]
+                #加权平均法
+                new[i,j] = int(0.3*float(b) + 0.59*float(g) + 0.11*float(r))&0xFF
+        #Middle value filter: 中值滤波
+        blur= cv.medianBlur(new, 5)
+        midGray = cv.cvtColor(blur, cv.COLOR_BGR2GRAY)
+        #Adaptive bin-translation: 自适应二值化
+        binGray = cv.adaptiveThreshold(midGray, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 43, 5)   # ADAPTIVE_THRESH_MEAN_C ADAPTIVE_THRESH_GAUSSIAN_C
+        binRes= cv.GaussianBlur(binGray, (5,5), 1.5) #medianBlur
+        #cv.imshow('Adaptive Bin', binRes)
+        corImg = cv.cvtColor(binRes, cv.COLOR_GRAY2BGR)
+        #高斯模糊,降低噪声  
+        blurred = cv.GaussianBlur(corImg,(3, 3), 0)  
+        #灰度图像  
+        gray=cv.cvtColor(blurred, cv.COLOR_RGB2GRAY)  
+        #图像梯度  
+        xgrad=cv.Sobel(gray, cv.CV_16SC1, 1, 0)   #cv.CV_32F
+        ygrad=cv.Sobel(gray, cv.CV_16SC1, 0, 1)  
+        #计算边缘  
+        #50和150参数必须符合1：3或者1：2  
+        edge_output=cv.Canny(xgrad, ygrad, 50, 100)  
+        #cv.imshow("edge", edge_output)
+        _, contours, _ = cv.findContours(edge_output, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+        #Output graphic: 输出图形
+        outputImg = cv.cvtColor(edge_output, cv.COLOR_GRAY2BGR)
+        mask = np.zeros((edge_output.shape[0]+2, edge_output.shape[1]+2), np.uint8)
+        mask[:] = 1
+        maxC = ''
+        #求最大弧长
+        arcLenMax = 0
+        for c in contours:
+            arcLen = cv.arcLength(c, False)
+            #cArea = cv.contourArea(c)
+            if (arcLen > arcLenMax):
+                maxC = c
+                arcLenMax = arcLen
+        #print("arcLenMax = ", arcLenMax)
+        # compute the center of the contour
+        M = cv.moments(maxC)
+        cX = int(M["m10"] / (M["m00"]+0.01))
+        cY = int(M["m01"] / (M["m00"]+0.01))
+        #4th method: 第四种方法
+        rect = cv.minAreaRect(maxC)
+        width, height = rect[1]
+        if (width > height):
+            tmp = width
+            width = height
+            height = tmp
+        cE = width / (height+0.001)
+        cE = round(cE, 2)
+        cv.drawContours(outputImg, maxC, -1, (0, 0, 255), 2)                    
+        cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+        
+        #画最小外接框
+        box = cv.boxPoints(rect)
+        box = np.int0(box)
+        cv.drawContours(outputImg, [box], -1, (0, 0, 255), 1)
+        
+        #cv.imshow("result", outputImg)  
+        newRadians = (height * height / (4 * width) + width)/2
+        #print("newRadians =%d, width/height=%d/%d" % (newRadians, width, height))
+        #newRadians = height * math.sqrt(1 + height*height/4/width/width)/2
+        baseLine = newRadians/refRadInUm
+        return arcLenMax, baseLine, outputImg
+    
+    
+    
+    
+    
       
         
 '''
@@ -508,168 +679,7 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
     def algoVisFluWormCaculate(self, fileName, fileNukeName):
         self.funcVisCfyLogTrace("L2VISCFY: Flu picture classification simulation algorithms demo, to be finsihed!")
 
-    #计算弧度的方式
-    #INPUT: refRadInUm, 孔半径长度，um单位
-    #OUTPUT: 对应比例关系
-    def algoVisGetRadians(self, refRadInUm, dirFn):
-        #Reading file: 读取文件
-        if (os.path.exists(dirFn) == False):
-            errStr = "L2VISCFY: File %s not exist!" % (dirFn)
-            self.medErrorLog(errStr);
-            print("L2VISCFY: File %s not exist!" % (dirFn))
-            return;
-        self.HST_VISION_WORM_CLASSIFY_pic_filename = dirFn
-        try:
-            inputImg = cv.imread(dirFn)
-        except Exception as err:
-            print("L2VISCFY: Read file error, errinfo = ", str(err))
-            return;
-        #图像分块
-        orgH = inputImg.shape[0]
-        orgW = inputImg.shape[1]
-        imgLeftUp = inputImg[0:orgH//3, 0:orgW//3]
-        imgRightUp = inputImg[0:orgH//3, orgW*2//3:orgW]
-        imgLeftBot = inputImg[orgH*2//3:orgH, 0:orgW//3]
-        imgRightBot = inputImg[orgH*2//3:orgH, orgW*2//3:orgW]
-        arcLenMax = math.sqrt((orgH//3) * (orgH//3) + (orgW//3) * (orgW//3))*2
-        print("Max Arc length = ", arcLenMax)
-        
-        #比较
-        flagIndex = 0
-        arcSave = 0
-        stdRatio = 0
-        #PART1
-        arcLen, lenSqrRatio, resImgLU = self.algoVisFindMaxEdge(refRadInUm, imgLeftUp)
-        print("LU Length/baseline = %f/%f" % (arcLen, lenSqrRatio))
-        if (arcLen < arcLenMax) and (lenSqrRatio < 1) and (lenSqrRatio > 0.1) and (arcLen > arcSave):
-            flagIndex = 1
-            arcSave = arcLen
-            stdRatio = lenSqrRatio
-        #PART2
-        arcLen, lenSqrRatio, resImgRU = self.algoVisFindMaxEdge(refRadInUm, imgRightUp)
-        print("RU Length/baseline = %f/%f" % (arcLen, lenSqrRatio))
-        if (arcLen < arcLenMax) and (lenSqrRatio < 1) and (lenSqrRatio > 0.1) and (arcLen > arcSave):
-            flagIndex = 2
-            arcSave = arcLen
-            stdRatio = lenSqrRatio
-        #PART3
-        arcLen, lenSqrRatio, resImgLB = self.algoVisFindMaxEdge(refRadInUm, imgLeftBot)
-        print("LB Length/baseline = %f/%f" % (arcLen, lenSqrRatio))
-        if (arcLen < arcLenMax) and (lenSqrRatio < 1) and (lenSqrRatio > 0.1) and (arcLen > arcSave):
-            flagIndex = 3
-            arcSave = arcLen
-            stdRatio = lenSqrRatio
-        #PART4
-        arcLen, lenSqrRatio, resImgRB = self.algoVisFindMaxEdge(refRadInUm, imgRightBot)
-        print("RB Length/baseline = %f/%f" % (arcLen, lenSqrRatio))
-        if (arcLen < arcLenMax) and (lenSqrRatio < 1) and (lenSqrRatio > 0.1) and (arcLen > arcSave):
-            flagIndex = 4
-            arcSave = arcLen
-            stdRatio = lenSqrRatio
-        #SHOW
-        '''
-        if (flagIndex == 1):
-            print("Result = resImgLU")
-            #cv.line(resImgLU, start, end, (0, 0, 255))
-            cv.imshow("resImgLU", resImgLU)
-        if (flagIndex == 2):
-            print("Result = resImgRU")
-            #cv.line(resImgRU, start, end, (0, 0, 255))
-            cv.imshow("resImgRU", resImgRU)
-        if (flagIndex == 3):
-            print("Result = resImgLB")
-            #cv.line(resImgLB, start, end, (0, 0, 255))
-            cv.imshow("resImgLB", resImgLB)
-        if (flagIndex == 4):
-            print("Result = resImgRB")
-            #cv.line(resImgRB, start, end, (0, 0, 255))
-            cv.imshow("resImgRB", resImgRB)
-        '''
-        #1mm = 1000um的标尺
-        ptLen = int(500*stdRatio)
-        #start = (160, 500)
-        start = (10, 30)
-        end = (start[0] + ptLen, start[1])
-        #原始图像
-        cv.line(inputImg, start, end, (0, 0, 255))
-        cv.putText(inputImg, '500um', (start[0], start[1]-10), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
-        #cv.imshow("inputImg", inputImg)
-        cv.imwrite('scale_' + dirFn, inputImg)
-        
-    '''
-    * 参考文档： https://blog.csdn.net/sinat_36458870/article/details/78825571
-    #寻找边缘算法，待优化
-    '''
-    def algoVisFindMaxEdge(self, refRadInUm, inputImg):
-        #噪声处理过程
-        new = np.zeros(inputImg.shape, np.uint8)    
-        #Gray transaction: 灰度化
-        for i in range(new.shape[0]):  #Axis-y/height/Rows
-            for j in range(new.shape[1]):
-                (b,g,r) = inputImg[i,j]
-                #加权平均法
-                new[i,j] = int(0.3*float(b) + 0.59*float(g) + 0.11*float(r))&0xFF
-        #Middle value filter: 中值滤波
-        blur= cv.medianBlur(new, 5)
-        midGray = cv.cvtColor(blur, cv.COLOR_BGR2GRAY)
-        #Adaptive bin-translation: 自适应二值化
-        binGray = cv.adaptiveThreshold(midGray, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 43, 5)   # ADAPTIVE_THRESH_MEAN_C ADAPTIVE_THRESH_GAUSSIAN_C
-        binRes= cv.GaussianBlur(binGray, (5,5), 1.5) #medianBlur
-        #cv.imshow('Adaptive Bin', binRes)
-        corImg = cv.cvtColor(binRes, cv.COLOR_GRAY2BGR)
-        #高斯模糊,降低噪声  
-        blurred = cv.GaussianBlur(corImg,(3, 3), 0)  
-        #灰度图像  
-        gray=cv.cvtColor(blurred, cv.COLOR_RGB2GRAY)  
-        #图像梯度  
-        xgrad=cv.Sobel(gray, cv.CV_16SC1, 1, 0)   #cv.CV_32F
-        ygrad=cv.Sobel(gray, cv.CV_16SC1, 0, 1)  
-        #计算边缘  
-        #50和150参数必须符合1：3或者1：2  
-        edge_output=cv.Canny(xgrad, ygrad, 50, 100)  
-        #cv.imshow("edge", edge_output)
-        _, contours, _ = cv.findContours(edge_output, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-        #Output graphic: 输出图形
-        outputImg = cv.cvtColor(edge_output, cv.COLOR_GRAY2BGR)
-        mask = np.zeros((edge_output.shape[0]+2, edge_output.shape[1]+2), np.uint8)
-        mask[:] = 1
-        maxC = ''
-        #求最大弧长
-        arcLenMax = 0
-        for c in contours:
-            arcLen = cv.arcLength(c, False)
-            #cArea = cv.contourArea(c)
-            if (arcLen > arcLenMax):
-                maxC = c
-                arcLenMax = arcLen
-        print("arcLenMax = ", arcLenMax)
-        # compute the center of the contour
-        M = cv.moments(maxC)
-        cX = int(M["m10"] / (M["m00"]+0.01))
-        cY = int(M["m01"] / (M["m00"]+0.01))
-        #4th method: 第四种方法
-        rect = cv.minAreaRect(maxC)
-        width, height = rect[1]
-        if (width > height):
-            tmp = width
-            width = height
-            height = tmp
-        cE = width / (height+0.001)
-        cE = round(cE, 2)
-        cv.drawContours(outputImg, maxC, -1, (0, 0, 255), 2)                    
-        cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-        
-        #画最小外接框
-        box = cv.boxPoints(rect)
-        box = np.int0(box)
-        cv.drawContours(outputImg, [box], -1, (0, 0, 255), 1)
-        
-        #cv.imshow("result", outputImg)  
-        newRadians = (height * height / (4 * width) + width)/2
-        print("newRadians =%d, width/height=%d/%d" % (newRadians, width, height))
-        #newRadians = height * math.sqrt(1 + height*height/4/width/width)/2
-        baseLine = newRadians/refRadInUm
-        return arcLenMax, baseLine, outputImg
+
     
 
 

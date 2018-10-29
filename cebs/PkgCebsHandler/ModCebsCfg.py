@@ -337,11 +337,18 @@ class clsL1_ConfigOpr(object):
     def combineFileName(self, batch, fileNbr):
         return str("batch#" + str(batch) + "FileName#" + str(fileNbr))
 
+    def combineScaleFileName(self, batch, fileNbr):
+        return str("scale_batch#" + str(batch) + "FileName#" + str(fileNbr))
+
     def combineVideoName(self, batch, fileNbr):
         return str("batch#" + str(batch) + "VideoName#" + str(fileNbr))
 
     def combineFileNameWithDir(self, batch, fileNbr):
         fileName = str("batch#" + str(batch) + "FileName#" + str(fileNbr))
+        return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
+
+    def combineScaleFileNameWithDir(self, batch, fileNbr):
+        fileName = str("scale_batch#" + str(batch) + "FileName#" + str(fileNbr))
         return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
     
     def combineFileNameVideoWithDir(self, batch, fileNbr):
