@@ -290,7 +290,6 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         obj = ModCebsVision.clsL2_VisCfyProc(self)
         obj.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), "ref.jpg")
 
-
     #
     #  SLOT FUNCTION, 槽函数部分
     #    DO NOT MODIFY SLOT FUNCTIONS NAME, 以下部分为系统接口对应的槽函数，函数命名不得动

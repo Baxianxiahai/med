@@ -524,7 +524,6 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
         except Exception as err:
             print("L2VISCFY: Read file error, errinfo = ", str(err))
             return;
-        #self.algoVisFindMaxEdge(refRadInUs, inputImg)
         #图像分块
         orgH = inputImg.shape[0]
         orgW = inputImg.shape[1]
@@ -532,20 +531,70 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
         imgRightUp = inputImg[0:orgH//3, orgW*2//3:orgW]
         imgLeftBot = inputImg[orgH*2//3:orgH, 0:orgW//3]
         imgRightBot = inputImg[orgH*2//3:orgH, orgW*2//3:orgW]
-        res0, res1, resImgLU = self.algoVisFindMaxEdge(refRadInUm, imgLeftUp)
-        print("Length/baseline = %f/%f" % (res0, res1))
-        res0, res1, resImgRU = self.algoVisFindMaxEdge(refRadInUm, imgRightUp)
-        print("Length/baseline = %f/%f" % (res0, res1))
-        res0, res1, resImgLB = self.algoVisFindMaxEdge(refRadInUm, imgLeftBot)
-        print("Length/baseline = %f/%f" % (res0, res1))
-        res0, res1, resImgRB = self.algoVisFindMaxEdge(refRadInUm, imgRightBot)
-        print("Length/baseline = %f/%f" % (res0, res1))
-        thdMax = math.sqrt((orgH//3) * (orgH//3) + (orgW//3) * (orgW//3))*2
-        print("Max Arc length = ", thdMax)
-        cv.imshow("resImgLU", resImgLU)
-        cv.imshow("resImgRU", resImgRU)
-        cv.imshow("resImgLB", resImgLB)
-        cv.imshow("resImgRB", resImgRB)
+        arcLenMax = math.sqrt((orgH//3) * (orgH//3) + (orgW//3) * (orgW//3))*2
+        print("Max Arc length = ", arcLenMax)
+        
+        #比较
+        flagIndex = 0
+        arcSave = 0
+        stdRatio = 0
+        #PART1
+        arcLen, lenSqrRatio, resImgLU = self.algoVisFindMaxEdge(refRadInUm, imgLeftUp)
+        print("LU Length/baseline = %f/%f" % (arcLen, lenSqrRatio))
+        if (arcLen < arcLenMax) and (lenSqrRatio < 1) and (lenSqrRatio > 0.1) and (arcLen > arcSave):
+            flagIndex = 1
+            arcSave = arcLen
+            stdRatio = lenSqrRatio
+        #PART2
+        arcLen, lenSqrRatio, resImgRU = self.algoVisFindMaxEdge(refRadInUm, imgRightUp)
+        print("RU Length/baseline = %f/%f" % (arcLen, lenSqrRatio))
+        if (arcLen < arcLenMax) and (lenSqrRatio < 1) and (lenSqrRatio > 0.1) and (arcLen > arcSave):
+            flagIndex = 2
+            arcSave = arcLen
+            stdRatio = lenSqrRatio
+        #PART3
+        arcLen, lenSqrRatio, resImgLB = self.algoVisFindMaxEdge(refRadInUm, imgLeftBot)
+        print("LB Length/baseline = %f/%f" % (arcLen, lenSqrRatio))
+        if (arcLen < arcLenMax) and (lenSqrRatio < 1) and (lenSqrRatio > 0.1) and (arcLen > arcSave):
+            flagIndex = 3
+            arcSave = arcLen
+            stdRatio = lenSqrRatio
+        #PART4
+        arcLen, lenSqrRatio, resImgRB = self.algoVisFindMaxEdge(refRadInUm, imgRightBot)
+        print("RB Length/baseline = %f/%f" % (arcLen, lenSqrRatio))
+        if (arcLen < arcLenMax) and (lenSqrRatio < 1) and (lenSqrRatio > 0.1) and (arcLen > arcSave):
+            flagIndex = 4
+            arcSave = arcLen
+            stdRatio = lenSqrRatio
+        #SHOW
+        '''
+        if (flagIndex == 1):
+            print("Result = resImgLU")
+            #cv.line(resImgLU, start, end, (0, 0, 255))
+            cv.imshow("resImgLU", resImgLU)
+        if (flagIndex == 2):
+            print("Result = resImgRU")
+            #cv.line(resImgRU, start, end, (0, 0, 255))
+            cv.imshow("resImgRU", resImgRU)
+        if (flagIndex == 3):
+            print("Result = resImgLB")
+            #cv.line(resImgLB, start, end, (0, 0, 255))
+            cv.imshow("resImgLB", resImgLB)
+        if (flagIndex == 4):
+            print("Result = resImgRB")
+            #cv.line(resImgRB, start, end, (0, 0, 255))
+            cv.imshow("resImgRB", resImgRB)
+        '''
+        #1mm = 1000um的标尺
+        ptLen = int(500*stdRatio)
+        #start = (160, 500)
+        start = (10, 30)
+        end = (start[0] + ptLen, start[1])
+        #原始图像
+        cv.line(inputImg, start, end, (0, 0, 255))
+        cv.putText(inputImg, '500um', (start[0], start[1]-10), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+        #cv.imshow("inputImg", inputImg)
+        cv.imwrite('scale_' + dirFn, inputImg)
         
     '''
     * 参考文档： https://blog.csdn.net/sinat_36458870/article/details/78825571
@@ -588,12 +637,12 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
         #求最大弧长
         arcLenMax = 0
         for c in contours:
-            arcLen = cv.arcLength(c,True)
+            arcLen = cv.arcLength(c, False)
             #cArea = cv.contourArea(c)
             if (arcLen > arcLenMax):
                 maxC = c
                 arcLenMax = arcLen
-        #print("arcLenMax = ", arcLenMax)
+        print("arcLenMax = ", arcLenMax)
         # compute the center of the contour
         M = cv.moments(maxC)
         cX = int(M["m10"] / (M["m00"]+0.01))
@@ -602,17 +651,24 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
         rect = cv.minAreaRect(maxC)
         width, height = rect[1]
         if (width > height):
-            cE = height / (width+0.001)
-        else:
-            cE = width / (height+0.001)
-        #print("cE = %d, width/Height=%d/%d" % (cE, width, height))
+            tmp = width
+            width = height
+            height = tmp
+        cE = width / (height+0.001)
         cE = round(cE, 2)
         cv.drawContours(outputImg, maxC, -1, (0, 0, 255), 2)                    
         cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+        
+        #画最小外接框
+        box = cv.boxPoints(rect)
+        box = np.int0(box)
+        cv.drawContours(outputImg, [box], -1, (0, 0, 255), 1)
+        
         #cv.imshow("result", outputImg)  
-        newRadians = height * height / (4 * width) + width
+        newRadians = (height * height / (4 * width) + width)/2
+        print("newRadians =%d, width/height=%d/%d" % (newRadians, width, height))
+        #newRadians = height * math.sqrt(1 + height*height/4/width/width)/2
         baseLine = newRadians/refRadInUm
-        #print("baseLine = ", baseLine)
         return arcLenMax, baseLine, outputImg
     
 
