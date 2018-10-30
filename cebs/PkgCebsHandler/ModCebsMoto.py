@@ -467,7 +467,7 @@ class clsL1_MdcThd(QThread):
                 self.funcMdctdDebugPrint("L1MDCT: Serial port is to open = " + str(searchComPartString))
                 serialName = searchComPartString
             try:
-                self.serialFd = serial.Serial(serialName, 9600, timeout = 0.3)
+                self.serialFd = serial.Serial(serialName, 9600, timeout = 0.2)
             except Exception:
                 self.IsSerialOpenOk = False
                 self.funcMdctdDebugPrint("L1MDCT: Serial exist, but can't open!")
@@ -512,8 +512,13 @@ class clsL1_MdcThd(QThread):
             self.funcMdctdDebugPrint("L1MDCT: Serial not opened, cant not send command!")
             return -2,0
         #串口的确已经被打开了
+        self.serialFd.readline()
         self.serialFd.write(cmd)
         rcvBuf = self.serialFd.readline()
+        if (len(rcvBuf) > 1):
+            while (rcvBuf[len(rcvBuf)-1] == 0x0A):
+                rcvBuf2 = self.serialFd.readline()
+                rcvBuf += rcvBuf2
         length = len(rcvBuf)
         if (length <=0):
             self.funcMdctdDebugPrint("L1MDCT: Nothing received. RCV BUF = " + str(rcvBuf))
