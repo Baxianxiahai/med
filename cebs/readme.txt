@@ -8,6 +8,8 @@
 
 
 
+//=ZJL, 2018/11/1, CURRENT_SW_DELIVERY R1.31 =>CEBS
+= 优化设计串口争抢机制
 
 //=ZJL, 2018/10/29, CURRENT_SW_DELIVERY R1.30 =>CEBS
 = 增加查询一般性状态
