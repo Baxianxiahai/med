@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_cebsGparForm(object):
     def setupUi(self, cebsGparForm):
         cebsGparForm.setObjectName("cebsGparForm")
-        cebsGparForm.resize(1185, 791)
+        cebsGparForm.resize(1313, 946)
         self.groupBox_gpar_normal = QtWidgets.QGroupBox(cebsGparForm)
         self.groupBox_gpar_normal.setGeometry(QtCore.QRect(20, 90, 471, 91))
         self.groupBox_gpar_normal.setObjectName("groupBox_gpar_normal")
@@ -175,10 +175,10 @@ class Ui_cebsGparForm(object):
         self.label_gpar_pic_origin_fill.setGeometry(QtCore.QRect(0, 20, 651, 311))
         self.label_gpar_pic_origin_fill.setObjectName("label_gpar_pic_origin_fill")
         self.groupBox_gpar_pic_cfy = QtWidgets.QGroupBox(cebsGparForm)
-        self.groupBox_gpar_pic_cfy.setGeometry(QtCore.QRect(510, 390, 651, 331))
+        self.groupBox_gpar_pic_cfy.setGeometry(QtCore.QRect(510, 390, 741, 521))
         self.groupBox_gpar_pic_cfy.setObjectName("groupBox_gpar_pic_cfy")
         self.label_gpar_pic_cfy_fill = QtWidgets.QLabel(self.groupBox_gpar_pic_cfy)
-        self.label_gpar_pic_cfy_fill.setGeometry(QtCore.QRect(0, 20, 651, 311))
+        self.label_gpar_pic_cfy_fill.setGeometry(QtCore.QRect(0, 20, 731, 491))
         self.label_gpar_pic_cfy_fill.setObjectName("label_gpar_pic_cfy_fill")
         self.pushButton_gpar_pic_file_load = QtWidgets.QPushButton(cebsGparForm)
         self.pushButton_gpar_pic_file_load.setGeometry(QtCore.QRect(1070, 20, 91, 21))

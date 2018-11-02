@@ -16,6 +16,7 @@ import re
 import urllib
 import http
 import socket
+#import cv2 as cv
 
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
@@ -50,10 +51,11 @@ class clsL3_GparProc(object):
     #Load file
     def funcPicFileLoad(self, dirFn):
         self.picDirFile = dirFn
+        print("input file name = ", dirFn)
         img = QtGui.QPixmap(dirFn)
         img=img.scaled(self.orgPicWidth,self.orgPicHeight)
         self.instL4GparForm.label_gpar_pic_origin_fill.setPixmap(img)
-        self.funcCtrlSchdDebugPrint("Load once!")
+        self.funcCtrlSchdDebugPrint("GPAR: Load once!")
         
     #Train files
     def funcPicFileTrain(self):
@@ -66,7 +68,7 @@ class clsL3_GparProc(object):
         img = QtGui.QPixmap('tempPic.jpg')
         img=img.scaled(self.cfyPicWidth,self.cfyPicHeight)
         self.instL4GparForm.label_gpar_pic_cfy_fill.setPixmap(img)
-        self.funcCtrlSchdDebugPrint("Done once!")
+        self.funcCtrlSchdDebugPrint("GPAR: Train done once!")
         
         
 
