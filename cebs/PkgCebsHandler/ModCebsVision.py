@@ -108,6 +108,7 @@ class clsL2_VisCapProc(object):
             self.funcVisCapLogTrace("L2VISCAP: Camera not yet installed!");
             return -1;
         else:
+            print("point test A1")
             self.capInit = cv.VideoCapture(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
             self.capInit.set(3, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
             self.capInit.set(4, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)

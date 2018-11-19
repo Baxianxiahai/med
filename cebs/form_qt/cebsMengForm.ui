@@ -120,6 +120,11 @@
      <string>查询一般状态（inq_status）</string>
     </property>
    </item>
+   <item>
+    <property name="text">
+     <string>测试脉冲数（test_pules)</string>
+    </property>
+   </item>
   </widget>
   <widget class="QLabel" name="label_meng_par1">
    <property name="geometry">

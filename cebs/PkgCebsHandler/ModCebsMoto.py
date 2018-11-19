@@ -33,7 +33,7 @@ from PkgCebsHandler import ModCebsMotorApi
 全局变量初始化
 全局变量设定，从而只干一次，不然每次随着moto模块的初始化，要搞两次，这就会出问题了
 '''
-L1MOTO_API_SELECTION = True  #外购API方式-True，自研驱动-False
+L1MOTO_API_SELECTION = False  #外购API方式-True，自研驱动-False
 
 if L1MOTO_API_SELECTION == True:
     instL1MotoDrvApiFlag = True
@@ -443,7 +443,7 @@ class clsL1_MdcThd(QThread):
     def funcInitSps(self):
         self.IsSerialOpenOk = False
         plist = list(serial.tools.list_ports.comports())
-        self.targetComPortString = 'Silicon Labs CP210x USB to UART Bridge ('
+        self.targetComPortString = 'Prolific USB-to-Serial Comm Port ('
         self.drvVerNbr = -1
         if len(plist) <= 0:
             self.instL1ConfigOpr.medErrorLog("L1MDCT: Not serial device installed!")

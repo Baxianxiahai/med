@@ -404,7 +404,7 @@ class clsL0_MedSpsPar():
     SPS_INQ_EN = '查询激活状态（inq_enable）'
     SPS_INQ_RUN = '查询运行状态（inq_run）'
     SPS_INQ_STATUS = '查询一般状态（inq_status）'
-
+    SPS_TEST_PULES = '测试脉冲数（test_pules)'
     SPS_SHK_HAND_CMID = 0x20
     SPS_SET_WK_MODE_CMID = 0x21
     SPS_SET_ACC_CMID = 0x22
@@ -422,6 +422,7 @@ class clsL0_MedSpsPar():
     SPS_INQ_EN_CMID = 0x35
     SPS_INQ_RUN_CMID = 0x36
     SPS_INQ_STATUS_CMID = 0x37
+    SPS_TEST_PULES_CMID = 0x38
     
     SPS_MENGPAR_ADDR  = 0x77
     SPS_MENGPAR_CMD_LEN = 18

@@ -117,12 +117,15 @@ class clsL3_CtrlSchdThread(QThread):
                 return -2;
         self.instL1ConfigOpr.createBatch(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
         #NEW STATE
+        print("point test A")
         self.instL2VisCapProc.funcVisBatCapStart();
+        print("point test B")
         #去掉初始3-4张黑屏幕的照片
         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
+        print("point test C")
         self.funcCtrlSchdDebugPrint("L3CTRLST: Normal picture starting progress...")
         self.capTimes = ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH+1;
         self.funcCtrlSchdDebugPrint("L3CTRLST: Start to take normal picture, remaining TIMES=%d." %(self.capTimes-1))
@@ -142,8 +145,10 @@ class clsL3_CtrlSchdThread(QThread):
                 self.funcCtrlSchdDebugPrint(string)
                 return -2;
         self.instL1ConfigOpr.createBatch(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
+        
         #NEW STATE
         self.instL2VisCapProc.funcVisBatCapStart();
+        
         #去掉初始3-4张黑屏幕的照片
         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN, True);
         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN, True);
@@ -153,7 +158,7 @@ class clsL3_CtrlSchdThread(QThread):
         self.capTimes = ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH+1;
         self.funcCtrlSchdDebugPrint("L3CTRLST: Start to take flu picture, remaining TIMES=%d." %(self.capTimes-1))
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CAP_PIC_FLU;
-    
+        
     #STOP TAKING PICTURE
     def funcTakePicStop(self):
         if (self.CTRL_STM_STATE == self.__CEBS_STM_CTRL_INIT):
