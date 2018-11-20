@@ -489,25 +489,44 @@ class clsL1_MdcThd(QThread):
     #命令打包
     def funcSendCmdPack(self, cmdId, par1, par2, par3, par4):
         #Build MODBUS COMMAND:系列化
-        fmt = ">BBiiii";
-        byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, par1, par2, par3, par4)
-        crc = self.funcCacCrc(byteDataBuf, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
-        fmt = "<H";
-        byteCrc = struct.pack(fmt, crc)
-        byteDataBuf += byteCrc
-        #打印完整的BYTE系列
-        index=0
-        outBuf=''
-        while index < (ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
-            outBuf += str("%02X " % (byteDataBuf[index]))
-            index+=1
-        self.funcMdctdDebugPrint("L1MDCT: SND CMD = " + outBuf)
-        res, Buf = self.funcCmdSend(byteDataBuf)
-        if (res > 0):
-            return Buf
+        #add for test pules
+        if (cmdId == 0x38):
+            for i in range(1,par1+1,100):
+                #print("A")
+                fmt = ">BBiiii";
+                byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, i, par2, par3, par4)
+                crc = self.funcCacCrc(byteDataBuf, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
+                fmt = "<H";
+                byteCrc = struct.pack(fmt, crc)
+                byteDataBuf += byteCrc
+                #打印完整的BYTE系列
+                index=0
+                outBuf=''
+                while index < (ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
+                    outBuf += str("%02X " % (byteDataBuf[index]))
+                    index+=1
+                self.funcMdctdDebugPrint("L1MDCT: SND CMD = " + outBuf)
+                res, Buf = self.funcCmdSend(byteDataBuf)
+                time.sleep(2)
         else:
-            return res
-
+            fmt = ">BBiiii";
+            byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, par1, par2, par3, par4)
+            crc = self.funcCacCrc(byteDataBuf, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
+            fmt = "<H";
+            byteCrc = struct.pack(fmt, crc)
+            byteDataBuf += byteCrc
+            #打印完整的BYTE系列
+            index=0
+            outBuf=''
+            while index < (ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
+                outBuf += str("%02X " % (byteDataBuf[index]))
+                index+=1
+            self.funcMdctdDebugPrint("L1MDCT: SND CMD = " + outBuf)
+            res, Buf = self.funcCmdSend(byteDataBuf)
+            if (res > 0):
+                return Buf
+            else:
+                return res
     #单条命令的执行
     def funcCmdSend(self, cmd):
         #正常状态
