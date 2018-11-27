@@ -1053,6 +1053,8 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
             cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_INQ_STATUS_CMID
         elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_TEST_PULES) > 0):
             cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_TEST_PULES_CMID
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_EXTI_DELAY_TIME_CMID) > 0):
+            cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_EXTI_DELAY_TIME_CMID
         else:
             cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SHK_HAND_CMID
         

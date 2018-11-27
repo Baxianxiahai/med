@@ -125,6 +125,11 @@
      <string>测试脉冲数（test_pules)</string>
     </property>
    </item>
+   <item>
+    <property name="text">
+     <string>设置限位器触发迟滞（set_exti_delay_time)</string>
+    </property>
+   </item>
   </widget>
   <widget class="QLabel" name="label_meng_par1">
    <property name="geometry">

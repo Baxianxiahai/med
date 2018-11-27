@@ -443,7 +443,7 @@ class clsL1_MdcThd(QThread):
     def funcInitSps(self):
         self.IsSerialOpenOk = False
         plist = list(serial.tools.list_ports.comports())
-        self.targetComPortString = 'Prolific USB-to-Serial Comm Port ('
+        self.targetComPortString = 'Prolific USB-to-Serial Comm Port ('  #Silicon Labs CP210x USB to UART Bridge
         self.drvVerNbr = -1
         if len(plist) <= 0:
             self.instL1ConfigOpr.medErrorLog("L1MDCT: Not serial device installed!")
@@ -489,9 +489,9 @@ class clsL1_MdcThd(QThread):
     #命令打包
     def funcSendCmdPack(self, cmdId, par1, par2, par3, par4):
         #Build MODBUS COMMAND:系列化
-        #add for test pules
+        #add for test pules  command ID 0x38   
         if (cmdId == 0x38):
-            for i in range(1,par1+1,100):
+            for i in range(1,par1+1,500):
                 #print("A")
                 fmt = ">BBiiii";
                 byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, i, par2, par3, par4)
@@ -508,8 +508,9 @@ class clsL1_MdcThd(QThread):
                 self.funcMdctdDebugPrint("L1MDCT: SND CMD = " + outBuf)
                 res, Buf = self.funcCmdSend(byteDataBuf)
                 time.sleep(2)
+            return 1    
         else:
-            fmt = ">BBiiii";
+            fmt = ">BBiiii";    
             byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, par1, par2, par3, par4)
             crc = self.funcCacCrc(byteDataBuf, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
             fmt = "<H";

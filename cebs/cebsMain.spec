@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['cebsMain.py'],
-             pathex=['D:\\IHUSRC\\med\\cebs'],
+             pathex=['D:\\ihusrc\\med\\cebs'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -13,7 +13,8 @@ a = Analysis(['cebsMain.py'],
              excludes=[],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
-             cipher=block_cipher)
+             cipher=block_cipher,
+             noarchive=False)
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
@@ -21,9 +22,11 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
+          [],
           name='cebsMain',
           debug=False,
+          bootloader_ignore_signals=False,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=False , icon='icon_res\\cebs.ico')
+          console=False )
