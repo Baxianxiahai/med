@@ -97,7 +97,7 @@ class clsL2_VisCapProc(object):
                     result[step] = item
                     step+=1
                 try:
-                    ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = result[2]
+                    ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = int(result[2])
                 except Exception:
                     ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = -1
         return res + str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR)
