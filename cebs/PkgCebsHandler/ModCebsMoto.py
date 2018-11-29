@@ -522,7 +522,7 @@ class clsL1_MdcThd(QThread):
             while index < (ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
                 outBuf += str("%02X " % (byteDataBuf[index]))
                 index+=1
-            print(outBuf)
+            
             self.funcMdctdDebugPrint("L1MDCT: SND CMD = " + outBuf)
             res, Buf = self.funcCmdSend(byteDataBuf)
             if (res > 0):

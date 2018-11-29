@@ -108,7 +108,6 @@ class clsL2_VisCapProc(object):
             self.funcVisCapLogTrace("L2VISCAP: Camera not yet installed!");
             return -1;
         else:
-            print("point test A1")
             self.capInit = cv.VideoCapture(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
             self.capInit.set(3, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
             self.capInit.set(4, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
@@ -168,7 +167,6 @@ class clsL2_VisCapProc(object):
             G = G * kg
             R = R * kr
             outputFrame = cv.merge([B, G, R])
-            
             #Show picture
             #cv.imshow('Input', frame)
             obj=ModCebsCfg.clsL1_ConfigOpr();
@@ -177,11 +175,11 @@ class clsL2_VisCapProc(object):
             #cv.imshow("Final output", frame)
             #waitKey(2000)
             #time.sleep(2)
-            
             #存储scale文件
             scaleFn = obj.combineScaleFileNameWithDir(batch, fileNbr)
-            self.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), fileName, scaleFn)
-        
+            if ModCebsCom.GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG == True:
+                self.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), fileName, scaleFn)
+         
         #Video capture
         #Ref: http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_video_display/py_video_display.html
         #fourcc code: http://www.fourcc.org/codecs.php

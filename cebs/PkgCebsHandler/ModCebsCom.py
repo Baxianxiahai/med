@@ -342,6 +342,8 @@ class clsL0_MedComPicPar():
     #VIDEO CAPTURE ENABLE OR NOT (视频录制参数)
     CAPTURE_ENABLE = True;
     CAPTURE_DUR_IN_SEC = 3;
+    #SCALE ENABLE SET
+    PIC_SCALE_ENABLE_FLAG = False;
     #图像识别中所用到的部分参数：将根据算法演进，待完善
     CFY_THD_PAR1 = 1
     CFY_THD_PAR2 = 2
