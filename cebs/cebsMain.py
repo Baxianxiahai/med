@@ -862,12 +862,12 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
 
     def slot_gpar_pic_train(self):
         #Firstly read parameter into classified variable sets, to let Train Func use.
-        self.funcReadVisParToCfySets();
+        self.funcReadVisParToCfySets();    #获取SAV
         #在训练之前，需要将系统参数保存在临时变量中，借助于全局变量的传递，进行算法训练。一旦完成，还要再回写。
-        savetmp = ModCebsCom.GLVIS_PAR_OFC
-        ModCebsCom.GLVIS_PAR_OFC = ModCebsCom.GLVIS_PAR_SAV
-        self.instL3GparProc.funcPicFileTrain()
-        ModCebsCom.GLVIS_PAR_OFC = savetmp
+        savetmp = ModCebsCom.GLVIS_PAR_SAV   #将SAV值传给临时变量
+        ModCebsCom.GLVIS_PAR_OFC = ModCebsCom.GLVIS_PAR_SAV   #将SAV值传给OFC
+        self.instL3GparProc.funcPicFileTrain()              #训练
+        ModCebsCom.GLVIS_PAR_OFC = savetmp                  #SAV给OFC
         
     #
     #  SERVICE FUNCTION PART, 业务函数部分
@@ -886,22 +886,23 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
             ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN = int(self.lineEdit_gpar_picTti.text());
         except Exception: 
             ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN = 60;
-        try: 
-            ModCebsCom.GLVIS_PAR_OFC.saveLowLimit(int(self.lineEdit_gpar_vision_small_low_limit.text()))
-        except Exception: 
-            ModCebsCom.GLVIS_PAR_OFC.saveLowLimit(200)
-        try: 
-            ModCebsCom.GLVIS_PAR_OFC.saveMidLimit(int(self.lineEdit_gpar_vision_small_mid_limit.text()))
-        except Exception: 
-            ModCebsCom.GLVIS_PAR_OFC.saveMidLimit(500)
-        try: 
-            ModCebsCom.GLVIS_PAR_OFC.saveBigLimit(int(self.lineEdit_gpar_vision_mid_big_limit.text()))
-        except Exception: 
-            ModCebsCom.GLVIS_PAR_OFC.saveBigLimit(2000)
-        try: 
-            ModCebsCom.GLVIS_PAR_OFC.saveUpperLimit(int(self.lineEdit_gpar_vision_big_upper_limit.text()))
-        except Exception: 
-            ModCebsCom.GLVIS_PAR_OFC.saveUpperLimit(2000)
+            
+#         try: 
+#             ModCebsCom.GLVIS_PAR_OFC.saveLowLimit(int(self.lineEdit_gpar_vision_small_low_limit.text()))
+#         except Exception: 
+#             ModCebsCom.GLVIS_PAR_OFC.saveLowLimit(200)
+#         try: 
+#             ModCebsCom.GLVIS_PAR_OFC.saveMidLimit(int(self.lineEdit_gpar_vision_small_mid_limit.text()))
+#         except Exception: 
+#             ModCebsCom.GLVIS_PAR_OFC.saveMidLimit(500)
+#         try: 
+#             ModCebsCom.GLVIS_PAR_OFC.saveBigLimit(int(self.lineEdit_gpar_vision_mid_big_limit.text()))
+#         except Exception: 
+#             ModCebsCom.GLVIS_PAR_OFC.saveBigLimit(2000)
+#         try: 
+#             ModCebsCom.GLVIS_PAR_OFC.saveUpperLimit(int(self.lineEdit_gpar_vision_big_upper_limit.text()))
+#         except Exception: 
+#             ModCebsCom.GLVIS_PAR_OFC.saveUpperLimit(2000)
         ModCebsCom.GLVIS_PAR_OFC.saveAddupSet(self.checkBox_gpar_vision_res_addup.isChecked())
         ModCebsCom.GLVIS_PAR_OFC.saveCapEnable(self.checkBox_gpar_video_enable.isChecked())
         try: 
@@ -914,6 +915,12 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         radioGparHts24 = self.radioButton_gpar_bts_24.isChecked();
         radioGparHts12 = self.radioButton_gpar_bts_12.isChecked();
         radioGparHts6 = self.radioButton_gpar_bts_6.isChecked();
+        
+        ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT = ModCebsCom.GLVIS_PAR_SAV.SMALL_LOW_LIMIT
+        ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT = ModCebsCom.GLVIS_PAR_SAV.SMALL_MID_LIMIT
+        ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT = ModCebsCom.GLVIS_PAR_SAV.MID_BIG_LIMIT
+        ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT = ModCebsCom.GLVIS_PAR_SAV.BIG_UPPER_LIMIT
+         
         option = 0;
         if (radioGparHts96 == 1): option = 96
         elif (radioGparHts48 == 1): option = 48

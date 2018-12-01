@@ -416,7 +416,11 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
     def funcVisCfyLogTrace(self, myString):
         self.instL4WinForm.med_debug_print(myString)
     
-    
+    def funcVisRefreshPar(self):
+        self.HST_VISION_WORM_CLASSIFY_base = ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_small2mid = ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_mid2big = ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_big2top = ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT;
     
     '''
     * 核心的识别函数，其它任务调用的主入口
@@ -425,6 +429,7 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
     *
     '''    
     def funcVisionNormalClassifyProc(self):
+        self.funcVisRefreshPar()
         batch, fileNbr = self.findNormalUnclasFileBatchAndNbr();
         if (batch < 0):
             ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
@@ -650,6 +655,7 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
     *
     '''    
     def funcVisionFluClassifyProc(self):
+        self.funcVisRefreshPar()
         batch, fileNbr = self.findFluUnclasFileBatchAndNbr();
         print("batch/FileNbr=%d/%d" % (batch, fileNbr))
         if (batch < 0):
