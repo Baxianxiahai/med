@@ -593,7 +593,7 @@ class clsL1_MdcThd(QThread):
             self.funcMdctdDebugPrint("L1MDCT: Exec move zero, not in EXEC state and can not continue support this command!")
             return -1
         self.MDCT_CTRL_CNT = 30
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_ZERO_CMID, 1, 1, 0, 0)
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_ZERO_CMID, -1, -1, 0, 0)
         self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXE_ZO
         return 1
 
