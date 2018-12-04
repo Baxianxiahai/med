@@ -390,6 +390,10 @@ PART4: 串口指令
 '''
 class clsL0_MedSpsPar():
 
+    SPS_USB_DBG_CARD1 = 'Prolific USB-to-Serial Comm Port ('
+    SPS_USB_DBG_CARD2 = 'Silicon Labs CP210x USB to UART Bridge ('
+    SPS_USB_CARD_SET = SPS_USB_DBG_CARD2
+
     SPS_SHK_HAND = '设备握手（shake_hand）'
     SPS_SET_WK_MODE = '设置工作模式（set_wk_mode）'
     SPS_SET_ACC = '设置加速度（set_acc）'
@@ -441,6 +445,8 @@ class clsL0_MedSpsPar():
     MOTOR_DIS_MM_PER_ROUND = 3.1415926*20*1.05
     MOTOR_STEPS_PER_DISTANCE_MM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND
     MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND / 1000    
+
+
     
     def __init__(self):    
         super(clsL0_MedSpsPar, self).__init__()  

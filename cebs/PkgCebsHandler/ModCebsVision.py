@@ -470,7 +470,7 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
                 print("L2VISCFY: func_vision_worm_input_processing on input error!")
         except Exception as err:
             text = "L2VISCFY: func_vision_worm_input_processing on input error = %s" % str(err)
-            print(text);
+            print("L2VISCFY: Input error = ", text);
 
 
 

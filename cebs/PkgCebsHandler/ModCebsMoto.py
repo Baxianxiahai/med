@@ -392,11 +392,18 @@ class clsL1_MdcThd(QThread):
     2: CALIB UI called
     3: MENG engineering UI called
     '''
+    #增加同步机制
     def funcGetSpsRights(self, par):
         self.MDCT_SPS_USAGE = par
         self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_SPS_RGT;
         self.funcMdctdDebugPrint("L1MDCT: Initialize SPS port, called father = %d" % (self.MDCT_SPS_USAGE))
+        #return 1
+        while 1:
+            if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_SPS_RGT):
+                return 1
+            time.sleep(0.1)
 
+    #增加同步机制
     def funcRelSpsRights(self, par):
         if (self.MDCT_SPS_USAGE != par):
             self.funcMdctdDebugPrint("L1MDCT: Not same father called release procedure!")
@@ -440,12 +447,10 @@ class clsL1_MdcThd(QThread):
 
     #初始化串口
     #注意两种串口设备，描述符是不一样的，需要通过描述符来锁定设备端口
-    GL_SPS_USB_DBG_CARD1 = 'Prolific USB-to-Serial Comm Port ('
-    GL_SPS_USB_DBG_CARD2 = 'Silicon Labs CP210x USB to UART Bridge ('
     def funcInitSps(self):
         self.IsSerialOpenOk = False
         plist = list(serial.tools.list_ports.comports())
-        self.targetComPortString = self.GL_SPS_USB_DBG_CARD2
+        self.targetComPortString = ModCebsCom.GLSPS_PAR_OFC.SPS_USB_CARD_SET
         self.drvVerNbr = -1
         if len(plist) <= 0:
             self.instL1ConfigOpr.medErrorLog("L1MDCT: Not serial device installed!")
@@ -456,7 +461,7 @@ class clsL1_MdcThd(QThread):
             for index in range(0, maxList):
                 self.instL1ConfigOpr.medErrorLog("L1MDCT: " + str(plist[index]))
                 plistIndex =list(plist[index])
-                print(plistIndex)
+                print("L1MDCT: Sps Init = ", plistIndex)
                 #Find right COM#
                 for comPortStr in plistIndex:
                     indexStart = comPortStr.find(self.targetComPortString)
@@ -597,7 +602,12 @@ class clsL1_MdcThd(QThread):
         self.MDCT_CTRL_CNT = 30
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_ZERO_CMID, -1*ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, -1*ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, 0, 0)
         self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXE_ZO
-        return 1
+        #return 1
+        while (1):
+            if (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_EXEC):
+                return 1
+            time.sleep(0.1)
+
 
     def funcExecStopNormal(self):
         if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_EXEC):
@@ -635,7 +645,7 @@ class clsL1_MdcThd(QThread):
     #标准指令
     def funcInqueryRunningStatus(self):
         res = self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_INQ_RUN_CMID, 1, 1, 1, 1)
-        print("Res = ", res)
+        print("L1MDCT: Inquiry Res = ", res)
         if res == 0:
             return True
         else:
@@ -665,7 +675,7 @@ class clsL1_MdcThd(QThread):
                     flag = self.funcInitSps()
                     localCnt += 1
                     time.sleep(0.2)
-                    print("L1MDCT: Fetch SPS port try times = ", localCnt)
+                    #print("L1MDCT: Fetch SPS port try times = ", localCnt)
                 if (flag > 0):
                     self.funcMdctdDebugPrint("L1MDCT: Init sps port successful!")
                     if (self.MDCT_SPS_USAGE == self.__CEBS_MDCT_SPS_USAGE_MENG_UI):

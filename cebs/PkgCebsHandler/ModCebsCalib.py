@@ -153,7 +153,7 @@ class clsL3_CalibProc(object):
             self.funcCalibLogTrace("L3CALIB: Camera already open, can not enabled again!")
             return 1;
         self.funcCalibLogTrace("L3CALIB: Pilot camera start to open...")
-        print(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR)
+        print("L3CALIB: CAM NBR = ", ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR)
         #做必要的判定，放置是无效摄像头，实际上，没整到位
      
         if (ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR < 0):

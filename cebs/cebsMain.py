@@ -180,7 +180,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         res = ModCebsVision.clsL2_VisCapProc.funcVisionDetectAllCamera(self)
         self.slot_print_trigger(res)
         #STEP8:抢占硬件资源
-        ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(1000)
+        ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(5)
         self.instL3CtrlSchdThd.funcCtrlGetSpsRights(1)
         #STEP9: SEND BACK-ZERO SIGNAL TO MOTO, 发送归零信号给马达 #MAKE MOTO GO BACK TO ZERO
         self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
@@ -256,7 +256,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         if not self.instL4CalibForm.isVisible():
             self.sgL4MainWinUnvisible.emit()
             #抢占硬件资源
-            ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(1000)
+            ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(5)
             self.instL4CalibForm.instL3CalibProc.funcCalibGetSpsRights(2);
             self.instL4CalibForm.show()
 
@@ -265,6 +265,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.med_debug_print("L4MAIN: Global parameter set start......")
         if not self.instL4GparForm.isVisible():
             self.sgL4MainWinUnvisible.emit()
+            #这里的申请，是为了后面回到主界面，做visualWin时，统一再次抢资源所用，不然会造成不同情况下处理过程不一致的情况
+            ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(5)
             self.instL4GparForm.show()
 
     #Enter Moto Engineering Mode
@@ -273,7 +275,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         if not self.instL4MengForm.isVisible():
             self.sgL4MainWinUnvisible.emit()
             #抢占硬件资源
-            ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(1000)
+            ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(5)
             self.instL4MengForm.funcGetLowLevelResource(3);
             self.instL4MengForm.show()
 
@@ -308,7 +310,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
             self.show()
         self.instL3CtrlSchdThd.sgL3CtrlCalibStop.emit()
         #抢占硬件资源
-        ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(1000)
+        ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(5)
         self.instL3CtrlSchdThd.funcCtrlGetSpsRights(1)
         self.med_debug_print("L4MAIN: Main form welcome to come back!")
 
@@ -833,24 +835,6 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         self.textEdit_gpar_cmd_log.moveCursor(QtGui.QTextCursor.End)
         self.textEdit_gpar_cmd_log.ensureCursorVisible()
         self.textEdit_gpar_cmd_log.insertPlainText("")        
-    #
-    #  SLOT FUNCTION, 槽函数部分
-    #    DO NOT MODIFY FUNCTION NAMES, 以下部分为系统接口对应的槽函数，函数命名不得动
-    #
-    #    
-    def slot_gpar_compl(self):
-        self.funcGlobalParReadSave()
-        self.sgL4MainWinVisible.emit()
-        self.close()
-
-    #Give up and not save parameters
-    def slot_gpar_giveup(self):
-        self.sgL4MainWinVisible.emit()
-        self.close()
-
-    #Clear the command log text box
-    def slot_gpar_clear(self):
-        self.textEdit_gpar_cmd_log.clear();
 
     
     '''
@@ -992,10 +976,29 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
             ModCebsCom.GLVIS_PAR_SAV.saveCapDur(int(self.lineEdit_gpar_video_input.text()))
         except Exception: 
             ModCebsCom.GLVIS_PAR_SAV.saveCapDur(3)    
-        
+
+    #
+    #  SLOT FUNCTION, 槽函数部分
+    #    DO NOT MODIFY FUNCTION NAMES, 以下部分为系统接口对应的槽函数，函数命名不得动
+    #    compl和giveup函数必须将释放mutex的动作放在closeEvent中统一完成，不然会造成完不成的情况
+    #
+    #    
+    def slot_gpar_compl(self):
+        self.funcGlobalParReadSave()
+        self.close()
+
+    #Give up and not save parameters
+    def slot_gpar_giveup(self):
+        self.close()
+
+    #Clear the command log text box
+    def slot_gpar_clear(self):
+        self.textEdit_gpar_cmd_log.clear();  
+              
     #Give up and not save parameters
     def closeEvent(self, event):
         self.instL3GparProc.funcRecoverWorkingEnv()
+        ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.release()
         self.sgL4MainWinVisible.emit()
         self.close()
 
