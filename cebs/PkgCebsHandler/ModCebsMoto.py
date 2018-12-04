@@ -599,15 +599,17 @@ class clsL1_MdcThd(QThread):
         if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_EXEC):
             self.funcMdctdDebugPrint("L1MDCT: Exec move zero, not in EXEC state and can not continue support this command!")
             return -1
-        self.MDCT_CTRL_CNT = 30
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_ZERO_CMID, -1*ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, -1*ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, 0, 0)
+        self.MDCT_CTRL_CNT = ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_RETRY_MAX_TIMES
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_ZERO_CMID, (-1)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, (-1)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, 0, 0)
         self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXE_ZO
-        #return 1
+        #退出当前状态机
+        cnt = 0
         while (1):
-            if (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_EXEC):
+            if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_EXE_ZO):
                 return 1
-            time.sleep(0.1)
-
+            time.sleep(1)
+            cnt += 1
+            print("L1MDCT: Wait back zero progress, Counter = ", cnt)
 
     def funcExecStopNormal(self):
         if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_EXEC):
@@ -675,7 +677,7 @@ class clsL1_MdcThd(QThread):
                     flag = self.funcInitSps()
                     localCnt += 1
                     time.sleep(0.2)
-                    #print("L1MDCT: Fetch SPS port try times = ", localCnt)
+                    print("L1MDCT: Fetch SPS port try times = ", localCnt)
                 if (flag > 0):
                     self.funcMdctdDebugPrint("L1MDCT: Init sps port successful!")
                     if (self.MDCT_SPS_USAGE == self.__CEBS_MDCT_SPS_USAGE_MENG_UI):
