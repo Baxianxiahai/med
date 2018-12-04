@@ -594,12 +594,20 @@ class clsL1_MdcThd(QThread):
         #全部停止
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_STP_IMD_CMID, 1, 1, 0, 0)
     
+    #停止动作
+    def funcExecStopNormal(self):
+        if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_EXEC):
+            self.funcMdctdDebugPrint("L1MDCT: Exec stop normal, not in EXEC state and can not continue support this command!")
+            return -1
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_STP_NOR_CMID, 1, 1, 0, 0)
+        return 1
+        
     #连续带监控的命令执行
     def funcExecMoveZero(self):
         if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_EXEC):
             self.funcMdctdDebugPrint("L1MDCT: Exec move zero, not in EXEC state and can not continue support this command!")
             return -1
-        self.MDCT_CTRL_CNT = ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_RETRY_MAX_TIMES
+        self.MDCT_CTRL_CNT = ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_ZERO_CMID, (-1)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, (-1)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, 0, 0)
         self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXE_ZO
         #退出当前状态机
@@ -611,13 +619,6 @@ class clsL1_MdcThd(QThread):
             cnt += 1
             print("L1MDCT: Wait back zero progress, Counter = ", cnt)
 
-    def funcExecStopNormal(self):
-        if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_EXEC):
-            self.funcMdctdDebugPrint("L1MDCT: Exec stop normal, not in EXEC state and can not continue support this command!")
-            return -1
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_STP_NOR_CMID, 1, 1, 0, 0)
-        return 1
-
     #连续带监控的命令执行：速度模式
     def funcExecMoveSpeed(self, par1, par2):
         if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_EXEC):
@@ -626,10 +627,17 @@ class clsL1_MdcThd(QThread):
         #定标10
         input1 = int(par1 * 10)
         input2 = int(par2 * 10)
-        self.MDCT_CTRL_CNT = 30
+        self.MDCT_CTRL_CNT = ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_SPD_CMID, input1, input2, 0, 0)
         self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXE_MV
-        return 1
+        cnt = 0
+        while (1):
+            if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_EXE_MV):
+                return 1
+            time.sleep(1)
+            cnt += 1
+            print("L1MDCT: Wait move speed progress, Counter = ", cnt)
+
 
     #连续带监控的命令执行：距离模式
     def funcExecMoveDistance(self, par1, par2):
@@ -639,10 +647,16 @@ class clsL1_MdcThd(QThread):
         #定标NF0
         input1 = int(par1)
         input2 = int(par2)
-        self.MDCT_CTRL_CNT = 30
+        self.MDCT_CTRL_CNT = ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_PULS_CMID, input1, input2, 0, 0)
         self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXE_MV
-        return 1
+        cnt = 0
+        while (1):
+            if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_CMD_EXE_MV):
+                return 1
+            time.sleep(1)
+            cnt += 1
+            print("L1MDCT: Wait move distance progress, Counter = ", cnt)
     
     #标准指令
     def funcInqueryRunningStatus(self):
