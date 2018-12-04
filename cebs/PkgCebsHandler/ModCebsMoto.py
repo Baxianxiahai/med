@@ -33,7 +33,7 @@ from PkgCebsHandler import ModCebsMotorApi
 全局变量初始化
 全局变量设定，从而只干一次，不然每次随着moto模块的初始化，要搞两次，这就会出问题了
 '''
-L1MOTO_API_SELECTION = True  #外购API方式-True，自研驱动-False
+L1MOTO_API_SELECTION = False  #外购API方式-True，自研驱动-False
 
 if L1MOTO_API_SELECTION == True:
     instL1MotoDrvApiFlag = True
@@ -298,7 +298,7 @@ class clsL2_MotoProc(object):
         print("L2MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy))
         #自研部分
         if (L1MOTO_API_SELECTION == False):
-            self.objMdcThd.funcExecMoveDistance((newPx-curPx)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM, (newPy-curPy)**ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM);
+            self.objMdcThd.funcExecMoveDistance((newPx-curPx)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM, (newPy-curPy)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM);
             return 1
         #外购部分
         else:
@@ -443,7 +443,7 @@ class clsL1_MdcThd(QThread):
     def funcInitSps(self):
         self.IsSerialOpenOk = False
         plist = list(serial.tools.list_ports.comports())
-        self.targetComPortString = 'Silicon Labs CP210x USB to UART Bridge ('
+        self.targetComPortString = 'Prolific USB-to-Serial Comm Port ('  #Silicon Labs CP210x USB to UART Bridge
         self.drvVerNbr = -1
         if len(plist) <= 0:
             self.instL1ConfigOpr.medErrorLog("L1MDCT: Not serial device installed!")
@@ -489,25 +489,46 @@ class clsL1_MdcThd(QThread):
     #命令打包
     def funcSendCmdPack(self, cmdId, par1, par2, par3, par4):
         #Build MODBUS COMMAND:系列化
-        fmt = ">BBiiii";
-        byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, par1, par2, par3, par4)
-        crc = self.funcCacCrc(byteDataBuf, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
-        fmt = "<H";
-        byteCrc = struct.pack(fmt, crc)
-        byteDataBuf += byteCrc
-        #打印完整的BYTE系列
-        index=0
-        outBuf=''
-        while index < (ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
-            outBuf += str("%02X " % (byteDataBuf[index]))
-            index+=1
-        self.funcMdctdDebugPrint("L1MDCT: SND CMD = " + outBuf)
-        res, Buf = self.funcCmdSend(byteDataBuf)
-        if (res > 0):
-            return Buf
+        #add for test pules  command ID 0x38   
+        if (cmdId == 0x38):
+            for i in range(1,par1+1,500):
+                #print("A")
+                fmt = ">BBiiii";
+                byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, i, par2, par3, par4)
+                crc = self.funcCacCrc(byteDataBuf, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
+                fmt = "<H";
+                byteCrc = struct.pack(fmt, crc)
+                byteDataBuf += byteCrc
+                #打印完整的BYTE系列
+                index=0
+                outBuf=''
+                while index < (ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
+                    outBuf += str("%02X " % (byteDataBuf[index]))
+                    index+=1
+                self.funcMdctdDebugPrint("L1MDCT: SND CMD = " + outBuf)
+                res, Buf = self.funcCmdSend(byteDataBuf)
+                time.sleep(2)
+            return 1    
         else:
-            return res
-
+            fmt = ">BBiiii";    
+            byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, par1, par2, par3, par4)
+            crc = self.funcCacCrc(byteDataBuf, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
+            fmt = "<H";
+            byteCrc = struct.pack(fmt, crc)
+            byteDataBuf += byteCrc
+            #打印完整的BYTE系列
+            index=0
+            outBuf=''
+            while index < (ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
+                outBuf += str("%02X " % (byteDataBuf[index]))
+                index+=1
+            
+            self.funcMdctdDebugPrint("L1MDCT: SND CMD = " + outBuf)
+            res, Buf = self.funcCmdSend(byteDataBuf)
+            if (res > 0):
+                return Buf
+            else:
+                return res
     #单条命令的执行
     def funcCmdSend(self, cmd):
         #正常状态
@@ -554,7 +575,7 @@ class clsL1_MdcThd(QThread):
         #设置激活
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_WK_MODE_CMID, 1, 1, 0, 0)
         #设置速度
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_SPD_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, 0, 0)
+        #self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_SPD_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, 0, 0)
         #设置加速度
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ACC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_ACC, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_ACC, 0, 0)
         #设置加速度
@@ -572,7 +593,7 @@ class clsL1_MdcThd(QThread):
             self.funcMdctdDebugPrint("L1MDCT: Exec move zero, not in EXEC state and can not continue support this command!")
             return -1
         self.MDCT_CTRL_CNT = 30
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_ZERO_CMID, 1, 1, 0, 0)
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_ZERO_CMID, -1*ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, -1*ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, 0, 0)
         self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXE_ZO
         return 1
 
@@ -660,7 +681,7 @@ class clsL1_MdcThd(QThread):
             
             #Moto working state
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_CMD_EXEC):
-                self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_CMPL
+                #self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_CMPL
                 #self.funcMdctdDebugPrint("L1MDCT: I am in EXEC state!")
                 time.sleep(1)
 

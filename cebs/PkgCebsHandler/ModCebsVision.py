@@ -97,7 +97,7 @@ class clsL2_VisCapProc(object):
                     result[step] = item
                     step+=1
                 try:
-                    ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = result[2]
+                    ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = int(result[2])
                 except Exception:
                     ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = -1
         return res + str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR)
@@ -167,7 +167,6 @@ class clsL2_VisCapProc(object):
             G = G * kg
             R = R * kr
             outputFrame = cv.merge([B, G, R])
-            
             #Show picture
             #cv.imshow('Input', frame)
             obj=ModCebsCfg.clsL1_ConfigOpr();
@@ -176,11 +175,11 @@ class clsL2_VisCapProc(object):
             #cv.imshow("Final output", frame)
             #waitKey(2000)
             #time.sleep(2)
-            
             #存储scale文件
             scaleFn = obj.combineScaleFileNameWithDir(batch, fileNbr)
-            self.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), fileName, scaleFn)
-        
+            if ModCebsCom.GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG == True:
+                self.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), fileName, scaleFn)
+         
         #Video capture
         #Ref: http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_video_display/py_video_display.html
         #fourcc code: http://www.fourcc.org/codecs.php
@@ -417,7 +416,11 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
     def funcVisCfyLogTrace(self, myString):
         self.instL4WinForm.med_debug_print(myString)
     
-    
+    def funcVisRefreshPar(self):
+        self.HST_VISION_WORM_CLASSIFY_base = ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_small2mid = ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_mid2big = ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_big2top = ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT;
     
     '''
     * 核心的识别函数，其它任务调用的主入口
@@ -426,6 +429,7 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
     *
     '''    
     def funcVisionNormalClassifyProc(self):
+        self.funcVisRefreshPar()
         batch, fileNbr = self.findNormalUnclasFileBatchAndNbr();
         if (batch < 0):
             ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
@@ -651,6 +655,7 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
     *
     '''    
     def funcVisionFluClassifyProc(self):
+        self.funcVisRefreshPar()
         batch, fileNbr = self.findFluUnclasFileBatchAndNbr();
         print("batch/FileNbr=%d/%d" % (batch, fileNbr))
         if (batch < 0):

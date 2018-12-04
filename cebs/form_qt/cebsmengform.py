@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'cebsMengform.ui'
+# Form implementation generated from reading ui file 'cebsMengForm.ui'
 #
-# Created by: PyQt5 UI code generator 5.10
+# Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -18,6 +18,10 @@ class Ui_cebsMengForm(object):
         self.listWidget_meng_cmd = QtWidgets.QListWidget(cebsMengForm)
         self.listWidget_meng_cmd.setGeometry(QtCore.QRect(20, 30, 421, 231))
         self.listWidget_meng_cmd.setObjectName("listWidget_meng_cmd")
+        item = QtWidgets.QListWidgetItem()
+        self.listWidget_meng_cmd.addItem(item)
+        item = QtWidgets.QListWidgetItem()
+        self.listWidget_meng_cmd.addItem(item)
         item = QtWidgets.QListWidgetItem()
         self.listWidget_meng_cmd.addItem(item)
         item = QtWidgets.QListWidgetItem()
@@ -144,6 +148,10 @@ class Ui_cebsMengForm(object):
         item.setText(_translate("cebsMengForm", "查询运行状态（inq_run）"))
         item = self.listWidget_meng_cmd.item(16)
         item.setText(_translate("cebsMengForm", "查询一般状态（inq_status）"))
+        item = self.listWidget_meng_cmd.item(17)
+        item.setText(_translate("cebsMengForm", "测试脉冲数（test_pules)"))
+        item = self.listWidget_meng_cmd.item(18)
+        item.setText(_translate("cebsMengForm", "设置限位器触发迟滞（set_exti_delay_time)"))
         self.listWidget_meng_cmd.setSortingEnabled(__sortingEnabled)
         self.label_meng_par1.setText(_translate("cebsMengForm", "参数1"))
         self.label_meng_par2.setText(_translate("cebsMengForm", "参数2"))

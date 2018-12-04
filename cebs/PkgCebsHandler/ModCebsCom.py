@@ -342,6 +342,8 @@ class clsL0_MedComPicPar():
     #VIDEO CAPTURE ENABLE OR NOT (视频录制参数)
     CAPTURE_ENABLE = True;
     CAPTURE_DUR_IN_SEC = 3;
+    #SCALE ENABLE SET
+    PIC_SCALE_ENABLE_FLAG = False;
     #图像识别中所用到的部分参数：将根据算法演进，待完善
     CFY_THD_PAR1 = 1
     CFY_THD_PAR2 = 2
@@ -404,7 +406,8 @@ class clsL0_MedSpsPar():
     SPS_INQ_EN = '查询激活状态（inq_enable）'
     SPS_INQ_RUN = '查询运行状态（inq_run）'
     SPS_INQ_STATUS = '查询一般状态（inq_status）'
-
+    SPS_TEST_PULES = '测试脉冲数（test_pules)'
+    SPS_SET_EXTI_DELAY_TIME = '设置限位器触发迟滞（set_exti_delay_time)'
     SPS_SHK_HAND_CMID = 0x20
     SPS_SET_WK_MODE_CMID = 0x21
     SPS_SET_ACC_CMID = 0x22
@@ -422,16 +425,18 @@ class clsL0_MedSpsPar():
     SPS_INQ_EN_CMID = 0x35
     SPS_INQ_RUN_CMID = 0x36
     SPS_INQ_STATUS_CMID = 0x37
+    SPS_TEST_PULES_CMID = 0x38
+    SPS_SET_EXTI_DELAY_TIME_CMID = 0x39
     
     SPS_MENGPAR_ADDR  = 0x77
     SPS_MENGPAR_CMD_LEN = 18
     
     MOTOR_STEPS_PER_ROUND = 12800   #NF0
-    MOTOR_MAX_SPD = 600  #NF1 rad/s
-    MOTOR_MAX_ACC = 2000  #NF1 rad/s2
-    MOTOR_MAX_DEACC = 4000  #NF1 rad/s2
-    MOTOR_ZERO_SPD = 300 #NF1 rad/s
-    MOTOR_ZERO_ACC = 1000 #NF1 rad/s2
+    MOTOR_MAX_SPD = 6  #NF1 rad/s
+    MOTOR_MAX_ACC = 3  #NF1 rad/s2
+    MOTOR_MAX_DEACC = 3  #NF1 rad/s2
+    MOTOR_ZERO_SPD = 6 #NF1 rad/s
+    MOTOR_ZERO_ACC = 3 #NF1 rad/s2
     MOTOR_DIS_MM_PER_ROUND = 3.1415926*20*1.05
     MOTOR_STEPS_PER_DISTANCE_MM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND
     MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND / 1000    
