@@ -394,11 +394,6 @@ class clsL1_MdcThd(QThread):
     '''
     def funcGetSpsRights(self, par):
         self.MDCT_SPS_USAGE = par
-#         cnt = 0;
-#         while (cnt < 10) and (self.MDCT_SPS_USAGE != 0):
-#             cnt += 1
-#             time.sleep(0.1)
-#             print("self.MDCT_SPS_USAGE = ", self.MDCT_SPS_USAGE)
         self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_SPS_RGT;
         self.funcMdctdDebugPrint("L1MDCT: Initialize SPS port, called father = %d" % (self.MDCT_SPS_USAGE))
 
@@ -658,7 +653,7 @@ class clsL1_MdcThd(QThread):
                 self.funcMdctdDebugPrint("L1MDCT: Get communication rights and start init port!")
                 localCnt = 0
                 flag = -1
-                while (localCnt < 10) and (flag < 0):
+                while (localCnt < 1) and (flag < 0):
                     flag = self.funcInitSps()
                     localCnt += 1
                     time.sleep(0.2)

@@ -16,11 +16,12 @@ import re
 import urllib
 import http
 import socket
+import threading
 
 
 '''
 
-PART1: 全局定义的变量，不需要封装
+PART0: 全局定义的变量，不需要封装
 
 '''
 #STATIC CONFIGURATION AND CAN NOT MODIFY BY HAND
@@ -38,7 +39,7 @@ GL_CEBS_COM_NUMBER_SET = 11;
 
 '''
 
-PART2: 配置文件及控制参数
+PART1: 配置文件及控制参数
 
 '''
 
@@ -382,7 +383,7 @@ GLVIS_PAR_SAV = clsL0_MedComPicPar()
 
 
 '''
-PART3: 串口指令
+PART4: 串口指令
 
 #封装
 方便对参数进行维护，包括增删
@@ -451,4 +452,41 @@ class clsL0_MedSpsPar():
 #定义全局变量以及操作函数
 GLSPS_PAR_OFC = clsL0_MedSpsPar()
 
+'''
+PART5: 全局静态handler传递存储地点
 
+#封装
+方便对参数进行维护，包括增删
+'''
+
+class clsL0_MedHandlerPar():
+    
+    #Class Handler Instance
+    CHS_L4_FORM_MAINWIN = ''
+    CHS_L4_FORM_CALIB = ''
+    CHS_L4_FORM_GPAR = ''
+    CHS_L4_FORM_MENG = ''
+    CHS_L4_FORM_BROW = ''
+    CHS_L3_CTRL_SCHD_THD = ''
+    CHS_L3_CALIB_PROC = ''
+    CHS_L3_GPAR_PROC = ''
+    CHS_L3_MENG_PROC = ''
+    CHS_L2_MOTO_PROC = ''
+    CHS_L2_CALIB_PILOT_THD = ''
+    CHS_L2_CALIB_CAM_DISP_THD = ''
+    CHS_L2_VS_CAP_PROC = ''
+    CHS_L2_VS_CFY_PROC = ''
+    CHS_L1_MDC_THD = ''
+    CHS_L1_MOT_DRV_API = ''  #第一代板子支持部分
+    CHS_L1_CFG_OPR = ''
+    
+    #串口全局锁
+    CHS_MOTO_MUTEX = threading.Lock()
+    CHS_CAM_MUTEX = threading.Lock()
+    
+    def __init__(self):    
+        super(clsL0_MedHandlerPar, self).__init__()  
+        pass
+                
+#定义全局变量以及操作函数
+GLHLR_PAR_OFC = clsL0_MedHandlerPar()

@@ -8,6 +8,8 @@
 
 //=ZJL, 2018/12/5, CURRENT_SW_DELIVERY R1.32 =>CEBS
 = 拉REL1的分支，保持原先的设计方法
+= 增加锁机制，优化串口获取的同步性能
+
 
 
 //=ZJL, 2018/11/1, CURRENT_SW_DELIVERY R1.31 =>CEBS

@@ -26,9 +26,11 @@ MAIN => 主入口
         |---clsL3_GparProc => 参数填写接口
     |---CommonLib
         |---clsL1_ConfigOpr => 本地配置文件接口
-            |---clsL0_MedComCfgPar => 配置参数
-            |---clsL0_MedComPlatePar => 托盘参数
-            |---clsL0_MedComPicPar=> 图像参数
+            |---clsL0_MedCfgPar => 配置参数
+            |---clsL0_MedPlatePar => 托盘参数
+            |---clsL0_MedPicPar=> 图像参数
+            |---clsL0_MedSpsPar=> 串口参数
+            |---clsL0_MedHandlerPar=> 全局对象和临界资源锁参数
     |---SEUI_L4_MengForm => 马达工程模式界面
         |---clsL3_MengProc => 马达工程模式参数填写接口
                 |---clsL1_MdcThd => 自研马达控制器任务
@@ -93,6 +95,7 @@ from PkgCebsHandler import ModCebsCalib
 from PkgCebsHandler import ModCebsGpar
 from PkgCebsHandler import ModCebsMeng
 
+
 '''
 #SEUI => System Entry UI，表示系统级的主入口
 第一主入口
@@ -138,6 +141,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         '''
         #STEP1: INI FILE CONFIGURATION, 初始化配置文件
         self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr()
+        self.instL1ConfigOpr.func_read_global_par_from_cfg_file()
         self.instL1ConfigOpr.func_read_global_par_from_cfg_file();  #读取本地文件的配置数据，并写入全局变量中来
         self.instL1ConfigOpr.updateCtrlCntInfo() #更新进度控制参量
         #STEP2: START SUB-UI, 启动子界面        
@@ -175,10 +179,11 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         '''
         res = ModCebsVision.clsL2_VisCapProc.funcVisionDetectAllCamera(self)
         self.slot_print_trigger(res)
-        #STEP8: SEND BACK-ZERO SIGNAL TO MOTO, 发送归零信号给马达 #MAKE MOTO GO BACK TO ZERO
-        self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
-        #STEP9:抢占硬件资源
+        #STEP8:抢占硬件资源
+        ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(1000)
         self.instL3CtrlSchdThd.funcCtrlGetSpsRights(1)
+        #STEP9: SEND BACK-ZERO SIGNAL TO MOTO, 发送归零信号给马达 #MAKE MOTO GO BACK TO ZERO
+        self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
 
     def aboutCompanyBox(self):
         QMessageBox.about(self, '公司信息', '上海小慧智能科技有限公司, 上海纳贤路800号，科海大厦3楼')   
@@ -251,6 +256,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         if not self.instL4CalibForm.isVisible():
             self.sgL4MainWinUnvisible.emit()
             #抢占硬件资源
+            ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(1000)
             self.instL4CalibForm.instL3CalibProc.funcCalibGetSpsRights(2);
             self.instL4CalibForm.show()
 
@@ -267,6 +273,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         if not self.instL4MengForm.isVisible():
             self.sgL4MainWinUnvisible.emit()
             #抢占硬件资源
+            ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(1000)
             self.instL4MengForm.funcGetLowLevelResource(3);
             self.instL4MengForm.show()
 
@@ -301,6 +308,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
             self.show()
         self.instL3CtrlSchdThd.sgL3CtrlCalibStop.emit()
         #抢占硬件资源
+        ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(1000)
         self.instL3CtrlSchdThd.funcCtrlGetSpsRights(1)
         self.med_debug_print("L4MAIN: Main form welcome to come back!")
 
@@ -311,6 +319,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
             self.med_debug_print("L4MAIN: Main form hide!")
         #释放硬件资源
         self.instL3CtrlSchdThd.funcCtrlRelSpsRights(1)
+        ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.release()
 
     '''采用简化模式，省的启动那么多类的Instance
     #self.instL2MotoProc = ModCebsMoto.clsL2_MotoProc(self, 1) #第一种选择
@@ -799,6 +808,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.instL3CalibProc.funcRecoverWorkingEnv()
         #释放硬件资源
         self.instL3CalibProc.funcCalibRelSpsRights(2)
+        ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.release()
         self.sgL4MainWinVisible.emit()
         self.close()
 
@@ -1093,6 +1103,7 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
     #Give up and not save parameters
     def closeEvent(self, event):
         self.funcRelLowLevelResource(3)
+        ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.release()
         self.sgL4MainWinVisible.emit()
         self.close()
 
