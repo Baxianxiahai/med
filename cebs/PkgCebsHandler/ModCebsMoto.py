@@ -402,6 +402,10 @@ class clsL1_MdcThd(QThread):
             self.funcMdctdDebugPrint("L1MDCT: Not same father called release procedure!")
         self.MDCT_SPS_USAGE = 0;
         self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_REL_RGT;
+        while 1:
+            if (self.MDCT_STM_STATE != self.__CEBS_STM_MDCT_REL_RGT):
+                return 1
+            time.sleep(0.1)
 
     def funcResetWkStatus(self):
         self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_INIT;    
@@ -435,10 +439,13 @@ class clsL1_MdcThd(QThread):
         return wCRCIn;
 
     #初始化串口
+    #注意两种串口设备，描述符是不一样的，需要通过描述符来锁定设备端口
+    GL_SPS_USB_DBG_CARD1 = 'Prolific USB-to-Serial Comm Port ('
+    GL_SPS_USB_DBG_CARD2 = 'Silicon Labs CP210x USB to UART Bridge ('
     def funcInitSps(self):
         self.IsSerialOpenOk = False
         plist = list(serial.tools.list_ports.comports())
-        self.targetComPortString = 'Prolific USB-to-Serial Comm Port ('  #Silicon Labs CP210x USB to UART Bridge
+        self.targetComPortString = self.GL_SPS_USB_DBG_CARD2
         self.drvVerNbr = -1
         if len(plist) <= 0:
             self.instL1ConfigOpr.medErrorLog("L1MDCT: Not serial device installed!")
@@ -648,7 +655,8 @@ class clsL1_MdcThd(QThread):
             if (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_INIT):
                 #self.funcMdctdDebugPrint("L1MDCT: I am alive! State = %d" % (self.MDCT_STM_STATE))
                 time.sleep(1)
-
+            
+            #获取马达串口的操作权限
             elif (self.MDCT_STM_STATE == self.__CEBS_STM_MDCT_SPS_RGT):
                 self.funcMdctdDebugPrint("L1MDCT: Get communication rights and start init port!")
                 localCnt = 0
