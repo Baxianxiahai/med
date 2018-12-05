@@ -156,10 +156,10 @@ class clsL0_MedComPlatePar():
         super(clsL0_MedComPlatePar, self).__init__()  
         pass
 
-    def med_cfl_test1(self):
-        global GL_CEBS_COM_NUMBER_SET
-        print("Test functions! Global parameter Nbr Set = %d" % (GL_CEBS_COM_NUMBER_SET))
-        pass
+#     def med_cfl_test1(self):
+#         global GL_CEBS_COM_NUMBER_SET
+#         print("Test functions! Global parameter Nbr Set = %d" % (GL_CEBS_COM_NUMBER_SET))
+#         pass
 
     def med_cfl_add(self, a, b):
         return a+b
@@ -389,8 +389,10 @@ PART4: 串口指令
 方便对参数进行维护，包括增删
 '''
 class clsL0_MedSpsPar():
-
+    
+    #完成黑线，USB转串口线缆，内置方式
     SPS_USB_DBG_CARD1 = 'Prolific USB-to-Serial Comm Port ('
+    #采购小卡，USB转串口卡片，手工连接杜邦线
     SPS_USB_DBG_CARD2 = 'Silicon Labs CP210x USB to UART Bridge ('
     SPS_USB_CARD_SET = SPS_USB_DBG_CARD1
 
@@ -447,7 +449,7 @@ class clsL0_MedSpsPar():
     MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND / 1000    
 
     #马达归零最大循环次数
-    MOTOR_MAX_RETRY_TIMES = 10 #正常需要放置30次数，确保归零的时间预算
+    MOTOR_MAX_RETRY_TIMES = 3 #正常需要放置30次数，确保归零的时间预算
     
     def __init__(self):    
         super(clsL0_MedSpsPar, self).__init__()  
