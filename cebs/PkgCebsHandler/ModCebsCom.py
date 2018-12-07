@@ -449,7 +449,7 @@ class clsL0_MedSpsPar():
     MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND / 1000    
 
     #马达归零最大循环次数
-    MOTOR_MAX_RETRY_TIMES = 3 #正常需要放置30次数，确保归零的时间预算
+    MOTOR_MAX_RETRY_TIMES = 10 #正常需要放置30次数，确保归零的时间预算
     
     def __init__(self):    
         super(clsL0_MedSpsPar, self).__init__()  
