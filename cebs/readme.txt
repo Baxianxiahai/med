@@ -6,6 +6,13 @@
 
 
 
+
+
+//=ZJL, 2018/12/8, CURRENT_SW_DELIVERY R1.33 =>CEBS
+= 完善CEBS REL2 RE-ARCH的代码框架
+= CAM的权限管理完善
+= 去掉了摄像头初始化后的3-4张黑屏照片
+
 //=ZJL, 2018/12/5, CURRENT_SW_DELIVERY R1.32 =>CEBS
 = 拉REL1的分支，保持原先的设计方法
 = 增加锁机制，优化串口获取的同步性能

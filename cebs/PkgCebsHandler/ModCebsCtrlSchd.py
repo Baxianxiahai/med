@@ -99,15 +99,22 @@ class clsL3_CtrlSchdThread(QThread):
     def funcResetWkStatus(self):
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
 
+
     '''
           执行界面控制命令函数部分
     '''                        
     #TAKE PICTURE NORMAL
     def funcTakePicStartNormal(self):
+        #STEP1: judge init state
         if (self.CTRL_STM_STATE != self.__CEBS_STM_CTRL_INIT):
             self.funcCtrlSchdDebugPrint("L3CTRLST: Please finish last action firstly！")
             return -1;
-        #JUDGE WHETHER TAKING PICTURE IS FIXED POSITION OR NOT
+        
+        #STEP2: NEW STATE: Get camera rights firstly, to optimize the executive duration
+        if (self.instL2VisCapProc.funcGetCamRightAndInit() < 0):
+            return -3;
+        
+        #STEP3: JUDGE WHETHER TAKING PICTURE IS FIXED POSITION OR NOT
         if (ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == False):
             #MOTO START POINT
             res, string = self.instL2MotoProc.funcMotoMove2Start()
@@ -116,25 +123,33 @@ class clsL3_CtrlSchdThread(QThread):
                 self.funcCtrlSchdDebugPrint(string)
                 return -2;
         self.instL1ConfigOpr.createBatch(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
-        #NEW STATE
-        self.instL2VisCapProc.funcVisBatCapStart();
-        #去掉初始3-4张黑屏幕的照片
-        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
-        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
-        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
-        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
 
+        #STEP4: 去掉初始3-4张黑屏幕的照片
+        #采用同步方式以后，这个技巧可以去掉了
+#         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
+#         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
+#         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
+#         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
+
+        #STEP5: 正常工作
         self.funcCtrlSchdDebugPrint("L3CTRLST: Normal picture starting progress...")
         self.capTimes = ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH+1;
         self.funcCtrlSchdDebugPrint("L3CTRLST: Start to take normal picture, remaining TIMES=%d." %(self.capTimes-1))
         self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CAP_PIC_NOR;
 
+
+
     #TAKE PICTURE FLU
     def funcTakePicStartFlu(self):
+        #STEP1: 
         if (self.CTRL_STM_STATE != self.__CEBS_STM_CTRL_INIT):
             self.funcCtrlSchdDebugPrint("L3CTRLST: Please finish last action firstly！")
             return -1;
-        #JUDGE WHETHER TAKING PICTURE IS FIXED POSITION OR NOT
+        #STEP2: NEW STATE and get camera rights
+        if (self.instL2VisCapProc.funcGetCamRightAndInit() <0):
+            return -2;
+        
+        #STEP3: JUDGE WHETHER TAKING PICTURE IS FIXED POSITION OR NOT
         if (ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == False):
             #MOTO START POINT
             res, string = self.instL2MotoProc.funcMotoMove2Start()
@@ -144,14 +159,14 @@ class clsL3_CtrlSchdThread(QThread):
                 return -2;
         self.instL1ConfigOpr.createBatch(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
         
-        #NEW STATE
-        self.instL2VisCapProc.funcVisBatCapStart();
-        
-        #去掉初始3-4张黑屏幕的照片
-        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN, True);
-        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN, True);
-        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN, True);
-        self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN, True);
+        #STEP4: 去掉初始3-4张黑屏幕的照片
+        #采用同步方式以后，这个技巧可以去掉了
+#         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
+#         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
+#         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
+#         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
+
+        #STEP5: 正常工作
         self.funcCtrlSchdDebugPrint("L3CTRLST: Flu picture starting progress...")
         self.capTimes = ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH+1;
         self.funcCtrlSchdDebugPrint("L3CTRLST: Start to take flu picture, remaining TIMES=%d." %(self.capTimes-1))
@@ -309,7 +324,7 @@ class clsL3_CtrlSchdThread(QThread):
                 self.funcCtrlSchdDebugPrint("L3CTRLST: Stop taking normal picture, remaining  TIMES=%d." %(self.capTimes-1))
                 ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX +=1;
                 self.instL1ConfigOpr.updateCtrlCntInfo();
-                self.instL2VisCapProc.funcVisBatCapStop();
+                self.instL2VisCapProc.funcRelCamRights();
                 self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
              
             #批量处理识别照片 NORMAL
@@ -340,7 +355,7 @@ class clsL3_CtrlSchdThread(QThread):
                 self.funcCtrlSchdDebugPrint("L3CTRLST: Stop taking flu picture, remaining  TIMES=%d." %(self.capTimes-1))
                 ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX +=1;
                 self.instL1ConfigOpr.updateCtrlCntInfo();
-                self.instL2VisCapProc.funcVisBatCapStop();
+                self.instL2VisCapProc.funcRelCamRights();
                 self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_INIT;
                   
             #批量处理识别照片 FLU

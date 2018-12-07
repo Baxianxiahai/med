@@ -102,6 +102,26 @@ class clsL2_VisCapProc(object):
                     ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = -1
         return res + str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR)
     
+    #唯一获取摄像头使用权限
+    def funcGetCamRightAndInit(self):
+        ModCebsCom.GLHLR_PAR_OFC.CHS_CAM_MUTEX.acquire(5)
+        if (ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR < 0):
+            self.funcVisCapLogTrace("L2VISCAP: Camera not yet installed!");
+            ModCebsCom.GLHLR_PAR_OFC.CHS_CAM_MUTEX.release()
+            return -1;
+        else:
+            self.capInit = cv.VideoCapture(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
+            self.capInit.set(3, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
+            self.capInit.set(4, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
+            return 1;
+    
+    #唯一释放摄像头使用权限
+    def funcRelCamRights(self):
+        self.capInit.release()
+        cv.destroyAllWindows()
+        ModCebsCom.GLHLR_PAR_OFC.CHS_CAM_MUTEX.release()
+        return;
+    
     #Init the camera resolution, iso set every capture time. 这样可以避免每次对焦的长时间消耗
     def funcVisBatCapStart(self):
         if (ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR < 0):
@@ -111,9 +131,8 @@ class clsL2_VisCapProc(object):
             self.capInit = cv.VideoCapture(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
             self.capInit.set(3, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
             self.capInit.set(4, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
-            #time.sleep(5)
             return 1;
-
+ 
     def funcVisBatCapStop(self):
         self.capInit.release()
         cv.destroyAllWindows()

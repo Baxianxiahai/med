@@ -183,7 +183,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(5)
         self.instL3CtrlSchdThd.funcCtrlGetSpsRights(1)
         #STEP9: SEND BACK-ZERO SIGNAL TO MOTO, 发送归零信号给马达 #MAKE MOTO GO BACK TO ZERO
-        #self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
+        self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
 
     def aboutCompanyBox(self):
         QMessageBox.about(self, '公司信息', '上海小慧智能科技有限公司, 上海纳贤路800号，科海大厦3楼')   
