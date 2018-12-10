@@ -22,7 +22,7 @@ import struct
 
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
-from cebsMain import *
+from cebsL4Ui import *
 from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsMotorApi
@@ -75,7 +75,7 @@ class clsL2_MotoProc(object):
                 self.funcMotoLogTrace("L2MOTO: Fetch moto hardware driver ver nbr = %s" % str(self.motoSpsDrvVer))
         #第二部分：启动马达控制的具体逻辑
         #自研部分肯定启动，简化程序的设计
-        self.objMdcThd = ModCebsMoto.clsL1_MdcThd(self.instL4WinForm, 2);
+        self.objMdcThd = clsL1_MdcThd(self.instL4WinForm, 2);
         self.objMdcThd.setIdentity("TASK_MotoDrvCtrlThread"+str(self.instL4WinForm))
         self.objMdcThd.sgL4MainWinPrtLog.connect(self.funcMotoLogTrace)
         self.objMdcThd.start();

@@ -1,0 +1,27 @@
+'''
+Created on 2018年12月8日
+
+@author: Administrator
+'''
+
+#TASK ID defination
+TUP_TASK_ID_NULL        = 0
+TUP_TASK_ID_MAIN_ENTRY  = 1
+TUP_TASK_ID_VMCONSL     = 2
+TUP_TASK_ID_TIMER       = 3
+TUP_TASK_ID_CALIB       = 10
+TUP_TASK_ID_CTRL_SCHD   = 11
+TUP_TASK_ID_GPAR        = 12
+TUP_TASK_ID_MENG        = 13
+TUP_TASK_ID_VISION      = 14
+TUP_TASK_ID_SPS_MOTO    = 15
+TUP_TASK_ID_TEST        = 99
+
+#Message ID defination
+TUP_MSGID_NULL          = 0
+TUP_MSGID_INIT          = 1
+TUP_MSGID_TIME_OUT      = 2
+TUP_MSGID_RESTART       = 3
+TUP_MSGID_GEN_TRIG      = 4
+TUP_MSGID_PIC_CAP_REQ   = 10
+TUP_MSGID_PIC_CAP_RESP  = 11

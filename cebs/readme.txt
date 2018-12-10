@@ -8,6 +8,12 @@
 
 
 
+
+
+//=ZJL, 2018/12/10, CURRENT_SW_DELIVERY R1.34 =>CEBS
+= 使用新的架构，创建VM机制
+
+
 //=ZJL, 2018/12/8, CURRENT_SW_DELIVERY R1.33 =>CEBS
 = 完善CEBS REL2 RE-ARCH的代码框架
 = CAM的权限管理完善

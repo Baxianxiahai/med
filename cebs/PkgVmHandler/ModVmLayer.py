@@ -7,7 +7,7 @@ Created on 2018年12月8日
 import random
 import time
 from multiprocessing import Queue, Process
-
+from PkgVmHandler import ModVmCfg
 
 '''
 #写进程
@@ -63,25 +63,10 @@ def tup_vm_msg_send(taskDest, msg):
 '''
 TUP_SUCCESS = 1
 TUP_FAILURE = -1
-TUP_TASK_ID_NULL        = 0
-TUP_TASK_ID_VM          = 1
-TUP_TASK_ID_CALIB       = 10
-TUP_TASK_ID_CTRL_SCHD   = 11
-TUP_TASK_ID_GPAR        = 12
-TUP_TASK_ID_MENG        = 13
-TUP_TASK_ID_VISION      = 14
-TUP_TASK_ID_SPS_MOTO    = 15
-TUP_TASK_ID_TEST        = 99
-
-TUP_MSGID_NULL          = 0
-TUP_MSGID_TIME_OUT      = 1
-TUP_MSGID_RESTART       = 2
-TUP_MSGID_GEN_TRIG      = 3
-TUP_MSGID_PIC_CAP_REQ   = 10
-TUP_MSGID_PIC_CAP_RESP  = 11
-
-
-
+#三个基础状态
+TUP_STM_NULL = 0
+TUP_STM_INIT = 1
+TUP_STM_COMN = 2
 
 
 '''
@@ -201,6 +186,13 @@ class tupTaskTemplate():
                 print("[VM ERR] Wrong destination module.")
                 continue
             #print(self.fsm_get())
+            #首先确定COMN状态机，忽略当前的消息执行
+            if self.msgStateMatrix[TUP_STM_COMN][msgId] != '':
+                proc = self.msgStateMatrix[TUP_STM_COMN][msgId]
+                if (proc(msgCont) == TUP_FAILURE):
+                    print("[VM ERR] Proc execute error, Src/Dst/MsgId=%d/%d/%d, MsgContent=%s" % (srcId, dstId, msgId, str(msgCont)))
+                    continue                
+            #具体状态处理过程
             if self.msgStateMatrix[self.state][msgId] == '':
                 print("[VM ERR] Un-valid state-message set.")
                 continue
@@ -213,49 +205,7 @@ class tupTaskTemplate():
         self.process.start()
 
 
-class tupVmTask(tupTaskTemplate):
-    _STM_NULL = 0
-    _STM_INIT = 1
-    _STM_ACTIVE = 2
-    _STM_RUN = 3
-    _STM_CLOSE = 4
-    _STM_MAX = 5
 
-    def __init__(self):
-        tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_VM, taskName="TASK_VM")
-        TUP_GL_CFG.save_task_by_id(TUP_TASK_ID_VM, self)
-        self.add_stm_combine(self._STM_INIT, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
-        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GEN_TRIG, self.fsm_msg_gen_trig_rcv_handler)
-        self.fsm_set(self._STM_INIT)
-        #print("State = ", self.fsm_get())
-        self.task_run()
-
-    def fsm_msg_restart_rcv_handler(self, msgContent):
-        print(time.asctime(), "I am in fsm_msg_restart_rcv_handler = ", msgContent)
-        time.sleep(1)
-        msgSnd = {}
-        msgSnd['mid'] = TUP_MSGID_GEN_TRIG
-        msgSnd['src'] = TUP_TASK_ID_TEST
-        msgSnd['dst'] = TUP_TASK_ID_VM
-        msgSnd['content'] = "test> " + str(random.random())
-        self.fsm_set(self._STM_ACTIVE)
-        self.msg_send_in(msgSnd)
-        
-    def fsm_msg_gen_trig_rcv_handler(self, msgContent):
-        print(time.asctime(), "I am in fsm_msg_gen_trig_rcv_handler = ", msgContent)
-        self.fsm_set(self._STM_INIT)
-        
-#if __name__ == "__main__":
-def vm_main_entry():
-    myTaskInst = tupVmTask();
-    msg = {}
-    while True:
-        time.sleep(5)
-        msg['mid'] = TUP_MSGID_RESTART
-        msg['src'] = TUP_TASK_ID_TEST
-        msg['dst'] = TUP_TASK_ID_VM
-        msg['content'] = "test> " + str(random.random())
-        myTaskInst.msg_send_in(msg)
 
         
         
