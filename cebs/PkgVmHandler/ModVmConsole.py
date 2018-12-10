@@ -26,7 +26,6 @@ class tupTaskVmConsl(ModVmLayer.tupTaskTemplate):
         self.add_stm_combine(ModVmLayer.TUP_STM_COMN, ModVmCfg.TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, ModVmCfg.TUP_MSGID_GEN_TRIG, self.fsm_msg_gen_trig_rcv_handler)
         self.fsm_set(ModVmLayer.TUP_STM_INIT)
-        #print("State = ", self.fsm_get())
         #START TASK
         self.task_run()
 
@@ -34,7 +33,7 @@ class tupTaskVmConsl(ModVmLayer.tupTaskTemplate):
         time.sleep(0.5) #WAIT FOR OTHER TASK STARTUP
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
-        print(time.asctime(), "I am in fsm_msg_restart_rcv_handler = ", msgContent)
+        self.tup_dbg_print("I am in fsm_msg_restart_rcv_handler = ", msgContent)
         time.sleep(1)
         msgSnd = {}
         msgSnd['mid'] = ModVmCfg.TUP_MSGID_GEN_TRIG
@@ -45,10 +44,10 @@ class tupTaskVmConsl(ModVmLayer.tupTaskTemplate):
         self.msg_send_in(msgSnd)
 
     def fsm_msg_time_out_rcv_handler(self, msgContent):
-        print(time.asctime(), "I am in fsm_msg_time_out_rcv_handler = ", msgContent)
+        self.tup_dbg_print("I am in fsm_msg_time_out_rcv_handler = ", msgContent)
         
     def fsm_msg_gen_trig_rcv_handler(self, msgContent):
-        print(time.asctime(), "I am in fsm_msg_gen_trig_rcv_handler = ", msgContent)
+        self.tup_dbg_print("I am in fsm_msg_gen_trig_rcv_handler = ", msgContent)
         self.fsm_set(ModVmLayer.TUP_STM_INIT)
         
 

@@ -9,7 +9,8 @@ Created on 2018/4/29
 
 import sys
 import time
-import cebsL4Ui
+import cebsL4Ui     #传统模式
+import cebsTkL4Ui   #新模式
 from PkgCetkHandler import ModCetkPrjEntry
 
 GL_MAIN_WORK_MODE_CEBSL4UI = 1

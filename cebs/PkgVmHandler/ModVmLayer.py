@@ -134,7 +134,7 @@ class tupTaskTemplate():
 
     def fsm_set(self, newState):
         if (newState < 0) or (newState >= TUP_GL_CFG.TUP_STATE_MAX):
-            print("[VM ERR] fsm_set Error.")
+            self.tup_err_print("[VM ERR] fsm_set Error.")
             return -1;
         self.state = newState
         return 1;
@@ -145,8 +145,7 @@ class tupTaskTemplate():
     def msg_send_in(self, msg):
         self.queue.put(msg)
         if (TUP_GL_CFG.dbg_level == 1):
-            TUP_GL_CFG.tup_trc_print(self.taskId, msg)
-            #print("[VM TRC] ", msg)
+            self.tup_trace(str(msg))
 
     def msg_send_out(self, taskDestId, msg):
         ret, taskObj = TUP_GL_CFG.get_task_by_id(taskDestId)
@@ -167,46 +166,47 @@ class tupTaskTemplate():
     def task_handler_enginee(self, myque):
         while True:
             result = myque.get()
-            #print("I am taskid = ", self.taskId)
-            #print("get {0} from queue".format(result))
             msgId = int(result['mid'])
             srcId = int(result['src'])
             dstId = int(result['dst'])
             msgCont = result['content']
             if (msgId <0) or (msgId >= TUP_GL_CFG.TUP_MSGID_MAX):
-                print("[VM ERR] Wrong msgId parameter.")
+                self.tup_err_print("Wrong msgId parameter.")
                 continue
             if (srcId <0) or (srcId >= TUP_GL_CFG.TUP_TASK_MAX):
-                print("[VM ERR] Wrong srcId parameter.")
+                self.tup_err_print("Wrong srcId parameter.")
                 continue
             if (dstId <0) or (dstId >= TUP_GL_CFG.TUP_TASK_MAX):
-                print("[VM ERR] Wrong dstId parameter.")
+                self.tup_err_print("Wrong dstId parameter.")
                 continue
             if (dstId != self.taskId):
-                print("[VM ERR] Wrong destination module.")
+                self.tup_err_print("Wrong destination module, self Taskid = %d, rcvId=%d." % (self.taskId, dstId) )
                 continue
-            #print(self.fsm_get())
             #首先确定COMN状态机，忽略当前的消息执行
             if self.msgStateMatrix[TUP_STM_COMN][msgId] != '':
                 proc = self.msgStateMatrix[TUP_STM_COMN][msgId]
                 if (proc(msgCont) == TUP_FAILURE):
-                    print("[VM ERR] Proc execute error, Src/Dst/MsgId=%d/%d/%d, MsgContent=%s" % (srcId, dstId, msgId, str(msgCont)))
+                    self.tup_err_print("Proc execute error, Src/Dst/MsgId=%d/%d/%d, MsgContent=%s" % (srcId, dstId, msgId, str(msgCont)))
                     continue                
             #具体状态处理过程
             if self.msgStateMatrix[self.state][msgId] == '':
-                print("[VM ERR] Un-valid state-message set.")
+                self.tup_err_print("Un-valid state-message set.")
                 continue
             proc = self.msgStateMatrix[self.state][msgId]
             if (proc(msgCont) == TUP_FAILURE):
-                print("[VM ERR] Proc execute error, Src/Dst/MsgId=%d/%d/%d, MsgContent=%s" % (srcId, dstId, msgId, str(msgCont)))
+                self.tup_err_print("Proc execute error, Src/Dst/MsgId=%d/%d/%d, MsgContent=%s" % (srcId, dstId, msgId, str(msgCont)))
                 continue
 
     def task_run(self):
         self.process.start()
 
+    def tup_trace(self, string):
+        print(time.asctime(), ", [TRC] [", self.taskName, "]: ", str(string))
 
-
-
+    def tup_dbg_print(self, string):
+        print(time.asctime(), ", [DBG] [", self.taskName, "]: ", str(string))
         
+    def tup_err_print(self, string):
+        print(time.asctime(), ", [ERR] [", self.taskName, "]: ", str(string))
         
         
