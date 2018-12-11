@@ -38,7 +38,7 @@ from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
 from cv2 import waitKey
 
-class tupTaskVision(ModVmLayer.tupTaskTemplate):
+class tupTaskVision(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
     _STM_ACTIVE = 3
     #主界面，干活拍照
     _STM_MAIN_UI_ACT = 4
@@ -49,6 +49,13 @@ class tupTaskVision(ModVmLayer.tupTaskTemplate):
         ModVmLayer.tupTaskTemplate.__init__(self, taskid=ModVmCfg.TUP_TASK_ID_VISION, taskName="TASK_VISION")
         #ModVmLayer.TUP_GL_CFG.save_task_by_id(ModVmCfg.TUP_TASK_ID_VISION, self)
         self.capInit = ''
+        self.HST_VISION_WORM_CLASSIFY_base = ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_small2mid = ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_mid2big = ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_big2top = ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_pic_filepath = ModCebsCom.GLCFG_PAR_OFC.PIC_MIDDLE_PATH + '/'
+        self.HST_VISION_WORM_CLASSIFY_pic_filename = "1.jpg"
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output = {'totalNbr':0, 'bigAlive':0, 'bigDead':0, 'middleAlive':0, 'middleDead':0, 'smallAlive':0, 'smallDead':0, 'totalAlive':0, 'totalDead':0}
         self.fsm_set(ModVmLayer.TUP_STM_NULL)
         #STM MATRIX
         self.add_stm_combine(ModVmLayer.TUP_STM_INIT, ModVmCfg.TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
@@ -57,6 +64,7 @@ class tupTaskVision(ModVmLayer.tupTaskTemplate):
         #通知界面切换
         self.add_stm_combine(ModVmLayer.TUP_STM_COMN, ModVmCfg.TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_main_ui_switch_rcv_handler)
         self.add_stm_combine(ModVmLayer.TUP_STM_COMN, ModVmCfg.TUP_MSGID_CALIB_UI_SWITCH, self.fsm_msg_calib_ui_switch_rcv_handler)
+        self.add_stm_combine(ModVmLayer.TUP_STM_COMN, ModVmCfg.TUP_MSGID_PIC_REFRESH_PAR, self.fsm_msg_refresh_par_rcv_handler)
 
         #校准模式下的抓图指令
         self.add_stm_combine(self._STM_CALIB_UI_ACT, ModVmCfg.TUP_MSGID_PIC_CAP_REQ, self.fsm_msg_calib_pic_cap_req_rcv_handler)
@@ -71,17 +79,12 @@ class tupTaskVision(ModVmLayer.tupTaskTemplate):
         self.task_run()
 
     def fsm_msg_init_rcv_handler(self, msgContent):
-        time.sleep(0.5) #WAIT FOR OTHER TASK STARTUP
-        self.instL1ConfigOpr = ModCebsCfg.clsL1_ConfigOpr()
-        self.tup_dbg_print("L2VISCAP: Instance start test!")
-        self.funcVisionLogTrace("L2VISCAP: Instance start test!")
         #全局搜索摄像头
         res = self.funcVisionDetectAllCamera()
         self.funcVisionLogTrace(str(res))
         #INIT
         if (self.funcGetCamRightAndInit() < 0):
-            self.tup_err_print("L2VISCAP: Init CAM error!")
-            self.funcVisionLogTrace("L2VISCAP: Init CAM error!")
+            self.funcVisionErrTrace("L2VISCAP: Init CAM error!")
             return ModVmLayer.TUP_FAILURE;
         else:
             self.fsm_set(self._STM_ACTIVE)
@@ -102,6 +105,10 @@ class tupTaskVision(ModVmLayer.tupTaskTemplate):
         self.fsm_set(self._STM_CALIB_UI_ACT)
         return ModVmLayer.TUP_SUCCESS;
 
+    def fsm_msg_refresh_par_rcv_handler(self, msgContent):
+        self.funcVisRefreshPar();
+        return ModVmLayer.TUP_SUCCESS;
+
     def funcVisionLogTrace(self, myString):
         msgSnd = {}
         msgSnd['mid'] = ModVmCfg.TUP_MSGID_TRACE
@@ -117,6 +124,33 @@ class tupTaskVision(ModVmLayer.tupTaskTemplate):
         else:
             msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MAIN
             self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MAIN, msgSnd)
+        #SAVE INTO MED FILE
+        self.medCmdLog(str(msgSnd))
+        #PRINT to local
+        self.tup_dbg_print(str(msgSnd))
+        return
+    
+    def funcVisionErrTrace(self, myString):
+        msgSnd = {}
+        msgSnd['mid'] = ModVmCfg.TUP_MSGID_TRACE
+        msgSnd['src'] = self.taskId
+        msgSnd['content'] = myString
+        self.fsm_set(self._STM_ACTIVE)
+        if (self.state == self._STM_MAIN_UI_ACT):
+            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MAIN
+            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MAIN, msgSnd)
+        elif (self.state == self._STM_CALIB_UI_ACT):
+            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_CALIB
+            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_CALIB, msgSnd)
+        else:
+            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MAIN
+            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MAIN, msgSnd)
+        #SAVE INTO MED FILE
+        self.medErrorLog(str(msgSnd));
+        #PRINT to local
+        self.tup_err_print(str(msgSnd))
+        return    
+    
 
     def fsm_msg_calib_pic_cap_req_rcv_handler(self, msgContent):
         scale = int(msgContent['scale'])
@@ -157,8 +191,7 @@ class tupTaskVision(ModVmLayer.tupTaskTemplate):
     #初始化摄像头
     def funcGetCamRightAndInit(self):
         if (ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR < 0):
-            self.tup_err_print("L2VISCAP: Camera not yet installed!");
-            self.funcVisionLogTrace("L2VISCAP: Camera not yet installed!");
+            self.funcVisionErrTrace("L2VISCAP: Camera not yet installed!");
             return -1;
         else:
             self.capInit = cv.VideoCapture(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
@@ -169,9 +202,7 @@ class tupTaskVision(ModVmLayer.tupTaskTemplate):
     #截获图像
     def funcVisionCapture(self, batch, fileNbr, forceFlag):
         if not self.capInit.isOpened():
-            #raise IOError("Cannot open webcam")
-            self.instL1ConfigOpr.medErrorLog("L2VISCAP: Cannot open webcam!")
-            print("L2VISCAP: Cannot open webcam!, Batch/Nbr=%d/%d" % (batch, fileNbr))
+            self.funcVisionErrTrace("L2VISCAP: Cannot open webcam!, Batch/Nbr=%d/%d" % (batch, fileNbr))
             self.capInit.release()
             cv.destroyAllWindows()            
             return -1;
@@ -415,6 +446,274 @@ class tupTaskVision(ModVmLayer.tupTaskTemplate):
 
 
 
+
+
+
+
+    '''
+    CLASSFICATION: 分类
+    '''
+    def funcVisRefreshPar(self):
+        self.HST_VISION_WORM_CLASSIFY_base = ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_small2mid = ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_mid2big = ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_big2top = ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT;
+    
+    '''
+    * 核心的识别函数，其它任务调用的主入口
+    *
+    *    用于普通白光照片的识别处理过程
+    *
+    '''    
+    def funcVisionNormalClassifyProc(self):
+        self.funcVisRefreshPar()
+        batch, fileNbr = self.findNormalUnclasFileBatchAndNbr();
+        if (batch < 0):
+            ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
+            self.funcVisionLogTrace("L2VISCFY: Picture classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.updateCtrlCntInfo();
+            return;
+        fileName = self.getStoredFileName(batch, fileNbr);
+        fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
+        if (fileName == None) or (fileNukeName == None):
+            ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
+            self.funcVisionLogTrace("L2VISCFY: Picture classification finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.updateCtrlCntInfo();
+            return;
+        #REAL PROCESSING PROCEDURE
+        print("L2VISCFY: Normal picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
+        self.func_vision_worm_clasification(fileName, fileNukeName, False);
+        ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT -= 1;
+        #Update classified files
+        self.updateUnclasFileAsClassified(batch, fileNbr);
+        self.funcVisionLogTrace("L2VISCFY: Normal picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+        self.updateCtrlCntInfo();
+        return;
+
+
+    def funcVisionNormalClassifyDirect(self, dirFn, tmpFn):
+        return self.func_vision_worm_clasification(dirFn, tmpFn, True);
+        
+        
+    def func_vision_worm_input_processing(self, inputStr):
+        try:
+            if ((inputStr['cfBase'] < inputStr['cfSmall2MidIndex']) and (inputStr['cfSmall2MidIndex'] < inputStr['cfMid2BigIndex']) and (inputStr['cfMid2BigIndex'] < inputStr['cfBig2TopIndex'])):
+                self.HST_VISION_WORM_CLASSIFY_base = inputStr['cfBase'];
+                self.HST_VISION_WORM_CLASSIFY_small2mid = inputStr['cfSmall2MidIndex'];
+                self.HST_VISION_WORM_CLASSIFY_mid2big = inputStr['cfMid2BigIndex'];
+                self.HST_VISION_WORM_CLASSIFY_big2top = inputStr['cfBig2TopIndex'];
+                self.HST_VISION_WORM_CLASSIFY_pic_filename = inputStr['fileName'];
+            else:
+                print("L2VISCFY: func_vision_worm_input_processing on input error!")
+        except Exception as err:
+            text = "L2VISCFY: func_vision_worm_input_processing on input error = %s" % str(err)
+            print("L2VISCFY: Input error = ", text);
+
+
+    def func_vision_worm_binvalue_proc(self, img):
+        new = np.zeros(img.shape, np.uint8)    
+    
+        #Gray transaction: 灰度化
+        for i in range(new.shape[0]):  #Axis-y/height/Rows
+            for j in range(new.shape[1]):
+                (b,g,r) = img[i,j]
+                #加权平均法
+                new[i,j] = int(0.3*float(b) + 0.59*float(g) + 0.11*float(r))&0xFF
+    
+        #Middle value filter: 中值滤波
+        blur= cv.medianBlur(new, 5)
+        midGray = cv.cvtColor(blur, cv.COLOR_BGR2GRAY)
+        #cv.imshow('Middle Blur', midGray)
+    
+        #Adaptive bin-translation: 自适应二值化
+        binGray = cv.adaptiveThreshold(midGray, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 43, 5)   # ADAPTIVE_THRESH_MEAN_C ADAPTIVE_THRESH_GAUSSIAN_C
+        binRes= cv.GaussianBlur(binGray, (5,5), 1.5) #medianBlur
+        #cv.imshow('Adaptive Bin', binRes)
+        return binRes;
+    
+    def func_vision_worm_remove_noise_proc(self, img):
+        #Enlarge + Erosion: shape translation 膨胀+腐蚀等形态学变化  
+        kerne1 = np.ones((7, 7), np.uint8)  
+        img_erosin = cv.erode(img, kerne1, iterations=1)
+           
+        #2nd time mid-value filter: 再次中值滤波
+        midFilter= cv.medianBlur(img_erosin, 5)
+        
+        #Fix bin-value: 固定二值化
+        ret, binImg = cv.threshold(midFilter, 130, 255, cv.THRESH_BINARY)
+        #cv.imshow("img_erosin and Noise removal", binImg)
+        return binImg;
+    
+    #https://www.cnblogs.com/llfisher/p/6557611.html
+    #https://www.cnblogs.com/nanyangzp/p/3496486.html
+    #偏心率：以质心为中心，所有点到X轴的长度综合，相比Y周的长度总和，他们之间的比值。
+    #圆形=1，长条就是斜率
+    # E = (M20-M02+4M11)/A, Mjk = EE(x-xA)^j * (y-yA)^k, (j+k阶矩)，A为面积
+    #http://wenku.baidu.com/link?url=4ZSLxGBKE3LBf2mdxDs0VJ1cjJ3hxqeORu-3mfXO23gGBqf5LyjqZ4AHFCMLeP32xEKkoj5tPsWHdvA2ovmuKiRDKN6YHFO9G7JOzBWWrMC
+    
+    #http://blog.csdn.net/app_12062011/article/details/51953030
+    #E = sqrt(1-I^2)
+    #I = (u20+u02-sqrt(4u11*u11(u20-u02)*(u20-u02))/(u20+u02+sqrt(4u11*u11(u20-u02)*(u20-u02))
+    def func_vision_worm_find_contours(self, nfImg, orgImg):
+        #Init output figure
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalNbr'] = 0
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['bigAlive'] = 0
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['bigDead'] = 0
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['middleAlive'] = 0
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['middleDead'] = 0
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['smallAlive'] = 0
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['smallDead'] = 0
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalAlive'] = 0
+        self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalDead'] = 0
+        
+        #Searching out-form shape: 找到轮廓
+        _, contours, hierarchy = cv.findContours(nfImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
+        #contours = contours[0] if imutils.is_cv() else contours[1]
+        
+        #Output graphic: 输出图形
+        outputImg = cv.cvtColor(nfImg, cv.COLOR_GRAY2BGR)
+        mask = np.zeros((orgImg.shape[0]+2, orgImg.shape[1]+2), np.uint8)
+        mask[:] = 1
+        #Analysis one by one: 分别分析
+        for c in contours:
+            #External retangle: 外矩形框
+            (x,y,w,h)=cv.boundingRect(c)
+            pointx=x+w/2
+            pointy=y+h/2
+            # compute the center of the contour
+            M = cv.moments(c)
+            cX = int(M["m10"] / (M["m00"]+0.01))
+            cY = int(M["m01"] / (M["m00"]+0.01))
+            seed_point = (cX, cY)
+            #Shape square: 轮廓面积
+            cArea = cv.contourArea(c)
+            #Shape length: 轮廓弧长
+            cPerimeter = cv.arcLength(c,True)
+            
+            #4th method: 第四种方法
+            rect = cv.minAreaRect(c)
+            #width / height: 长宽,总有 width>=height  
+            width, height = rect[1]
+            if (width > height):
+                cE = height / (width+0.001)
+            else:
+                cE = width / (height+0.001)
+            cE = round(cE, 2)
+    
+            #Finally not use flood algorithms: 最终决定不采用flood算法
+            #print(self.HST_VISION_WORM_CLASSIFY_base)
+            if cArea < self.HST_VISION_WORM_CLASSIFY_base:
+                pass
+            elif cArea < self.HST_VISION_WORM_CLASSIFY_small2mid:
+                self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalNbr'] +=1
+                #cv.floodFill(outputImg, mask, seed_point,(0,0,255))
+                cv.drawContours(outputImg, c, -1, (0,0,255), 2)  
+                if (cE < 0.5):
+                    self.HST_VISION_WORM_CLASSIFY_pic_sta_output['smallDead'] +=1
+                    self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalDead'] +=1
+                else:
+                    self.HST_VISION_WORM_CLASSIFY_pic_sta_output['smallAlive'] +=1
+                    self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalAlive'] +=1               
+                cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+            elif cArea < self.HST_VISION_WORM_CLASSIFY_mid2big:
+                self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalNbr'] +=1
+                #cv.floodFill(outputImg, mask, seed_point,(0,255,0))  
+                cv.drawContours(outputImg, c, -1, (0,255,0), 2)
+                if (cE < 0.5):
+                    self.HST_VISION_WORM_CLASSIFY_pic_sta_output['middleDead'] +=1
+                    self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalDead'] +=1
+                else:
+                    self.HST_VISION_WORM_CLASSIFY_pic_sta_output['middleAlive'] +=1
+                    self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalAlive'] +=1            
+                cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            elif cArea < self.HST_VISION_WORM_CLASSIFY_big2top:
+                self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalNbr'] +=1
+                #cv.floodFill(outputImg, mask, seed_point,(255,0,0))  
+                cv.drawContours(outputImg, c, -1, (255,0,0), 2)
+                if (cE < 0.5):
+                    self.HST_VISION_WORM_CLASSIFY_pic_sta_output['bigDead'] +=1
+                    self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalDead'] +=1
+                else:
+                    self.HST_VISION_WORM_CLASSIFY_pic_sta_output['bigAlive'] +=1
+                    self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalAlive'] +=1                        
+                cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+        #叠加统计结果
+        if (ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET == True):
+            font = cv.FONT_HERSHEY_SIMPLEX
+            cv.putText(outputImg, str(self.HST_VISION_WORM_CLASSIFY_pic_sta_output), (10, 30), font, 0.7, (0, 0, 255), 2, cv.LINE_AA)
+        return outputImg;
+
+    #Classified processing: 分类总处理
+    #outCtrlFlag: 控制输出方式，是否直接使用fileNukeName而不增加文件名字选项
+    def func_vision_worm_clasification(self, fileName, fileNukeName, outCtrlFlag):
+        #Reading file: 读取文件
+        if (os.path.exists(fileName) == False):
+            errStr = "L2VISCFY: File %s not exist!" % (fileName)
+            self.medErrorLog(errStr);
+            print("L2VISCFY: File %s not exist!" % (fileName))
+            return;
+        self.HST_VISION_WORM_CLASSIFY_pic_filename = fileName
+        try:
+            inputImg = cv.imread(fileName)
+        except Exception as err:
+            print("L2VISCFY: Read file error, errinfo = ", str(err))
+            return;
+
+        #Processing procedure: 处理过程
+        binImg = self.func_vision_worm_binvalue_proc(inputImg)
+        nfImg = self.func_vision_worm_remove_noise_proc(binImg)
+        outputImg = self.func_vision_worm_find_contours(nfImg, inputImg)
+        if (outCtrlFlag == True):
+            outputFn = fileNukeName
+        else:
+            outputFn = self.HST_VISION_WORM_CLASSIFY_pic_filepath + "result_" + fileNukeName
+        print("L2VISCFY: OutputFn = %s, nuke name = %s" %(outputFn, fileNukeName))
+        cv.imwrite(outputFn, outputImg)
+            
+        #Save log record: 存储干活的log记录
+        f = open(ModCebsCom.GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET, "a+")
+        a = '[%s], vision worm classification ones, save result as [%s] with output [%s].\n' % (time.asctime(), outputFn, str(self.HST_VISION_WORM_CLASSIFY_pic_sta_output))
+        f.write(a)
+        f.close()
+        
+        #Show result or not: 根据指令，是否显示文件
+        cv.destroyAllWindows()
+
+    '''
+    * 核心的识别函数，其它任务调用的主入口
+    *
+    *    用于荧光照片的识别处理过程
+    *
+    '''    
+    def funcVisionFluClassifyProc(self):
+        self.funcVisRefreshPar()
+        batch, fileNbr = self.findFluUnclasFileBatchAndNbr();
+        print("batch/FileNbr=%d/%d" % (batch, fileNbr))
+        if (batch < 0):
+            ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT = 0;
+            self.funcVisionLogTrace("L2VISCFY: Picture flu classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
+            self.updateCtrlCntInfo();
+            return;
+        fileName = self.getStoredFileName(batch, fileNbr);
+        fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
+        if (fileName == None) or (fileNukeName == None):
+            ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
+            self.funcVisionLogTrace("L2VISCFY: Picture flu classification finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
+            self.updateCtrlCntInfo();
+            return;
+        #REAL PROCESSING PROCEDURE
+        print("L2VISCFY: Flu picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
+        self.algoVisFluWormCaculate(fileName, fileNukeName);
+        ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT -= 1;
+        #Update classified files
+        self.updateUnclasFileAsClassified(batch, fileNbr);
+        self.funcVisionLogTrace("L2VISCFY: Flu picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
+        self.updateCtrlCntInfo();
+        return;
+    
+    #荧光处理算法过程
+    def algoVisFluWormCaculate(self, fileName, fileNukeName):
+        self.funcVisionLogTrace("L2VISCFY: Flu picture classification simulation algorithms demo, to be finsihed!")
 
 
 

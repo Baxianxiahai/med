@@ -25,7 +25,7 @@ from PkgCebsHandler import ModCebsCfg
 
 
 #主任务入口
-class tupTaskMoto(ModVmLayer.tupTaskTemplate):
+class tupTaskMoto(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
     IsSerialOpenOk = ''
 
     _STM_ACTIVE = 3
@@ -72,7 +72,6 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate):
     def fsm_msg_init_rcv_handler(self, msgContent):
         #time.sleep(0.5) #WAIT FOR OTHER TASK STARTUP
         ModCebsCom.GLPLT_PAR_OFC.med_init_plate_parameter()
-        self.instL1ConfigOpr = ModCebsCfg.clsL1_ConfigOpr()
         if (self.funcInitSps() < 0):
             self.tup_err_print("Init sps port error!")
             return ModVmLayer.TUP_FAILURE;
@@ -99,7 +98,8 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate):
     def fsm_msg_meng_ui_switch_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_MENG_UI_ACT)
         return ModVmLayer.TUP_SUCCESS;
-        
+    
+    #复合TRACE       
     def funcMotoLogTrace(self, myString):
         msgSnd = {}
         msgSnd['mid'] = ModVmCfg.TUP_MSGID_TRACE
@@ -118,6 +118,35 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate):
         else:
             msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MAIN
             self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MAIN, msgSnd)
+        #SAVE INTO MED FILE
+        self.medCmdLog(str(msgSnd));
+        #PRINT to local
+        self.tup_dbg_print(str(msgSnd))
+        return
+
+    #复合TRACE       
+    def funcMotoErrTrace(self, myString):
+        msgSnd = {}
+        msgSnd['mid'] = ModVmCfg.TUP_MSGID_TRACE
+        msgSnd['src'] = self.taskId
+        msgSnd['content'] = myString
+        self.fsm_set(self._STM_ACTIVE)
+        if (self.state == self._STM_MAIN_UI_ACT) or (self.state == self._STM_MAIN_UI_EXEC):
+            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MAIN
+            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MAIN, msgSnd)
+        elif (self.state == self._STM_CALIB_UI_ACT) or (self.state == self._STM_CALIB_UI_EXEC):
+            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_CALIB
+            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_CALIB, msgSnd)
+        elif (self.state == self._STM_MENG_UI_ACT) or (self.state == self._STM_MENG_UI_EXEC):
+            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MENG
+            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MENG, msgSnd)
+        else:
+            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MAIN
+            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MAIN, msgSnd)
+        #SAVE INTO MED FILE
+        self.medErrorLog(str(msgSnd));
+        #PRINT to local
+        self.tup_err_print(str(msgSnd))
         return
     
     #主界面模式下的归零
@@ -182,7 +211,7 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate):
     SERVICE PART: 业务部分的函数，功能处理函数
     '''
     def funcMotoBackZero(self):
-        self.tup_dbg_print("L2MOTO: Running Zero Position!")
+        self.funcMotoLogTrace("L2MOTO: Running Zero Position!")
         return self.funcExecMoveZero()
         
     #Normal moving with limitation    
@@ -279,11 +308,11 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate):
         #Error case
         else:
             pass
-        self.tup_dbg_print("L2MOTO: Moving one step! Scale=%d, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (scale, dir, Old_Px, Old_Py, ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]));
+        self.funcMotoLogTrace("L2MOTO: Moving one step! Scale=%d, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (scale, dir, Old_Px, Old_Py, ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]));
         if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]) > 0):
             return 1;
         else:
-            self.instL1ConfigOpr.medErrorLog("L2MOTO: funcMotoMoveOneStep error!")
+            self.funcMotoErrTrace("L2MOTO: funcMotoMoveOneStep error!")
             return -2;
 
     #Force Moving function, with scale = 1cm=10mm=10000um
@@ -312,16 +341,16 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate):
         #Error case
         else:
             pass
-        self.tup_dbg_print("L2MOTO: Moving one step! Scale=1cm, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (dir, Old_Px, Old_Py, ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]));
+        self.funcMotoLogTrace("L2MOTO: Moving one step! Scale=1cm, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (dir, Old_Px, Old_Py, ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]));
         if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]) > 0):
             return 1;
         else:
-            self.instL1ConfigOpr.medErrorLog("L2MOTO: funcMotoForceMoveOneStep error!")
+            self.funcMotoErrTrace("L2MOTO: funcMotoForceMoveOneStep error!")
             return -2;
     
     #运动到起点
     def funcMotoMove2Start(self):
-        self.tup_dbg_print("L2MOTO: Move to start position - Left/up!")
+        self.funcMotoLogTrace("L2MOTO: Move to start position - Left/up!")
         xWidth = ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0] - ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2];
         yHeight = ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1] - ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3];
         if (xWidth <= 0 or yHeight <= 0):
@@ -332,7 +361,7 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate):
         if (res > 0):
             return res, "L2MOTO: Success!"
         else:
-            self.instL1ConfigOpr.medErrorLog("L2MOTO: funcMotoMove2Start Failure!")
+            self.medErrorLog("L2MOTO: funcMotoMove2Start Failure!")
             return res, "L2MOTO: Failure!"
 
     '''
@@ -360,7 +389,7 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate):
             return 1;
         else:
             self.tup_dbg_print("L2MOTO: funcMotoMove2HoleNbr() error get feedback from funcMotoMove2AxisPos.")
-            self.instL1ConfigOpr.medErrorLog("L2MOTO: Error get feedback from funcMotoMove2AxisPos")
+            self.medErrorLog("L2MOTO: Error get feedback from funcMotoMove2AxisPos")
             return -2;
 
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy):
@@ -407,13 +436,12 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate):
         self.targetComPortString = ModCebsCom.GLSPS_PAR_OFC.SPS_USB_CARD_SET
         self.drvVerNbr = -1
         if len(plist) <= 0:
-            self.instL1ConfigOpr.medErrorLog("L2MOTO: Not serial device installed!")
-            self.funcMotoLogTrace("L2MOTO: Not serial device installed!")
+            self.funcMotoErrTrace("L2MOTO: Not serial device installed!")
         else:
             maxList = len(plist)
             searchComPartString = ''
             for index in range(0, maxList):
-                self.instL1ConfigOpr.medErrorLog("L2MOTO: " + str(plist[index]))
+                self.medErrorLog("L2MOTO: " + str(plist[index]))
                 plistIndex =list(plist[index])
                 string = ("L2MOTO: Sps Init = ", plistIndex)
                 self.tup_dbg_print(string)
@@ -424,19 +452,16 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate):
                     if (indexStart >= 0) and (indexEnd >=0) and (indexEnd > len(self.targetComPortString)):
                         searchComPartString = comPortStr[len(self.targetComPortString):indexEnd]
             if searchComPartString == '':
-                self.tup_dbg_print("L2MOTO: Can not find right serial port!")
-                self.funcMotoLogTrace("L2MOTO: Can not find right serial port!")
-                self.instL1ConfigOpr.medErrorLog("L2MOTO: Can not find right serial port!")
+                self.funcMotoErrTrace("L2MOTO: Can not find right serial port!")
                 return -1
             else:
-                self.tup_dbg_print("L2MOTO: Serial port is to open = ", searchComPartString)
                 self.funcMotoLogTrace("L2MOTO: Serial port is to open = " + str(searchComPartString))
                 serialName = searchComPartString
             try:
                 self.serialFd = serial.Serial(serialName, 9600, timeout = 0.2)
             except Exception:
                 self.IsSerialOpenOk = False
-                self.funcMotoLogTrace("L2MOTO: Serial exist, but can't open!")
+                self.funcMotoErrTrace("L2MOTO: Serial exist, but can't open!")
                 return -1
             self.IsSerialOpenOk = True
             self.funcMotoLogTrace("L2MOTO: Success open serial port!")
@@ -487,7 +512,7 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate):
     def funcCmdSend(self, cmd):
         #正常状态
         if(self.IsSerialOpenOk == False):
-            self.funcMotoLogTrace("L2MOTO: Serial not opened, cant not send command!")
+            self.funcMotoErrTrace("L2MOTO: Serial not opened, cant not send command!")
             return -2,0
         #串口的确已经被打开了
         self.serialFd.readline()
@@ -499,7 +524,7 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate):
                 rcvBuf += rcvBuf2
         length = len(rcvBuf)
         if (length <=0):
-            self.funcMotoLogTrace("L2MOTO: Nothing received. RCV BUF = " + str(rcvBuf))
+            self.funcMotoErrTrace("L2MOTO: Nothing received. RCV BUF = " + str(rcvBuf))
             return -3,0
         outBuf = ''
         for i in range(length):
@@ -509,10 +534,10 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate):
         targetCrc = rcvBuf[length-2] + (rcvBuf[length-1]<<8)
         rcvCrc = self.funcCacCrc(rcvBuf, length-2)
         if (rcvCrc != targetCrc):
-            self.funcMotoLogTrace("L2MOTO: Receive CRC Error!")
+            self.funcMotoErrTrace("L2MOTO: Receive CRC Error!")
             return -4,0
         if (rcvBuf[0] != cmd[0]):
-            self.funcMotoLogTrace("L2MOTO: Receive EquId Error!")
+            self.funcMotoErrTrace("L2MOTO: Receive EquId Error!")
             return -5,0
         fmt = ">i";
         upBuf = rcvBuf[3:7]
@@ -546,7 +571,7 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate):
 
     #停止命令
     def funcMotoStop(self):
-        self.instL1ConfigOpr.medCmdLog("L2MOTO: Send full stop command to moto!")
+        self.funcMotoLogTrace("L2MOTO: Send full stop command to moto!")
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_STP_NOR_CMID, 1, 1, 0, 0)
         return 1
     

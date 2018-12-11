@@ -12,7 +12,7 @@ from PkgVmHandler import ModVmLayer
 from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
 
-class tupTaskCalib(ModVmLayer.tupTaskTemplate):
+class tupTaskCalib(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
     _STM_ACTIVE = 3
 
     def __init__(self):

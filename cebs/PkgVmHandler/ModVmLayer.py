@@ -104,7 +104,7 @@ class tupTaskTemplate():
     def msg_send_out(self, taskDestId, msg):
         if (taskDestId <0) or (taskDestId >= TUP_GL_CFG.TUP_TASK_MAX):
             return TUP_FAILURE;
-        print("MsgQue = ", TUP_GL_CFG.queTab[taskDestId])
+        #print("MsgQue = ", TUP_GL_CFG.queTab[taskDestId])
         TUP_GL_CFG.queTab[taskDestId].put(msg)
 
     def add_stm_combine(self, state, msgid, proc):

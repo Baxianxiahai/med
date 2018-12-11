@@ -14,7 +14,7 @@ from PkgCebsHandler import ModCebsCfg
 
 
 
-class tupTaskMeng(ModVmLayer.tupTaskTemplate):
+class tupTaskMeng(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
     _STM_ACTIVE = 3
 
     def __init__(self):

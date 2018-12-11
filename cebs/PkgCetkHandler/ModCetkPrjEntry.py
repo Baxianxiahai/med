@@ -81,6 +81,7 @@ def prj_cebs_main_entry():
     VisionTaskInst.tup_dbg_print("Create VISION task success!")
     
     #MAIN_UI
+    time.sleep(1)
     MainUiTaskInst = SEUI_L4_MainWindow();
     initMsg['dst'] = ModVmCfg.TUP_TASK_ID_UI_MAIN
     MainUiTaskInst.msg_send_in(initMsg)            

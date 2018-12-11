@@ -13,7 +13,7 @@ from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
 
 
-class tupTaskCtrlSchd(ModVmLayer.tupTaskTemplate):
+class tupTaskCtrlSchd(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
     _STM_ACTIVE = 3
 
     def __init__(self):
