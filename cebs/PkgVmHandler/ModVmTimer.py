@@ -23,20 +23,22 @@ class tupTaskTimer(ModVmLayer.tupTaskTemplate):
         self.add_stm_combine(ModVmLayer.TUP_STM_COMN, ModVmCfg.TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
         self.add_stm_combine(ModVmLayer.TUP_STM_COMN, ModVmCfg.TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
         self.fsm_set(ModVmLayer.TUP_STM_INIT)
-        #print("State = ", self.fsm_get())
         #START TASK
         self.task_run()
 
     def fsm_msg_init_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
-        time.sleep(0.5) #WAIT FOR OTHER TASK STARTUP
+        #time.sleep(0.5) #WAIT FOR OTHER TASK STARTUP
+        return ModVmLayer.TUP_SUCCESS;
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
-        time.sleep(1)
+        #time.sleep(1)
         self.fsm_set(self._STM_ACTIVE)
+        return ModVmLayer.TUP_SUCCESS;
         
     def fsm_msg_time_out_rcv_handler(self, msgContent):
-        time.sleep(1)
+        #time.sleep(1)
+        return ModVmLayer.TUP_SUCCESS;
 
 
         

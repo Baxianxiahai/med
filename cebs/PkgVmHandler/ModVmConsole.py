@@ -30,11 +30,12 @@ class tupTaskVmConsl(ModVmLayer.tupTaskTemplate):
         self.task_run()
 
     def fsm_msg_init_rcv_handler(self, msgContent):
-        time.sleep(0.5) #WAIT FOR OTHER TASK STARTUP
+        #time.sleep(0.5) #WAIT FOR OTHER TASK STARTUP
+        return ModVmLayer.TUP_SUCCESS;
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
         self.tup_dbg_print("I am in fsm_msg_restart_rcv_handler = ", msgContent)
-        time.sleep(1)
+        #time.sleep(1)
         msgSnd = {}
         msgSnd['mid'] = ModVmCfg.TUP_MSGID_GEN_TRIG
         msgSnd['src'] = ModVmCfg.TUP_TASK_ID_TEST
@@ -42,13 +43,16 @@ class tupTaskVmConsl(ModVmLayer.tupTaskTemplate):
         msgSnd['content'] = "test> " + str(random.random())
         self.fsm_set(self._STM_ACTIVE)
         self.msg_send_in(msgSnd)
+        return ModVmLayer.TUP_SUCCESS;
 
     def fsm_msg_time_out_rcv_handler(self, msgContent):
         self.tup_dbg_print("I am in fsm_msg_time_out_rcv_handler = ", msgContent)
+        return ModVmLayer.TUP_SUCCESS;
         
     def fsm_msg_gen_trig_rcv_handler(self, msgContent):
         self.tup_dbg_print("I am in fsm_msg_gen_trig_rcv_handler = ", msgContent)
         self.fsm_set(ModVmLayer.TUP_STM_INIT)
+        return ModVmLayer.TUP_SUCCESS;
         
 
 
@@ -66,7 +70,7 @@ def vm_main_entry():
     myTaskInst = tupTaskVmConsl();
     msg = {}
     while True:
-        time.sleep(5)
+        time.sleep(0.5)
         msg['mid'] = ModVmCfg.TUP_MSGID_RESTART
         msg['src'] = ModVmCfg.TUP_TASK_ID_TEST
         msg['dst'] = ModVmCfg.TUP_TASK_ID_VMCONSL

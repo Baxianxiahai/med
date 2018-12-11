@@ -9,54 +9,6 @@ import time
 from multiprocessing import Queue, Process
 from PkgVmHandler import ModVmCfg
 
-'''
-#写进程
-def write(q):
-    for i in ["a","b","c","d"]:
-        q.put(i)
-        print("put {0} to queue".format(i))
-#读进程
-def read(q):
-    while 1:
-        result = q.get()
-        print("get {0} from queue".format(result))
-#主函数
-def vm():
-# 父进程创建Queue，并传给各个子进程：
-    q = Queue()
-    pw = Process(target=write,args=(q,))
-    pr = Process(target=read,args=(q,))
-    # 启动子进程pw，写入:
-    pw.start()
-    # 启动子进程pe，读入:
-    pr.start()
-    # 等待pw结束:
-    pw.join()
-    # pr进程里是死循环，无法等待其结束，只能强行终止
-    pr.terminate()
-
-
-
-def tup_vm_task_create(proc):
-    q = Queue()
-    p = Process(target=proc,args=(q,))
-    #启动子进程
-    p.start()
-    return q
-
-def tup_task_test1_handler(queue):
-    while True:
-        result = queue.get()
-        print("put {0} to queue".format(result))
-
-def tup_vm_msg_send(taskDest, msg):
-    taskDest.put(msg)
-'''
-
-
-
-
-
 
 '''
 全局常量

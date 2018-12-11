@@ -33,11 +33,10 @@ class tupTaskGpar(ModVmLayer.tupTaskTemplate):
         time.sleep(0.5) #WAIT FOR OTHER TASK STARTUP
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
-        time.sleep(1)
         self.fsm_set(self._STM_ACTIVE)
         
     def fsm_msg_time_out_rcv_handler(self, msgContent):
-        time.sleep(1)
+        pass
 
 
 
