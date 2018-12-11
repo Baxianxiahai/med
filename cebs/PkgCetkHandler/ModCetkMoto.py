@@ -18,14 +18,16 @@ import serial.tools.list_ports
 import struct
 
 from multiprocessing import Queue, Process
-from PkgVmHandler import ModVmCfg
-from PkgVmHandler import ModVmLayer
-from PkgCebsHandler import ModCebsCom
-from PkgCebsHandler import ModCebsCfg
+from PkgVmHandler.ModVmCfg import *
+from PkgVmHandler.ModVmLayer import *
+from PkgCebsHandler.ModCebsCom import *
+from PkgCebsHandler.ModCebsCfg import *
+from PkgVmHandler.ModVmConsole import *
+from PkgVmHandler.ModVmTimer import *
 
 
 #主任务入口
-class tupTaskMoto(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
+class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     IsSerialOpenOk = ''
 
     _STM_ACTIVE = 3
@@ -39,33 +41,36 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
     _STM_MENG_UI_ACT = 8
     _STM_MENG_UI_EXEC = 9
 
-    def __init__(self):
-        ModVmLayer.tupTaskTemplate.__init__(self, taskid=ModVmCfg.TUP_TASK_ID_MOTO, taskName="TASK_MOTO")
-        #ModVmLayer.TUP_GL_CFG.save_task_by_id(ModVmCfg.TUP_TASK_ID_MOTO, self)
-        self.fsm_set(ModVmLayer.TUP_STM_NULL)
+    def __init__(self, glPar):
+        tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_MOTO, taskName="TASK_MOTO", glTabEntry=glPar)
+        #ModVmLayer.TUP_GL_CFG.save_task_by_id(TUP_TASK_ID_MOTO, self)
+        self.fsm_set(TUP_STM_NULL)
         self.IsSerialOpenOk = False
         #STM MATRIX
-        self.add_stm_combine(ModVmLayer.TUP_STM_INIT, ModVmCfg.TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
-        self.add_stm_combine(ModVmLayer.TUP_STM_COMN, ModVmCfg.TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
-        self.add_stm_combine(ModVmLayer.TUP_STM_COMN, ModVmCfg.TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
+        self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
         #通知界面切换
-        self.add_stm_combine(ModVmLayer.TUP_STM_COMN, ModVmCfg.TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_main_ui_switch_rcv_handler)
-        self.add_stm_combine(ModVmLayer.TUP_STM_COMN, ModVmCfg.TUP_MSGID_CALIB_UI_SWITCH, self.fsm_msg_calib_ui_switch_rcv_handler)
-        self.add_stm_combine(ModVmLayer.TUP_STM_COMN, ModVmCfg.TUP_MSGID_MENG_UI_SWITCH, self.fsm_msg_meng_ui_switch_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_main_ui_switch_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_UI_SWITCH, self.fsm_msg_calib_ui_switch_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MENG_UI_SWITCH, self.fsm_msg_meng_ui_switch_rcv_handler)
+        #测试功能
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_TEST, self.fsm_msg_test_msg_rcv_handler)
+
         #主界面模式的移动命令
-        self.add_stm_combine(self._STM_MAIN_UI_ACT, ModVmCfg.TUP_MSGID_NORM_MOTO_BACK_ZERO, self.fsm_msg_main_back_zero_rcv_handler)
-        self.add_stm_combine(self._STM_MAIN_UI_ACT, ModVmCfg.TUP_MSGID_NORM_MOTO_MOVE_START, self.fsm_msg_main_move_start_rcv_handler)
-        self.add_stm_combine(self._STM_MAIN_UI_ACT, ModVmCfg.TUP_MSGID_NORM_MOTO_MOVE_HOLEN, self.fsm_msg_main_move_holen_rcv_handler)
+        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_NORM_MOTO_BACK_ZERO, self.fsm_msg_main_back_zero_rcv_handler)
+        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_NORM_MOTO_MOVE_START, self.fsm_msg_main_move_start_rcv_handler)
+        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_NORM_MOTO_MOVE_HOLEN, self.fsm_msg_main_move_holen_rcv_handler)
 
         #校准模式下的移动命令
-        self.add_stm_combine(self._STM_CALIB_UI_ACT, ModVmCfg.TUP_MSGID_CALIB_MOTO_MV_STEP, self.fsm_msg_calib_move_rcv_handler)
-        self.add_stm_combine(self._STM_CALIB_UI_ACT, ModVmCfg.TUP_MSGID_CALIB_MOTO_FM_STEP, self.fsm_msg_calib_force_move_rcv_handler)
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOTO_MV_STEP, self.fsm_msg_calib_move_rcv_handler)
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOTO_FM_STEP, self.fsm_msg_calib_force_move_rcv_handler)
         
         #马达工程模式下的命令
-        self.add_stm_combine(self._STM_MENG_UI_ACT, ModVmCfg.TUP_MSGID_MENG_MOTO_COMMAND, self.fsm_msg_meng_command_rcv_handler)
+        self.add_stm_combine(self._STM_MENG_UI_ACT, TUP_MSGID_MENG_MOTO_COMMAND, self.fsm_msg_meng_command_rcv_handler)
         
         #切换状态机
-        self.fsm_set(ModVmLayer.TUP_STM_INIT)
+        self.fsm_set(TUP_STM_INIT)
         #START TASK
         self.task_run()
 
@@ -73,51 +78,60 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
         #time.sleep(0.5) #WAIT FOR OTHER TASK STARTUP
         ModCebsCom.GLPLT_PAR_OFC.med_init_plate_parameter()
         if (self.funcInitSps() < 0):
-            self.tup_err_print("Init sps port error!")
-            return ModVmLayer.TUP_FAILURE;
+            self.funcMotoErrTrace("Init sps port error!")
+            return TUP_FAILURE;
         else:
             self.fsm_set(self._STM_ACTIVE)
         self.funcBatInitPar();
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
 
     def fsm_msg_time_out_rcv_handler(self, msgContent):
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
+
+    def fsm_msg_test_msg_rcv_handler(self, msgContent):
+        msgSnd = {}
+        msgSnd['mid'] = TUP_MSGID_TRACE
+        msgSnd['src'] = self.taskId
+        msgSnd['content'] = msgContent
+        msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
+        self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)  
+        return TUP_SUCCESS;
 
     def fsm_msg_main_ui_switch_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_MAIN_UI_ACT)
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
 
     def fsm_msg_calib_ui_switch_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_CALIB_UI_ACT)
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
 
     def fsm_msg_meng_ui_switch_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_MENG_UI_ACT)
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
     
     #复合TRACE       
     def funcMotoLogTrace(self, myString):
         msgSnd = {}
-        msgSnd['mid'] = ModVmCfg.TUP_MSGID_TRACE
+        msgSnd['mid'] = TUP_MSGID_TRACE
         msgSnd['src'] = self.taskId
         msgSnd['content'] = myString
         self.fsm_set(self._STM_ACTIVE)
         if (self.state == self._STM_MAIN_UI_ACT) or (self.state == self._STM_MAIN_UI_EXEC):
-            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MAIN
-            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MAIN, msgSnd)
+            msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
+            self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)
         elif (self.state == self._STM_CALIB_UI_ACT) or (self.state == self._STM_CALIB_UI_EXEC):
-            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_CALIB
-            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_CALIB, msgSnd)
+            msgSnd['dst'] = TUP_TASK_ID_UI_CALIB
+            self.msg_send_out(TUP_TASK_ID_UI_CALIB, msgSnd)
         elif (self.state == self._STM_MENG_UI_ACT) or (self.state == self._STM_MENG_UI_EXEC):
-            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MENG
-            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MENG, msgSnd)
+            msgSnd['dst'] = TUP_TASK_ID_UI_MENG
+            self.msg_send_out(TUP_TASK_ID_UI_MENG, msgSnd)
         else:
-            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MAIN
-            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MAIN, msgSnd)
+            msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
+            self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)
         #SAVE INTO MED FILE
         self.medCmdLog(str(msgSnd));
         #PRINT to local
@@ -127,22 +141,22 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
     #复合TRACE       
     def funcMotoErrTrace(self, myString):
         msgSnd = {}
-        msgSnd['mid'] = ModVmCfg.TUP_MSGID_TRACE
+        msgSnd['mid'] = TUP_MSGID_TRACE
         msgSnd['src'] = self.taskId
         msgSnd['content'] = myString
         self.fsm_set(self._STM_ACTIVE)
         if (self.state == self._STM_MAIN_UI_ACT) or (self.state == self._STM_MAIN_UI_EXEC):
-            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MAIN
-            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MAIN, msgSnd)
+            msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
+            self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)
         elif (self.state == self._STM_CALIB_UI_ACT) or (self.state == self._STM_CALIB_UI_EXEC):
-            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_CALIB
-            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_CALIB, msgSnd)
+            msgSnd['dst'] = TUP_TASK_ID_UI_CALIB
+            self.msg_send_out(TUP_TASK_ID_UI_CALIB, msgSnd)
         elif (self.state == self._STM_MENG_UI_ACT) or (self.state == self._STM_MENG_UI_EXEC):
-            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MENG
-            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MENG, msgSnd)
+            msgSnd['dst'] = TUP_TASK_ID_UI_MENG
+            self.msg_send_out(TUP_TASK_ID_UI_MENG, msgSnd)
         else:
-            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MAIN
-            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MAIN, msgSnd)
+            msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
+            self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)
         #SAVE INTO MED FILE
         self.medErrorLog(str(msgSnd));
         #PRINT to local
@@ -154,14 +168,14 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
         self.fsm_set(self._STM_MAIN_UI_EXEC)
         self.funcMotoBackZero()
         self.fsm_set(self._STM_MAIN_UI_ACT)
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
 
     #主界面模式下的移动到第一个孔
     def fsm_msg_main_move_start_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_MAIN_UI_EXEC)
         self.funcMotoMove2Start()
         self.fsm_set(self._STM_MAIN_UI_ACT)
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
     
     #主界面模式下的移动到孔N
     def fsm_msg_main_move_holen_rcv_handler(self, msgContent):
@@ -169,7 +183,7 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
         holeIndex = int(msgContent['hole'])
         self.funcMotoMove2HoleNbr(holeIndex)
         self.fsm_set(self._STM_MAIN_UI_ACT)
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
     
     #CALIB: 正常移动
     def fsm_msg_calib_move_rcv_handler(self, msgContent):
@@ -178,7 +192,7 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
         dir = msgContent['dir']
         self.funcMotoMoveOneStep(scale, dir)
         self.fsm_set(self._STM_CALIB_UI_ACT)
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
 
     #CALIB: 强制移动
     def fsm_msg_calib_force_move_rcv_handler(self, msgContent):
@@ -186,7 +200,7 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
         dir = msgContent['dir']
         self.funcMotoForceMoveOneStep(dir)
         self.fsm_set(self._STM_CALIB_UI_ACT)
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
 
     #MENG: 工程模式下的控制命令
     def fsm_msg_meng_command_rcv_handler(self, msgContent):
@@ -198,13 +212,13 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
         par4 = int(msgContent['par4'])
         res = self.funcSendCmdPack(cmdid, par1, par2, par3, par4)
         msgSnd = {}
-        msgSnd['mid'] = ModVmCfg.TUP_MSGID_MENG_MOTO_CMD_FB
-        msgSnd['src'] = ModVmCfg.TUP_TASK_ID_MOTO
-        msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MENG
+        msgSnd['mid'] = TUP_MSGID_MENG_MOTO_CMD_FB
+        msgSnd['src'] = TUP_TASK_ID_MOTO
+        msgSnd['dst'] = TUP_TASK_ID_UI_MENG
         msgSnd['content'] = ("{'res':%d}" %(res))
-        self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MENG, msgSnd)        
+        self.msg_send_out(TUP_TASK_ID_UI_MENG, msgSnd)        
         self.fsm_set(self._STM_MENG_UI_ACT)
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
 
     
     '''

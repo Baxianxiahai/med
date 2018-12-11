@@ -7,7 +7,7 @@ Created on 2018年12月8日
 import random
 import time
 from multiprocessing import Queue, Process
-from PkgVmHandler import ModVmCfg
+from PkgVmHandler.ModVmCfg import *
 
 
 '''
@@ -19,7 +19,8 @@ TUP_FAILURE = -1
 TUP_STM_NULL = 0
 TUP_STM_INIT = 1
 TUP_STM_COMN = 2
-
+#给入口参数做初始化
+TUP_INIT_VALUE = -1
 
 '''
 全局配置参数
@@ -49,7 +50,6 @@ class tupGlbCfg():
 #         if (ret == TUP_SUCCESS):
 #             print(time.asctime(), ", TRC_TSKID_", taskid, ": ", str(string))
         
-TUP_GL_CFG = tupGlbCfg()
 
 
 '''
@@ -58,20 +58,21 @@ TUP_GL_CFG = tupGlbCfg()
 class tupTaskTemplate():
     taskId = 0;
     taskName = '';
+    glTab = '';
     queue = '';
     process = '';
     state = 0;
-    msgStateMatrix = []   
+    msgStateMatrix = []
     
-    def __init__(self, taskid, taskName):
+    def __init__(self, taskid, taskName, glTabEntry):
         super(tupTaskTemplate, self).__init__()
         self.taskId = taskid;
         self.taskName = taskName;
-        #self.queue = Queue();
-        self.queue = TUP_GL_CFG.queTab[taskid];
+        self.glTab = glTabEntry;
+        self.queue = self.glTab.queTab[taskid];
         self.process = '';
         self.state = 0;
-        self.msgStateMatrix = [[ '' for i in range(TUP_GL_CFG.TUP_MSGID_MAX)] for j in range(TUP_GL_CFG.TUP_STATE_MAX)]
+        self.msgStateMatrix = [[TUP_INIT_VALUE for i in range(self.glTab.TUP_MSGID_MAX)] for j in range(self.glTab.TUP_STATE_MAX)]
         self.task_create();
         
     def get_task_id(self):
@@ -87,7 +88,7 @@ class tupTaskTemplate():
         return self.process
 
     def fsm_set(self, newState):
-        if (newState < 0) or (newState >= TUP_GL_CFG.TUP_STATE_MAX):
+        if (newState < 0) or (newState >= self.glTab.TUP_STATE_MAX):
             self.tup_err_print("[VM ERR] fsm_set Error.")
             return -1;
         self.state = newState
@@ -98,18 +99,21 @@ class tupTaskTemplate():
 
     def msg_send_in(self, msg):
         self.queue.put(msg)
-        if (TUP_GL_CFG.dbg_level == 1):
+        if (self.glTab.dbg_level == 1):
             self.tup_trace(str(msg))
 
     def msg_send_out(self, taskDestId, msg):
-        if (taskDestId <0) or (taskDestId >= TUP_GL_CFG.TUP_TASK_MAX):
+        if (taskDestId <0) or (taskDestId >= self.glTab.TUP_TASK_MAX):
+            self.tup_err_print("Wrong Task Id.")
             return TUP_FAILURE;
         #print("MsgQue = ", TUP_GL_CFG.queTab[taskDestId])
-        TUP_GL_CFG.queTab[taskDestId].put(msg)
+        self.glTab.queTab[taskDestId].put(msg)
+        if (self.glTab.dbg_level == 1):
+            self.tup_trace(str(msg))
 
     def add_stm_combine(self, state, msgid, proc):
-        if (state < 0) or (state >= TUP_GL_CFG.TUP_STATE_MAX) or (msgid < 0) or (msgid >= TUP_GL_CFG.TUP_MSGID_MAX):
-            print("[VM ERR] Add_stm_combine Error.")
+        if (state < 0) or (state >= self.glTab.TUP_STATE_MAX) or (msgid < 0) or (msgid >= self.glTab.TUP_MSGID_MAX):
+            self.tup_err_print("Add_stm_combine Error.")
             return -1
         self.msgStateMatrix[state][msgid] = proc
         return 1
@@ -124,35 +128,45 @@ class tupTaskTemplate():
             srcId = int(result['src'])
             dstId = int(result['dst'])
             msgCont = result['content']
-            if (msgId <0) or (msgId >= TUP_GL_CFG.TUP_MSGID_MAX):
+            if (msgId <0) or (msgId >= self.glTab.TUP_MSGID_MAX):
                 self.tup_err_print("Wrong msgId parameter.")
                 continue
-            if (srcId <0) or (srcId >= TUP_GL_CFG.TUP_TASK_MAX):
+            if (srcId <0) or (srcId >= self.glTab.TUP_TASK_MAX):
                 self.tup_err_print("Wrong srcId parameter.")
                 continue
-            if (dstId <0) or (dstId >= TUP_GL_CFG.TUP_TASK_MAX):
+            if (dstId <0) or (dstId >= self.glTab.TUP_TASK_MAX):
                 self.tup_err_print("Wrong dstId parameter.")
                 continue
             if (dstId != self.taskId):
-                self.tup_err_print("Wrong destination module, self Taskid = %d, rcvId=%d." % (self.taskId, dstId) )
+                self.tup_err_print("Wrong destination module, self srcId = %d, dstId=%d." % (self.taskId, dstId) )
                 continue
-            #首先确定COMN状态机，忽略当前的消息执行
-            if self.msgStateMatrix[TUP_STM_COMN][msgId] != '':
+            # 尝试使用TRY机制，后面的机制好使，这个机制暂时不用
+#             try:
+#                 proc = self.msgStateMatrix[TUP_STM_COMN][msgId]
+#                 if (proc(msgCont) == TUP_FAILURE):
+#                     self.tup_err_print("Proc execute error, Src/Dst/MsgId=%d/%d/%d, MsgContent=%s" % (srcId, dstId, msgId, str(msgCont)))
+#                     continue
+#             except Exception:
+#                 pass
+            #CASE1: 首先确定COMN状态机，忽略当前的消息执行
+            if self.msgStateMatrix[TUP_STM_COMN][msgId] != TUP_INIT_VALUE:
                 proc = self.msgStateMatrix[TUP_STM_COMN][msgId]
                 if (proc(msgCont) == TUP_FAILURE):
                     self.tup_err_print("Proc execute error, Src/Dst/MsgId=%d/%d/%d, MsgContent=%s" % (srcId, dstId, msgId, str(msgCont)))
-                    continue                
-            #具体状态处理过程
-            if self.msgStateMatrix[self.state][msgId] == '':
-                self.tup_err_print("Un-valid state-message set.")
                 continue
+            #CASE2: NOT EXIST
+            if self.msgStateMatrix[self.state][msgId] == TUP_INIT_VALUE:
+                self.tup_err_print("Un-valid state-message set, inc State/MsgId=%d/%d" % (self.state, msgId))
+                continue
+            #CASE3: EXIST RIGHT STM
             proc = self.msgStateMatrix[self.state][msgId]
             if (proc(msgCont) == TUP_FAILURE):
                 self.tup_err_print("Proc execute error, Src/Dst/MsgId=%d/%d/%d, MsgContent=%s" % (srcId, dstId, msgId, str(msgCont)))
-                continue
+            continue
 
     def task_run(self):
         self.process.start()
+        #self.process.join()
 
     def tup_trace(self, string):
         print(time.asctime(), ", [TRC] [", self.taskName, "]: ", str(string))
@@ -162,5 +176,8 @@ class tupTaskTemplate():
         
     def tup_err_print(self, string):
         print(time.asctime(), ", [ERR] [", self.taskName, "]: ", str(string))
+
+
+
         
         

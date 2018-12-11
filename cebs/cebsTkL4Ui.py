@@ -115,10 +115,6 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModVmLayer.tu
 
     def __init__(self):    
         super(SEUI_L4_MainWindow, self).__init__()
-        #初始化任务
-        ModVmLayer.tupTaskTemplate.__init__(self, taskid=ModVmCfg.TUP_TASK_ID_UI_MAIN, taskName="TASK_UI_MAIN")
-        ModVmLayer.TUP_GL_CFG.save_task_by_id(ModVmCfg.TUP_TASK_ID_UI_MAIN, self)
-        print("MAIN UI: ", ModVmLayer.TUP_GL_CFG.taskTab[ModVmCfg.TUP_TASK_ID_UI_MAIN])
         #SYSTEM LEVEL UI INIT, 系统级别的界面初始化
         self.setupUi(self)
         #USER LAVEL UI INIT, 用户级别的界面初始化

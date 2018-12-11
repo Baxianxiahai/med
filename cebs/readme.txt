@@ -14,6 +14,7 @@
 = 使用新的架构，创建VM机制
 = 更新SPS-MOTO的处理过程
 = 更新VISION函数
+= 完善多任务之间的消息交互过程
 
 //=ZJL, 2018/12/8, CURRENT_SW_DELIVERY R1.33 =>CEBS
 = 完善CEBS REL2 RE-ARCH的代码框架

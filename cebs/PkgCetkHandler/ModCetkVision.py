@@ -21,33 +21,32 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 import math
-from ctypes import c_uint8
+from   ctypes import c_uint8
 import win32com.client  #pip install pyWin32
 import usb.core
-
-from multiprocessing import Queue, Process
-from PkgVmHandler import ModVmCfg
-from PkgVmHandler import ModVmLayer
-from PkgCebsHandler import ModCebsCom
-from PkgCebsHandler import ModCebsCfg
-
+from   cv2 import waitKey
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
-from cebsTkL4Ui import *
-from PkgCebsHandler import ModCebsCom
-from PkgCebsHandler import ModCebsCfg
-from cv2 import waitKey
 
-class tupTaskVision(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
+from multiprocessing import Queue, Process
+from PkgVmHandler.ModVmCfg import *
+from PkgVmHandler.ModVmLayer import *
+from PkgCebsHandler.ModCebsCom import *
+from PkgCebsHandler.ModCebsCfg import *
+from PkgVmHandler.ModVmConsole import *
+from PkgVmHandler.ModVmTimer import *
+#from cebsTkL4Ui import *
+
+class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_ACTIVE = 3
     #主界面，干活拍照
     _STM_MAIN_UI_ACT = 4
     #校准模式下图像直接读取
     _STM_CALIB_UI_ACT = 5
 
-    def __init__(self):
-        ModVmLayer.tupTaskTemplate.__init__(self, taskid=ModVmCfg.TUP_TASK_ID_VISION, taskName="TASK_VISION")
-        #ModVmLayer.TUP_GL_CFG.save_task_by_id(ModVmCfg.TUP_TASK_ID_VISION, self)
+    def __init__(self, glPar):
+        tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_VISION, taskName="TASK_VISION", glTabEntry=glPar)
+        #ModVmLayer.TUP_GL_CFG.save_task_by_id(TUP_TASK_ID_VISION, self)
         self.capInit = ''
         self.HST_VISION_WORM_CLASSIFY_base = ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT;
         self.HST_VISION_WORM_CLASSIFY_small2mid = ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT;
@@ -56,25 +55,25 @@ class tupTaskVision(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
         self.HST_VISION_WORM_CLASSIFY_pic_filepath = ModCebsCom.GLCFG_PAR_OFC.PIC_MIDDLE_PATH + '/'
         self.HST_VISION_WORM_CLASSIFY_pic_filename = "1.jpg"
         self.HST_VISION_WORM_CLASSIFY_pic_sta_output = {'totalNbr':0, 'bigAlive':0, 'bigDead':0, 'middleAlive':0, 'middleDead':0, 'smallAlive':0, 'smallDead':0, 'totalAlive':0, 'totalDead':0}
-        self.fsm_set(ModVmLayer.TUP_STM_NULL)
+        self.fsm_set(TUP_STM_NULL)
         #STM MATRIX
-        self.add_stm_combine(ModVmLayer.TUP_STM_INIT, ModVmCfg.TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
-        self.add_stm_combine(ModVmLayer.TUP_STM_COMN, ModVmCfg.TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
-        self.add_stm_combine(ModVmLayer.TUP_STM_COMN, ModVmCfg.TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
+        self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
         #通知界面切换
-        self.add_stm_combine(ModVmLayer.TUP_STM_COMN, ModVmCfg.TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_main_ui_switch_rcv_handler)
-        self.add_stm_combine(ModVmLayer.TUP_STM_COMN, ModVmCfg.TUP_MSGID_CALIB_UI_SWITCH, self.fsm_msg_calib_ui_switch_rcv_handler)
-        self.add_stm_combine(ModVmLayer.TUP_STM_COMN, ModVmCfg.TUP_MSGID_PIC_REFRESH_PAR, self.fsm_msg_refresh_par_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_main_ui_switch_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_UI_SWITCH, self.fsm_msg_calib_ui_switch_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_PIC_REFRESH_PAR, self.fsm_msg_refresh_par_rcv_handler)
 
         #校准模式下的抓图指令
-        self.add_stm_combine(self._STM_CALIB_UI_ACT, ModVmCfg.TUP_MSGID_PIC_CAP_REQ, self.fsm_msg_calib_pic_cap_req_rcv_handler)
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_PIC_CAP_REQ, self.fsm_msg_calib_pic_cap_req_rcv_handler)
 
         #主界面业务模式下的抓图指令
-        self.add_stm_combine(self._STM_MAIN_UI_ACT, ModVmCfg.TUP_MSGID_PIC_CAP_REQ, self.fsm_msg_main_pic_cap_req_rcv_handler)
-        self.add_stm_combine(self._STM_MAIN_UI_ACT, ModVmCfg.TUP_MSGID_PIC_CLFY_REQ, self.fsm_msg_main_pic_clfy_req_rcv_handler)
+        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_PIC_CAP_REQ, self.fsm_msg_main_pic_cap_req_rcv_handler)
+        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_PIC_CLFY_REQ, self.fsm_msg_main_pic_clfy_req_rcv_handler)
         
         #切换状态机
-        self.fsm_set(ModVmLayer.TUP_STM_INIT)
+        self.fsm_set(TUP_STM_INIT)
         #START TASK
         self.task_run()
 
@@ -85,45 +84,45 @@ class tupTaskVision(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
         #INIT
         if (self.funcGetCamRightAndInit() < 0):
             self.funcVisionErrTrace("L2VISCAP: Init CAM error!")
-            return ModVmLayer.TUP_FAILURE;
+            return TUP_FAILURE;
         else:
             self.fsm_set(self._STM_ACTIVE)
-            return ModVmLayer.TUP_SUCCESS;
+            return TUP_SUCCESS;
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
         
     def fsm_msg_time_out_rcv_handler(self, msgContent):
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
 
     def fsm_msg_main_ui_switch_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_MAIN_UI_ACT)
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
 
     def fsm_msg_calib_ui_switch_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_CALIB_UI_ACT)
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
 
     def fsm_msg_refresh_par_rcv_handler(self, msgContent):
         self.funcVisRefreshPar();
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
 
     def funcVisionLogTrace(self, myString):
         msgSnd = {}
-        msgSnd['mid'] = ModVmCfg.TUP_MSGID_TRACE
+        msgSnd['mid'] = TUP_MSGID_TRACE
         msgSnd['src'] = self.taskId
         msgSnd['content'] = myString
         self.fsm_set(self._STM_ACTIVE)
         if (self.state == self._STM_MAIN_UI_ACT):
-            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MAIN
-            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MAIN, msgSnd)
+            msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
+            self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)
         elif (self.state == self._STM_CALIB_UI_ACT):
-            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_CALIB
-            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_CALIB, msgSnd)
+            msgSnd['dst'] = TUP_TASK_ID_UI_CALIB
+            self.msg_send_out(TUP_TASK_ID_UI_CALIB, msgSnd)
         else:
-            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MAIN
-            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MAIN, msgSnd)
+            msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
+            self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)
         #SAVE INTO MED FILE
         self.medCmdLog(str(msgSnd))
         #PRINT to local
@@ -132,19 +131,19 @@ class tupTaskVision(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
     
     def funcVisionErrTrace(self, myString):
         msgSnd = {}
-        msgSnd['mid'] = ModVmCfg.TUP_MSGID_TRACE
+        msgSnd['mid'] = TUP_MSGID_TRACE
         msgSnd['src'] = self.taskId
         msgSnd['content'] = myString
         self.fsm_set(self._STM_ACTIVE)
         if (self.state == self._STM_MAIN_UI_ACT):
-            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MAIN
-            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MAIN, msgSnd)
+            msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
+            self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)
         elif (self.state == self._STM_CALIB_UI_ACT):
-            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_CALIB
-            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_CALIB, msgSnd)
+            msgSnd['dst'] = TUP_TASK_ID_UI_CALIB
+            self.msg_send_out(TUP_TASK_ID_UI_CALIB, msgSnd)
         else:
-            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MAIN
-            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MAIN, msgSnd)
+            msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
+            self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)
         #SAVE INTO MED FILE
         self.medErrorLog(str(msgSnd));
         #PRINT to local
@@ -155,13 +154,13 @@ class tupTaskVision(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
     def fsm_msg_calib_pic_cap_req_rcv_handler(self, msgContent):
         scale = int(msgContent['scale'])
         self.funcMotoMoveOneStep(scale, dir)        
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
 
     def fsm_msg_main_pic_cap_req_rcv_handler(self, msgContent):
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
 
     def fsm_msg_main_pic_clfy_req_rcv_handler(self, msgContent):
-        return ModVmLayer.TUP_SUCCESS;
+        return TUP_SUCCESS;
 
     '''
     SERVICE PART: 业务部分的函数，功能处理函数
@@ -241,14 +240,13 @@ class tupTaskVision(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
             outputFrame = cv.merge([B, G, R])
             #Show picture
             #cv.imshow('Input', frame)
-            obj=ModCebsCfg.clsL1_ConfigOpr();
-            fileName = obj.combineFileNameWithDir(batch, fileNbr)
+            fileName = clsL1_ConfigOpr.combineFileNameWithDir(batch, fileNbr)
             cv.imwrite(fileName, outputFrame)
             #cv.imshow("Final output", frame)
             #waitKey(2000)
             #time.sleep(2)
             #存储scale文件
-            scaleFn = obj.combineScaleFileNameWithDir(batch, fileNbr)
+            scaleFn = clsL1_ConfigOpr.combineScaleFileNameWithDir(batch, fileNbr)
             if ModCebsCom.GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG == True:
                 self.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), fileName, scaleFn)
          
@@ -260,7 +258,7 @@ class tupTaskVision(ModVmLayer.tupTaskTemplate, ModCebsCfg.clsL1_ConfigOpr):
         if (ret == True) and (ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE == True):
             #Video capture with 3 second
             fourcc = cv.VideoWriter_fourcc(*'mp4v')  #mp4v(.mp4), XVID(.avi)
-            fileNameVideo = obj.combineFileNameVideoWithDir(batch, fileNbr)
+            fileNameVideo = clsL1_ConfigOpr.combineFileNameVideoWithDir(batch, fileNbr)
             out = cv.VideoWriter(fileNameVideo, fourcc, fps, (width, height))
             cnt = 0
             targetCnt = fps * ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC
