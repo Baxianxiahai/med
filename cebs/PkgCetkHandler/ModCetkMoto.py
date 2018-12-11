@@ -41,7 +41,7 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate):
 
     def __init__(self):
         ModVmLayer.tupTaskTemplate.__init__(self, taskid=ModVmCfg.TUP_TASK_ID_MOTO, taskName="TASK_MOTO")
-        ModVmLayer.TUP_GL_CFG.save_task_by_id(ModVmCfg.TUP_TASK_ID_TIMER, self)
+        #ModVmLayer.TUP_GL_CFG.save_task_by_id(ModVmCfg.TUP_TASK_ID_MOTO, self)
         self.fsm_set(ModVmLayer.TUP_STM_NULL)
         self.IsSerialOpenOk = False
         #STM MATRIX
@@ -116,7 +116,8 @@ class tupTaskMoto(ModVmLayer.tupTaskTemplate):
             msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MENG
             self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MENG, msgSnd)
         else:
-            self.tup_err_print("Trace log function to UI error as in wrong STM.")
+            msgSnd['dst'] = ModVmCfg.TUP_TASK_ID_UI_MAIN
+            self.msg_send_out(ModVmCfg.TUP_TASK_ID_UI_MAIN, msgSnd)
         return
     
     #主界面模式下的归零

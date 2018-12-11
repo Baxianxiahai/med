@@ -49,6 +49,12 @@ from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsCalib
 from PkgCebsHandler import ModCebsGpar
 from PkgCebsHandler import ModCebsMeng
+#
+from multiprocessing import Queue, Process
+from PkgVmHandler import ModVmCfg
+from PkgVmHandler import ModVmLayer
+from PkgCebsHandler import ModCebsCom
+from PkgCebsHandler import ModCebsCfg
 
 
 '''
@@ -103,12 +109,16 @@ MAIN => 主入口
 第一主入口
 Main Windows
 '''
-class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
+class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModVmLayer.tupTaskTemplate):
     sgL4MainWinUnvisible = pyqtSignal()
     sgL4MainWinVisible = pyqtSignal()
 
     def __init__(self):    
         super(SEUI_L4_MainWindow, self).__init__()
+        #初始化任务
+        ModVmLayer.tupTaskTemplate.__init__(self, taskid=ModVmCfg.TUP_TASK_ID_UI_MAIN, taskName="TASK_UI_MAIN")
+        ModVmLayer.TUP_GL_CFG.save_task_by_id(ModVmCfg.TUP_TASK_ID_UI_MAIN, self)
+        print("MAIN UI: ", ModVmLayer.TUP_GL_CFG.taskTab[ModVmCfg.TUP_TASK_ID_UI_MAIN])
         #SYSTEM LEVEL UI INIT, 系统级别的界面初始化
         self.setupUi(self)
         #USER LAVEL UI INIT, 用户级别的界面初始化
@@ -179,11 +189,11 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow):
         self.instL3VisCapProc = ModCebsVision.clsL2_VisCapProc(self, 1);
         res = self.instL3VisCapProc.funcVisionDetectAllCamera()
         '''
-        res = ModCebsVision.clsL2_VisCapProc.funcVisionDetectAllCamera(self)
-        self.slot_print_trigger(res)
+        #res = ModCebsVision.clsL2_VisCapProc.funcVisionDetectAllCamera(self)
+        #self.slot_print_trigger(res)
         #STEP8:抢占硬件资源
-        ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(5)
-        self.instL3CtrlSchdThd.funcCtrlGetSpsRights(1)
+        #ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(5)
+        #self.instL3CtrlSchdThd.funcCtrlGetSpsRights(1)
         #STEP9: SEND BACK-ZERO SIGNAL TO MOTO, 发送归零信号给马达 #MAKE MOTO GO BACK TO ZERO
         #self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
 

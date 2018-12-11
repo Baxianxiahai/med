@@ -16,7 +16,7 @@ class tupTaskTimer(ModVmLayer.tupTaskTemplate):
 
     def __init__(self):
         ModVmLayer.tupTaskTemplate.__init__(self, taskid=ModVmCfg.TUP_TASK_ID_TIMER, taskName="TASK_TIMER")
-        ModVmLayer.TUP_GL_CFG.save_task_by_id(ModVmCfg.TUP_TASK_ID_TIMER, self)
+        #ModVmLayer.TUP_GL_CFG.save_task_by_id(ModVmCfg.TUP_TASK_ID_TIMER, self)
         self.fsm_set(ModVmLayer.TUP_STM_NULL)
         #STM MATRIX
         self.add_stm_combine(ModVmLayer.TUP_STM_INIT, ModVmCfg.TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)

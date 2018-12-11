@@ -30,23 +30,24 @@ class tupGlbCfg():
         self.TUP_MSGID_MAX = 1000;
         self.TUP_STATE_MAX = 50;
         self.TUP_TASK_MAX = 200;
-        self.taskTab = ['' for i in range(self.TUP_TASK_MAX)]
+        self.queTab = [Queue() for i in range(self.TUP_TASK_MAX)]
+        #self.taskTab = ['' for i in range(self.TUP_TASK_MAX)]
         
-    def save_task_by_id(self, taskId, taskObj):
-        if (taskId < 0) or (taskId >= self.TUP_TASK_MAX):
-            return TUP_FAILURE
-        self.taskTab.insert(taskId, taskObj)
-        return TUP_SUCCESS;
+#     def save_task_by_id(self, taskId, taskObj):
+#         if (taskId < 0) or (taskId >= self.TUP_TASK_MAX):
+#             return TUP_FAILURE
+#         self.taskTab.insert(taskId, taskObj)
+#         return TUP_SUCCESS;
 
-    def get_task_by_id(self, taskId):
-        if (taskId < 0) or (taskId >= self.TUP_TASK_MAX):
-            return TUP_FAILURE, _
-        return TUP_SUCCESS, self.taskTab[taskId]
+#     def get_task_by_id(self, taskId):
+#         if (taskId < 0) or (taskId >= self.TUP_TASK_MAX):
+#             return TUP_FAILURE, _
+#         return TUP_SUCCESS, self.taskTab[taskId]
     
-    def tup_trc_print(self, taskid, string):
-        ret,_ = self.get_task_by_id(taskid)
-        if (ret == TUP_SUCCESS):
-            print(time.asctime(), ", TRC_TSKID_", taskid, ": ", str(string))
+#     def tup_trc_print(self, taskid, string):
+#         ret,_ = self.get_task_by_id(taskid)
+#         if (ret == TUP_SUCCESS):
+#             print(time.asctime(), ", TRC_TSKID_", taskid, ": ", str(string))
         
 TUP_GL_CFG = tupGlbCfg()
 
@@ -57,7 +58,7 @@ TUP_GL_CFG = tupGlbCfg()
 class tupTaskTemplate():
     taskId = 0;
     taskName = '';
-    queue = Queue();
+    queue = '';
     process = '';
     state = 0;
     msgStateMatrix = []   
@@ -66,7 +67,8 @@ class tupTaskTemplate():
         super(tupTaskTemplate, self).__init__()
         self.taskId = taskid;
         self.taskName = taskName;
-        self.queue = Queue();
+        #self.queue = Queue();
+        self.queue = TUP_GL_CFG.queTab[taskid];
         self.process = '';
         self.state = 0;
         self.msgStateMatrix = [[ '' for i in range(TUP_GL_CFG.TUP_MSGID_MAX)] for j in range(TUP_GL_CFG.TUP_STATE_MAX)]
@@ -100,10 +102,10 @@ class tupTaskTemplate():
             self.tup_trace(str(msg))
 
     def msg_send_out(self, taskDestId, msg):
-        ret, taskObj = TUP_GL_CFG.get_task_by_id(taskDestId)
-        if (ret == TUP_FAILURE):
+        if (taskDestId <0) or (taskDestId >= TUP_GL_CFG.TUP_TASK_MAX):
             return TUP_FAILURE;
-        taskObj.get_task_queue().put(msg)
+        print("MsgQue = ", TUP_GL_CFG.queTab[taskDestId])
+        TUP_GL_CFG.queTab[taskDestId].put(msg)
 
     def add_stm_combine(self, state, msgid, proc):
         if (state < 0) or (state >= TUP_GL_CFG.TUP_STATE_MAX) or (msgid < 0) or (msgid >= TUP_GL_CFG.TUP_MSGID_MAX):
