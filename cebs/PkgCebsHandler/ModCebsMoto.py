@@ -492,6 +492,7 @@ class clsL1_MdcThd(QThread):
             self.funcMdctdDebugPrint("L1MDCT: Not in SND state and can not continue support this command!")
             return -1,0
         return self.funcSendCmdPack(cmdId, par1, par2, par3, par4)
+         
     
     #命令打包
     def funcSendCmdPack(self, cmdId, par1, par2, par3, par4):
@@ -523,6 +524,8 @@ class clsL1_MdcThd(QThread):
             fmt = "<H";
             byteCrc = struct.pack(fmt, crc)
             byteDataBuf += byteCrc
+            
+                
             #打印完整的BYTE系列
             index=0
             outBuf=''
@@ -531,6 +534,7 @@ class clsL1_MdcThd(QThread):
                 index+=1
             
             self.funcMdctdDebugPrint("L1MDCT: SND CMD = " + outBuf)
+            
             res, Buf = self.funcCmdSend(byteDataBuf)
             if (res > 0):
                 return Buf
@@ -579,20 +583,28 @@ class clsL1_MdcThd(QThread):
             return -1,0
         #设置一圈步伐
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_PPC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_ROUND, 0, 0, 0)
+        self.funcMdctdDebugPrint("SET_PPC:%d,%d,%d,%d"%(ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_ROUND,0,0,0))
         #设置激活
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_WK_MODE_CMID, 1, 1, 0, 0)
+        self.funcMdctdDebugPrint("SET_WK_MODE:%d,%d,%d,%d"%(1,1,0,0))
         #设置速度
-        #self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_SPD_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, 0, 0)
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_SPD_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, 0, 0)
+        self.funcMdctdDebugPrint("SET_MV_SPD:%d,%d,%d,%d"%(ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD,ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD,0,0))
         #设置加速度
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ACC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_ACC, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_ACC, 0, 0)
+        self.funcMdctdDebugPrint("SET_ACC:%d,%d,%d,%d"%(ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_ACC,ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_ACC,0,0))
         #设置加速度
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_DEACC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_DEACC, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_DEACC, 0, 0)
+        self.funcMdctdDebugPrint("SET_DEACC:%d,%d,%d,%d"%(ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_DEACC,ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_DEACC,0,0))
         #设置归零速度
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ZO_SPD_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, 0, 0)
+        self.funcMdctdDebugPrint("SET_ZO_SPD:%d,%d,%d,%d"%(ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD,ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD,0,0))
         #设置归零加速度
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ZO_ACC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_ACC, ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_ACC, 0, 0)
+        self.funcMdctdDebugPrint("SET_ZO_ACC:%d,%d,%d,%d"%(ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_ACC,ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_ACC,0,0))
         #全部停止
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_STP_IMD_CMID, 1, 1, 0, 0)
+        self.funcMdctdDebugPrint("STP_IMD:%d,%d,%d,%d"%(1,1,0,0)) 
     
     #停止动作
     def funcExecStopNormal(self):
