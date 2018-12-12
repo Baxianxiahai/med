@@ -8,7 +8,11 @@
 
 
 //=ZJL, 2018/12/12, CURRENT_SW_DELIVERY R1.35 =>CEBS
-= 建立起基本的任务框架
+= 建立起基本的任务框架 
+= 进程模式改为了线程模式，速度快的不是一点点。VM中任务启动直接控制。
+= 改为线程模式之后，可以使用全局变量来进行参数和对象传递
+= ERR: funcVisionDetectAllCamera()
+
 
 //=ZJL, 2018/12/10, CURRENT_SW_DELIVERY R1.34 =>CEBS
 = 使用新的架构，创建VM机制

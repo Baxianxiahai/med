@@ -6,6 +6,7 @@ Created on 2018年12月8日
 
 import random
 import time
+import threading
 from multiprocessing import Queue, Process
 from PkgVmHandler.ModVmCfg import *
 
@@ -111,15 +112,30 @@ class tupTaskTemplate():
         if (self.glTab.dbg_level == 1):
             self.tup_trace(str(msg))
 
+    def msg_send(self, mid, dst, src, content):
+        msgSnd = {}
+        msgSnd['mid'] = mid
+        msgSnd['src'] = src
+        msgSnd['dst'] = dst
+        msgSnd['content'] = content
+        if (self.taskId == dst):
+            self.msg_send_in(msgSnd)
+        else:
+            self.msg_send_out(dst, msgSnd)
+
     def add_stm_combine(self, state, msgid, proc):
         if (state < 0) or (state >= self.glTab.TUP_STATE_MAX) or (msgid < 0) or (msgid >= self.glTab.TUP_MSGID_MAX):
             self.tup_err_print("Add_stm_combine Error.")
             return -1
         self.msgStateMatrix[state][msgid] = proc
         return 1
-
+    
+    #进程和线程方法
     def task_create(self):
-        self.process = Process(target=self.task_handler_enginee, args=(self.queue,))
+        #进程模式
+        #self.process = Process(target=self.task_handler_enginee, args=(self.queue,))
+        #线程模式
+        self.process = threading.Thread(target=self.task_handler_enginee, args=(self.queue,))
             
     def task_handler_enginee(self, myque):
         while True:

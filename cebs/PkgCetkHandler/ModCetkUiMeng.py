@@ -31,7 +31,6 @@ class tupTaskUiMeng(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_init_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
-        time.sleep(0.5) #WAIT FOR OTHER TASK STARTUP
         return TUP_SUCCESS;
 
     def fsm_msg_restart_rcv_handler(self, msgContent):

@@ -79,7 +79,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_init_rcv_handler(self, msgContent):
         #全局搜索摄像头
-        res = self.funcVisionDetectAllCamera()
+        #res = self.funcVisionDetectAllCamera()
+        res = 1
         self.funcVisionLogTrace(str(res))
         #INIT
         if (self.funcGetCamRightAndInit() < 0):

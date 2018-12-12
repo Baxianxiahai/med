@@ -13,8 +13,8 @@ import platform
 from PyQt5 import QtWidgets, QtGui, QtCore,QtWebEngineWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, qApp, QAction, QFileDialog, QTextEdit, QMessageBox
 from PyQt5.QtCore import pyqtSlot, pyqtSignal
-from PyQt5.uic import loadUi
 from PyQt5.QtGui import QIcon
+#from PyQt5.uic import loadUi
 
 #Form class
 from form_qt.cebsmainform import Ui_cebsMainWindow
@@ -24,18 +24,11 @@ from form_qt.cebsmengform import Ui_cebsMengForm
 from form_qt.cebsBroswerForm import Ui_BroswerForm
 
 #Local Class
-#
 from PkgVmHandler import ModVmCfg
 from PkgVmHandler import ModVmLayer
 from PkgCebsHandler import ModCebsCom  #Common Support module
 from PkgCebsHandler import ModCebsCfg
 
-#from PkgCebsHandler import ModCebsMoto
-# from PkgCebsHandler import ModCebsCtrlSchd
-# from PkgCebsHandler import ModCebsVision
-# from PkgCebsHandler import ModCebsCalib
-# from PkgCebsHandler import ModCebsGpar
-# from PkgCebsHandler import ModCebsMeng
 
 
 
@@ -50,7 +43,6 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCfg.cl
 
     def __init__(self, TaskInstMainUi, TaskInstCalibUi, TaskInstGparUi, TaskInstMenUi, TaskInstBrowUi):    
         super(SEUI_L4_MainWindow, self).__init__()
-        #super(ModCebsCfg.clsL1_ConfigOpr, self).__init__()
         #存储UI界面的对象指针
         self.TkMainUi = TaskInstMainUi
         self.TkCalibUi = TaskInstCalibUi
@@ -84,16 +76,15 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCfg.cl
     #MUST Load global parameters, to initialize different UI and update the stored parameters.
     def initParameter(self):
         #STEP1: INI FILE CONFIGURATION, 初始化配置文件
-        #self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr()
-        #self.instL1ConfigOpr.func_read_global_par_from_cfg_file();  #读取本地文件的配置数据，并写入全局变量中来
         self.func_read_global_par_from_cfg_file();  #读取本地文件的配置数据，并写入全局变量中来
-        #self.instL1ConfigOpr.updateCtrlCntInfo() #更新进度控制参量
         self.updateCtrlCntInfo() #更新进度控制参量
+
         #STEP2: START SUB-UI, 启动子界面        
         self.instL4CalibForm = SEUI_L4_CalibForm(self.TkCalibUi)
         self.instL4GparForm = SEUI_L4_GparForm(self.TkGparUi)
         self.instL4MengForm = SEUI_L4_MengForm(self.TkMenUi)
         #self.instL4BroserForm=SEUI_L4_BroswerForm(self.TkBrowUi)
+        
         #STEP3: CONNECT SIGNAL SLOT, 连接信号槽
         self.sgL4MainWinUnvisible.connect(self.funcMainWinUnvisible);
         self.sgL4MainWinVisible.connect(self.funcMainWinVisible);
@@ -101,7 +92,11 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCfg.cl
         self.instL4GparForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.instL4MengForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         #self.instL4BroserForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
-
+        
+        #print("TkMainUi.qtsTkUiMainPrint = ", self.TkMainUi.qstSubTask.qtsTkUiMainPrint)
+        #self.TkMainUi.qtsTkUiMainPrint.connect(self.med_debug_print)
+        #STEP4: Add signal slot = 解决不了信号槽的问题，使用传递指针的方式
+        self.TkMainUi.funcSaveUiInstance(self)
 
     def aboutCompanyBox(self):
         QMessageBox.about(self, '公司信息', '上海小慧智能科技有限公司, 上海纳贤路800号，科海大厦3楼')   
@@ -121,11 +116,11 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCfg.cl
         self.textEdit_runProgress.ensureCursorVisible()
         self.textEdit_runProgress.insertPlainText("")
     
-    #
+    '''
     #  SLOT FUNCTION, 槽函数部分
     #    DO NOT MODIFY FUNCTION NAMES, 以下部分为系统接口对应的槽函数，函数命名不得动
     #
-    #
+    '''
     def slot_print_trigger(self, info):
         self.med_debug_print(info)
 
@@ -201,16 +196,18 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCfg.cl
 
     #Test functions
     def slot_runpg_test(self):
-        res = {'nothing!'}
-        self.med_debug_print("TEST: " + str(res))
+        #res = {'nothing!'}
+        #self.med_debug_print("TEST: " + str(res))
         #obj = ModCebsVision.clsL2_VisCapProc(self)
         #obj.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), "ref.jpg", "scale_ref.jpg")
+        
+        self.TkMainUi.funcPrintTestCalledByQt("TEST! Send test msg to UI_MAIN and then send back to UI show by signal slot.")
 
-    #
+    '''
     #  SLOT FUNCTION, 槽函数部分
     #    DO NOT MODIFY SLOT FUNCTIONS NAME, 以下部分为系统接口对应的槽函数，函数命名不得动
     #
-    #
+    '''
     #Control UI visible
     def funcMainWinVisible(self):
         if not self.isVisible():
