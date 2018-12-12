@@ -41,8 +41,40 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_time_out_rcv_handler(self, msgContent):
         return TUP_SUCCESS;
 
+    #主界面承接过来的执行函数
+    def func_ui_click_pilot_mv(self, scale, dir):
+        print("I am func_ui_click_pilot_mv!")
 
+    def func_ui_click_force_move(self, dir):
+        print("I am func_ui_click_force_move!")
 
+    def func_ui_click_right_up_set(self):
+        print("I am func_ui_click_right_up_set!")
+
+    def func_ui_click_left_down_set(self):
+        print("I am func_ui_click_left_down_set!")
+
+    def func_ui_click_pilot_start(self):
+        print("I am func_ui_click_pilot_start!")
+
+    def func_ui_click_pilot_stop(self):
+        print("I am func_ui_click_pilot_stop!")
+        
+    def func_ui_click_pilot_move_0(self):
+        print("I am func_ui_click_pilot_move_0!")        
+        
+    def func_ui_click_pilot_move_n(self, holeNbr):
+        print("I am func_ui_click_pilot_move_n!")
+        
+    def func_ui_click_cap_pic_by_hole(self, holeNbr):
+        print("I am func_ui_click_cap_pic_by_hole!")        
+        
+    def func_ui_click_calib_close(self):
+        print("I am func_ui_click_calib_close!")
+        
+    #切换界面
+    def func_ui_click_calib_switch_to_main(self):
+        print("I am func_ui_click_calib_switch_to_main!")          
 
 
 

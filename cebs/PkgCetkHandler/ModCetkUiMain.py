@@ -6,6 +6,13 @@ Created on 2018年12月11日
 
 import random
 import time
+import sys
+import json
+import os
+import re
+import urllib
+import http
+import socket
 from multiprocessing import Queue, Process
 from PkgVmHandler.ModVmCfg import *
 from PkgVmHandler.ModVmLayer import *
@@ -13,7 +20,6 @@ from PkgCebsHandler.ModCebsCom import *
 from PkgCebsHandler.ModCebsCfg import *
 from PkgVmHandler.ModVmConsole import *
 from PkgVmHandler.ModVmTimer import *
-
 
 class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_ACTIVE = 3
@@ -44,6 +50,55 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_trace_inc_rcv_handler(self, msgContent):
         return TUP_SUCCESS;
+    
+    def funcPrintTest(self):
+        print("I am MAIN UI task and have a test!")
+
+    #主界面承接过来的执行函数
+    def func_ui_click_cap_start_nor(self):
+        print("I am func_ui_click_cap_start_nor!")
+
+    def func_ui_click_cap_start_flu(self):
+        print("I am func_ui_click_cap_start_flu!")
+
+    def func_ui_click_cap_stop(self):
+        print("I am func_ui_click_cap_stop!")
+    
+    def func_ui_click_move_zero(self):
+        print("I am func_ui_click_move_zero!")
+
+    def func_ui_click_clf_start_nor(self):
+        print("I am func_ui_click_clf_start_nor!")
+
+    def func_ui_click_clf_start_flu(self):
+        print("I am func_ui_click_clf_start_flu!")        
+        
+    def func_ui_click_clf_stop(self):
+        print("I am func_ui_click_clf_stop!")        
+    
+    #切换界面
+    def func_ui_click_calib_start(self):
+        print("I am func_ui_click_calib_start!")
+        #切换界面
+        #执行命令 
+    
+    #切换界面
+    def func_ui_click_gpar_start(self):
+        print("I am func_ui_click_gpar_start!")    
+    
+    #切换界面
+    def func_ui_click_meng_start(self):
+        print("I am func_ui_click_meng_start!")    
+
+    #切换界面
+    def func_ui_click_main_start(self):
+        print("I am func_ui_click_main_start!")    
+
+
+
+
+
+
 
 
 

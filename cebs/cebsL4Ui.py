@@ -1176,6 +1176,6 @@ def cebs_l4ui_main_form_entry():
     mainWindow = SEUI_L4_MainWindow()
     mainWindow.show()
     splash.hide()
-    sys.exit(app.exec_())    
+    sys.exit(app.exec_())
     
     

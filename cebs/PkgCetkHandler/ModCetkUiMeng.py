@@ -41,6 +41,23 @@ class tupTaskUiMeng(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_time_out_rcv_handler(self, msgContent):
         return TUP_SUCCESS;
 
+    #主界面承接过来的执行函数
+    def func_ui_click_pilot_mv(self, scale, dir):
+        print("I am func_ui_click_pilot_mv!")
+
+    def func_ui_click_send_command(self, cmdid, par1, par2, par3, par4):
+        print("I am func_ui_click_send_command!")
+        return 1
+    
+    #切换界面
+    def func_ui_click_meng_switch_to_main(self):
+        print("I am func_ui_click_meng_switch_to_main!")            
+        
+
+
+
+
+
 
 
 

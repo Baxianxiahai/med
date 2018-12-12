@@ -41,6 +41,40 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_time_out_rcv_handler(self, msgContent):
         return TUP_SUCCESS;
 
+    #主界面承接过来的执行函数
+    def func_ui_click_pic_file_load(self, fn):
+        print("I am func_ui_click_pic_file_load!")
+    
+    def func_ui_click_pic_train(self):
+        print("I am func_ui_click_pic_train!")
+        
+    def func_ui_click_gpar_close(self):
+        print("I am func_ui_click_gpar_close!")
+        
+    #切换界面
+    def func_ui_click_gpar_switch_to_main(self):
+        print("I am func_ui_click_gpar_switch_to_main!")               
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

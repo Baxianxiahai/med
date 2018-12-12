@@ -6,7 +6,7 @@ Created on 2018年12月8日
 
 #TASK ID defination
 TUP_TASK_ID_NULL        = 0
-TUP_TASK_ID_MAIN_ENTRY  = 1
+TUP_TASK_ID_TUPCONSL    = 1
 TUP_TASK_ID_VMCONSL     = 2
 TUP_TASK_ID_TIMER       = 3
 TUP_TASK_ID_CALIB       = 10

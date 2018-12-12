@@ -7,8 +7,8 @@
 
 
 
-
-
+//=ZJL, 2018/12/12, CURRENT_SW_DELIVERY R1.35 =>CEBS
+= 建立起基本的任务框架
 
 //=ZJL, 2018/12/10, CURRENT_SW_DELIVERY R1.34 =>CEBS
 = 使用新的架构，创建VM机制

@@ -7,29 +7,12 @@ Created on 2018/4/29
 ####!/usr/bin/python3.6
 #### -*- coding: UTF-8 -*-
 
-import random
 import sys
 import time
-import json
-import os
-import re
-import urllib
-import http
-import socket
-import hashlib
-from ctypes import *
-import serial
-import serial.tools.list_ports
-import string
 import platform
-
-#System lib
 from PyQt5 import QtWidgets, QtGui, QtCore,QtWebEngineWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, qApp, QAction, QFileDialog, QTextEdit
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, qApp, QAction, QFileDialog, QTextEdit, QMessageBox
+from PyQt5.QtCore import pyqtSlot, pyqtSignal
 from PyQt5.uic import loadUi
 from PyQt5.QtGui import QIcon
 
@@ -41,66 +24,18 @@ from form_qt.cebsmengform import Ui_cebsMengForm
 from form_qt.cebsBroswerForm import Ui_BroswerForm
 
 #Local Class
-from PkgCebsHandler import ModCebsCom  #Common Support module
-from PkgCebsHandler import ModCebsMoto
-from PkgCebsHandler import ModCebsCtrlSchd
-from PkgCebsHandler import ModCebsVision
-from PkgCebsHandler import ModCebsCfg
-from PkgCebsHandler import ModCebsCalib
-from PkgCebsHandler import ModCebsGpar
-from PkgCebsHandler import ModCebsMeng
 #
-from multiprocessing import Queue, Process
 from PkgVmHandler import ModVmCfg
 from PkgVmHandler import ModVmLayer
-from PkgCebsHandler import ModCebsCom
+from PkgCebsHandler import ModCebsCom  #Common Support module
 from PkgCebsHandler import ModCebsCfg
 
-
-'''
-SYSTEM DESIGN FRAMEWORK, 系统设计框架
-MAIN => 主入口
-    |--SEUI_L4_MainWindow => 主界面
-        |---clsL3_CtrlSchdThread => 控制调度线程
-            |---clsL2_VisCapProc => 图像抓取过程 
-            |---clsL2_VisCfyProc => 图像识别线程
-            |---clsL2_MotoProc => 马达控制任务
-                |---clsL1_MotoDrvApi => 马达驱动接口
-    |---SEUI_L4_CalibForm => 校准界面
-        |---clsL3_CalibProc => 校准任务
-            |---clsL2_CalibPilotThread => 校准巡游线程
-            |---clsL2_CalibCamDispThread => 摄像头显示视频线程
-            |---clsL2_MotoProc => 马达控制任务
-                |---clsL1_MotoDrvApi => 马达驱动接口
-    |---SEUI_L4_GparForm => 参数设置界面
-        |---clsL3_GparProc => 参数填写接口
-    |---CommonLib
-        |---clsL1_ConfigOpr => 本地配置文件接口
-            |---clsL0_MedCfgPar => 配置参数
-            |---clsL0_MedPlatePar => 托盘参数
-            |---clsL0_MedPicPar=> 图像参数
-            |---clsL0_MedSpsPar=> 串口参数
-            |---clsL0_MedHandlerPar=> 全局对象和临界资源锁参数
-    |---SEUI_L4_MengForm => 马达工程模式界面
-        |---clsL3_MengProc => 马达工程模式参数填写接口
-                |---clsL1_MdcThd => 自研马达控制器任务
-
-线程启动过程
-    SEUI_L4_MainWindow
-        -> clsL3_CtrlSchdThread  => 调度任务，静态，已经完善对该状态的改造
-                |---clsL1_MdcThd => 自研马达控制器任务 - 被启动第一个线程
-    -> SEUI_L4_CalibForm
-        -> clsL3_CalibProc
-            -> clsL2_CalibPilotThread  =>巡游任务，静态，简单的工作任务，使用信号槽触发，不需要状态机
-            -> clsL2_CalibCamDispThread  => 摄像头显示图像任务，动态
-                |---clsL1_MdcThd => 自研马达控制器任务 - 被启动第二个线程
-    -> SEUI_L4_GparForm
-    -> SEUI_L4_MengForm
-                |---clsL1_MdcThd => 自研马达控制器任务 - 被启动第三个线程
-
-注意：信号槽，只能在线程和任务之间传递，所以普通的CLASS是不能增加信号槽的，设计机制时需要注意
-
-'''
+#from PkgCebsHandler import ModCebsMoto
+# from PkgCebsHandler import ModCebsCtrlSchd
+# from PkgCebsHandler import ModCebsVision
+# from PkgCebsHandler import ModCebsCalib
+# from PkgCebsHandler import ModCebsGpar
+# from PkgCebsHandler import ModCebsMeng
 
 
 
@@ -109,18 +44,26 @@ MAIN => 主入口
 第一主入口
 Main Windows
 '''
-class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModVmLayer.tupTaskTemplate):
+class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCfg.clsL1_ConfigOpr):
     sgL4MainWinUnvisible = pyqtSignal()
     sgL4MainWinVisible = pyqtSignal()
 
-    def __init__(self):    
+    def __init__(self, TaskInstMainUi, TaskInstCalibUi, TaskInstGparUi, TaskInstMenUi, TaskInstBrowUi):    
         super(SEUI_L4_MainWindow, self).__init__()
+        #super(ModCebsCfg.clsL1_ConfigOpr, self).__init__()
+        #存储UI界面的对象指针
+        self.TkMainUi = TaskInstMainUi
+        self.TkCalibUi = TaskInstCalibUi
+        self.TkGparUi = TaskInstGparUi
+        self.TkMenUi = TaskInstMenUi
+        self.TkBrowUi = TaskInstBrowUi
         #SYSTEM LEVEL UI INIT, 系统级别的界面初始化
         self.setupUi(self)
         #USER LAVEL UI INIT, 用户级别的界面初始化
         self.initUI()
         #HARDWARE LEVEL INIT, 硬件初始化
         self.initParameter()
+
         
     def initUI(self):
         self.statusBar().showMessage('SYSTEM START ')
@@ -131,7 +74,6 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModVmLayer.tu
         exitAction.triggered.connect(qApp.quit)
         toolbar = self.addToolBar('EXIT')  
         toolbar.addAction(exitAction)
-
         aboutAction = QAction(QIcon('.\icon_res\cebsAbout.ico'), '&About', self)
         aboutAction.setShortcut('Ctrl+A')
         aboutAction.setStatusTip('ABOUT SYSTEM - 上海小慧智能科技有限公司, 上海纳贤路800号科海大厦302-5')
@@ -139,59 +81,27 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModVmLayer.tu
         toolbar = self.addToolBar('About')  
         toolbar.addAction(aboutAction)
 
-
     #MUST Load global parameters, to initialize different UI and update the stored parameters.
     def initParameter(self):
-        '''
-        ModCebsCom.clsL0_MedCFlib.med_cfl_test1(self)
-        c = ModCebsCom.clsL0_MedCFlib.med_cfl_add(self, 1, 2)
-        print("Test result = %d" % (c))
-        '''
         #STEP1: INI FILE CONFIGURATION, 初始化配置文件
-        self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr()
-        self.instL1ConfigOpr.func_read_global_par_from_cfg_file()
-        self.instL1ConfigOpr.func_read_global_par_from_cfg_file();  #读取本地文件的配置数据，并写入全局变量中来
-        self.instL1ConfigOpr.updateCtrlCntInfo() #更新进度控制参量
+        #self.instL1ConfigOpr=ModCebsCfg.clsL1_ConfigOpr()
+        #self.instL1ConfigOpr.func_read_global_par_from_cfg_file();  #读取本地文件的配置数据，并写入全局变量中来
+        self.func_read_global_par_from_cfg_file();  #读取本地文件的配置数据，并写入全局变量中来
+        #self.instL1ConfigOpr.updateCtrlCntInfo() #更新进度控制参量
+        self.updateCtrlCntInfo() #更新进度控制参量
         #STEP2: START SUB-UI, 启动子界面        
-        self.instL4CalibForm = SEUI_L4_CalibForm()
-        self.instL4GparForm = SEUI_L4_GparForm()
-        self.instL4MengForm = SEUI_L4_MengForm()
-        # self.instL4BroserForm=SEUI_L4_BroswerForm()
+        self.instL4CalibForm = SEUI_L4_CalibForm(self.TkCalibUi)
+        self.instL4GparForm = SEUI_L4_GparForm(self.TkGparUi)
+        self.instL4MengForm = SEUI_L4_MengForm(self.TkMenUi)
+        #self.instL4BroserForm=SEUI_L4_BroswerForm(self.TkBrowUi)
         #STEP3: CONNECT SIGNAL SLOT, 连接信号槽
         self.sgL4MainWinUnvisible.connect(self.funcMainWinUnvisible);
+        self.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.instL4CalibForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.instL4GparForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.instL4MengForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
-        # self.instL4BroserForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
-        #STEP4: CONTROL SCHEDULE MODULE INIT, 控制调度模块初始化
-        self.instL3CtrlSchdThd = ModCebsCtrlSchd.clsL3_CtrlSchdThread(self)
-        self.instL3CtrlSchdThd.setIdentity("TASK_CtrlScheduleThread")
-        self.instL3CtrlSchdThd.sgL4MainWinPrtLog.connect(self.slot_print_trigger)
-        self.instL3CtrlSchdThd.sgL3CtrlCapStartNormal.connect(self.instL3CtrlSchdThd.funcTakePicStartNormal)
-        self.instL3CtrlSchdThd.sgL3CtrlCapStartFlu.connect(self.instL3CtrlSchdThd.funcTakePicStartFlu)
-        self.instL3CtrlSchdThd.sgL3CtrlCapStop.connect(self.instL3CtrlSchdThd.funcTakePicStop)
-        self.instL3CtrlSchdThd.sgL3CtrlClfyStartNormal.connect(self.instL3CtrlSchdThd.funcVisionClasStartNormal)
-        self.instL3CtrlSchdThd.sgL3CtrlClfyStartFlu.connect(self.instL3CtrlSchdThd.funcVisionClasStartFlu)
-        self.instL3CtrlSchdThd.sgL3CtrlClfyStop.connect(self.instL3CtrlSchdThd.funcVisionClasStop)
-        self.instL3CtrlSchdThd.sgL3CtrlCalibStart.connect(self.instL3CtrlSchdThd.funcCtrlCalibStart)
-        self.instL3CtrlSchdThd.sgL3CtrlCalibStop.connect(self.instL3CtrlSchdThd.funcCtrlCalibStop)
-        self.instL3CtrlSchdThd.sgL3CtrlMotoZero.connect(self.instL3CtrlSchdThd.funcCtrlMotoBackZero)
-        self.instL3CtrlSchdThd.start();
-        #STEP5: SET MOTO AND RELEVANT HARDWARE STATUS, 设置马达等物理硬件状态
-        self.funcMainFormSetEquInitStatus();
-        #STEP6: INTELLEGENT INIT CAMERA, 智能初始化摄像头#Detect all valid camera
-        '''
-                    方法一：搞定了，但长久初始化一个线程空间，没必要，简化模式的使用
-        self.instL3VisCapProc = ModCebsVision.clsL2_VisCapProc(self, 1);
-        res = self.instL3VisCapProc.funcVisionDetectAllCamera()
-        '''
-        #res = ModCebsVision.clsL2_VisCapProc.funcVisionDetectAllCamera(self)
-        #self.slot_print_trigger(res)
-        #STEP8:抢占硬件资源
-        #ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(5)
-        #self.instL3CtrlSchdThd.funcCtrlGetSpsRights(1)
-        #STEP9: SEND BACK-ZERO SIGNAL TO MOTO, 发送归零信号给马达 #MAKE MOTO GO BACK TO ZERO
-        #self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
+        #self.instL4BroserForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
+
 
     def aboutCompanyBox(self):
         QMessageBox.about(self, '公司信息', '上海小慧智能科技有限公司, 上海纳贤路800号，科海大厦3楼')   
@@ -222,79 +132,68 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModVmLayer.tu
     #Start taking picture
     def slot_ctrl_start_normal(self):
         self.med_debug_print("L4MAIN: Taking normal picture start......")
-        self.instL3CtrlSchdThd.sgL3CtrlCapStartNormal.emit()
+        self.TkMainUi.func_ui_click_cap_start_nor();
 
     #Start taking picture
     def slot_ctrl_start_flu(self):
         self.med_debug_print("L4MAIN: Taking Fluorescen picture start......")
-        self.instL3CtrlSchdThd.sgL3CtrlCapStartFlu.emit()
+        self.TkMainUi.func_ui_click_cap_start_flu();
     
     #Stop taking picture
     def slot_ctrl_stop(self):
         self.med_debug_print("L4MAIN: Taking picture stop......")
-        self.instL3CtrlSchdThd.sgL3CtrlCapStop.emit()
+        self.TkMainUi.func_ui_click_cap_stop();
 
     #Control moto run to Zero position
     def slot_ctrl_zero(self):
         self.med_debug_print("L4MAIN: Moto run to zero position......")
-        self.instL3CtrlSchdThd.sgL3CtrlMotoZero.emit()
+        self.TkMainUi.func_ui_click_move_zero();
 
     #Start vision classification
     def slot_ctrl_vclas_start_normal(self):
         self.med_debug_print("L4MAIN: Normal picture classification starting......")
-        self.instL3CtrlSchdThd.sgL3CtrlClfyStartNormal.emit()
+        self.TkMainUi.func_ui_click_clf_start_nor();
 
     #Start vision classification
     def slot_ctrl_vclas_start_flu(self):
         self.med_debug_print("L4MAIN: Fluorescen picture classification starting......")
-        self.instL3CtrlSchdThd.sgL3CtrlClfyStartFlu.emit()
+        self.TkMainUi.func_ui_click_clf_start_flu();
 
     #Stop vision classification
     def slot_ctrl_vclas_stop(self):
         self.med_debug_print("L4MAIN: Picture classification stop......")
-        self.instL3CtrlSchdThd.sgL3CtrlClfyStop.emit()
+        self.TkMainUi.func_ui_click_clf_stop();
 
     #Enter calibration session
     def slot_ctrl_calib(self):
-        if (self.instL3CtrlSchdThd.funcCtrlGetRightStatus() < 0):
-            self.med_debug_print("L4MAIN: CALIB error!")
-            return -1;
         self.med_debug_print("L4MAIN: Calibration start!")
-        self.instL3CtrlSchdThd.sgL3CtrlCalibStart.emit()
         if not self.instL4CalibForm.isVisible():
+            self.TkMainUi.func_ui_click_calib_start();
             self.sgL4MainWinUnvisible.emit()
-            #抢占硬件资源
-            ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(5)
-            self.instL4CalibForm.instL3CalibProc.funcCalibGetSpsRights(2);
             self.instL4CalibForm.show()
 
     #Enter parameter setting session
     def slot_gpar_start(self):
         self.med_debug_print("L4MAIN: Global parameter set start......")
         if not self.instL4GparForm.isVisible():
+            self.TkMainUi.func_ui_click_gpar_start();
             self.sgL4MainWinUnvisible.emit()
-            #这里的申请，是为了后面回到主界面，做visualWin时，统一再次抢资源所用，不然会造成不同情况下处理过程不一致的情况
-            ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(5)
             self.instL4GparForm.show()
 
     #Enter Moto Engineering Mode
     def slot_meng_sel(self):
         self.med_debug_print("L4MAIN: Moto Engineering start......")
         if not self.instL4MengForm.isVisible():
+            self.TkMainUi.func_ui_click_meng_start();
             self.sgL4MainWinUnvisible.emit()
-            #抢占硬件资源
-            ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(5)
-            self.instL4MengForm.funcGetLowLevelResource(3);
             self.instL4MengForm.show()
 
     #Enter Selection Active Hole Target Mode
     def slot_saht_sel(self):
-        self.instL4BroserForm = SEUI_L4_BroswerForm()
-        self.instL4BroserForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.med_debug_print("L4MAIN: Active Hole Selection start......")
-        if not self.instL4BroserForm.isVisible():
-            self.sgL4MainWinUnvisible.emit()
-            self.instL4BroserForm.show()
+        #if not self.instL4BroserForm.isVisible():
+            #self.sgL4MainWinUnvisible.emit()
+            #self.instL4BroserForm.show()
 
     #Clean log window
     def slot_runpg_clear(self):
@@ -304,8 +203,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModVmLayer.tu
     def slot_runpg_test(self):
         res = {'nothing!'}
         self.med_debug_print("TEST: " + str(res))
-        obj = ModCebsVision.clsL2_VisCapProc(self)
-        obj.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), "ref.jpg", "scale_ref.jpg")
+        #obj = ModCebsVision.clsL2_VisCapProc(self)
+        #obj.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), "ref.jpg", "scale_ref.jpg")
 
     #
     #  SLOT FUNCTION, 槽函数部分
@@ -316,46 +215,31 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModVmLayer.tu
     def funcMainWinVisible(self):
         if not self.isVisible():
             self.show()
-        self.instL3CtrlSchdThd.sgL3CtrlCalibStop.emit()
-        #抢占硬件资源
-        ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.acquire(5)
-        self.instL3CtrlSchdThd.funcCtrlGetSpsRights(1)
+            self.TkMainUi.func_ui_click_main_start();
         self.med_debug_print("L4MAIN: Main form welcome to come back!")
 
     #Control UI un-visible
     def funcMainWinUnvisible(self):
+        self.med_debug_print("L4MAIN: Main form hide!")
         if self.isVisible():
             self.hide()
-            self.med_debug_print("L4MAIN: Main form hide!")
-        #释放硬件资源
-        self.instL3CtrlSchdThd.funcCtrlRelSpsRights(1)
-        ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.release()
-
-    '''采用简化模式，省的启动那么多类的Instance
-    #self.instL2MotoProc = ModCebsMoto.clsL2_MotoProc(self, 1) #第一种选择
-    #if (self.instL2MotoProc.funcMotoRunningStatusInquery() == True):
-    #    self.instL2MotoProc.funcMotoStop()
-    '''
-    #Local function
-    def funcMainFormSetEquInitStatus(self):
-        if (ModCebsMoto.clsL2_MotoProc.funcMotoRunningStatusInquery(self) == True):
-            ModCebsMoto.clsL2_MotoProc.funcMotoStop(self)
 
 
 
 #第二主入口
 #Calibration Widget
-class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
+class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm, ModCebsCfg.clsL1_ConfigOpr):
     sgL4MainWinUnvisible = pyqtSignal()
     sgL4MainWinVisible = pyqtSignal()
     sgL4CalibFormActiveTrig = pyqtSignal()
 
-    def __init__(self):    
+    def __init__(self, TaskInstCalibUi):    
         super(SEUI_L4_CalibForm, self).__init__()  
+        self.TkCalibUi = TaskInstCalibUi
         self.setupUi(self)
-        self.instL3CalibProc = ModCebsCalib.clsL3_CalibProc(self)
-        self.sgL4CalibFormActiveTrig.connect(self.instL3CalibProc.funcActiveTrig)
-        self.instL1ConfigOpr1 = ModCebsCfg.clsL1_ConfigOpr()
+        #self.instL3CalibProc = ModCebsCalib.clsL3_CalibProc(self)
+        #self.sgL4CalibFormActiveTrig.connect(self.instL3CalibProc.funcActiveTrig)
+        #self.instL1ConfigOpr1 = ModCebsCfg.clsL1_ConfigOpr()
         
     def med_debug_print(self, info):
         strOut = ">> " + time.asctime() + " " + info;
@@ -435,7 +319,8 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         else:
             parMoveScale = 1;
         
-        self.instL3CalibProc.funcCalibMove(parMoveScale, "UP");
+        #self.instL3CalibProc.funcCalibMove(parMoveScale, "UP");
+        self.TkCalibUi.func_ui_click_pilot_mv(parMoveScale, "UP");
         
     def slot_calib_pilot_move_down(self):
         time.sleep(0.1)
@@ -503,7 +388,8 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         else:
             parMoveScale = 1;
         
-        self.instL3CalibProc.funcCalibMove(parMoveScale, "DOWN");    
+        #self.instL3CalibProc.funcCalibMove(parMoveScale, "DOWN");
+        self.TkCalibUi.func_ui_click_pilot_mv(parMoveScale, "DOWN");
         
     def slot_calib_pilot_move_left(self):
         time.sleep(0.1)
@@ -571,7 +457,8 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         else:
             parMoveScale = 1;
         
-        self.instL3CalibProc.funcCalibMove(parMoveScale, "LEFT"); 
+        #self.instL3CalibProc.funcCalibMove(parMoveScale, "LEFT"); 
+        self.TkCalibUi.func_ui_click_pilot_mv(parMoveScale, "LEFT");
         
     def slot_calib_pilot_move_right(self):
         time.sleep(0.1)
@@ -639,7 +526,10 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         else:
             parMoveScale = 1;
         
-        self.instL3CalibProc.funcCalibMove(parMoveScale, "RIGHT"); 
+        #self.instL3CalibProc.funcCalibMove(parMoveScale, "RIGHT");
+        self.TkCalibUi.func_ui_click_pilot_mv(parMoveScale, "RIGHT");
+        
+        
     '''
     def slot_calib_pilot_move_up(self): 
         self.timer=QTimer()
@@ -762,30 +652,36 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
         self.instL3CalibProc.funcCalibMove(parMoveScale, parMoveDir);
     '''
     def slot_calib_right_up(self):
-        self.instL3CalibProc.funcCalibRightUp();
+        #self.instL3CalibProc.funcCalibRightUp();
+        self.TkCalibUi.func_ui_click_right_up_set();
     
     def slot_calib_left_down(self):
-        self.instL3CalibProc.funcCalibLeftDown();
+        #self.instL3CalibProc.funcCalibLeftDown();
+        self.TkCalibUi.func_ui_click_left_down_set();
     
     def slot_calib_pilot_start(self):
-        self.instL3CalibProc.funcCalibPilotStart();
+        #self.instL3CalibProc.funcCalibPilotStart();
+        self.TkCalibUi.func_ui_click_pilot_start();
 
     def slot_calib_pilot_stop(self):
-        self.instL3CalibProc.funcCalibPilotStop();
+        #self.instL3CalibProc.funcCalibPilotStop();
+        self.TkCalibUi.func_ui_click_pilot_stop();
 
     def slot_calib_pilot_move_0(self):
-        self.instL3CalibProc.funcCalibPilotMove0();
+        #self.instL3CalibProc.funcCalibPilotMove0();
+        self.TkCalibUi.func_ui_click_pilot_move_0();
 
     def slot_calib_pilot_move_n(self):
         try:
             holeNbr = int(self.lineEdit_pilot_move_n.text())
         except Exception: 
             holeNbr = 1;
-        self.instL3CalibProc.funcCalibPilotMoven(holeNbr);
+        #self.instL3CalibProc.funcCalibPilotMoven(holeNbr);
+        self.TkCalibUi.func_ui_click_pilot_move_n(holeNbr);
     
     #CAMERA ENABLE: Not support any more!
-    def slot_calib_pilot_camera_enable(self):
-        self.instL3CalibProc.funcCalibPilotCameraEnable();
+#     def slot_calib_pilot_camera_enable(self):
+#         self.instL3CalibProc.funcCalibPilotCameraEnable();
 
     #CAMERA CAPTURE: new function support
     def slot_calib_pilot_camera_cap(self):
@@ -793,47 +689,52 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm):
             holeNbr = int(self.lineEdit_pilot_move_n.text())
         except Exception: 
             holeNbr = 1;        
-        self.instL3CalibProc.funcCalibPilotCameraCapture(holeNbr);
+        #self.instL3CalibProc.funcCalibPilotCameraCapture(holeNbr);
+        self.TkCalibUi.func_ui_click_cap_pic_by_hole(holeNbr);
 
     def slot_calib_fm_up(self):
-        self.instL3CalibProc.funcCalibForceMove('UP');
+        #self.instL3CalibProc.funcCalibForceMove('UP');
+        self.TkCalibUi.func_ui_click_force_move('UP');
     
     def slot_calib_fm_down(self):
-        self.instL3CalibProc.funcCalibForceMove('DOWN');
+        #self.instL3CalibProc.funcCalibForceMove('DOWN');
+        self.TkCalibUi.func_ui_click_force_move('DOWN');
 
     def slot_calib_fm_left(self):
-        self.instL3CalibProc.funcCalibForceMove('LEFT');
+        #self.instL3CalibProc.funcCalibForceMove('LEFT');
+        self.TkCalibUi.func_ui_click_force_move('LEFT');
 
     def slot_calib_fm_right(self):
-        self.instL3CalibProc.funcCalibForceMove('RIGHT');
+        #self.instL3CalibProc.funcCalibForceMove('RIGHT');
+        self.TkCalibUi.func_ui_click_force_move('RIGHT');
     
     def slot_calib_close(self):
-        try:
-            self.instL3CalibProc.funcCtrlCalibComp()
-        except Exception:
-            self.instL1ConfigOpr1.medErrorLog("L4CALIBMAIN: Execute instL3CalibProc.funcCtrlCalibComp() get error feedback.")
+#         try:
+#             self.instL3CalibProc.funcCtrlCalibComp()
+#         except Exception:
+#             self.instL1ConfigOpr1.medErrorLog("L4CALIBMAIN: Execute instL3CalibProc.funcCtrlCalibComp() get error feedback.")
         self.close()
 
     def closeEvent(self, event):
-        self.instL3CalibProc.funcRecoverWorkingEnv()
-        #释放硬件资源
-        self.instL3CalibProc.funcCalibRelSpsRights(2)
-        ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.release()
+        #self.instL3CalibProc.funcRecoverWorkingEnv()
+        self.TkCalibUi.func_ui_click_calib_close()
+        self.TkCalibUi.func_ui_click_calib_switch_to_main()
         self.sgL4MainWinVisible.emit()
         self.close()
 
 
 #3rd Main Entry, 第三主入口
 #Calibration Widget
-class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
+class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_ConfigOpr):
     sgL4MainWinUnvisible = pyqtSignal()
     sgL4MainWinVisible = pyqtSignal()
 
-    def __init__(self):    
-        super(SEUI_L4_GparForm, self).__init__()  
+    def __init__(self, TaskInstGparUi):    
+        super(SEUI_L4_GparForm, self).__init__()
+        self.TkGparUi = TaskInstGparUi
         self.setupUi(self)
-        self.instL3GparProc = ModCebsGpar.clsL3_GparProc(self)
-        self.instL1ConfigOpr2=ModCebsCfg.clsL1_ConfigOpr()
+        #self.instL3GparProc = ModCebsGpar.clsL3_GparProc(self)
+        #self.instL1ConfigOpr2=ModCebsCfg.clsL1_ConfigOpr()
         #Update UI interface last time parameter setting
         self.funcGlobalParReadSet2Ui()
 
@@ -860,7 +761,8 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
             fileName, _ = QFileDialog.getOpenFileName(self, "选取文件", "/home/", "All Files (*);;Text Files (*.txt)")   #设置文件扩展名过滤,注意用双分号间隔
         #将文件导入到目标框中
         if (fileName != ''):
-            self.instL3GparProc.funcPicFileLoad(fileName)
+            #self.instL3GparProc.funcPicFileLoad(fileName)
+            self.TkGparUi.func_ui_click_pic_file_load(fileName)
 
     def slot_gpar_pic_train(self):
         #Firstly read parameter into classified variable sets, to let Train Func use.
@@ -868,7 +770,8 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         #在训练之前，需要将系统参数保存在临时变量中，借助于全局变量的传递，进行算法训练。一旦完成，还要再回写。
         savetmp = ModCebsCom.GLVIS_PAR_SAV   #将SAV值传给临时变量
         ModCebsCom.GLVIS_PAR_OFC = ModCebsCom.GLVIS_PAR_SAV   #将SAV值传给OFC
-        self.instL3GparProc.funcPicFileTrain()              #训练
+        #self.instL3GparProc.funcPicFileTrain()              #训练
+        self.TkGparUi.func_ui_click_pic_train()
         ModCebsCom.GLVIS_PAR_OFC = savetmp                  #SAV给OFC
         
     #
@@ -888,23 +791,6 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
             ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN = int(self.lineEdit_gpar_picTti.text());
         except Exception: 
             ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN = 60;
-            
-#         try: 
-#             ModCebsCom.GLVIS_PAR_OFC.saveLowLimit(int(self.lineEdit_gpar_vision_small_low_limit.text()))
-#         except Exception: 
-#             ModCebsCom.GLVIS_PAR_OFC.saveLowLimit(200)
-#         try: 
-#             ModCebsCom.GLVIS_PAR_OFC.saveMidLimit(int(self.lineEdit_gpar_vision_small_mid_limit.text()))
-#         except Exception: 
-#             ModCebsCom.GLVIS_PAR_OFC.saveMidLimit(500)
-#         try: 
-#             ModCebsCom.GLVIS_PAR_OFC.saveBigLimit(int(self.lineEdit_gpar_vision_mid_big_limit.text()))
-#         except Exception: 
-#             ModCebsCom.GLVIS_PAR_OFC.saveBigLimit(2000)
-#         try: 
-#             ModCebsCom.GLVIS_PAR_OFC.saveUpperLimit(int(self.lineEdit_gpar_vision_big_upper_limit.text()))
-#         except Exception: 
-#             ModCebsCom.GLVIS_PAR_OFC.saveUpperLimit(2000)
         ModCebsCom.GLVIS_PAR_OFC.saveAddupSet(self.checkBox_gpar_vision_res_addup.isChecked())
         ModCebsCom.GLVIS_PAR_OFC.saveCapEnable(self.checkBox_gpar_video_enable.isChecked())
         try: 
@@ -932,7 +818,8 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         else: option = 6
         ModCebsCom.GLPLT_PAR_OFC.med_select_plate_board_type(option)
         #FINAL UPDATE         
-        self.instL1ConfigOpr2.updateSectionPar()
+        #self.instL1ConfigOpr2.updateSectionPar()
+        self.updateSectionPar()
 
     #Using global parameter set to UI during launch
     def funcGlobalParReadSet2Ui(self):
@@ -995,33 +882,35 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         self.funcGlobalParReadSave()
         self.close()
 
-    #Give up and not save parameters
-    def slot_gpar_giveup(self):
-        self.close()
-
     #Clear the command log text box
     def slot_gpar_clear(self):
         self.textEdit_gpar_cmd_log.clear();  
               
     #Give up and not save parameters
+    def slot_gpar_giveup(self):
+        self.close()
+
+    #Give up and not save parameters
     def closeEvent(self, event):
-        self.instL3GparProc.funcRecoverWorkingEnv()
-        ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.release()
+        #self.instL3GparProc.funcRecoverWorkingEnv()
+        self.TkGparUi.func_ui_click_gpar_close()
+        self.TkGparUi.func_ui_click_gpar_switch_to_main()
         self.sgL4MainWinVisible.emit()
         self.close()
 
 
 #4rd Main Entry, 第四主入口
 #Meng Widget
-class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
+class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm, ModCebsCfg.clsL1_ConfigOpr):
     sgL4MainWinUnvisible = pyqtSignal()
     sgL4MainWinVisible = pyqtSignal()
 
-    def __init__(self):    
-        super(SEUI_L4_MengForm, self).__init__()  
+    def __init__(self, TaskInstGparUi):    
+        super(SEUI_L4_MengForm, self).__init__()
+        self.TkMengUi = TaskInstGparUi
         self.setupUi(self)
-        self.instL3MengProc = ModCebsMeng.clsL3_MengProc(self)
-        self.instL1ConfigOpr3=ModCebsCfg.clsL1_ConfigOpr()
+        #self.instL3MengProc = ModCebsMeng.clsL3_MengProc(self)
+        #self.instL1ConfigOpr3=ModCebsCfg.clsL1_ConfigOpr()
 
     def med_debug_print(self, info):
         strOut = ">> " + time.asctime() + " " + info;
@@ -1045,6 +934,8 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
     def slot_meng_cmd_send(self):
         text_list = self.listWidget_meng_cmd.selectedItems()
         text = [i.text() for i in list(text_list)]
+        if (text == []):
+            return
         if (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SHK_HAND) > 0):
             cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SHK_HAND_CMID
         elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_WK_MODE) > 0):
@@ -1104,7 +995,8 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
             par4 = -1;            
                        
         #self.med_debug_print("MENG: Cmd = %d, Par1/2/3/4=%d/%d/%d/%d" % (cmd, par1, par2, par3, par4))
-        res = self.instL3MengProc.funcSendCmd2Moto(cmd, par1, par2, par3, par4)
+        #res = self.instL3MengProc.funcSendCmd2Moto(cmd, par1, par2, par3, par4)
+        res = self.TkMengUi.func_ui_click_send_command(cmd, par1, par2, par3, par4)
         self.lineEdit_meng_cmd_par.setText(str(res))
         
     #Clear the command log text box
@@ -1113,23 +1005,17 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm):
 
     #Give up and not save parameters
     def closeEvent(self, event):
-        self.funcRelLowLevelResource(3)
-        ModCebsCom.GLHLR_PAR_OFC.CHS_MOTO_MUTEX.release()
+        self.TkMengUi.func_ui_click_meng_switch_to_main()
         self.sgL4MainWinVisible.emit()
         self.close()
-
-    def funcGetLowLevelResource(self, par):
-        self.instL3MengProc.funcGetSpsRights(par)
-
-    def funcRelLowLevelResource(self, par):
-        self.instL3MengProc.funcRelSpsRights(par)
         
                 
-class SEUI_L4_BroswerForm(QtWidgets.QMainWindow, Ui_BroswerForm):
+class SEUI_L4_BroswerForm(QtWidgets.QMainWindow, Ui_BroswerForm, ModCebsCfg.clsL1_ConfigOpr):
     sgL4MainWinUnvisible = pyqtSignal()
     sgL4MainWinVisible = pyqtSignal()
-    def __init__(self):
+    def __init__(self, TaskInstBrowUi):
         super(SEUI_L4_BroswerForm, self).__init__()
+        self.TkBrowUi = TaskInstBrowUi
         self.setupUi(self)
         self.openBroswer()
     def openBroswer(self):
@@ -1161,27 +1047,48 @@ class SEUI_L4_BroswerForm(QtWidgets.QMainWindow, Ui_BroswerForm):
 
 探索使得加载更加人性化和自动化
 '''
-def load_data(sp):
+def cetk_start_app():
+    app = QtWidgets.QApplication(sys.argv)
+    splash = cetk_show_startup_pic()
+    return app, splash
+
+def cetk_load_data(sp):
     for i in range(1, 2):              #模拟主程序加载过程 
         time.sleep(1)                   # 加载数据
         sp.showMessage("加载... {0}%".format(i * 10), QtCore.Qt.AlignHCenter |QtCore.Qt.AlignBottom, QtCore.Qt.black)
         QtWidgets.qApp.processEvents()  # 允许主进程处理事件
 
-
-
-#THE MAIN ENTRY: 第0主入口，MAIN函数部分
-#Main App entry
-def cebs_l4ui_main_form_entry():
-    app = QtWidgets.QApplication(sys.argv)
+def cetk_show_startup_pic():
     splash = QtWidgets.QSplashScreen(QtGui.QPixmap("cebsStart.jpg"))
     splash.showMessage("加载...0%", QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom, QtCore.Qt.black)
     splash.resize(1202, 800)
     splash.show()
-    load_data(splash)
-    QtWidgets.qApp.processEvents()
-    mainWindow = SEUI_L4_MainWindow()
-    mainWindow.show()
+    cetk_load_data(splash)
+    return splash    
+
+def cetk_hide_startup_pic(splash):
     splash.hide()
-    sys.exit(app.exec_())    
+
+def cetk_show_app(app, splash, TkMainUi, TkCalibUi, TkGparUi, TkMenUi, TkBrowUi):
+    QtWidgets.qApp.processEvents()
+    mainWindow = SEUI_L4_MainWindow(TkMainUi, TkCalibUi, TkGparUi, TkMenUi, TkBrowUi)
+    mainWindow.show()
+    cetk_hide_startup_pic(splash)
+    sys.exit(app.exec_())
+    print("Main App done!")
+    return    
+
+#THE MAIN ENTRY: 第0主入口，MAIN函数部分
+#这个是聚合部分，放在一起进行显示和启动
+def cetk_l4ui_main_form_entry(TkMainUi, TkCalibUi, TkGparUi, TkMenUi):
+    app = QtWidgets.QApplication(sys.argv)
+    splash = cetk_show_startup_pic()
+    QtWidgets.qApp.processEvents()
+    mainWindow = SEUI_L4_MainWindow(TkMainUi, TkCalibUi, TkGparUi, TkMenUi)
+    mainWindow.show()
+    cetk_hide_startup_pic(splash)
+    sys.exit(app.exec_())
+    print("Main App done!")
+    return
     
     
