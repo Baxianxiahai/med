@@ -25,17 +25,18 @@ from cebsTkL4Ui import *
 
 class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_ACTIVE = 3
+    _STM_DEACT  = 4 #界面没激活
     
     def __init__(self, glPar):
         tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_UI_MAIN, taskName="TASK_UI_MAIN", glTabEntry=glPar)
         self.fsm_set(TUP_STM_NULL)
-        #self.qstSubTask = tupTaskUiMainThread()
-        self.instUiTk = ''
+        self.fatherUiObj = ''   #父对象界面，双向通信
         #STM MATRIX
         self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_inc_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_ui_focus_rcv_handler)
         #测试消息，后面可以去掉
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TEST, self.fsm_msg_print_test_inc_rcv_handler)
         self.fsm_set(TUP_STM_INIT)
@@ -58,26 +59,28 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_trace_inc_rcv_handler(self, msgContent):
         self.funcDebugPrint2Qt(msgContent);
         return TUP_SUCCESS;
+
+    def fsm_msg_ui_focus_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_ACTIVE)
+        return TUP_SUCCESS;
     
     def fsm_msg_print_test_inc_rcv_handler(self, msgContent):
         self.funcDebugPrint2Qt(msgContent);
         return TUP_SUCCESS;
     
     #将界面对象传递给本任务，以便将打印信息送到界面上
-    def funcSaveUiInstance(self, instance):
-        self.instUiTk = instance
+    def funcSaveFatherInst(self, instance):
+        self.fatherUiObj = instance
     
     def funcDebugPrint2Qt(self, string):
-        if (self.instUiTk == ''):
+        if (self.fatherUiObj == ''):
             print("MAIN_UI task lose 1 print message due to time sync.")
         else:
-            self.instUiTk.med_debug_print(string)
+            self.fatherUiObj.cetk_debug_print(string)
     
     #主界面承接过来的执行函数-测试函数
     def funcPrintTestCalledByQt(self, string):
         self.funcDebugPrint2Qt(string);
-        #self.msg_send(TUP_MSGID_TEST, TUP_TASK_ID_UI_MAIN, TUP_TASK_ID_UI_MAIN, string)
-
 
         
     '''
@@ -107,20 +110,41 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
     #切换界面
     def func_ui_click_calib_start(self):
         print("I am func_ui_click_calib_start!")
-        #切换界面
+        self.msg_send(TUP_MSGID_CALIB_UI_SWITCH, TUP_TASK_ID_MOTO, self.taskId, "")
+        self.msg_send(TUP_MSGID_CALIB_UI_SWITCH, TUP_TASK_ID_VISION, self.taskId, "")
+        self.msg_send(TUP_MSGID_CALIB_UI_SWITCH, TUP_TASK_ID_UI_CALIB, self.taskId, "")
         #执行命令 
+        #转移状态
+        self.fsm_set(self._STM_DEACT)
     
     #切换界面
     def func_ui_click_gpar_start(self):
-        print("I am func_ui_click_gpar_start!")    
+        print("I am func_ui_click_gpar_start!")
+        self.msg_send(TUP_MSGID_GPAR_UI_SWITCH, TUP_TASK_ID_UI_GPAR, self.taskId, "")
+        #执行命令 
+        #转移状态
+        self.fsm_set(self._STM_DEACT)
+
+    def func_ui_click_pilot_stop(self):
+        print("I am func_ui_click_pilot_stop!")    
     
     #切换界面
     def func_ui_click_meng_start(self):
         print("I am func_ui_click_meng_start!")    
+        self.msg_send(TUP_MSGID_MENG_UI_SWITCH, TUP_TASK_ID_MOTO, self.taskId, "") 
+        self.msg_send(TUP_MSGID_MENG_UI_SWITCH, TUP_TASK_ID_UI_MENG, self.taskId, "") 
+        #执行命令 
+        #转移状态
+        self.fsm_set(self._STM_DEACT)
 
     #切换界面
     def func_ui_click_main_start(self):
-        print("I am func_ui_click_main_start!")    
+        print("I am func_ui_click_main_start!")
+        self.msg_send(TUP_MSGID_MAIN_UI_SWITCH, TUP_TASK_ID_MOTO, self.taskId, "") 
+        self.msg_send(TUP_MSGID_MAIN_UI_SWITCH, TUP_TASK_ID_VISION, self.taskId, "") 
+        #执行命令 
+        #转移状态
+        self.fsm_set(self._STM_ACTIVE)
 
 
 

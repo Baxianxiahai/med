@@ -55,6 +55,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_UI_SWITCH, self.fsm_msg_calib_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MENG_UI_SWITCH, self.fsm_msg_meng_ui_switch_rcv_handler)
         #测试功能
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_msg_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_TEST, self.fsm_msg_test_msg_rcv_handler)
 
         #主界面模式的移动命令
@@ -75,7 +76,6 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         self.task_run()
 
     def fsm_msg_init_rcv_handler(self, msgContent):
-        #time.sleep(0.5) #WAIT FOR OTHER TASK STARTUP
         ModCebsCom.GLPLT_PAR_OFC.med_init_plate_parameter()
         if (self.funcInitSps() < 0):
             self.funcMotoErrTrace("Init sps port error!")
@@ -92,13 +92,12 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_time_out_rcv_handler(self, msgContent):
         return TUP_SUCCESS;
 
+    def fsm_msg_trace_msg_rcv_handler(self, msgContent):
+        self.funcMotoLogTrace(msgContent);
+        return TUP_SUCCESS;
+
     def fsm_msg_test_msg_rcv_handler(self, msgContent):
-        msgSnd = {}
-        msgSnd['mid'] = TUP_MSGID_TRACE
-        msgSnd['src'] = self.taskId
-        msgSnd['content'] = msgContent
-        msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
-        self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)  
+        self.msg_send(TUP_MSGID_TEST, TUP_TASK_ID_UI_MAIN, self.taskId, msgContent)
         return TUP_SUCCESS;
 
     def fsm_msg_main_ui_switch_rcv_handler(self, msgContent):
@@ -115,52 +114,34 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     
     #复合TRACE       
     def funcMotoLogTrace(self, myString):
-        msgSnd = {}
-        msgSnd['mid'] = TUP_MSGID_TRACE
-        msgSnd['src'] = self.taskId
-        msgSnd['content'] = myString
-        self.fsm_set(self._STM_ACTIVE)
         if (self.state == self._STM_MAIN_UI_ACT) or (self.state == self._STM_MAIN_UI_EXEC):
-            msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
-            self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
         elif (self.state == self._STM_CALIB_UI_ACT) or (self.state == self._STM_CALIB_UI_EXEC):
-            msgSnd['dst'] = TUP_TASK_ID_UI_CALIB
-            self.msg_send_out(TUP_TASK_ID_UI_CALIB, msgSnd)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, self.taskId, myString)
         elif (self.state == self._STM_MENG_UI_ACT) or (self.state == self._STM_MENG_UI_EXEC):
-            msgSnd['dst'] = TUP_TASK_ID_UI_MENG
-            self.msg_send_out(TUP_TASK_ID_UI_MENG, msgSnd)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MENG, self.taskId, myString)
         else:
-            msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
-            self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
         #SAVE INTO MED FILE
-        self.medCmdLog(str(msgSnd));
+        self.medCmdLog(str(myString));
         #PRINT to local
-        self.tup_dbg_print(str(msgSnd))
+        self.tup_dbg_print(str(myString))
         return
 
     #复合TRACE       
     def funcMotoErrTrace(self, myString):
-        msgSnd = {}
-        msgSnd['mid'] = TUP_MSGID_TRACE
-        msgSnd['src'] = self.taskId
-        msgSnd['content'] = myString
-        self.fsm_set(self._STM_ACTIVE)
         if (self.state == self._STM_MAIN_UI_ACT) or (self.state == self._STM_MAIN_UI_EXEC):
-            msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
-            self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
         elif (self.state == self._STM_CALIB_UI_ACT) or (self.state == self._STM_CALIB_UI_EXEC):
-            msgSnd['dst'] = TUP_TASK_ID_UI_CALIB
-            self.msg_send_out(TUP_TASK_ID_UI_CALIB, msgSnd)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, self.taskId, myString)
         elif (self.state == self._STM_MENG_UI_ACT) or (self.state == self._STM_MENG_UI_EXEC):
-            msgSnd['dst'] = TUP_TASK_ID_UI_MENG
-            self.msg_send_out(TUP_TASK_ID_UI_MENG, msgSnd)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MENG, self.taskId, myString)
         else:
-            msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
-            self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
         #SAVE INTO MED FILE
-        self.medErrorLog(str(msgSnd));
+        self.medErrorLog(str(myString));
         #PRINT to local
-        self.tup_err_print(str(msgSnd))
+        self.tup_err_print(str(myString))
         return
     
     #主界面模式下的归零

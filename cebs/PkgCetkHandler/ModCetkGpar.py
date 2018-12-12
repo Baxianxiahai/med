@@ -42,7 +42,21 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_time_out_rcv_handler(self, msgContent):
         return TUP_SUCCESS;
 
-
+    def funcGparLogTrace(self, myString):
+        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_GPAR, self.taskId, myString)
+        #SAVE INTO MED FILE
+        self.medCmdLog(str(myString))
+        #PRINT to local
+        self.tup_dbg_print(str(myString))
+        return
+    
+    def funcGparErrTrace(self, myString):
+        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_GPAR, self.taskId, myString)
+        #SAVE INTO MED FILE
+        self.medErrorLog(str(myString));
+        #PRINT to local
+        self.tup_err_print(str(myString))
+        return        
 
 
 

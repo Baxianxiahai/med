@@ -110,48 +110,31 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
 
     def funcVisionLogTrace(self, myString):
-        msgSnd = {}
-        msgSnd['mid'] = TUP_MSGID_TRACE
-        msgSnd['src'] = self.taskId
-        msgSnd['content'] = myString
-        self.fsm_set(self._STM_ACTIVE)
         if (self.state == self._STM_MAIN_UI_ACT):
-            msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
-            self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
         elif (self.state == self._STM_CALIB_UI_ACT):
-            msgSnd['dst'] = TUP_TASK_ID_UI_CALIB
-            self.msg_send_out(TUP_TASK_ID_UI_CALIB, msgSnd)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, self.taskId, myString)
         else:
-            msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
-            self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
         #SAVE INTO MED FILE
-        self.medCmdLog(str(msgSnd))
+        self.medCmdLog(str(myString))
         #PRINT to local
-        self.tup_dbg_print(str(msgSnd))
+        self.tup_dbg_print(str(myString))
         return
     
     def funcVisionErrTrace(self, myString):
-        msgSnd = {}
-        msgSnd['mid'] = TUP_MSGID_TRACE
-        msgSnd['src'] = self.taskId
-        msgSnd['content'] = myString
-        self.fsm_set(self._STM_ACTIVE)
         if (self.state == self._STM_MAIN_UI_ACT):
-            msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
-            self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
         elif (self.state == self._STM_CALIB_UI_ACT):
-            msgSnd['dst'] = TUP_TASK_ID_UI_CALIB
-            self.msg_send_out(TUP_TASK_ID_UI_CALIB, msgSnd)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, self.taskId, myString)
         else:
-            msgSnd['dst'] = TUP_TASK_ID_UI_MAIN
-            self.msg_send_out(TUP_TASK_ID_UI_MAIN, msgSnd)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
         #SAVE INTO MED FILE
-        self.medErrorLog(str(msgSnd));
+        self.medErrorLog(str(myString));
         #PRINT to local
-        self.tup_err_print(str(msgSnd))
-        return    
+        self.tup_err_print(str(myString))
+        return
     
-
     def fsm_msg_calib_pic_cap_req_rcv_handler(self, msgContent):
         scale = int(msgContent['scale'])
         self.funcMotoMoveOneStep(scale, dir)        

@@ -41,7 +41,21 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_time_out_rcv_handler(self, msgContent):
         return TUP_SUCCESS;
         
-        
+    def funcCalibLogTrace(self, myString):
+        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, self.taskId, myString)
+        #SAVE INTO MED FILE
+        self.medCmdLog(str(myString))
+        #PRINT to local
+        self.tup_dbg_print(str(myString))
+        return
+    
+    def funcCalibErrTrace(self, myString):
+        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, self.taskId, myString)
+        #SAVE INTO MED FILE
+        self.medErrorLog(str(myString));
+        #PRINT to local
+        self.tup_err_print(str(myString))
+        return        
         
         
         

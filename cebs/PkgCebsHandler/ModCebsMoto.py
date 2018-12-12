@@ -44,7 +44,7 @@ if L1MOTO_API_SELECTION == True:
     #print("L2MOTO: Status of Moto driver =", instL1MotoDrvApiFlag)
 else:
     instL1MotoDrvApiFlag = False
-    #print("L2MOTO: Using self-designed board!")
+    print("L2MOTO: Using self-designed board!")
 
 
 '''
