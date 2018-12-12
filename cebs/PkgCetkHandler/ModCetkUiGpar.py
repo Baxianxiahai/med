@@ -29,8 +29,8 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_inc_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_GPAR_UI_SWITCH, self.fsm_msg_ui_focus_rcv_handler)
-        self.fsm_set(TUP_STM_INIT)
         #START TASK
+        self.fsm_set(TUP_STM_INIT)
         self.task_run()
 
     def fsm_msg_init_rcv_handler(self, msgContent):
@@ -61,7 +61,7 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
         if (self.fatherUiObj == ''):
             print("GPAR_UI task lose 1 print message due to time sync.")
         else:
-            self.fatherUiObj.cetk_debug_print(string)
+            self.fatherUiObj.cetk_debug_print(str(string))
             
     #主界面承接过来的执行函数
     def func_ui_click_pic_file_load(self, fn):

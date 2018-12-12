@@ -10,6 +10,10 @@
 //=ZJL, 2018/12/13, CURRENT_SW_DELIVERY R1.36 =>CEBS
 = 界面切换完善
 = ERR: funcVisionDetectAllCamera()
+= 因为要取出数据，字符串必须使用标准字符串格式
+= 重要技巧：内部消息交换的格式，其实是嵌套的DICT格式，而不是字符串格式。当需要将参数从一个模块送到另外一个模块时，最好采用DICT的方式
+          如果一定要使用字符串方式进行数据交互，则需要做json.loads(str())操作，而且字符串必须采用双引号的方式继续格式化
+= 完成工参MENG模块的改造
 
 //=ZJL, 2018/12/12, CURRENT_SW_DELIVERY R1.35 =>CEBS
 = 建立起基本的任务框架 

@@ -26,8 +26,8 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
-        self.fsm_set(TUP_STM_INIT)
         #START TASK
+        self.fsm_set(TUP_STM_INIT)
         self.task_run()
 
     def fsm_msg_init_rcv_handler(self, msgContent):

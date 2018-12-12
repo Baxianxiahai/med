@@ -4,6 +4,9 @@ Created on 2018年12月11日
 @author: Administrator
 '''
 
+####!/usr/bin/python3.6
+#### -*- coding: UTF-8 -*-
+
 import random
 import time
 from multiprocessing import Queue, Process
@@ -13,6 +16,7 @@ from PkgCebsHandler.ModCebsCom import *
 from PkgCebsHandler.ModCebsCfg import *
 from PkgVmHandler.ModVmConsole import *
 from PkgVmHandler.ModVmTimer import *
+import json
 
 
 class tupTaskUiMeng(tupTaskTemplate, clsL1_ConfigOpr):
@@ -29,8 +33,10 @@ class tupTaskUiMeng(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_inc_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MENG_UI_SWITCH, self.fsm_msg_ui_focus_rcv_handler)
-        self.fsm_set(TUP_STM_INIT)
+        #业务态
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_MENG_MOTO_CMD_FB, self.fsm_msg_meng_cmd_fb_rcv_handler)
         #START TASK
+        self.fsm_set(TUP_STM_INIT)
         self.task_run()
 
     def fsm_msg_init_rcv_handler(self, msgContent):
@@ -47,6 +53,16 @@ class tupTaskUiMeng(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_trace_inc_rcv_handler(self, msgContent):
         self.funcDebugPrint2Qt(msgContent);
         return TUP_SUCCESS;
+        
+    #业务状态处理过程
+    #jsonDic = json.loads(msgContent)
+    def fsm_msg_meng_cmd_fb_rcv_handler(self, msgContent):
+        if (self.fatherUiObj == ''):
+            print("MENG_UI task lose 1 print message due to time sync.")
+        else:      
+            self.funcDebugPrint2Qt(msgContent)
+            self.fatherUiObj.meng_callback_cmd_exec_fb(msgContent['res'])
+        return TUP_SUCCESS;
 
     #界面切换进来
     def fsm_msg_ui_focus_rcv_handler(self, msgContent):
@@ -61,7 +77,7 @@ class tupTaskUiMeng(tupTaskTemplate, clsL1_ConfigOpr):
         if (self.fatherUiObj == ''):
             print("MENG_UI task lose 1 print message due to time sync.")
         else:
-            self.fatherUiObj.cetk_debug_print(string)
+            self.fatherUiObj.cetk_debug_print(str(string))
             
     #主界面承接过来的执行函数
     def func_ui_click_pilot_mv(self, scale, dir):
@@ -69,7 +85,13 @@ class tupTaskUiMeng(tupTaskTemplate, clsL1_ConfigOpr):
 
     def func_ui_click_send_command(self, cmdid, par1, par2, par3, par4):
         print("I am func_ui_click_send_command!")
-        return 1
+        msgContent = {}
+        msgContent['cmdid'] = int(cmdid)
+        msgContent['par1'] = int(par1)
+        msgContent['par2'] = int(par2)
+        msgContent['par3'] = int(par3)
+        msgContent['par4'] = int(par4)
+        self.msg_send(TUP_MSGID_MENG_MOTO_COMMAND, TUP_TASK_ID_MOTO, self.taskId, msgContent)
 
     #清理各项操作
     def func_ui_click_meng_close(self):
@@ -79,7 +101,6 @@ class tupTaskUiMeng(tupTaskTemplate, clsL1_ConfigOpr):
     def func_ui_click_meng_switch_to_main(self):
         print("I am func_ui_click_meng_switch_to_main!")
         self.fsm_set(self._STM_DEACT)          
-        
 
 
 

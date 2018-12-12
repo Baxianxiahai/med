@@ -39,8 +39,8 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_ui_focus_rcv_handler)
         #测试消息，后面可以去掉
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TEST, self.fsm_msg_print_test_inc_rcv_handler)
-        self.fsm_set(TUP_STM_INIT)
         #START TASK
+        self.fsm_set(TUP_STM_INIT)
         self.task_run()
     
     #延迟一秒，确保打印消息不丢失
@@ -76,7 +76,7 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         if (self.fatherUiObj == ''):
             print("MAIN_UI task lose 1 print message due to time sync.")
         else:
-            self.fatherUiObj.cetk_debug_print(string)
+            self.fatherUiObj.cetk_debug_print(str(string))
     
     #主界面承接过来的执行函数-测试函数
     def funcPrintTestCalledByQt(self, string):
@@ -124,7 +124,8 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         #执行命令 
         #转移状态
         self.fsm_set(self._STM_DEACT)
-
+    
+    #TBD
     def func_ui_click_pilot_stop(self):
         print("I am func_ui_click_pilot_stop!")    
     

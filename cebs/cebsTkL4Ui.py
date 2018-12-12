@@ -106,9 +106,9 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCfg.cl
 
     def cetk_debug_print(self, info):
         strOld = self.textEdit_runProgress.toPlainText()
-        #strOut = strOld + "\n>> " + time.asctime() + " " + info;
+        #strOut = strOld + "\n>> " + time.asctime() + " " + str(info);
         #self.textEdit_runProgress.setText(strOut);
-        strOut = ">> " + time.asctime() + " " + info;
+        strOut = ">> " + time.asctime() + " " + str(info);
         self.textEdit_runProgress.append(strOut);
         self.textEdit_runProgress.moveCursor(QtGui.QTextCursor.End)
         self.textEdit_runProgress.ensureCursorVisible()
@@ -233,7 +233,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm, ModCebsCfg.clsL1_Co
         self.TkCalibUi.funcSaveFatherInst(self)
         
     def cetk_debug_print(self, info):
-        strOut = ">> " + time.asctime() + " " + info;
+        strOut = ">> " + time.asctime() + " " + str(info);
         self.textEdit_calib_runProgress.append(strOut);
         self.textEdit_calib_runProgress.moveCursor(QtGui.QTextCursor.End)
         self.textEdit_calib_runProgress.ensureCursorVisible()
@@ -710,7 +710,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
         self.funcGlobalParReadSet2Ui()
 
     def cetk_debug_print(self, info):
-        strOut = ">> " + time.asctime() + " " + info;
+        strOut = ">> " + time.asctime() + " " + str(info);
         self.textEdit_gpar_cmd_log.append(strOut);
         self.textEdit_gpar_cmd_log.moveCursor(QtGui.QTextCursor.End)
         self.textEdit_gpar_cmd_log.ensureCursorVisible()
@@ -880,7 +880,7 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm, ModCebsCfg.clsL1_Conf
         self.TkMengUi.funcSaveFatherInst(self)
 
     def cetk_debug_print(self, info):
-        strOut = ">> " + time.asctime() + " " + info;
+        strOut = ">> " + time.asctime() + " " + str(info);
         self.textEdit_meng_trace_log.append(strOut);
         self.textEdit_meng_trace_log.moveCursor(QtGui.QTextCursor.End)
         self.textEdit_meng_trace_log.ensureCursorVisible()
@@ -955,8 +955,11 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm, ModCebsCfg.clsL1_Conf
             par4 = -1;            
                        
         #self.cetk_debug_print("MENG: Cmd = %d, Par1/2/3/4=%d/%d/%d/%d" % (cmd, par1, par2, par3, par4))
-        #res = self.instL3MengProc.funcSendCmd2Moto(cmd, par1, par2, par3, par4)
-        res = self.TkMengUi.func_ui_click_send_command(cmd, par1, par2, par3, par4)
+        self.TkMengUi.func_ui_click_send_command(cmd, par1, par2, par3, par4)
+        self.lineEdit_meng_cmd_par.setText("")
+    
+    #给TkMengUi回调的处理过程
+    def meng_callback_cmd_exec_fb(self, res):
         self.lineEdit_meng_cmd_par.setText(str(res))
         
     #Clear the command log text box

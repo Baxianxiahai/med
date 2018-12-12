@@ -70,9 +70,8 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         #马达工程模式下的命令
         self.add_stm_combine(self._STM_MENG_UI_ACT, TUP_MSGID_MENG_MOTO_COMMAND, self.fsm_msg_meng_command_rcv_handler)
         
-        #切换状态机
-        self.fsm_set(TUP_STM_INIT)
         #START TASK
+        self.fsm_set(TUP_STM_INIT)
         self.task_run()
 
     def fsm_msg_init_rcv_handler(self, msgContent):
@@ -184,6 +183,8 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
 
     #MENG: 工程模式下的控制命令
+    #因为要取出数据，字符串必须使用标准字符串格式
+    #msgContent = ("{\"res\":%d}" %(res))
     def fsm_msg_meng_command_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_MENG_UI_EXEC)
         cmdid = int(msgContent['cmdid'])
@@ -192,12 +193,9 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         par3 = int(msgContent['par3'])
         par4 = int(msgContent['par4'])
         res = self.funcSendCmdPack(cmdid, par1, par2, par3, par4)
-        msgSnd = {}
-        msgSnd['mid'] = TUP_MSGID_MENG_MOTO_CMD_FB
-        msgSnd['src'] = TUP_TASK_ID_MOTO
-        msgSnd['dst'] = TUP_TASK_ID_UI_MENG
-        msgSnd['content'] = ("{'res':%d}" %(res))
-        self.msg_send_out(TUP_TASK_ID_UI_MENG, msgSnd)        
+        mCont={}
+        mCont['res'] = res
+        self.msg_send(TUP_MSGID_MENG_MOTO_CMD_FB, TUP_TASK_ID_UI_MENG, self.taskId, mCont)
         self.fsm_set(self._STM_MENG_UI_ACT)
         return TUP_SUCCESS;
 
