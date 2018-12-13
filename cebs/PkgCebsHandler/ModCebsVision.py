@@ -85,6 +85,7 @@ class clsL2_VisCapProc(object):
 #             cv.destroyAllWindows()
         #New finding camaer way
         wmi = win32com.client.GetObject ("winmgmts:")
+        print("WMI = ", wmi)
         for usb in wmi.InstancesOf ("win32_usbcontrollerdevice"):
             if "VID_0547&PID_6010" in usb.Dependent:
                 searchText = "VID_0547&PID_6010"
@@ -703,8 +704,6 @@ class clsL2_VisCfyProc(ModCebsCfg.clsL1_ConfigOpr):
     def algoVisFluWormCaculate(self, fileName, fileNukeName):
         self.funcVisCfyLogTrace("L2VISCFY: Flu picture classification simulation algorithms demo, to be finsihed!")
 
-
-    
 
 
 

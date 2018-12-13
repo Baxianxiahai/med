@@ -23,9 +23,10 @@ import matplotlib.pyplot as plt
 import math
 from   ctypes import c_uint8
 import win32com.client  #pip install pyWin32
+from win32com.client import GetObject
 import usb.core
-from   cv2 import waitKey
-from PyQt5 import QtWidgets, QtCore
+#from   cv2 import waitKey
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import pyqtSlot
 
 from multiprocessing import Queue, Process
@@ -45,6 +46,10 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_CALIB_UI_ACT = 5
     #参数模式下图像直接读取
     _STM_GPAR_UI_ACT = 6
+    
+    #摄像头初始化之后的对象指针
+    capInit = ''
+
 
     def __init__(self, glPar):
         tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_VISION, taskName="TASK_VISION", glTabEntry=glPar)
@@ -83,18 +88,30 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.fsm_set(TUP_STM_INIT)
         #START TASK
         self.task_run()
-
+    
+    #摄像头初始化
     def fsm_msg_init_rcv_handler(self, msgContent):
         #全局搜索摄像头
-        #res = self.funcVisionDetectAllCamera()
-        res = 1
+        p = clsCamDevHdl()
+        ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = p.dhSearchRunCam()
+        res = "L2VISCAP: Valid camera number = " + str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR)     
         self.funcVisionLogTrace(str(res))
         #INIT
-        if (self.funcGetCamRightAndInit() < 0):
-            self.funcVisionErrTrace("L2VISCAP: Init CAM error!")
+        if (ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR < 0):
+            self.funcVisionErrTrace("L2VISCAP: Camera not yet installed, init error!");
+            return TUP_FAILURE;
+        #正确的情况
+        self.capInit = cv.VideoCapture(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
+        self.capInit.set(3, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
+        self.capInit.set(4, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
+        if not self.capInit.isOpened():
+            self.capInit.release()
+            cv.destroyAllWindows()
+            self.funcVisionErrTrace("L2VISCAP: Camera not installed, but open error!");
             return TUP_FAILURE;
         else:
             self.fsm_set(self._STM_ACTIVE)
+            self.funcVisionLogTrace("L2VISCAP: Camera open successful!");
             return TUP_SUCCESS;
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
@@ -154,8 +171,31 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     #传递文件回去给显示界面
     def fsm_msg_calib_video_display_req_rcv_handler(self, msgContent):
         mbuf={}
-        self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
-        return TUP_SUCCESS;
+        if self.capInit == '':
+            mbuf['res'] = -1
+            self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
+            return TUP_FAILURE;
+        try:
+            ret, frame = self.capInit.read()
+        except Exception:
+            pass
+        if (ret == True):
+            height, width = frame.shape[:2]
+            if frame.ndim == 3:
+                rgb = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+            elif frame.ndim == 2:
+                rgb = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
+            temp_image = QtGui.QImage(rgb.flatten(), width, height, QtGui.QImage.Format_RGB888)
+            temp_pixmap = QtGui.QPixmap.fromImage(temp_image)
+            cv.imwrite("tempCalibDisp.jpg", temp_pixmap)
+            mbuf['res'] = 1
+            mbuf['fileName'] = "tempCalibDisp.jpg"
+            self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
+            return TUP_SUCCESS;
+        else:
+            mbuf['res'] = -2
+            self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
+            return TUP_FAILURE;            
 
     def fsm_msg_main_pic_cap_req_rcv_handler(self, msgContent):
         return TUP_SUCCESS;
@@ -185,28 +225,13 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     '''
     SERVICE PART: 业务部分的函数，功能处理函数
     '''
-    #搜索摄像头
-    def funcVisionDetectAllCamera(self):
-        res = "L2VISCAP: Valid camera number = "
-        #New finding camaer way
-        wmi = win32com.client.GetObject ("winmgmts:")
-        for usb in wmi.InstancesOf ("win32_usbcontrollerdevice"):
-            if "VID_0547&PID_6010" in usb.Dependent:
-                searchText = "VID_0547&PID_6010"
-                indexStart = usb.Dependent.find(searchText)
-                textLen = len(searchText)
-                textContent = usb.Dependent[indexStart+textLen:]
-                result={}
-                step=0;
-                for item in textContent.split('&'):
-                    result[step] = item
-                    step+=1
-                try:
-                    ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = int(result[2])
-                except Exception:
-                    ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = -1
-        return res + str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR)
-    
+#     #搜索摄像头
+#     def funcVisionDetectWorkCam(self):
+#         p = clsCamDevHdl()
+#         ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = p.dhSearchRunCam()
+#         res = "L2VISCAP: Valid camera number = "
+#         return res + str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR)
+#     
     #初始化摄像头
     def funcGetCamRightAndInit(self):
         if (ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR < 0):
@@ -735,15 +760,47 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
 
 
 
+#搜索摄像头进程：调用的win32com必须在进程里面干活，所以只能采用这种创造进程的方式干搜索设备号
+class clsCamDevHdl():
+    def __init__(self, ):
+        pass
 
-
-
-
-
-
-
-
-
+    #搜索摄像头
+    def dhSearchRunCam(self):
+        pCamRead = Process(target=self.dhFetchUsbCamId, args=())
+        pCamRead.start()
+        pCamRead.join(5)
+        #读取文件，得到camId
+        with open('tempCamId.txt','r') as f:
+            a = f.read()
+        camId = int(a)
+        return camId
+        
+    #独立读取的进程函数
+    def dhFetchUsbCamId(self):
+        wmi = win32com.client.GetObject("winmgmts:")
+        camId = -2
+        for usb in wmi.InstancesOf ("win32_usbcontrollerdevice"):
+            if "VID_0547&PID_6010" in usb.Dependent:
+                searchText = "VID_0547&PID_6010"
+                indexStart = usb.Dependent.find(searchText)
+                textLen = len(searchText)
+                textContent = usb.Dependent[indexStart+textLen:]
+                result={}
+                step=0;
+                for item in textContent.split('&'):
+                    result[step] = item
+                    step+=1
+                try:
+                    camId = int(result[2])
+                except Exception:
+                    camId = -1
+        #存入临时文件
+        f = open("tempCamId.txt", "w+")
+        a = ("%d" % (camId))
+        f.write(a)
+        f.flush()
+        f.close()
 
 
 

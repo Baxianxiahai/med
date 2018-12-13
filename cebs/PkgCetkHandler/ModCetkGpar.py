@@ -41,6 +41,12 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
 
         #业务处理部分
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_GPAR_CLOSE_REQ, self.fsm_msg_close_req_rcv_handler)
+        '''
+        #通过文件进行训练结果的交换，无法在任务里直接处理。结果必须送到界面任务中进行处理
+        #同一个消息，在不同任务之间进行交换，简化系统设计的技巧
+        #至于为啥一定要通过这里的交换，一方面是为了隔离，另一方面，将充分利用状态机，去除无效的界面事件，放置对硬件和算法处理的不适当过程
+        #这里还没考虑定时器机制，未来看诉求
+        '''
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GPAR_PIC_TRAIN_REQ, self.fsm_msg_pic_train_req_rcv_handler)
         self.add_stm_combine(self._STM_TRAINING, TUP_MSGID_GPAR_PIC_TRAIN_RESP, self.fsm_msg_pic_train_resp_rcv_handler)
         

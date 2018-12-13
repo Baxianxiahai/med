@@ -5,9 +5,12 @@
 
 
 [BUG LIST]
-1. funcVisionDetectAllCamera()
 2. def func_vision_worm_binvalue_proc(self, img):  new = np.zeros(img.shape, np.uint8)   
 
+
+
+//=ZJL, 2018/12/14, CURRENT_SW_DELIVERY R1.38 =>CEBS
+= 完善CALIB中摄像头的显示问题
 
 
 //=ZJL, 2018/12/13, CURRENT_SW_DELIVERY R1.37 =>CEBS

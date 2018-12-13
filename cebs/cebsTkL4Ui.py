@@ -11,6 +11,7 @@ import sys
 import time
 import platform
 import os
+import cv2 as cv
 from PyQt5 import QtWidgets, QtGui, QtCore,QtWebEngineWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, qApp, QAction, QFileDialog, QTextEdit, QMessageBox
 from PyQt5.QtCore import pyqtSlot, pyqtSignal
@@ -248,7 +249,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm, ModCebsCfg.clsL1_Co
         self.calibRect = self.label_calib_RtCam_Fill.geometry()
         if (os.path.exists('calibInitWorm.jpg') == True):
             self.filePicInit = QtGui.QPixmap('calibInitWorm.jpg').scaled(self.calibRect.width(), self.calibRect.height())
-            self.label_calib_RtCam_Fill.setPixmap(self.filePicInit)
+            self.label_calib_RtCam_Fill.setPixmap(self.filePicInit)        
         
     def cetk_debug_print(self, info):
         time.sleep(0.01)
@@ -712,6 +713,12 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm, ModCebsCfg.clsL1_Co
         self.sgL4MainWinVisible.emit()
         self.close()
 
+    def cetk_calib_disp_cam(self, fileName):
+        #self.instL4CalibForm.label_calib_RtCam_Fill.setPixmap(temp_pixmap.scaled(self.camRtFillWidth, self.camRtFillHeight))
+        print("Test!")
+        if (os.path.exists(fileName) == True):
+            temp_pixmap = cv.imread(fileName)
+            self.label_calib_RtCam_Fill.setPixmap(temp_pixmap.scaled(self.calibRect.width(), self.calibRect.height()))
 
 #3rd Main Entry, 第三主入口
 #Calibration Widget

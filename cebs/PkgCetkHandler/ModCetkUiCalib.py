@@ -31,6 +31,7 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_UI_SWITCH, self.fsm_msg_ui_focus_rcv_handler)
 
         #业务部分
+        #视频流处理完成后需要通知界面，并显示在界面上。这里是通过文件交换的，而非实时内存图片，因为内部消息不支持qt文件对象通过dict数据格式进行交换
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_VDISP_RESP, self.fsm_msg_calib_vdisp_resp_rcv_handler)
         
         #START TASK
@@ -60,6 +61,11 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
 
     #业务功能
     def fsm_msg_calib_vdisp_resp_rcv_handler(self, msgContent):
+        if (self.fatherUiObj == ''):
+            print("CALIB_UI task lose 1 print message due to time sync.")
+            return TUP_SUCCESS;
+        if (msgContent['res'] >= 0):
+            self.fatherUiObj.cetk_calib_disp_cam(msgContent['fileName'])        
         return TUP_SUCCESS;
     
     #将界面对象传递给本任务，以便将打印信息送到界面上

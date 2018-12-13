@@ -71,7 +71,10 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
 
     #关闭摄像头与马达
     def fsm_msg_close_req_rcv_handler(self, msgContent):
+        #摄像头采集
         self.func_clean_working_env()
+        #停止马达
+        self.msg_send(TUP_MSGID_NORM_MOTO_STOP, TUP_TASK_ID_MOTO, '')
         return TUP_SUCCESS;
         
     def funcCalibLogTrace(self, myString):
