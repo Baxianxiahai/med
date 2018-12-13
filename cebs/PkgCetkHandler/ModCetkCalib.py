@@ -19,6 +19,8 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_MOTO_MV = 5
 
     timerDisplay = ''
+    TIMER_DISP_CYCLE = 0.5
+    
     
     def __init__(self, glPar):
         tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_CALIB, taskName="TASK_CALIB", glTabEntry=glPar)
@@ -29,13 +31,15 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
         
         #业务处理部分
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_CLOSE_REQ, self.fsm_msg_close_req_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_OPEN_REQ, self.fsm_msg_open_req_rcv_handler)
-        self.add_stm_combine(self._STM_CAM_DISP, TUP_MSGID_CALIB_VDISP_RESP, self.fsm_msg_cam_disp_resp_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_CLOSE_REQ, self.fsm_msg_close_req_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_VDISP_RESP, self.fsm_msg_cam_disp_resp_rcv_handler)
 
-        #移动命令
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MV_DIR_REQ, self.fsm_msg_mv_dir_req_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MV_DIR_RESP, self.fsm_msg_mv_dir_resp_rcv_handler)
+        #校准移动命令
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOMV_DIR_REQ, self.fsm_msg_moto_mv_dir_req_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOMV_DIR_RESP, self.fsm_msg_moto_mv_dir_resp_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOFM_DIR_REQ, self.fsm_msg_moto_force_move_dir_req_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOFM_DIR_RESP, self.fsm_msg_moto_force_move_dir_resp_rcv_handler)
 
         #START TASK
         self.fsm_set(TUP_STM_INIT)
@@ -60,7 +64,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     
     #打开摄像头
     def fsm_msg_open_req_rcv_handler(self, msgContent):
-        self.timerDisplay = self.tup_timer_start(0.05, self.func_timer_display_process)
+        self.timerDisplay = self.tup_timer_start(self.TIMER_DISP_CYCLE, self.func_timer_display_process)
         self.fsm_set(self._STM_CAM_DISP)
         return TUP_SUCCESS;
     
@@ -70,14 +74,24 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
     
     #移动动作需要等待MOTO反馈并解锁状态
-    def fsm_msg_mv_dir_req_rcv_handler(self, msgContent):
+    def fsm_msg_moto_mv_dir_req_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_MOTO_MV)
-        self.msg_send(TUP_MSGID_CALIB_MV_DIR_REQ, TUP_TASK_ID_CALIB, msgContent)
+        self.msg_send(TUP_MSGID_CALIB_MOMV_DIR_REQ, TUP_TASK_ID_MOTO, msgContent)
         return TUP_SUCCESS;
 
-    def fsm_msg_mv_dir_resp_rcv_handler(self, msgContent):
+    def fsm_msg_moto_mv_dir_resp_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
-        self.msg_send(TUP_MSGID_CALIB_MV_DIR_RESP, TUP_TASK_ID_UI_CALIB, msgContent)
+        self.msg_send(TUP_MSGID_CALIB_MOMV_DIR_RESP, TUP_TASK_ID_UI_CALIB, msgContent)
+        return TUP_SUCCESS;
+
+    def fsm_msg_moto_force_move_dir_req_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_MOTO_MV)
+        self.msg_send(TUP_MSGID_CALIB_MOFM_DIR_REQ, TUP_TASK_ID_MOTO, msgContent)
+        return TUP_SUCCESS;
+
+    def fsm_msg_moto_force_move_dir_resp_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_ACTIVE)
+        self.msg_send(TUP_MSGID_CALIB_MOFM_DIR_RESP, TUP_TASK_ID_UI_CALIB, msgContent)
         return TUP_SUCCESS;
 
     #关闭摄像头与马达
@@ -107,7 +121,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     #打开定时器干活
     def func_timer_display_process(self):
         self.msg_send(TUP_MSGID_CALIB_VDISP_REQ, TUP_TASK_ID_VISION, '')
-        self.timerDisplay = self.tup_timer_start(0.05, self.func_timer_display_process)
+        self.timerDisplay = self.tup_timer_start(self.TIMER_DISP_CYCLE, self.func_timer_display_process)
         
     #业务函数    
     def func_clean_working_env(self):

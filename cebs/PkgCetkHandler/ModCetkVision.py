@@ -176,14 +176,32 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         except Exception:
             pass
         if (ret == True):
-            height, width = frame.shape[:2]
-            if frame.ndim == 3:
-                rgb = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-            elif frame.ndim == 2:
-                rgb = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
-            temp_image = QtGui.QImage(rgb.flatten(), width, height, QtGui.QImage.Format_RGB888)
-            temp_pixmap = QtGui.QPixmap.fromImage(temp_image)
-            cv.imwrite("tempCalibDisp.jpg", temp_pixmap)
+            frame = cv.flip(frame, 1)#Operation in frame
+            frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_AREA)
+            #白平衡算法
+            B,G,R = cv.split(frame)
+            bMean = cv.mean(B)
+            gMean = cv.mean(G)
+            rMean = cv.mean(R)
+            kb = (bMean[0] + gMean[0] + rMean[0])/(3*bMean[0]+0.0001)
+            kg = (bMean[0] + gMean[0] + rMean[0])/(3*gMean[0]+0.0001)
+            kr = (bMean[0] + gMean[0] + rMean[0])/(3*rMean[0]+0.0001)
+            B = B * kb
+            G = G * kg
+            R = R * kr
+            outputFrame = cv.merge([B, G, R])
+            #cv.imwrite(fileName, outputFrame)
+        
+#         if (ret == True):
+#             height, width = frame.shape[:2]
+#             if frame.ndim == 3:
+#                 rgb = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+#             elif frame.ndim == 2:
+#                 rgb = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
+#             temp_image = QtGui.QImage(rgb.flatten(), width, height, QtGui.QImage.Format_RGB888)
+#             temp_pixmap = QtGui.QPixmap.fromImage(temp_image)
+            
+            cv.imwrite("tempCalibDisp.jpg", outputFrame)
             mbuf['res'] = 1
             mbuf['fileName'] = "tempCalibDisp.jpg"
             self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
@@ -220,25 +238,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
 
     '''
     SERVICE PART: 业务部分的函数，功能处理函数
-    '''
-#     #搜索摄像头
-#     def funcVisionDetectWorkCam(self):
-#         p = clsCamDevHdl()
-#         ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = p.dhSearchRunCam()
-#         res = "L2VISCAP: Valid camera number = "
-#         return res + str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR)
-#     
-    #初始化摄像头
-    def funcGetCamRightAndInit(self):
-        if (ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR < 0):
-            self.funcVisionErrTrace("L2VISCAP: Camera not yet installed!");
-            return -1;
-        else:
-            self.capInit = cv.VideoCapture(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
-            self.capInit.set(3, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
-            self.capInit.set(4, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
-            return 1;
-    
+    '''    
     #截获图像
     def funcVisionCapture(self, batch, fileNbr, forceFlag):
         if not self.capInit.isOpened():

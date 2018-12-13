@@ -13,6 +13,7 @@
 = 完善CALIB中摄像头的显示问题
 = 去掉老旧TIMER工作机制
 = 完善打印机制
+= 解决了摄像头显示的问题，并将周期调整为0.5s的周期
 
 //=ZJL, 2018/12/13, CURRENT_SW_DELIVERY R1.37 =>CEBS
 = 优化msg_send函数

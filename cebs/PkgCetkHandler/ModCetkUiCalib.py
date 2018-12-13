@@ -31,7 +31,8 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
         #业务部分
         #视频流处理完成后需要通知界面，并显示在界面上。这里是通过文件交换的，而非实时内存图片，因为内部消息不支持qt文件对象通过dict数据格式进行交换
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_VDISP_RESP, self.fsm_msg_calib_vdisp_resp_rcv_handler)
-        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_MV_DIR_RESP, self.fsm_msg_mv_dir_resp_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_MOMV_DIR_RESP, self.fsm_msg_momv_dir_resp_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_MOFM_DIR_RESP, self.fsm_msg_force_move_dir_resp_rcv_handler)
 
         
         #START TASK
@@ -66,7 +67,11 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
     
     #将马达移动的结果提示在界面上
-    def fsm_msg_mv_dir_resp_rcv_handler(self, msgContent):
+    def fsm_msg_momv_dir_resp_rcv_handler(self, msgContent):
+        self.funcDebugPrint2Qt(str(msgContent))
+        return TUP_SUCCESS;    
+
+    def fsm_msg_force_move_dir_resp_rcv_handler(self, msgContent):
         self.funcDebugPrint2Qt(str(msgContent))
         return TUP_SUCCESS;    
     
@@ -86,10 +91,15 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf={}
         mbuf['scale'] = scale
         mbuf['dir'] = dir
-        self.msg_send(TUP_MSGID_CALIB_MV_DIR_REQ, TUP_TASK_ID_UI_CALIB, mbuf)
+        self.msg_send(TUP_MSGID_CALIB_MOMV_DIR_REQ, TUP_TASK_ID_CALIB, mbuf)
         return
+    
     def func_ui_click_force_move(self, dir):
         print("I am func_ui_click_force_move!")
+        mbuf={}
+        mbuf['dir'] = dir
+        self.msg_send(TUP_MSGID_CALIB_MOFM_DIR_REQ, TUP_TASK_ID_CALIB, mbuf)
+        return
 
     def func_ui_click_right_up_set(self):
         print("I am func_ui_click_right_up_set!")

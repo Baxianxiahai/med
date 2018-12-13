@@ -67,8 +67,8 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_NORM_MOTO_MOVE_HOLEN, self.fsm_msg_main_move_holen_rcv_handler)
 
         #校准模式下的移动命令
-        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MV_DIR_REQ, self.fsm_msg_calib_move_dir_req_rcv_handler)
-        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOTO_FM_STEP, self.fsm_msg_calib_force_move_rcv_handler)
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOMV_DIR_REQ, self.fsm_msg_calib_moto_move_dir_req_rcv_handler)
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOFM_DIR_REQ, self.fsm_msg_calib_moto_force_move_req_rcv_handler)
         
         #马达工程模式下的命令
         self.add_stm_combine(self._STM_MENG_UI_ACT, TUP_MSGID_MENG_MOTO_COMMAND, self.fsm_msg_meng_command_rcv_handler)
@@ -170,21 +170,22 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
     
     #CALIB: 正常移动
-    def fsm_msg_calib_move_dir_req_rcv_handler(self, msgContent):
+    def fsm_msg_calib_moto_move_dir_req_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_CALIB_UI_EXEC)
         scale = int(msgContent['scale'])
         dir = msgContent['dir']
         self.funcMotoMoveOneStep(scale, dir)
         self.fsm_set(self._STM_CALIB_UI_ACT)
-        self.msg_send(TUP_MSGID_CALIB_MV_DIR_RESP, TUP_TASK_ID_CALIB, msgContent)
+        self.msg_send(TUP_MSGID_CALIB_MOMV_DIR_RESP, TUP_TASK_ID_CALIB, msgContent)
         return TUP_SUCCESS;
 
     #CALIB: 强制移动
-    def fsm_msg_calib_force_move_rcv_handler(self, msgContent):
+    def fsm_msg_calib_moto_force_move_req_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_CALIB_UI_EXEC)
         dir = msgContent['dir']
         self.funcMotoForceMoveOneStep(dir)
         self.fsm_set(self._STM_CALIB_UI_ACT)
+        self.msg_send(TUP_MSGID_CALIB_MOFM_DIR_RESP, TUP_TASK_ID_CALIB, msgContent)
         return TUP_SUCCESS;
 
     #MENG: 工程模式下的控制命令
@@ -621,7 +622,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
                 return 1
             time.sleep(1)
             cnt -= 1
-            self.tup_dbg_print("L2MOTO: Wait move distance progress, Counter = ", cnt)
+            self.tup_dbg_print("L2MOTO: Wait move distance progress, Counter = " + str(cnt))
             if cnt <=0:
                 self.tup_err_print("L2MOTO: Time out on waiting for moto feedback.")
                 return -1;
@@ -629,7 +630,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     #标准指令
     def funcInqueryRunningStatus(self):
         res = self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_INQ_RUN_CMID, 1, 1, 1, 1)
-        self.tup_dbg_print("L2MOTO: Inquiry Res = ", res)
+        self.tup_dbg_print("L2MOTO: Inquiry Res = " + str(res))
         if res == 0:
             return True
         else:
