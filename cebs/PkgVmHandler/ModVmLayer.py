@@ -29,6 +29,13 @@ TUP_TIMER_PERIOD    = 2
 TUP_TASK_PROCESS_MODE = 1
 TUP_TASK_THREAD_MODE = 2
 TUP_TASK_CUR_MOD = TUP_TASK_THREAD_MODE
+#DEBUG_LEVEL
+TUP_DBG_LVL_ALL = 1
+TUP_DBG_LVL_CRT = 2
+TUP_DBG_LVL_IMP = 3
+TUP_DBG_LVL_NOR = 4
+TUP_DBG_LVL_INF = 5
+TUP_DBG_LVL_NOT = 6
 
 '''
 全局配置参数
@@ -39,10 +46,10 @@ TUP_TASK_CUR_MOD = TUP_TASK_THREAD_MODE
 '''
 class tupGlbCfg():
     def __init__(self):
-        self.dbg_level = 1
-        self.TUP_MSGID_MAX = 1000;
+        self.dbg_level = TUP_DBG_LVL_ALL
+        self.TUP_MSGID_MAX = TUP_MSG_ID_NBR_MAX;
         self.TUP_STATE_MAX = 50;
-        self.TUP_TASK_MAX = 200;
+        self.TUP_TASK_MAX = TUP_TASK_NBR_MAX;
         self.TUP_TIMER_MAX = 200;
         self.queTab = [Queue() for i in range(self.TUP_TASK_MAX)]
         self.timerTab = [{'type':TUP_TIMER_ONE_TIME, 'cnt':0, 'act': False} for i in range(self.TUP_TIMER_MAX)]
@@ -95,7 +102,9 @@ class tupTaskTemplate():
     def msg_send_in(self, msg):
         self.queue.put(msg)
         if (self.glTab.dbg_level == 1):
-            self.tup_trace(str(msg))
+            self.tup_trace("MID=" + str(msg['mid']) + "[" + str(TUP_MID_NAME[msg['mid']]) + str("], SRC=") + str(msg['src']) + \
+                "[" + str(TUP_TASK_NAME[msg['src']]) + str("], DST=") + str(msg['dst']) + "[" + str(TUP_TASK_NAME[msg['dst']]) + \
+                str("], CONTENT=[") + str(msg['content']) + "]")
 
     def msg_send_out(self, taskDestId, msg):
         if (taskDestId <0) or (taskDestId >= self.glTab.TUP_TASK_MAX):
@@ -104,7 +113,10 @@ class tupTaskTemplate():
         #print("MsgQue = ", TUP_GL_CFG.queTab[taskDestId])
         self.glTab.queTab[taskDestId].put(msg)
         if (self.glTab.dbg_level == 1):
-            self.tup_trace(str(msg))
+            #self.tup_trace(str(msg))
+            self.tup_trace("MID=" + str(msg['mid']) + "[" + str(TUP_MID_NAME[msg['mid']]) + str("], SRC=") + str(msg['src']) + \
+                "[" + str(TUP_TASK_NAME[msg['src']]) + str("], DST=") + str(msg['dst']) + "[" + str(TUP_TASK_NAME[msg['dst']]) + \
+                str("], CONTENT=[") + str(msg['content']) + "]")
 
     def msg_send(self, mid, dst, content):
         msgSnd = {}

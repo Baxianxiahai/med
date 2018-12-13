@@ -23,7 +23,6 @@ from PkgVmHandler.ModVmLayer import *
 from PkgCebsHandler.ModCebsCom import *
 from PkgCebsHandler.ModCebsCfg import *
 from PkgVmHandler.ModVmConsole import *
-from PkgVmHandler.ModVmTimer import *
 
 
 #主任务入口
@@ -49,14 +48,18 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         #STM MATRIX
         self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
+
         #通知界面切换
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_main_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_UI_SWITCH, self.fsm_msg_calib_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MENG_UI_SWITCH, self.fsm_msg_meng_ui_switch_rcv_handler)
+        
         #测试功能
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_msg_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_TEST, self.fsm_msg_test_msg_rcv_handler)
+
+        #通用功能
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_NORM_MOTO_STOP, self.fsm_msg_moto_stop_rcv_handler)
 
         #主界面模式的移动命令
         self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_NORM_MOTO_BACK_ZERO, self.fsm_msg_main_back_zero_rcv_handler)
@@ -64,7 +67,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_NORM_MOTO_MOVE_HOLEN, self.fsm_msg_main_move_holen_rcv_handler)
 
         #校准模式下的移动命令
-        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOTO_MV_STEP, self.fsm_msg_calib_move_rcv_handler)
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MV_DIR_REQ, self.fsm_msg_calib_move_dir_req_rcv_handler)
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOTO_FM_STEP, self.fsm_msg_calib_force_move_rcv_handler)
         
         #马达工程模式下的命令
@@ -88,15 +91,16 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS;
 
-    def fsm_msg_time_out_rcv_handler(self, msgContent):
-        return TUP_SUCCESS;
-
     def fsm_msg_trace_msg_rcv_handler(self, msgContent):
         self.funcMotoLogTrace(msgContent);
         return TUP_SUCCESS;
 
     def fsm_msg_test_msg_rcv_handler(self, msgContent):
         self.msg_send(TUP_MSGID_TEST, TUP_TASK_ID_UI_MAIN, msgContent)
+        return TUP_SUCCESS;
+
+    def fsm_msg_moto_stop_rcv_handler(self, msgContent):
+        self.funcMotoStop()
         return TUP_SUCCESS;
 
     def fsm_msg_main_ui_switch_rcv_handler(self, msgContent):
@@ -166,12 +170,13 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
     
     #CALIB: 正常移动
-    def fsm_msg_calib_move_rcv_handler(self, msgContent):
+    def fsm_msg_calib_move_dir_req_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_CALIB_UI_EXEC)
         scale = int(msgContent['scale'])
         dir = msgContent['dir']
         self.funcMotoMoveOneStep(scale, dir)
         self.fsm_set(self._STM_CALIB_UI_ACT)
+        self.msg_send(TUP_MSGID_CALIB_MV_DIR_RESP, TUP_TASK_ID_CALIB, msgContent)
         return TUP_SUCCESS;
 
     #CALIB: 强制移动

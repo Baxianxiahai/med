@@ -35,7 +35,7 @@ from PkgVmHandler.ModVmLayer import *
 from PkgCebsHandler.ModCebsCom import *
 from PkgCebsHandler.ModCebsCfg import *
 from PkgVmHandler.ModVmConsole import *
-from PkgVmHandler.ModVmTimer import *
+
 #from cebsTkL4Ui import *
 
 class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
@@ -66,14 +66,13 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         #STM MATRIX
         self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
         #通知界面切换
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_main_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_UI_SWITCH, self.fsm_msg_calib_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_GPAR_UI_SWITCH, self.fsm_msg_gpar_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_PIC_REFRESH_PAR, self.fsm_msg_refresh_par_rcv_handler)
 
-        #校准模式下的抓图指令
+        #校准模式下的视频摄像头+抓图指令
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_PIC_CAP_REQ, self.fsm_msg_calib_pic_cap_req_rcv_handler)
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_VDISP_REQ, self.fsm_msg_calib_video_display_req_rcv_handler)
 
@@ -116,9 +115,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
-        return TUP_SUCCESS;
-        
-    def fsm_msg_time_out_rcv_handler(self, msgContent):
         return TUP_SUCCESS;
 
     def fsm_msg_main_ui_switch_rcv_handler(self, msgContent):

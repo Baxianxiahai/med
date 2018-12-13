@@ -12,7 +12,6 @@ from PkgVmHandler.ModVmLayer import *
 from PkgCebsHandler.ModCebsCom import *
 from PkgCebsHandler.ModCebsCfg import *
 from PkgVmHandler.ModVmConsole import *
-from PkgVmHandler.ModVmTimer import *
 
 from PkgCetkHandler import ModCetkCalib
 from PkgCetkHandler import ModCetkCtrlSchd
@@ -48,13 +47,6 @@ def prj_cebs_main_entry():
     VmConslTaskInst.msg_send_in(initMsg)
     VmConslTaskInst.tup_dbg_print("Create VM task success!")
     
-    #待删去，废弃现在的定时器方案
-    #Timer Task
-    TimerTaskInst = tupTaskTimer(TUP_GL_CFG);
-    initMsg['dst'] = TUP_TASK_ID_TIMER
-    TimerTaskInst.msg_send_in(initMsg)
-    TimerTaskInst.tup_dbg_print("Create TIMER task success!")
-
     #UI_MAIN
     MainUiTaskInst = ModCetkUiMain.tupTaskUiMain(TUP_GL_CFG);
     initMsg['dst'] = TUP_TASK_ID_UI_MAIN

@@ -9,14 +9,13 @@ Created on 2018年12月11日
 
 import random
 import time
+import json
 from multiprocessing import Queue, Process
 from PkgVmHandler.ModVmCfg import *
 from PkgVmHandler.ModVmLayer import *
 from PkgCebsHandler.ModCebsCom import *
 from PkgCebsHandler.ModCebsCfg import *
 from PkgVmHandler.ModVmConsole import *
-from PkgVmHandler.ModVmTimer import *
-import json
 
 
 class tupTaskUiMeng(tupTaskTemplate, clsL1_ConfigOpr):
@@ -30,7 +29,6 @@ class tupTaskUiMeng(tupTaskTemplate, clsL1_ConfigOpr):
         #STM MATRIX
         self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_inc_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MENG_UI_SWITCH, self.fsm_msg_ui_focus_rcv_handler)
         #业务态
@@ -45,9 +43,6 @@ class tupTaskUiMeng(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_DEACT)
-        return TUP_SUCCESS;
-        
-    def fsm_msg_time_out_rcv_handler(self, msgContent):
         return TUP_SUCCESS;
 
     def fsm_msg_trace_inc_rcv_handler(self, msgContent):

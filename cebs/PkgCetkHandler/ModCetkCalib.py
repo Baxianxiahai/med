@@ -12,11 +12,11 @@ from PkgVmHandler.ModVmLayer import *
 from PkgCebsHandler.ModCebsCom import *
 from PkgCebsHandler.ModCebsCfg import *
 from PkgVmHandler.ModVmConsole import *
-from PkgVmHandler.ModVmTimer import *
 
 class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_ACTIVE = 3
     _STM_CAM_DISP = 4
+    _STM_MOTO_MV = 5
 
     timerDisplay = ''
     
@@ -27,12 +27,15 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         #STM MATRIX
         self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
         
         #业务处理部分
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_CLOSE_REQ, self.fsm_msg_close_req_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_OPEN_REQ, self.fsm_msg_open_req_rcv_handler)
         self.add_stm_combine(self._STM_CAM_DISP, TUP_MSGID_CALIB_VDISP_RESP, self.fsm_msg_cam_disp_resp_rcv_handler)
+
+        #移动命令
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MV_DIR_REQ, self.fsm_msg_mv_dir_req_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MV_DIR_RESP, self.fsm_msg_mv_dir_resp_rcv_handler)
 
         #START TASK
         self.fsm_set(TUP_STM_INIT)
@@ -54,9 +57,6 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_restart_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS;
-        
-    def fsm_msg_time_out_rcv_handler(self, msgContent):
-        return TUP_SUCCESS;
     
     #打开摄像头
     def fsm_msg_open_req_rcv_handler(self, msgContent):
@@ -67,6 +67,17 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     #传回来的显示结果
     def fsm_msg_cam_disp_resp_rcv_handler(self, msgContent):
         self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_UI_CALIB, msgContent)
+        return TUP_SUCCESS;
+    
+    #移动动作需要等待MOTO反馈并解锁状态
+    def fsm_msg_mv_dir_req_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_MOTO_MV)
+        self.msg_send(TUP_MSGID_CALIB_MV_DIR_REQ, TUP_TASK_ID_CALIB, msgContent)
+        return TUP_SUCCESS;
+
+    def fsm_msg_mv_dir_resp_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_ACTIVE)
+        self.msg_send(TUP_MSGID_CALIB_MV_DIR_RESP, TUP_TASK_ID_UI_CALIB, msgContent)
         return TUP_SUCCESS;
 
     #关闭摄像头与马达

@@ -12,7 +12,6 @@ from PkgVmHandler.ModVmLayer import *
 from PkgCebsHandler.ModCebsCom import *
 from PkgCebsHandler.ModCebsCfg import *
 from PkgVmHandler.ModVmConsole import *
-from PkgVmHandler.ModVmTimer import *
 
 
 class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
@@ -25,7 +24,6 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         #STM MATRIX
         self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
         #START TASK
         self.fsm_set(TUP_STM_INIT)
         self.task_run()
@@ -37,9 +35,6 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
-        return TUP_SUCCESS;
-        
-    def fsm_msg_time_out_rcv_handler(self, msgContent):
         return TUP_SUCCESS;
 
     def funcCtrlSchdLogTrace(self, myString):

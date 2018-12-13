@@ -22,7 +22,6 @@ class tupTaskVmConsl(tupTaskTemplate):
         #STM MATRIX
         self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GEN_TRIG, self.fsm_msg_gen_trig_rcv_handler)
         self.fsm_set(TUP_STM_INIT)
         #START TASK
@@ -35,10 +34,6 @@ class tupTaskVmConsl(tupTaskTemplate):
         self.tup_dbg_print("I am in fsm_msg_restart_rcv_handler = ", msgContent)
         self.msg_send(TUP_MSGID_GEN_TRIG, TUP_TASK_ID_VMCONSL, "test> " + str(random.random()))
         self.fsm_set(self._STM_ACTIVE)
-        return TUP_SUCCESS;
-
-    def fsm_msg_time_out_rcv_handler(self, msgContent):
-        self.tup_dbg_print("I am in fsm_msg_time_out_rcv_handler = ", msgContent)
         return TUP_SUCCESS;
         
     def fsm_msg_gen_trig_rcv_handler(self, msgContent):

@@ -11,7 +11,8 @@
 
 //=ZJL, 2018/12/14, CURRENT_SW_DELIVERY R1.38 =>CEBS
 = 完善CALIB中摄像头的显示问题
-
+= 去掉老旧TIMER工作机制
+= 完善打印机制
 
 //=ZJL, 2018/12/13, CURRENT_SW_DELIVERY R1.37 =>CEBS
 = 优化msg_send函数
