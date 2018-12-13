@@ -251,7 +251,7 @@ class clsL3_CtrlSchdThread(QThread):
         if (ret == 2):
             self.instL1ConfigOpr.updBatchFileVideo(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, curOne)
         #MOVINT TO NEXT WORKIN POSITION IN ADVANCE
-        nextOne = curOne + 1;
+        nextOne = curOne ;
         #Using FIX Point set to un-make the moto moving step
         if (ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == True):
             return 1;

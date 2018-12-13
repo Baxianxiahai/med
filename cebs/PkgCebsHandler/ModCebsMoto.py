@@ -272,7 +272,7 @@ class clsL2_MotoProc(object):
     '''    
     '这个移动算法跟显微镜的放置方式息息相关'
     def funcMotoMove2HoleNbr(self, holeIndex):
-        time.sleep(1)
+        time.sleep(6)
         if (holeIndex == 0):
             xTargetHoleNbr = 0;
             yTargetHoleNbr = 0;
@@ -545,9 +545,7 @@ class clsL1_MdcThd(QThread):
             crc = self.funcCacCrc(byteDataBuf, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
             fmt = "<H";
             byteCrc = struct.pack(fmt, crc)
-            byteDataBuf += byteCrc
-            
-                
+            byteDataBuf += byteCrc   
             #打印完整的BYTE系列
             index=0
             outBuf=''
