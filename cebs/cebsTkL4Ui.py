@@ -104,10 +104,11 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCfg.cl
         file, ok=QFileDialog.getOpenFileName(self,"OPEN FILE","C:/","All Files (*);;Text Files (*.txt)")  
         self.statusbar.showMessage(file)
 
+    #strOut = strOld + "\n>> " + str(time.asctime()) + " " + str(info);
+    #self.textEdit_runProgress.setText(strOut);
     def cetk_debug_print(self, info):
+        time.sleep(0.01)
         strOld = self.textEdit_runProgress.toPlainText()
-        #strOut = strOld + "\n>> " + str(time.asctime()) + " " + str(info);
-        #self.textEdit_runProgress.setText(strOut);
         strOut = ">> " + str(time.asctime()) + " " + str(info);
         self.textEdit_runProgress.append(strOut);
         self.textEdit_runProgress.moveCursor(QtGui.QTextCursor.End)
@@ -233,6 +234,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm, ModCebsCfg.clsL1_Co
         self.TkCalibUi.funcSaveFatherInst(self)
         
     def cetk_debug_print(self, info):
+        time.sleep(0.01)
         strOut = ">> " + str(time.asctime()) + " " + str(info);
         self.textEdit_calib_runProgress.append(strOut);
         self.textEdit_calib_runProgress.moveCursor(QtGui.QTextCursor.End)
@@ -715,6 +717,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
         self.picOrgFile = ''
 
     def cetk_debug_print(self, info):
+        time.sleep(0.01)
         strOut = ">> " + str(time.asctime()) + " " + str(info);
         self.textEdit_gpar_cmd_log.append(strOut);
         self.textEdit_gpar_cmd_log.moveCursor(QtGui.QTextCursor.End)
@@ -894,6 +897,7 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm, ModCebsCfg.clsL1_Conf
         self.TkMengUi.funcSaveFatherInst(self)
 
     def cetk_debug_print(self, info):
+        time.sleep(0.01)
         strOut = ">> " + str(time.asctime()) + " " + str(info);
         self.textEdit_meng_trace_log.append(strOut);
         self.textEdit_meng_trace_log.moveCursor(QtGui.QTextCursor.End)

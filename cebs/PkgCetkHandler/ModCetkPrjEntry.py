@@ -113,20 +113,9 @@ def prj_cebs_main_entry():
     initMsg['dst'] = TUP_TASK_ID_VISION
     VisionTaskInst.msg_send_in(initMsg)
     VisionTaskInst.tup_dbg_print("Create VISION task success!")
-    
-    #TEST trigger MOTO
-#     time.sleep(1)
-#     msgSnd = {}
-#     msgSnd['mid'] = TUP_MSGID_TEST
-#     msgSnd['src'] = TUP_TASK_ID_TEST
-#     msgSnd['content'] = "MY TEST"
-#     msgSnd['dst'] = TUP_TASK_ID_MOTO
-#     MotoTaskInst.msg_send_in(msgSnd)
-            
+               
     #FINAL QT UI：真正启动界面APP
     cebsTkL4Ui.cetk_show_app(app, splash, MainUiTaskInst, CalibUiTaskInst, GparUiTaskInst, MengUiTaskInst, 0)
-    #本界面启动以后，TUPCONSOLE任务被阻塞了，一直要等到界面退出后才能出来
-    #cetk_l4ui_main_form_entry();
     
     #CLOSE ALL TASK: total 12 tasks
     print("Project CETK terminate all existing tasks!")

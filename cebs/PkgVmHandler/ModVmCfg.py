@@ -26,11 +26,12 @@ TUP_TASK_ID_TEST        = 99
 #Message ID defination
 TUP_MSGID_NULL          = 0
 TUP_MSGID_INIT          = 1
-TUP_MSGID_TIME_OUT      = 2
-TUP_MSGID_RESTART       = 3
-TUP_MSGID_GEN_TRIG      = 4
-TUP_MSGID_TRACE         = 5
-TUP_MSGID_TEST          = 6
+TUP_MSGID_TIME_REQ      = 2
+TUP_MSGID_TIME_OUT      = 3
+TUP_MSGID_RESTART       = 4
+TUP_MSGID_GEN_TRIG      = 5
+TUP_MSGID_TRACE         = 6
+TUP_MSGID_TEST          = 7
 
 #界面相关的切换消息
 TUP_MSGID_MAIN_UI_SWITCH= 20

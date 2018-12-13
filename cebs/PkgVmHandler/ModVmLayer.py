@@ -22,6 +22,13 @@ TUP_STM_INIT = 1
 TUP_STM_COMN = 2
 #给入口参数做初始化
 TUP_INIT_VALUE = -1
+#定时器相关定义
+TUP_TIMER_ONE_TIME  = 1
+TUP_TIMER_PERIOD    = 2
+#PROCE or THREAD MODE
+TUP_TASK_PROCESS_MODE = 1
+TUP_TASK_THREAD_MODE = 2
+TUP_TASK_CUR_MOD = TUP_TASK_THREAD_MODE
 
 '''
 全局配置参数
@@ -32,26 +39,11 @@ class tupGlbCfg():
         self.TUP_MSGID_MAX = 1000;
         self.TUP_STATE_MAX = 50;
         self.TUP_TASK_MAX = 200;
+        self.TUP_TIMER_MAX = 200;
         self.queTab = [Queue() for i in range(self.TUP_TASK_MAX)]
-        #self.taskTab = ['' for i in range(self.TUP_TASK_MAX)]
-        
-#     def save_task_by_id(self, taskId, taskObj):
-#         if (taskId < 0) or (taskId >= self.TUP_TASK_MAX):
-#             return TUP_FAILURE
-#         self.taskTab.insert(taskId, taskObj)
-#         return TUP_SUCCESS;
-
-#     def get_task_by_id(self, taskId):
-#         if (taskId < 0) or (taskId >= self.TUP_TASK_MAX):
-#             return TUP_FAILURE, _
-#         return TUP_SUCCESS, self.taskTab[taskId]
-    
-#     def tup_trc_print(self, taskid, string):
-#         ret,_ = self.get_task_by_id(taskid)
-#         if (ret == TUP_SUCCESS):
-#             print(time.asctime(), ", TRC_TSKID_", taskid, ": ", str(string))
-        
-
+        #self.timerTab = [{'tid':i, 'type':'oneTime', 'cnt':0, 'act': False} for i in range(self.TUP_TIMER_MAX)]
+        #type: oneTime / period
+        self.timerTab = [{'type':TUP_TIMER_ONE_TIME, 'cnt':0, 'act': False} for i in range(self.TUP_TIMER_MAX)]
 
 '''
 基础任务模板
@@ -112,17 +104,6 @@ class tupTaskTemplate():
         if (self.glTab.dbg_level == 1):
             self.tup_trace(str(msg))
 
-#     def msg_send(self, mid, dst, src, content):
-#         msgSnd = {}
-#         msgSnd['mid'] = mid
-#         msgSnd['src'] = src
-#         msgSnd['dst'] = dst
-#         msgSnd['content'] = content
-#         if (self.taskId == dst):
-#             self.msg_send_in(msgSnd)
-#         else:
-#             self.msg_send_out(dst, msgSnd)
-
     def msg_send(self, mid, dst, content):
         msgSnd = {}
         msgSnd['mid'] = mid
@@ -143,10 +124,12 @@ class tupTaskTemplate():
     
     #进程和线程方法
     def task_create(self):
-        #进程模式
-        #self.process = Process(target=self.task_handler_enginee, args=(self.queue,))
         #线程模式
-        self.process = threading.Thread(target=self.task_handler_enginee, args=(self.queue,))
+        if (TUP_TASK_CUR_MOD == TUP_TASK_THREAD_MODE):
+            self.process = threading.Thread(target=self.task_handler_enginee, args=(self.queue,))
+        #进程模式
+        else:
+            self.process = Process(target=self.task_handler_enginee, args=(self.queue,))
             
     def task_handler_enginee(self, myque):
         while True:
@@ -167,14 +150,6 @@ class tupTaskTemplate():
             if (dstId != self.taskId):
                 self.tup_err_print("Wrong destination module, self srcId = %d, dstId=%d." % (self.taskId, dstId) )
                 continue
-            # 尝试使用TRY机制，后面的机制好使，这个机制暂时不用
-#             try:
-#                 proc = self.msgStateMatrix[TUP_STM_COMN][msgId]
-#                 if (proc(msgCont) == TUP_FAILURE):
-#                     self.tup_err_print("Proc execute error, Src/Dst/MsgId=%d/%d/%d, MsgContent=%s" % (srcId, dstId, msgId, str(msgCont)))
-#                     continue
-#             except Exception:
-#                 pass
             #CASE1: 首先确定COMN状态机，忽略当前的消息执行
             if self.msgStateMatrix[TUP_STM_COMN][msgId] != TUP_INIT_VALUE:
                 proc = self.msgStateMatrix[TUP_STM_COMN][msgId]
@@ -193,7 +168,6 @@ class tupTaskTemplate():
 
     def task_run(self):
         self.process.start()
-        #self.process.join()
 
     def tup_trace(self, string):
         print(time.asctime(), ", [TRC] [", self.taskName, "]: ", str(string))

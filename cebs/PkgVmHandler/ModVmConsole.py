@@ -18,7 +18,6 @@ class tupTaskVmConsl(tupTaskTemplate):
 
     def __init__(self, glPar):
         tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_VMCONSL, taskName="TASK_VM", glTabEntry=glPar)
-        #ModVmLayer.TUP_GL_CFG.save_task_by_id(ModVmCfg.TUP_TASK_ID_VMCONSL, self)
         self.fsm_set(TUP_STM_NULL)
         #STM MATRIX
         self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
@@ -30,18 +29,11 @@ class tupTaskVmConsl(tupTaskTemplate):
         self.task_run()
 
     def fsm_msg_init_rcv_handler(self, msgContent):
-        #time.sleep(0.5) #WAIT FOR OTHER TASK STARTUP
         return TUP_SUCCESS;
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
         self.tup_dbg_print("I am in fsm_msg_restart_rcv_handler = ", msgContent)
         self.msg_send(TUP_MSGID_GEN_TRIG, TUP_TASK_ID_VMCONSL, "test> " + str(random.random()))
-#         msgSnd = {}
-#         msgSnd['mid'] = TUP_MSGID_GEN_TRIG
-#         msgSnd['src'] = TUP_TASK_ID_TEST
-#         msgSnd['dst'] = TUP_TASK_ID_VMCONSL
-#         msgSnd['content'] = "test> " + str(random.random())
-#         self.msg_send_in(msgSnd)
         self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS;
 
