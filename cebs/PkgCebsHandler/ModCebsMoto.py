@@ -517,6 +517,28 @@ class clsL1_MdcThd(QThread):
                 res, Buf = self.funcCmdSend(byteDataBuf)
                 time.sleep(2)
             return 1    
+#             if (cmdId == 0x30):
+#             for i in range(1,500):
+#                 #print("A")
+#                 fmt = ">BBiiii";
+#                 if (i%2 == 0):
+#                     byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, (-1)*par1, par2, par3, par4)
+#                 else:
+#                     byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, par1, par2, par3, par4)
+#                 crc = self.funcCacCrc(byteDataBuf, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
+#                 fmt = "<H";
+#                 byteCrc = struct.pack(fmt, crc)
+#                 byteDataBuf += byteCrc
+#                 #打印完整的BYTE系列
+#                 index=0
+#                 outBuf=''
+#                 while index < (ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
+#                     outBuf += str("%02X " % (byteDataBuf[index]))
+#                     index+=1
+#                 self.funcMdctdDebugPrint("L1MDCT: SND CMD = " + outBuf)
+#                 res, Buf = self.funcCmdSend(byteDataBuf)
+#                 time.sleep(12)
+#             return 1  
         else:
             fmt = ">BBiiii";    
             byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, par1, par2, par3, par4)
