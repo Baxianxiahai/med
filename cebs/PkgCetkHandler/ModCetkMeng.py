@@ -27,6 +27,12 @@ class tupTaskMeng(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
+        
+        #业务处理部分
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MENG_CLOSE_REQ, self.fsm_msg_close_req_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_MENG_MOTO_COMMAND, self.fsm_msg_moto_cmd_req_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_MENG_MOTO_CMD_FB, self.fsm_msg_moto_cmd_resp_rcv_handler)
+        
         #START TASK
         self.fsm_set(TUP_STM_INIT)
         self.task_run()
@@ -43,6 +49,18 @@ class tupTaskMeng(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_time_out_rcv_handler(self, msgContent):
         return TUP_SUCCESS;
 
+    def fsm_msg_close_req_rcv_handler(self, msgContent):
+        self.func_clean_working_env()
+        return TUP_SUCCESS;
+
+    def fsm_msg_moto_cmd_req_rcv_handler(self, msgContent):
+        self.msg_send(TUP_MSGID_MENG_MOTO_COMMAND, TUP_TASK_ID_MOTO, msgContent)
+        return TUP_SUCCESS;
+    
+    def fsm_msg_moto_cmd_resp_rcv_handler(self, msgContent):
+        self.msg_send(TUP_MSGID_MENG_MOTO_CMD_FB, TUP_TASK_ID_UI_MENG, msgContent)
+        return TUP_SUCCESS;    
+
     def funcMengLogTrace(self, myString):
         self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MENG, myString)
         #SAVE INTO MED FILE
@@ -58,7 +76,10 @@ class tupTaskMeng(tupTaskTemplate, clsL1_ConfigOpr):
         #PRINT to local
         self.tup_err_print(str(myString))
         return        
-
+    
+    #业务函数    
+    def func_clean_working_env(self):
+        pass
 
 
 

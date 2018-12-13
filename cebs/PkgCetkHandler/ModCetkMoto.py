@@ -193,9 +193,9 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         par3 = int(msgContent['par3'])
         par4 = int(msgContent['par4'])
         res = self.funcSendCmdPack(cmdid, par1, par2, par3, par4)
-        mCont={}
-        mCont['res'] = res
-        self.msg_send(TUP_MSGID_MENG_MOTO_CMD_FB, TUP_TASK_ID_UI_MENG, mCont)
+        mbuf={}
+        mbuf['res'] = res
+        self.msg_send(TUP_MSGID_MENG_MOTO_CMD_FB, TUP_TASK_ID_MENG, mbuf)
         self.fsm_set(self._STM_MENG_UI_ACT)
         return TUP_SUCCESS;
 

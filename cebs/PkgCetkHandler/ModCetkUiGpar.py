@@ -93,6 +93,7 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
     #清理各项操作
     def func_ui_click_gpar_close(self):
         print("I am func_ui_click_gpar_close!")
+        self.msg_send(TUP_MSGID_GPAR_CLOSE_REQ, TUP_TASK_ID_GPAR, "")
         
     #界面切走
     def func_ui_click_gpar_switch_to_main(self):

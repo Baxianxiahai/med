@@ -29,6 +29,10 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TIME_OUT, self.fsm_msg_time_out_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_inc_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_UI_SWITCH, self.fsm_msg_ui_focus_rcv_handler)
+
+        #业务部分
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_VDISP_RESP, self.fsm_msg_calib_vdisp_resp_rcv_handler)
+        
         #START TASK
         self.fsm_set(TUP_STM_INIT)
         self.task_run()
@@ -50,7 +54,12 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
     
     #界面切换进来
     def fsm_msg_ui_focus_rcv_handler(self, msgContent):
+        self.msg_send(TUP_MSGID_CALIB_OPEN_REQ, TUP_TASK_ID_CALIB, "")
         self.fsm_set(self._STM_ACTIVE)
+        return TUP_SUCCESS;
+
+    #业务功能
+    def fsm_msg_calib_vdisp_resp_rcv_handler(self, msgContent):
         return TUP_SUCCESS;
     
     #将界面对象传递给本任务，以便将打印信息送到界面上
@@ -91,9 +100,10 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
     def func_ui_click_cap_pic_by_hole(self, holeNbr):
         print("I am func_ui_click_cap_pic_by_hole!")        
     
-    #清理各项操作
+    #清理各项操作：CALIB有遗留马达效应，所以需要发送控制命令给干活的CALIB
     def func_ui_click_calib_close(self):
         print("I am func_ui_click_calib_close!")
+        self.msg_send(TUP_MSGID_CALIB_CLOSE_REQ, TUP_TASK_ID_CALIB, "")
         
     #界面切走
     def func_ui_click_calib_switch_to_main(self):

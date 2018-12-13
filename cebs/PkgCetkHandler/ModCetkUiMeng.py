@@ -60,7 +60,7 @@ class tupTaskUiMeng(tupTaskTemplate, clsL1_ConfigOpr):
         if (self.fatherUiObj == ''):
             print("MENG_UI task lose 1 print message due to time sync.")
         else:      
-            self.funcDebugPrint2Qt(msgContent)
+            #self.funcDebugPrint2Qt(msgContent)
             self.fatherUiObj.meng_callback_cmd_exec_fb(msgContent['res'])
         return TUP_SUCCESS;
 
@@ -82,18 +82,18 @@ class tupTaskUiMeng(tupTaskTemplate, clsL1_ConfigOpr):
     #主界面承接过来的执行函数
     def func_ui_click_send_command(self, cmdid, par1, par2, par3, par4):
         print("I am func_ui_click_send_command!")
-        msgContent = {}
-        msgContent['cmdid'] = int(cmdid)
-        msgContent['par1'] = int(par1)
-        msgContent['par2'] = int(par2)
-        msgContent['par3'] = int(par3)
-        msgContent['par4'] = int(par4)
-        self.msg_send(TUP_MSGID_MENG_MOTO_COMMAND, TUP_TASK_ID_MOTO, msgContent)
+        mbuf = {}
+        mbuf['cmdid'] = int(cmdid)
+        mbuf['par1'] = int(par1)
+        mbuf['par2'] = int(par2)
+        mbuf['par3'] = int(par3)
+        mbuf['par4'] = int(par4)
+        self.msg_send(TUP_MSGID_MENG_MOTO_COMMAND, TUP_TASK_ID_MENG, mbuf)
 
-    #清理各项操作
+    #清理各项操作：工程模式均为阻塞式工作模式，暂时不需要再去通知MENG任务模块
     def func_ui_click_meng_close(self):
         print("I am func_ui_click_meng_close!")
-        pass
+        self.msg_send(TUP_MSGID_MENG_CLOSE_REQ, TUP_TASK_ID_MENG, "")
             
     #界面切走
     def func_ui_click_meng_switch_to_main(self):

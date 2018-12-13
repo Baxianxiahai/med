@@ -40,6 +40,7 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_GPAR_INIT_INF, self.fsm_msg_init_inf_rcv_handler)
 
         #业务处理部分
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_GPAR_CLOSE_REQ, self.fsm_msg_close_req_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GPAR_PIC_TRAIN_REQ, self.fsm_msg_pic_train_req_rcv_handler)
         self.add_stm_combine(self._STM_TRAINING, TUP_MSGID_GPAR_PIC_TRAIN_RESP, self.fsm_msg_pic_train_resp_rcv_handler)
         
@@ -120,7 +121,23 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
             self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_GPAR, mbuf)
             self.timerTrain = self.tup_timer_start(1, self.func_timer_train_process)
 
-
-
-
-
+    def fsm_msg_close_req_rcv_handler(self, msgContent):
+        self.func_clean_working_env()
+        return TUP_SUCCESS;
+    
+    #业务函数
+    def func_clean_working_env(self):
+        pass
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

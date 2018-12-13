@@ -70,6 +70,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
 
         #校准模式下的抓图指令
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_PIC_CAP_REQ, self.fsm_msg_calib_pic_cap_req_rcv_handler)
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_VDISP_REQ, self.fsm_msg_calib_video_display_req_rcv_handler)
 
         #主界面业务模式下的抓图指令
         self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_PIC_CAP_REQ, self.fsm_msg_main_pic_cap_req_rcv_handler)
@@ -148,6 +149,12 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_calib_pic_cap_req_rcv_handler(self, msgContent):
         scale = int(msgContent['scale'])
         self.funcMotoMoveOneStep(scale, dir)        
+        return TUP_SUCCESS;
+    
+    #传递文件回去给显示界面
+    def fsm_msg_calib_video_display_req_rcv_handler(self, msgContent):
+        mbuf={}
+        self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
         return TUP_SUCCESS;
 
     def fsm_msg_main_pic_cap_req_rcv_handler(self, msgContent):

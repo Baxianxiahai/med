@@ -10,6 +10,7 @@ Created on 2018/4/29
 import sys
 import time
 import platform
+import os
 from PyQt5 import QtWidgets, QtGui, QtCore,QtWebEngineWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, qApp, QAction, QFileDialog, QTextEdit, QMessageBox
 from PyQt5.QtCore import pyqtSlot, pyqtSignal
@@ -43,19 +44,22 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCfg.cl
 
     def __init__(self, TaskInstMainUi, TaskInstCalibUi, TaskInstGparUi, TaskInstMenUi, TaskInstBrowUi):    
         super(SEUI_L4_MainWindow, self).__init__()
+        #CASE1:
+        #SYSTEM LEVEL UI INIT, 系统级别的界面初始化
+        self.setupUi(self)
+        #USER LAVEL UI INIT, 用户级别的界面初始化
+        self.initUI()
+
+        #CASE2
         #存储任务对象指针，以便双向通信
         self.TkMainUi = TaskInstMainUi
         self.TkCalibUi = TaskInstCalibUi
         self.TkGparUi = TaskInstGparUi
         self.TkMenUi = TaskInstMenUi
         self.TkBrowUi = TaskInstBrowUi
-        #SYSTEM LEVEL UI INIT, 系统级别的界面初始化
-        self.setupUi(self)
-        #USER LAVEL UI INIT, 用户级别的界面初始化
-        self.initUI()
-        #HARDWARE LEVEL INIT, 硬件初始化
-        self.initParameter()
 
+        #CASE3: HARDWARE LEVEL INIT, 硬件初始化
+        self.initParameter()
         
     def initUI(self):
         self.statusBar().showMessage('SYSTEM START ')
@@ -227,11 +231,24 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm, ModCebsCfg.clsL1_Co
     sgL4CalibFormActiveTrig = pyqtSignal()
 
     def __init__(self, TaskInstCalibUi):    
-        super(SEUI_L4_CalibForm, self).__init__()  
-        self.TkCalibUi = TaskInstCalibUi
+        super(SEUI_L4_CalibForm, self).__init__()
+        #CASE1: UI PART
         self.setupUi(self)
+
+        #CASE2: WORKING TASK
+        self.TkCalibUi = TaskInstCalibUi
         #使用传递指针的方式
         self.TkCalibUi.funcSaveFatherInst(self)
+        
+        #CASE3: INTI PARAMETERS
+        self.initParameter()
+    
+    def initParameter(self):
+        #载入缺省图像
+        self.calibRect = self.label_calib_RtCam_Fill.geometry()
+        if (os.path.exists('calibInitWorm.jpg') == True):
+            self.filePicInit = QtGui.QPixmap('calibInitWorm.jpg').scaled(self.calibRect.width(), self.calibRect.height())
+            self.label_calib_RtCam_Fill.setPixmap(self.filePicInit)
         
     def cetk_debug_print(self, info):
         time.sleep(0.01)
@@ -704,17 +721,25 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
 
     def __init__(self, TaskInstGparUi):    
         super(SEUI_L4_GparForm, self).__init__()
-        self.TkGparUi = TaskInstGparUi
+        #CASE1: UI PART
         self.setupUi(self)
+
+        #CASE2: WORKING TASK
         #使用传递指针的方式
+        self.TkGparUi = TaskInstGparUi
         self.TkGparUi.funcSaveFatherInst(self)
+        
+        #CASE3: INTI PARAMETERS
+        self.initParameter()
+        
         #Update UI interface last time parameter setting
+    def initParameter(self):
         self.funcGlobalParReadSet2Ui()
         #将参数传递给业务模块
         self.rectOrg = self.label_gpar_pic_origin_fill.geometry()
         self.rectCfy = self.label_gpar_pic_cfy_fill.geometry()
         self.TkGparUi.funcGparInitBascPar(self.rectOrg.width(), self.rectOrg.height(), self.rectCfy.width(), self.rectCfy.height())
-        self.picOrgFile = ''
+        self.picOrgFile = ''       
 
     def cetk_debug_print(self, info):
         time.sleep(0.01)
@@ -891,10 +916,19 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm, ModCebsCfg.clsL1_Conf
 
     def __init__(self, TaskInstGparUi):    
         super(SEUI_L4_MengForm, self).__init__()
-        self.TkMengUi = TaskInstGparUi
+        #CASE1: 
         self.setupUi(self)
+
+        #CASE2: 
+        self.TkMengUi = TaskInstGparUi
         #使用传递指针的方式
         self.TkMengUi.funcSaveFatherInst(self)
+        
+        #CASE3: 
+        self.initParameter()
+    
+    def initParameter(self):
+        pass        
 
     def cetk_debug_print(self, info):
         time.sleep(0.01)
