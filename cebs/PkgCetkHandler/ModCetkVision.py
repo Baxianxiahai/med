@@ -43,6 +43,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_MAIN_UI_ACT = 4
     #校准模式下图像直接读取
     _STM_CALIB_UI_ACT = 5
+    #参数模式下图像直接读取
+    _STM_GPAR_UI_ACT = 6
 
     def __init__(self, glPar):
         tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_VISION, taskName="TASK_VISION", glTabEntry=glPar)
@@ -63,6 +65,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         #通知界面切换
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_main_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_UI_SWITCH, self.fsm_msg_calib_ui_switch_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_GPAR_UI_SWITCH, self.fsm_msg_gpar_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_PIC_REFRESH_PAR, self.fsm_msg_refresh_par_rcv_handler)
 
         #校准模式下的抓图指令
@@ -71,6 +74,9 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         #主界面业务模式下的抓图指令
         self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_PIC_CAP_REQ, self.fsm_msg_main_pic_cap_req_rcv_handler)
         self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_PIC_CLFY_REQ, self.fsm_msg_main_pic_clfy_req_rcv_handler)
+        
+        #训练图像
+        self.add_stm_combine(self._STM_GPAR_UI_ACT, TUP_MSGID_GPAR_PIC_TRAIN_REQ, self.fsm_msg_pic_train_req_rcv_handler)
         
         #切换状态机
         self.fsm_set(TUP_STM_INIT)
@@ -105,17 +111,21 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.fsm_set(self._STM_CALIB_UI_ACT)
         return TUP_SUCCESS;
 
+    def fsm_msg_gpar_ui_switch_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_GPAR_UI_ACT)
+        return TUP_SUCCESS;    
+
     def fsm_msg_refresh_par_rcv_handler(self, msgContent):
         self.funcVisRefreshPar();
         return TUP_SUCCESS;
 
     def funcVisionLogTrace(self, myString):
         if (self.state == self._STM_MAIN_UI_ACT):
-            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)
         elif (self.state == self._STM_CALIB_UI_ACT):
-            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, self.taskId, myString)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, myString)
         else:
-            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)
         #SAVE INTO MED FILE
         self.medCmdLog(str(myString))
         #PRINT to local
@@ -124,11 +134,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     
     def funcVisionErrTrace(self, myString):
         if (self.state == self._STM_MAIN_UI_ACT):
-            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)
         elif (self.state == self._STM_CALIB_UI_ACT):
-            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, self.taskId, myString)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, myString)
         else:
-            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)
         #SAVE INTO MED FILE
         self.medErrorLog(str(myString));
         #PRINT to local
@@ -145,6 +155,25 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_main_pic_clfy_req_rcv_handler(self, msgContent):
         return TUP_SUCCESS;
+
+    def fsm_msg_pic_train_req_rcv_handler(self, msgContent):
+        picFile = msgContent['fileName']
+        mbuf={}
+        if (os.path.exists(picFile) == False):
+            mbuf['res'] = -1
+            self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_RESP, TUP_TASK_ID_GPAR, mbuf)
+            return TUP_SUCCESS;
+        self.funcVisionNormalClassifyDirect(picFile, 'tempPic.jpg')
+        if (os.path.exists('tempPic.jpg') == False):
+            mbuf['res'] = -2
+            self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_RESP, TUP_TASK_ID_GPAR, mbuf)
+            return TUP_SUCCESS;
+        #Final feedback
+        mbuf['res'] = 1
+        mbuf['fileName'] = 'tempPic.jpg'
+        self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_RESP, TUP_TASK_ID_GPAR, mbuf)
+        return TUP_SUCCESS;
+
 
     '''
     SERVICE PART: 业务部分的函数，功能处理函数

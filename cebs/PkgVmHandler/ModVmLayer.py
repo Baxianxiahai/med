@@ -112,16 +112,27 @@ class tupTaskTemplate():
         if (self.glTab.dbg_level == 1):
             self.tup_trace(str(msg))
 
-    def msg_send(self, mid, dst, src, content):
+#     def msg_send(self, mid, dst, src, content):
+#         msgSnd = {}
+#         msgSnd['mid'] = mid
+#         msgSnd['src'] = src
+#         msgSnd['dst'] = dst
+#         msgSnd['content'] = content
+#         if (self.taskId == dst):
+#             self.msg_send_in(msgSnd)
+#         else:
+#             self.msg_send_out(dst, msgSnd)
+
+    def msg_send(self, mid, dst, content):
         msgSnd = {}
         msgSnd['mid'] = mid
-        msgSnd['src'] = src
+        msgSnd['src'] = self.taskId
         msgSnd['dst'] = dst
         msgSnd['content'] = content
         if (self.taskId == dst):
             self.msg_send_in(msgSnd)
         else:
-            self.msg_send_out(dst, msgSnd)
+            self.msg_send_out(dst, msgSnd)            
 
     def add_stm_combine(self, state, msgid, proc):
         if (state < 0) or (state >= self.glTab.TUP_STATE_MAX) or (msgid < 0) or (msgid >= self.glTab.TUP_MSGID_MAX):

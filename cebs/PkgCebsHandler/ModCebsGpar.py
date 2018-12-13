@@ -25,6 +25,7 @@ from PyQt5.QtCore import pyqtSlot
 from cebsL4Ui import *
 from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
+from PkgVmHandler.ModVmCfg import TUP_MSGID_TRACE, TUP_TASK_ID_UI_GPAR
 
 
 class clsL3_GparProc(object):

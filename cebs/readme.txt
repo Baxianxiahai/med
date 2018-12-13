@@ -6,6 +6,10 @@
 
 
 
+//=ZJL, 2018/12/13, CURRENT_SW_DELIVERY R1.37 =>CEBS
+= 优化msg_send函数
+= 完成GPAR模块的完整工作流程
+
 
 //=ZJL, 2018/12/13, CURRENT_SW_DELIVERY R1.36 =>CEBS
 = 界面切换完善

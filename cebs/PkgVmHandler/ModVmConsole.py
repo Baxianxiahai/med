@@ -35,14 +35,14 @@ class tupTaskVmConsl(tupTaskTemplate):
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
         self.tup_dbg_print("I am in fsm_msg_restart_rcv_handler = ", msgContent)
-        #time.sleep(1)
-        msgSnd = {}
-        msgSnd['mid'] = TUP_MSGID_GEN_TRIG
-        msgSnd['src'] = TUP_TASK_ID_TEST
-        msgSnd['dst'] = TUP_TASK_ID_VMCONSL
-        msgSnd['content'] = "test> " + str(random.random())
+        self.msg_send(TUP_MSGID_GEN_TRIG, TUP_TASK_ID_VMCONSL, "test> " + str(random.random()))
+#         msgSnd = {}
+#         msgSnd['mid'] = TUP_MSGID_GEN_TRIG
+#         msgSnd['src'] = TUP_TASK_ID_TEST
+#         msgSnd['dst'] = TUP_TASK_ID_VMCONSL
+#         msgSnd['content'] = "test> " + str(random.random())
+#         self.msg_send_in(msgSnd)
         self.fsm_set(self._STM_ACTIVE)
-        self.msg_send_in(msgSnd)
         return TUP_SUCCESS;
 
     def fsm_msg_time_out_rcv_handler(self, msgContent):

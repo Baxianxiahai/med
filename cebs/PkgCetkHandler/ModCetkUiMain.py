@@ -110,9 +110,9 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
     #切换界面
     def func_ui_click_calib_start(self):
         print("I am func_ui_click_calib_start!")
-        self.msg_send(TUP_MSGID_CALIB_UI_SWITCH, TUP_TASK_ID_MOTO, self.taskId, "")
-        self.msg_send(TUP_MSGID_CALIB_UI_SWITCH, TUP_TASK_ID_VISION, self.taskId, "")
-        self.msg_send(TUP_MSGID_CALIB_UI_SWITCH, TUP_TASK_ID_UI_CALIB, self.taskId, "")
+        self.msg_send(TUP_MSGID_CALIB_UI_SWITCH, TUP_TASK_ID_UI_CALIB, "")
+        self.msg_send(TUP_MSGID_CALIB_UI_SWITCH, TUP_TASK_ID_MOTO, "")
+        self.msg_send(TUP_MSGID_CALIB_UI_SWITCH, TUP_TASK_ID_VISION, "")
         #执行命令 
         #转移状态
         self.fsm_set(self._STM_DEACT)
@@ -120,7 +120,8 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
     #切换界面
     def func_ui_click_gpar_start(self):
         print("I am func_ui_click_gpar_start!")
-        self.msg_send(TUP_MSGID_GPAR_UI_SWITCH, TUP_TASK_ID_UI_GPAR, self.taskId, "")
+        self.msg_send(TUP_MSGID_GPAR_UI_SWITCH, TUP_TASK_ID_UI_GPAR, "")
+        self.msg_send(TUP_MSGID_GPAR_UI_SWITCH, TUP_TASK_ID_VISION, "")
         #执行命令 
         #转移状态
         self.fsm_set(self._STM_DEACT)
@@ -132,8 +133,8 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
     #切换界面
     def func_ui_click_meng_start(self):
         print("I am func_ui_click_meng_start!")    
-        self.msg_send(TUP_MSGID_MENG_UI_SWITCH, TUP_TASK_ID_MOTO, self.taskId, "") 
-        self.msg_send(TUP_MSGID_MENG_UI_SWITCH, TUP_TASK_ID_UI_MENG, self.taskId, "") 
+        self.msg_send(TUP_MSGID_MENG_UI_SWITCH, TUP_TASK_ID_UI_MENG, "") 
+        self.msg_send(TUP_MSGID_MENG_UI_SWITCH, TUP_TASK_ID_MOTO, "") 
         #执行命令 
         #转移状态
         self.fsm_set(self._STM_DEACT)
@@ -141,8 +142,8 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
     #切换界面
     def func_ui_click_main_start(self):
         print("I am func_ui_click_main_start!")
-        self.msg_send(TUP_MSGID_MAIN_UI_SWITCH, TUP_TASK_ID_MOTO, self.taskId, "") 
-        self.msg_send(TUP_MSGID_MAIN_UI_SWITCH, TUP_TASK_ID_VISION, self.taskId, "") 
+        self.msg_send(TUP_MSGID_MAIN_UI_SWITCH, TUP_TASK_ID_MOTO, "") 
+        self.msg_send(TUP_MSGID_MAIN_UI_SWITCH, TUP_TASK_ID_VISION, "") 
         #执行命令 
         #转移状态
         self.fsm_set(self._STM_ACTIVE)

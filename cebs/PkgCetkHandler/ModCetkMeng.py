@@ -44,7 +44,7 @@ class tupTaskMeng(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
 
     def funcMengLogTrace(self, myString):
-        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MENG, self.taskId, myString)
+        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MENG, myString)
         #SAVE INTO MED FILE
         self.medCmdLog(str(myString))
         #PRINT to local
@@ -52,7 +52,7 @@ class tupTaskMeng(tupTaskTemplate, clsL1_ConfigOpr):
         return
     
     def funcMengErrTrace(self, myString):
-        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MENG, self.taskId, myString)
+        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MENG, myString)
         #SAVE INTO MED FILE
         self.medErrorLog(str(myString));
         #PRINT to local

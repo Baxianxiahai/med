@@ -106,9 +106,9 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCfg.cl
 
     def cetk_debug_print(self, info):
         strOld = self.textEdit_runProgress.toPlainText()
-        #strOut = strOld + "\n>> " + time.asctime() + " " + str(info);
+        #strOut = strOld + "\n>> " + str(time.asctime()) + " " + str(info);
         #self.textEdit_runProgress.setText(strOut);
-        strOut = ">> " + time.asctime() + " " + str(info);
+        strOut = ">> " + str(time.asctime()) + " " + str(info);
         self.textEdit_runProgress.append(strOut);
         self.textEdit_runProgress.moveCursor(QtGui.QTextCursor.End)
         self.textEdit_runProgress.ensureCursorVisible()
@@ -233,7 +233,7 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm, ModCebsCfg.clsL1_Co
         self.TkCalibUi.funcSaveFatherInst(self)
         
     def cetk_debug_print(self, info):
-        strOut = ">> " + time.asctime() + " " + str(info);
+        strOut = ">> " + str(time.asctime()) + " " + str(info);
         self.textEdit_calib_runProgress.append(strOut);
         self.textEdit_calib_runProgress.moveCursor(QtGui.QTextCursor.End)
         self.textEdit_calib_runProgress.ensureCursorVisible()
@@ -708,9 +708,14 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
         self.TkGparUi.funcSaveFatherInst(self)
         #Update UI interface last time parameter setting
         self.funcGlobalParReadSet2Ui()
+        #将参数传递给业务模块
+        self.rectOrg = self.label_gpar_pic_origin_fill.geometry()
+        self.rectCfy = self.label_gpar_pic_cfy_fill.geometry()
+        self.TkGparUi.funcGparInitBascPar(self.rectOrg.width(), self.rectOrg.height(), self.rectCfy.width(), self.rectCfy.height())
+        self.picOrgFile = ''
 
     def cetk_debug_print(self, info):
-        strOut = ">> " + time.asctime() + " " + str(info);
+        strOut = ">> " + str(time.asctime()) + " " + str(info);
         self.textEdit_gpar_cmd_log.append(strOut);
         self.textEdit_gpar_cmd_log.moveCursor(QtGui.QTextCursor.End)
         self.textEdit_gpar_cmd_log.ensureCursorVisible()
@@ -731,17 +736,26 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
             fileName, _ = QFileDialog.getOpenFileName(self, "选取文件", "/home/", "All Files (*);;Text Files (*.txt)")   #设置文件扩展名过滤,注意用双分号间隔
         #将文件导入到目标框中
         if (fileName != ''):
-            #self.instL3GparProc.funcPicFileLoad(fileName)
-            self.TkGparUi.func_ui_click_pic_file_load(fileName)
+            self.picOrgFile = fileName
+            img = QtGui.QPixmap(fileName)
+            img=img.scaled(self.rectOrg.width(), self.rectOrg.height())
+            self.label_gpar_pic_origin_fill.setPixmap(img)
 
     def slot_gpar_pic_train(self):
+        if (self.picOrgFile == ''):
+            return;
         #Firstly read parameter into classified variable sets, to let Train Func use.
         self.funcReadVisParToCfySets();    #获取SAV
         #在训练之前，需要将系统参数保存在临时变量中，借助于全局变量的传递，进行算法训练。一旦完成，还要再回写。
         savetmp = ModCebsCom.GLVIS_PAR_SAV   #将SAV值传给临时变量
         ModCebsCom.GLVIS_PAR_OFC = ModCebsCom.GLVIS_PAR_SAV   #将SAV值传给OFC
-        self.TkGparUi.func_ui_click_pic_train()
+        self.TkGparUi.func_ui_click_pic_train(self.picOrgFile)
         ModCebsCom.GLVIS_PAR_OFC = savetmp                  #SAV给OFC
+    
+    def gpar_callback_train_resp(self, fileName):
+        img = QtGui.QPixmap(fileName)
+        img=img.scaled(self.rectCfy.width(), self.rectCfy.height())
+        self.label_gpar_pic_cfy_fill.setPixmap(img)
         
     #
     #  SERVICE FUNCTION PART, 业务函数部分
@@ -880,7 +894,7 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm, ModCebsCfg.clsL1_Conf
         self.TkMengUi.funcSaveFatherInst(self)
 
     def cetk_debug_print(self, info):
-        strOut = ">> " + time.asctime() + " " + str(info);
+        strOut = ">> " + str(time.asctime()) + " " + str(info);
         self.textEdit_meng_trace_log.append(strOut);
         self.textEdit_meng_trace_log.moveCursor(QtGui.QTextCursor.End)
         self.textEdit_meng_trace_log.ensureCursorVisible()

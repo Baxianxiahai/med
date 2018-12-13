@@ -42,7 +42,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
         
     def funcCalibLogTrace(self, myString):
-        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, self.taskId, myString)
+        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, myString)
         #SAVE INTO MED FILE
         self.medCmdLog(str(myString))
         #PRINT to local
@@ -50,7 +50,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         return
     
     def funcCalibErrTrace(self, myString):
-        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, self.taskId, myString)
+        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, myString)
         #SAVE INTO MED FILE
         self.medErrorLog(str(myString));
         #PRINT to local

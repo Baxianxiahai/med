@@ -80,9 +80,6 @@ class tupTaskUiMeng(tupTaskTemplate, clsL1_ConfigOpr):
             self.fatherUiObj.cetk_debug_print(str(string))
             
     #主界面承接过来的执行函数
-    def func_ui_click_pilot_mv(self, scale, dir):
-        print("I am func_ui_click_pilot_mv!")
-
     def func_ui_click_send_command(self, cmdid, par1, par2, par3, par4):
         print("I am func_ui_click_send_command!")
         msgContent = {}
@@ -91,11 +88,12 @@ class tupTaskUiMeng(tupTaskTemplate, clsL1_ConfigOpr):
         msgContent['par2'] = int(par2)
         msgContent['par3'] = int(par3)
         msgContent['par4'] = int(par4)
-        self.msg_send(TUP_MSGID_MENG_MOTO_COMMAND, TUP_TASK_ID_MOTO, self.taskId, msgContent)
+        self.msg_send(TUP_MSGID_MENG_MOTO_COMMAND, TUP_TASK_ID_MOTO, msgContent)
 
     #清理各项操作
     def func_ui_click_meng_close(self):
         print("I am func_ui_click_meng_close!")
+        pass
             
     #界面切走
     def func_ui_click_meng_switch_to_main(self):

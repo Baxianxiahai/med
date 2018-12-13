@@ -43,7 +43,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
 
     def funcCtrlSchdLogTrace(self, myString):
-        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
+        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)
         #SAVE INTO MED FILE
         self.medCmdLog(str(myString))
         #PRINT to local
@@ -51,7 +51,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         return
     
     def funcCtrlSchdErrTrace(self, myString):
-        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
+        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)
         #SAVE INTO MED FILE
         self.medErrorLog(str(myString));
         #PRINT to local

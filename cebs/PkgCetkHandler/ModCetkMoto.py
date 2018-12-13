@@ -96,7 +96,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
 
     def fsm_msg_test_msg_rcv_handler(self, msgContent):
-        self.msg_send(TUP_MSGID_TEST, TUP_TASK_ID_UI_MAIN, self.taskId, msgContent)
+        self.msg_send(TUP_MSGID_TEST, TUP_TASK_ID_UI_MAIN, msgContent)
         return TUP_SUCCESS;
 
     def fsm_msg_main_ui_switch_rcv_handler(self, msgContent):
@@ -114,13 +114,13 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     #复合TRACE       
     def funcMotoLogTrace(self, myString):
         if (self.state == self._STM_MAIN_UI_ACT) or (self.state == self._STM_MAIN_UI_EXEC):
-            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)
         elif (self.state == self._STM_CALIB_UI_ACT) or (self.state == self._STM_CALIB_UI_EXEC):
-            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, self.taskId, myString)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, myString)
         elif (self.state == self._STM_MENG_UI_ACT) or (self.state == self._STM_MENG_UI_EXEC):
-            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MENG, self.taskId, myString)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MENG, myString)
         else:
-            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)
         #SAVE INTO MED FILE
         self.medCmdLog(str(myString));
         #PRINT to local
@@ -130,13 +130,13 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     #复合TRACE       
     def funcMotoErrTrace(self, myString):
         if (self.state == self._STM_MAIN_UI_ACT) or (self.state == self._STM_MAIN_UI_EXEC):
-            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)
         elif (self.state == self._STM_CALIB_UI_ACT) or (self.state == self._STM_CALIB_UI_EXEC):
-            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, self.taskId, myString)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, myString)
         elif (self.state == self._STM_MENG_UI_ACT) or (self.state == self._STM_MENG_UI_EXEC):
-            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MENG, self.taskId, myString)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MENG, myString)
         else:
-            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, self.taskId, myString)
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)
         #SAVE INTO MED FILE
         self.medErrorLog(str(myString));
         #PRINT to local
@@ -195,7 +195,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         res = self.funcSendCmdPack(cmdid, par1, par2, par3, par4)
         mCont={}
         mCont['res'] = res
-        self.msg_send(TUP_MSGID_MENG_MOTO_CMD_FB, TUP_TASK_ID_UI_MENG, self.taskId, mCont)
+        self.msg_send(TUP_MSGID_MENG_MOTO_CMD_FB, TUP_TASK_ID_UI_MENG, mCont)
         self.fsm_set(self._STM_MENG_UI_ACT)
         return TUP_SUCCESS;
 
@@ -544,7 +544,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         #设置激活
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_WK_MODE_CMID, 1, 1, 0, 0)
         #设置速度
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_SPD_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, 0, 0)
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_SPD_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, 0, 0)
         #设置加速度
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ACC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_ACC, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_ACC, 0, 0)
         #设置加速度
