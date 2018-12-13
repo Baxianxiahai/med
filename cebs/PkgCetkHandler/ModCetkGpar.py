@@ -26,6 +26,8 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
     orgPicHeight = 0
     cfyPicWidth = 0
     cfyPicHeight = 0
+    timerTrain = ''
+    timerTrainCnt = 0
 
     def __init__(self, glPar):
         tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_GPAR, taskName="TASK_GPAR", glTabEntry=glPar)
@@ -51,6 +53,8 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         self.orgPicHeight = 0
         self.cfyPicWidth = 0
         self.cfyPicHeight = 0
+        self.timerTrain = ''
+        self.timerTrainCnt = 0
         self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS;
 
@@ -90,15 +94,31 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         self.funcGparLogTrace("Picture training starting!")
         self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_REQ, TUP_TASK_ID_VISION, msgContent)
         self.fsm_set(self._STM_TRAINING)
+        self.timerTrainCnt = 0
+        self.timerTrain = self.tup_timer_start(1, self.func_timer_train_process)
         return TUP_SUCCESS
 
     def fsm_msg_pic_train_resp_rcv_handler(self, msgContent):
         self.funcGparLogTrace("Picture training accomplish!")
+        self.tup_timer_stop(self.timerTrain)
         self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_RESP, TUP_TASK_ID_UI_GPAR, msgContent)
         self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS
-
-
+    
+    def func_timer_train_process(self):
+        self.timerTrainCnt += 1
+        if (self.timerTrainCnt >= 100):
+            self.timerTrainCnt = 0;
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_GPAR, "Time out to wait training, failure!")
+            mbuf = {}
+            mbuf['res'] = -3
+            self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_RESP, TUP_TASK_ID_UI_GPAR, mbuf)
+            self.fsm_set(self._STM_ACTIVE)
+        #RESTART
+        else:
+            mbuf = ("Picture training progress: %d" % (self.timerTrainCnt))
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_GPAR, mbuf)
+            self.timerTrain = self.tup_timer_start(1, self.func_timer_train_process)
 
 
 

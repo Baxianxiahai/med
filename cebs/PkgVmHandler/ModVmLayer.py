@@ -32,6 +32,10 @@ TUP_TASK_CUR_MOD = TUP_TASK_THREAD_MODE
 
 '''
 全局配置参数
+
+技巧1： self.timerTab = [{'tid':i, 'type':'oneTime', 'cnt':0, 'act': False} for i in range(self.TUP_TIMER_MAX)]
+
+技巧2： self.timerTab = [{'tid':i, 'type':'oneTime', 'cnt':0, 'act': False} for i in range(self.TUP_TIMER_MAX)]
 '''
 class tupGlbCfg():
     def __init__(self):
@@ -41,8 +45,6 @@ class tupGlbCfg():
         self.TUP_TASK_MAX = 200;
         self.TUP_TIMER_MAX = 200;
         self.queTab = [Queue() for i in range(self.TUP_TASK_MAX)]
-        #self.timerTab = [{'tid':i, 'type':'oneTime', 'cnt':0, 'act': False} for i in range(self.TUP_TIMER_MAX)]
-        #type: oneTime / period
         self.timerTab = [{'type':TUP_TIMER_ONE_TIME, 'cnt':0, 'act': False} for i in range(self.TUP_TIMER_MAX)]
 
 '''
@@ -177,8 +179,14 @@ class tupTaskTemplate():
         
     def tup_err_print(self, string):
         print(time.asctime(), ", [ERR] [", self.taskName, "]: ", str(string))
+    
+    #秒级定时器
+    def tup_timer_start(self, durInSec, funcCb):
+        timer = threading.Timer(durInSec, funcCb)
+        timer.start()
+        return timer
 
-
-
+    def tup_timer_stop(self, timer):
+        timer.cancel()
         
         

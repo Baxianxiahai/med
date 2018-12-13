@@ -8,7 +8,7 @@ Created on 2018年12月8日
 TUP_TASK_ID_NULL        = 0
 TUP_TASK_ID_TUPCONSL    = 1
 TUP_TASK_ID_VMCONSL     = 2
-TUP_TASK_ID_TIMER       = 3
+TUP_TASK_ID_TIMER       = 3 #待删去，废弃现在的定时器方案
 TUP_TASK_ID_CALIB       = 10
 TUP_TASK_ID_CTRL_SCHD   = 11
 TUP_TASK_ID_GPAR        = 12
@@ -26,8 +26,8 @@ TUP_TASK_ID_TEST        = 99
 #Message ID defination
 TUP_MSGID_NULL          = 0
 TUP_MSGID_INIT          = 1
-TUP_MSGID_TIME_REQ      = 2
-TUP_MSGID_TIME_OUT      = 3
+TUP_MSGID_TIME_REQ      = 2 #待删去，废弃现在的定时器方案
+TUP_MSGID_TIME_OUT      = 3 #待删去，废弃现在的定时器方案
 TUP_MSGID_RESTART       = 4
 TUP_MSGID_GEN_TRIG      = 5
 TUP_MSGID_TRACE         = 6

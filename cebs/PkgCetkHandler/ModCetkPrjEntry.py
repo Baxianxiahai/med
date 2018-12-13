@@ -48,6 +48,7 @@ def prj_cebs_main_entry():
     VmConslTaskInst.msg_send_in(initMsg)
     VmConslTaskInst.tup_dbg_print("Create VM task success!")
     
+    #待删去，废弃现在的定时器方案
     #Timer Task
     TimerTaskInst = tupTaskTimer(TUP_GL_CFG);
     initMsg['dst'] = TUP_TASK_ID_TIMER

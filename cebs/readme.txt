@@ -4,12 +4,15 @@
 2. 荧光识别算法：待定
 
 
+[BUG LIST]
+1. funcVisionDetectAllCamera()
+2. def func_vision_worm_binvalue_proc(self, img):  new = np.zeros(img.shape, np.uint8)   
 
 
 //=ZJL, 2018/12/13, CURRENT_SW_DELIVERY R1.37 =>CEBS
 = 优化msg_send函数
 = 完成GPAR模块的完整工作流程
-
+= 完善定时器工作模式
 
 //=ZJL, 2018/12/13, CURRENT_SW_DELIVERY R1.36 =>CEBS
 = 界面切换完善
