@@ -284,7 +284,9 @@ class clsL2_CalibPilotThread(QThread):
         self.instMotoHandler.funcMotoMove2HoleNbr(ModCebsCom.GLPLT_PAR_OFC.HB_HOLE_X_NUM);
         self.instMotoHandler.funcMotoMove2HoleNbr(ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX);
         self.instMotoHandler.funcMotoMove2HoleNbr(ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX - ModCebsCom.GLPLT_PAR_OFC.HB_HOLE_X_NUM + 1);
-                
+        #LC:add run all hole test stability
+#         for i in range(1,97):
+#             self.instMotoHandler.funcMotoMove2HoleNbr(i)  
     def run(self):
         while True:
             time.sleep(1)

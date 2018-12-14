@@ -516,7 +516,8 @@ class clsL1_MdcThd(QThread):
                 self.funcMdctdDebugPrint("L1MDCT: SND CMD = " + outBuf)
                 res, Buf = self.funcCmdSend(byteDataBuf)
                 time.sleep(2)
-            return 1    
+            return 1  
+              #LC:add test for come and go pules to test stability  
 #             if (cmdId == 0x30):
 #             for i in range(1,500):
 #                 #print("A")
