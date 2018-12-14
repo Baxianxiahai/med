@@ -18,7 +18,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_CAM_DISP = 4
     _STM_MOTO_MV = 5
     
-    CAM_DISP_SET = False
+    CAM_DISP_SET = True
     timerDisplay = ''
     TIMER_DISP_CYCLE = 0.5
     
@@ -30,6 +30,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         #STM MATRIX
         self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_inc_rcv_handler)
         
         #业务处理部分
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_OPEN_REQ, self.fsm_msg_open_req_rcv_handler)
@@ -47,7 +48,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_LEFT_DOWN_SET, self.fsm_msg_left_down_set_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOMV_START, self.fsm_msg_momv_start_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOMV_HOLEN, self.fsm_msg_momv_holen_rcv_handler)
-
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_PIC_CAP_HOLEN, self.fsm_msg_pic_cap_holen_rcv_handler)
 
         #START TASK
         self.fsm_set(TUP_STM_INIT)
@@ -69,12 +70,19 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_restart_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS;
-    
+
+    def fsm_msg_trace_inc_rcv_handler(self, msgContent):
+        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, msgContent)
+        return TUP_SUCCESS;
+        
     #打开摄像头
     def fsm_msg_open_req_rcv_handler(self, msgContent):
         if (self.CAM_DISP_SET == True):
             self.timerDisplay = self.tup_timer_start(self.TIMER_DISP_CYCLE, self.func_timer_display_process)
         self.fsm_set(self._STM_CAM_DISP)
+        
+        #每进来一次，照片批次号都被更新一次
+        self.createBatch(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
         return TUP_SUCCESS;
     
     #传回来的显示结果
@@ -116,7 +124,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         #SAVE INTO MED FILE
         self.medCmdLog(str(myString))
         #PRINT to local
-        self.tup_dbg_print(str(myString))
+        #self.tup_dbg_print(str(myString))
         return
     
     def funcCalibErrTrace(self, myString):
@@ -124,7 +132,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         #SAVE INTO MED FILE
         self.medErrorLog(str(myString));
         #PRINT to local
-        self.tup_err_print(str(myString))
+        #self.tup_err_print(str(myString))
         return
     
     #打开定时器干活
@@ -181,9 +189,18 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
             return ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH
         return holeNbr
 
+    #截图命令
+    def fsm_msg_pic_cap_holen_rcv_handler(self, msgContent):
+        holeIndex = int(msgContent['holeNbr'])
+        newHoldNbr = self.funcCheckHoldNumber(holeIndex)
+        mbuf={}
+        mbuf['holeNbr'] = newHoldNbr        
+        self.funcCalibLogTrace(str("L3CALIB: Capture picture with Hole#%d point." % (int(msgContent['holeNbr']))))
+        self.msg_send(TUP_MSGID_CALIB_PIC_CAP_HOLEN, TUP_TASK_ID_VISION, mbuf)
+        return TUP_SUCCESS;
 
-
-
+#         zCebsCamPicCapInHole = holeNbr;
+#         self.instL2CalibCamDisThd.funcCalibCameraDispSetVidCap();
 
 
 

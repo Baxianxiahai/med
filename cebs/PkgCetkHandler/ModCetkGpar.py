@@ -35,6 +35,7 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         #STM MATRIX
         self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_inc_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_GPAR_INIT_INF, self.fsm_msg_init_inf_rcv_handler)
 
         #业务处理部分
@@ -67,12 +68,16 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS;
 
+    def fsm_msg_trace_inc_rcv_handler(self, msgContent):
+        self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_GPAR, msgContent)
+        return TUP_SUCCESS;
+
     def funcGparLogTrace(self, myString):
         self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_GPAR, myString)
         #SAVE INTO MED FILE
         self.medCmdLog(str(myString))
         #PRINT to local
-        self.tup_dbg_print(str(myString))
+        #self.tup_dbg_print(str(myString))
         return
     
     def funcGparErrTrace(self, myString):
@@ -80,7 +85,7 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         #SAVE INTO MED FILE
         self.medErrorLog(str(myString));
         #PRINT to local
-        self.tup_err_print(str(myString))
+        #self.tup_err_print(str(myString))
         return        
 
     '''

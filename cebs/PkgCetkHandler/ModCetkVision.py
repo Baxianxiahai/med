@@ -50,7 +50,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     #摄像头初始化之后的对象指针
     capInit = ''
 
-
     def __init__(self, glPar):
         tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_VISION, taskName="TASK_VISION", glTabEntry=glPar)
         #ModVmLayer.TUP_GL_CFG.save_task_by_id(TUP_TASK_ID_VISION, self)
@@ -76,11 +75,14 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_PIC_CAP_REQ, self.fsm_msg_calib_pic_cap_req_rcv_handler)
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_VDISP_REQ, self.fsm_msg_calib_video_display_req_rcv_handler)
 
-        #主界面业务模式下的抓图指令
+        #MAIN主界面业务模式下的抓图指令
         self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_PIC_CAP_REQ, self.fsm_msg_main_pic_cap_req_rcv_handler)
         self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_PIC_CLFY_REQ, self.fsm_msg_main_pic_clfy_req_rcv_handler)
         
-        #训练图像
+        #CALIB校准界面下的抓图指令
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_PIC_CAP_HOLEN, self.fsm_msg_calib_pic_cap_holen_rcv_handler)
+        
+        #GPAR训练图像
         self.add_stm_combine(self._STM_GPAR_UI_ACT, TUP_MSGID_GPAR_PIC_TRAIN_REQ, self.fsm_msg_pic_train_req_rcv_handler)
         
         #切换状态机
@@ -120,9 +122,10 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_main_ui_switch_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_MAIN_UI_ACT)
         return TUP_SUCCESS;
-
+    
     def fsm_msg_calib_ui_switch_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_CALIB_UI_ACT)
+        self.createBatch(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
         return TUP_SUCCESS;
 
     def fsm_msg_gpar_ui_switch_rcv_handler(self, msgContent):
@@ -165,51 +168,43 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
     
     #传递文件回去给显示界面
+    #暂时没找到其它更好的办法，所以只能采用文件传输的方式
     def fsm_msg_calib_video_display_req_rcv_handler(self, msgContent):
         mbuf={}
         if self.capInit == '':
             mbuf['res'] = -1
             self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
             return TUP_FAILURE;
-        try:
-            ret, frame = self.capInit.read()
-        except Exception:
-            pass
-        if (ret == True):
-            frame = cv.flip(frame, 1)#Operation in frame
-            frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_AREA)
-            #白平衡算法
-            B,G,R = cv.split(frame)
-            bMean = cv.mean(B)
-            gMean = cv.mean(G)
-            rMean = cv.mean(R)
-            kb = (bMean[0] + gMean[0] + rMean[0])/(3*bMean[0]+0.0001)
-            kg = (bMean[0] + gMean[0] + rMean[0])/(3*gMean[0]+0.0001)
-            kr = (bMean[0] + gMean[0] + rMean[0])/(3*rMean[0]+0.0001)
-            B = B * kb
-            G = G * kg
-            R = R * kr
-            outputFrame = cv.merge([B, G, R])
-            #cv.imwrite(fileName, outputFrame)
-        
-#         if (ret == True):
-#             height, width = frame.shape[:2]
-#             if frame.ndim == 3:
-#                 rgb = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-#             elif frame.ndim == 2:
-#                 rgb = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
-#             temp_image = QtGui.QImage(rgb.flatten(), width, height, QtGui.QImage.Format_RGB888)
-#             temp_pixmap = QtGui.QPixmap.fromImage(temp_image)
-            
-            cv.imwrite("tempCalibDisp.jpg", outputFrame)
-            mbuf['res'] = 1
-            mbuf['fileName'] = "tempCalibDisp.jpg"
-            self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
-            return TUP_SUCCESS;
-        else:
+        #CAPTURE PICTURE
+        ret, outFrame = self.funcCap1Frame()
+        if (ret <0):
             mbuf['res'] = -2
             self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
-            return TUP_FAILURE;            
+            return TUP_FAILURE;
+        #正确处理过程
+        cv.imwrite("tempCalibDisp.jpg", outFrame)
+        mbuf['res'] = 1
+        mbuf['fileName'] = "tempCalibDisp.jpg"
+        self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
+        return TUP_SUCCESS;            
+
+    #传递文件回去给显示界面
+    def fsm_msg_calib_pic_cap_holen_rcv_handler(self, msgContent):
+        holeNbr = msgContent['holeNbr']
+        if self.capInit == '':
+            self.funcVisionErrTrace("VISION: capture error as not init camera!")
+            return TUP_FAILURE;
+        #CAPTURE PICTURE
+        ret, outFrame = self.funcCap1Frame()
+        if (ret <0):
+            self.funcVisionErrTrace("VISION: capture picture error!")
+            return TUP_FAILURE;
+        #正确处理过程
+        fileName = self.combineFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, holeNbr)
+        self.addNormalBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, holeNbr)
+        cv.imwrite(fileName, outFrame)
+        self.funcVisionLogTrace("VISION: Capture and save file, batch=%d, fileNbr=%d, fn=%s" % (ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, holeNbr, fileName));
+        return TUP_SUCCESS;
 
     def fsm_msg_main_pic_cap_req_rcv_handler(self, msgContent):
         return TUP_SUCCESS;
@@ -238,7 +233,30 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
 
     '''
     SERVICE PART: 业务部分的函数，功能处理函数
-    '''    
+    '''
+    def funcCap1Frame(self):
+        try:
+            ret, frame = self.capInit.read()
+        except Exception:
+            pass
+        if (ret != True):
+            return -1,_;
+        frame = cv.flip(frame, 1)#Operation in frame
+        frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_AREA)
+        #白平衡算法
+        B,G,R = cv.split(frame)
+        bMean = cv.mean(B)
+        gMean = cv.mean(G)
+        rMean = cv.mean(R)
+        kb = (bMean[0] + gMean[0] + rMean[0])/(3*bMean[0]+0.0001)
+        kg = (bMean[0] + gMean[0] + rMean[0])/(3*gMean[0]+0.0001)
+        kr = (bMean[0] + gMean[0] + rMean[0])/(3*rMean[0]+0.0001)
+        B = B * kb
+        G = G * kg
+        R = R * kr
+        outputFrame = cv.merge([B, G, R])
+        return 1, outputFrame
+   
     #截获图像
     def funcVisionCapture(self, batch, fileNbr, forceFlag):
         if not self.capInit.isOpened():
@@ -246,25 +264,13 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             self.capInit.release()
             cv.destroyAllWindows()            
             return -1;
-
         width = int(self.capInit.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
         height = int(self.capInit.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
         fps = 20
-        #print("L2VISCAP: Width/Height = %d/%d" % (width, height))
         time.sleep(1)
-        
-        #MASSIVE ERROR!
-        #1st par is path and file name
-        #2nd par is video format, “MPEG” is **standard， BAIDU fourcc could find more
-        #2nd par（fourcc） = -1，means allow select video format
-        #fourcc = cv.VideoWriter_fourcc(*"MPEG")
-        #fourcc=-1**
-        #3rd par is carmera speed，20 is normal，less than 20 is slow**
-        #out = cv.VideoWriter('c://output.avi',fourcc,20,(640,480))
         ret, frame = self.capInit.read()
         if (ret == True):
             frame = cv.flip(frame, 1)#Operation in frame
-            #frame = cv.resize(frame, None, fx=1.5, fy=1.5, interpolation=cv.INTER_AREA)
             frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_AREA)
             #白平衡算法
             B,G,R = cv.split(frame)
@@ -279,21 +285,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             G = G * kg
             R = R * kr
             outputFrame = cv.merge([B, G, R])
-            #Show picture
-            #cv.imshow('Input', frame)
             fileName = clsL1_ConfigOpr.combineFileNameWithDir(batch, fileNbr)
             cv.imwrite(fileName, outputFrame)
-            #cv.imshow("Final output", frame)
-            #waitKey(2000)
-            #time.sleep(2)
-            #存储scale文件
             scaleFn = clsL1_ConfigOpr.combineScaleFileNameWithDir(batch, fileNbr)
             if ModCebsCom.GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG == True:
                 self.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), fileName, scaleFn)
-         
-        #Video capture
-        #Ref: http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_video_display/py_video_display.html
-        #fourcc code: http://www.fourcc.org/codecs.php
         if (forceFlag == True):
             return 1;
         if (ret == True) and (ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE == True):
@@ -345,7 +341,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         imgRightBot = inputImg[orgH*2//3:orgH, orgW*2//3:orgW]
         arcLenMax = math.sqrt((orgH//3) * (orgH//3) + (orgW//3) * (orgW//3))*2
         #print("Max Arc length = ", arcLenMax)
-        
         #比较
         flagIndex = 0
         arcSave = 0

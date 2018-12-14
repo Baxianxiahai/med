@@ -132,7 +132,11 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
         return
         
     def func_ui_click_cap_pic_by_hole(self, holeNbr):
-        print("I am func_ui_click_cap_pic_by_hole!")        
+        print("I am func_ui_click_cap_pic_by_hole!")
+        mbuf={}
+        mbuf['holeNbr'] = holeNbr
+        self.msg_send(TUP_MSGID_CALIB_PIC_CAP_HOLEN, TUP_TASK_ID_CALIB, mbuf)
+        return                   
     
     #清理各项操作：CALIB有遗留马达效应，所以需要发送控制命令给干活的CALIB
     def func_ui_click_calib_close(self):

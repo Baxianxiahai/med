@@ -22,9 +22,6 @@ TUP_STM_INIT = 1
 TUP_STM_COMN = 2
 #给入口参数做初始化
 TUP_INIT_VALUE = -1
-#定时器相关定义
-TUP_TIMER_ONE_TIME  = 1
-TUP_TIMER_PERIOD    = 2
 #PROCE or THREAD MODE
 TUP_TASK_PROCESS_MODE = 1
 TUP_TASK_THREAD_MODE = 2
@@ -35,7 +32,8 @@ TUP_DBG_LVL_CRT = 2
 TUP_DBG_LVL_IMP = 3
 TUP_DBG_LVL_NOR = 4
 TUP_DBG_LVL_INF = 5
-TUP_DBG_LVL_NOT = 6
+TUP_DBG_LVL_EXP_CAM = 6
+TUP_DBG_LVL_NOT = 10
 
 '''
 全局配置参数
@@ -46,13 +44,12 @@ TUP_DBG_LVL_NOT = 6
 '''
 class tupGlbCfg():
     def __init__(self):
-        self.dbg_level = TUP_DBG_LVL_ALL
+        self.dbg_lv_set = TUP_DBG_LVL_EXP_CAM
         self.TUP_MSGID_MAX = TUP_MSG_ID_NBR_MAX;
         self.TUP_STATE_MAX = 50;
         self.TUP_TASK_MAX = TUP_TASK_NBR_MAX;
         self.TUP_TIMER_MAX = 200;
         self.queTab = [Queue() for i in range(self.TUP_TASK_MAX)]
-        self.timerTab = [{'type':TUP_TIMER_ONE_TIME, 'cnt':0, 'act': False} for i in range(self.TUP_TIMER_MAX)]
 
 '''
 基础任务模板
@@ -98,25 +95,30 @@ class tupTaskTemplate():
     
     def fsm_get(self):
         return self.state
-
-    def msg_send_in(self, msg):
-        self.queue.put(msg)
-        if (self.glTab.dbg_level == 1):
-            self.tup_trace("MID=" + str(msg['mid']) + "[" + str(TUP_MID_NAME[msg['mid']]) + str("], SRC=") + str(msg['src']) + \
+    
+    #self.tup_trace(str(msg))
+    def msg_trc_prt_single(self, msg):
+        self.tup_trace("MID=" + str(msg['mid']) + "[" + str(TUP_MID_NAME[msg['mid']]) + str("], SRC=") + str(msg['src']) + \
                 "[" + str(TUP_TASK_NAME[msg['src']]) + str("], DST=") + str(msg['dst']) + "[" + str(TUP_TASK_NAME[msg['dst']]) + \
                 str("], CONTENT=[") + str(msg['content']) + "]")
+
+    def msg_trc_prt_filter(self, msg):
+        if (self.glTab.dbg_lv_set == TUP_DBG_LVL_ALL):
+            self.msg_trc_prt_single(msg)
+        elif (self.glTab.dbg_lv_set == TUP_DBG_LVL_EXP_CAM):
+            if (int(msg['mid']) != TUP_MSGID_CALIB_VDISP_REQ) and (int(msg['mid']) != TUP_MSGID_CALIB_VDISP_RESP):
+                self.msg_trc_prt_single(msg)
+        
+    def msg_send_in(self, msg):
+        self.queue.put(msg)
+        self.msg_trc_prt_filter(msg)
 
     def msg_send_out(self, taskDestId, msg):
         if (taskDestId <0) or (taskDestId >= self.glTab.TUP_TASK_MAX):
             self.tup_err_print("Wrong Task Id.")
             return TUP_FAILURE;
-        #print("MsgQue = ", TUP_GL_CFG.queTab[taskDestId])
         self.glTab.queTab[taskDestId].put(msg)
-        if (self.glTab.dbg_level == 1):
-            #self.tup_trace(str(msg))
-            self.tup_trace("MID=" + str(msg['mid']) + "[" + str(TUP_MID_NAME[msg['mid']]) + str("], SRC=") + str(msg['src']) + \
-                "[" + str(TUP_TASK_NAME[msg['src']]) + str("], DST=") + str(msg['dst']) + "[" + str(TUP_TASK_NAME[msg['dst']]) + \
-                str("], CONTENT=[") + str(msg['content']) + "]")
+        self.msg_trc_prt_filter(msg)
 
     def msg_send(self, mid, dst, content):
         msgSnd = {}
