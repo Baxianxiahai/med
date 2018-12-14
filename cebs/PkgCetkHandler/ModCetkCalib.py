@@ -49,8 +49,11 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOMV_START, self.fsm_msg_momv_start_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOMV_HOLEN, self.fsm_msg_momv_holen_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_PIC_CAP_HOLEN, self.fsm_msg_pic_cap_holen_rcv_handler)
+        
+        #巡游
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_PILOT_START, self.fsm_msg_pilot_start_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_PILOT_STOP, self.fsm_msg_pilot_start_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_PILOT_STOP, self.fsm_msg_pilot_stop_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_PILOT_MV_HN_RESP, self.fsm_msg_pilot_mv_hn_resp_rcv_handler)
 
         #START TASK
         self.fsm_set(TUP_STM_INIT)
@@ -65,8 +68,13 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         GLPLT_PAR_OFC.med_init_plate_parameter()
         self.func_clean_working_env()
         
-        #干活的定时器
+        #STEP3: 干活的定时器
         self.timerDisplay = ''
+        
+        #STEP4: 巡游的控制单元
+        self.pilotCnt = 0
+        self.pilotPos = 0
+        
         return TUP_SUCCESS;
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
@@ -132,15 +140,16 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         #SAVE INTO MED FILE
         self.medCmdLog(str(myString))
         #PRINT to local
-        #self.tup_dbg_print(str(myString))
+        self.tup_dbg_print(str(myString))
         return
-    
+        
+    #抑制本地打印，实在是太多了
     def funcCalibErrTrace(self, myString):
         self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, myString)
         #SAVE INTO MED FILE
         self.medErrorLog(str(myString));
         #PRINT to local
-        #self.tup_err_print(str(myString))
+        self.tup_err_print(str(myString))
         return
     
     #打开定时器干活
@@ -209,10 +218,44 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     
     #巡游开始
     def fsm_msg_pilot_start_rcv_handler(self, msgContent):
+        self.pilotCnt = 0
+        self.pilotPos = 0
+        self.funcCalibLogTrace(str("L3CALIB: Pilot round #0 movement start!"))
+        mbuf={}
+        mbuf['holeNbr'] = int(1)
+        self.msg_send(TUP_MSGID_CALIB_PILOT_MV_HN_REQ, TUP_TASK_ID_MOTO, mbuf);
         return TUP_SUCCESS;
+    
+    #巡游持续
+    def fsm_msg_pilot_mv_hn_resp_rcv_handler(self, msgContent):
+        mbuf={}
+        self.pilotPos += 1
+        if (self.pilotPos >=4):
+            self.pilotPos = 0
+            self.pilotCnt +=1
+            #打印内容，不期望跟结束之间产生冲突矛盾
+            if (self.pilotCnt < ModCebsCom.GL_CEBS_PILOT_WOKING_ROUNDS_MAX):
+                self.funcCalibLogTrace(str("L3CALIB: Pilot round #%d movement start!" % (self.pilotCnt)))
+        #结束的时刻
+        if (self.pilotCnt >= ModCebsCom.GL_CEBS_PILOT_WOKING_ROUNDS_MAX):
+            self.msg_send(TUP_MSGID_CALIB_PILOT_STOP, TUP_TASK_ID_MOTO, "");
+            self.funcCalibLogTrace(str("L3CALIB: Pilot movement accomplished successful!"))
+            return TUP_SUCCESS;
+        #正常继续
+        if (self.pilotPos == 0):
+            mbuf['holeNbr'] = int(1)
+        elif (self.pilotPos == 1):
+            mbuf['holeNbr'] = int(ModCebsCom.GLPLT_PAR_OFC.HB_HOLE_X_NUM)
+        elif (self.pilotPos == 2):
+            mbuf['holeNbr'] = int(ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX)
+        elif (self.pilotPos == 3):
+            mbuf['holeNbr'] = int(ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX - ModCebsCom.GLPLT_PAR_OFC.HB_HOLE_X_NUM + 1)
+        self.msg_send(TUP_MSGID_CALIB_PILOT_MV_HN_REQ, TUP_TASK_ID_MOTO, mbuf);
+        return TUP_SUCCESS;    
     
     #巡游停止
     def fsm_msg_pilot_stop_rcv_handler(self, msgContent):
+        self.msg_send(TUP_MSGID_CALIB_PILOT_STOP, TUP_TASK_ID_MOTO, "");
         return TUP_SUCCESS;
 
 

@@ -77,7 +77,7 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         #SAVE INTO MED FILE
         self.medCmdLog(str(myString))
         #PRINT to local
-        #self.tup_dbg_print(str(myString))
+        self.tup_dbg_print(str(myString))
         return
     
     def funcGparErrTrace(self, myString):
@@ -85,7 +85,7 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         #SAVE INTO MED FILE
         self.medErrorLog(str(myString));
         #PRINT to local
-        #self.tup_err_print(str(myString))
+        self.tup_err_print(str(myString))
         return        
 
     '''

@@ -61,16 +61,20 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         #通用功能
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_NORM_MOTO_STOP, self.fsm_msg_moto_stop_rcv_handler)
 
-        #主界面模式的移动命令
+        #MAIN主界面模式的移动命令
         self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_NORM_MOTO_BACK_ZERO, self.fsm_msg_main_back_zero_rcv_handler)
 
-        #校准模式下的移动命令
+        #CALIB校准模式下的移动命令
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOMV_DIR_REQ, self.fsm_msg_calib_moto_move_dir_req_rcv_handler)
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOFM_DIR_REQ, self.fsm_msg_calib_moto_force_move_req_rcv_handler)
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOMV_START, self.fsm_msg_calib_move_start_rcv_handler)
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOMV_HOLEN, self.fsm_msg_main_move_holen_rcv_handler)
         
-        #马达工程模式下的命令
+        #CALIB校准模式的
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_PILOT_MV_HN_REQ, self.fsm_msg_calib_pilot_move_holen_rcv_handler)
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_PILOT_STOP, self.fsm_msg_calib_pilot_stop_rcv_handler)
+        
+        #MENG马达工程模式下的命令
         self.add_stm_combine(self._STM_MENG_UI_ACT, TUP_MSGID_MENG_MOTO_COMMAND, self.fsm_msg_meng_command_rcv_handler)
         
         #START TASK
@@ -128,7 +132,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         #SAVE INTO MED FILE
         self.medCmdLog(str(myString));
         #PRINT to local
-        #self.tup_dbg_print(str(myString))
+        self.tup_dbg_print(str(myString))
         return
 
     #复合TRACE       
@@ -144,7 +148,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         #SAVE INTO MED FILE
         self.medErrorLog(str(myString));
         #PRINT to local
-        #self.tup_err_print(str(myString))
+        self.tup_err_print(str(myString))
         return
     
     #主界面模式下的归零
@@ -216,6 +220,31 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         self.msg_send(TUP_MSGID_MENG_MOTO_CMD_FB, TUP_TASK_ID_MENG, mbuf)
         self.fsm_set(self._STM_MENG_UI_ACT)
         return TUP_SUCCESS;
+
+    #校准巡游模式下的移动
+    def fsm_msg_calib_pilot_move_holen_rcv_handler(self, msgContent):
+        mbuf={}
+        self.fsm_set(self._STM_CALIB_UI_EXEC)
+        holeNbr = int(msgContent['holeNbr'])
+        res = self.funcMotoMove2HoleNbr(holeNbr)
+        self.fsm_set(self._STM_CALIB_UI_ACT)
+        if (res < 0):
+            outputStr = "L2MOTO: Move to Hole#%d point error!" % (holeNbr)
+            self.funcMotoErrTrace(outputStr)
+            mbuf['res'] = -1
+            self.msg_send(TUP_MSGID_CALIB_PILOT_MV_HN_RESP, TUP_TASK_ID_CALIB, mbuf)
+            return TUP_FAILURE;
+        else:
+            outputStr = "L2MOTO: Move to Hole#%d point success!" % (holeNbr)
+            self.funcMotoLogTrace(outputStr)
+            mbuf['res'] = 1
+            self.msg_send(TUP_MSGID_CALIB_PILOT_MV_HN_RESP, TUP_TASK_ID_CALIB, mbuf)
+            return TUP_SUCCESS;
+
+    def fsm_msg_calib_pilot_stop_rcv_handler(self, msgContent):
+        self.funcMotoStop()
+        return TUP_SUCCESS;
+
 
     
     '''
@@ -650,7 +679,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
 
 
 
-
+        
 
 
 

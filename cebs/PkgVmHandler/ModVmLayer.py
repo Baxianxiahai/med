@@ -35,6 +35,11 @@ TUP_DBG_LVL_INF = 5
 TUP_DBG_LVL_EXP_CAM = 6
 TUP_DBG_LVL_NOT = 10
 
+#正常打印的标志位，简化全局控制
+TUP_PRINT_FLAG_SET_ERR = True
+TUP_PRINT_FLAG_SET_DBG = True
+TUP_PRINT_FLAG_SET_TRC = True
+
 '''
 全局配置参数
 
@@ -186,13 +191,16 @@ class tupTaskTemplate():
         self.process.start()
 
     def tup_trace(self, string):
-        print(time.asctime(), ", [TRC] [", self.taskName, "]: ", str(string))
+        if (TUP_PRINT_FLAG_SET_TRC == True):
+            print(time.asctime(), ", [TRC] [", self.taskName, "]: ", str(string))
 
     def tup_dbg_print(self, string):
-        print(time.asctime(), ", [DBG] [", self.taskName, "]: ", str(string))
+        if (TUP_PRINT_FLAG_SET_DBG == True):
+            print(time.asctime(), ", [DBG] [", self.taskName, "]: ", str(string))
         
     def tup_err_print(self, string):
-        print(time.asctime(), ", [ERR] [", self.taskName, "]: ", str(string))
+        if (TUP_PRINT_FLAG_SET_ERR == True):
+            print(time.asctime(), ", [ERR] [", self.taskName, "]: ", str(string))
     
     #秒级定时器
     def tup_timer_start(self, durInSec, funcCb):
