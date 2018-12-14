@@ -63,12 +63,12 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
 
         #主界面模式的移动命令
         self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_NORM_MOTO_BACK_ZERO, self.fsm_msg_main_back_zero_rcv_handler)
-        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_NORM_MOTO_MOVE_START, self.fsm_msg_main_move_start_rcv_handler)
-        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_NORM_MOTO_MOVE_HOLEN, self.fsm_msg_main_move_holen_rcv_handler)
 
         #校准模式下的移动命令
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOMV_DIR_REQ, self.fsm_msg_calib_moto_move_dir_req_rcv_handler)
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOFM_DIR_REQ, self.fsm_msg_calib_moto_force_move_req_rcv_handler)
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOMV_START, self.fsm_msg_calib_move_start_rcv_handler)
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOMV_HOLEN, self.fsm_msg_main_move_holen_rcv_handler)
         
         #马达工程模式下的命令
         self.add_stm_combine(self._STM_MENG_UI_ACT, TUP_MSGID_MENG_MOTO_COMMAND, self.fsm_msg_meng_command_rcv_handler)
@@ -155,19 +155,31 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
 
     #主界面模式下的移动到第一个孔
-    def fsm_msg_main_move_start_rcv_handler(self, msgContent):
-        self.fsm_set(self._STM_MAIN_UI_EXEC)
-        self.funcMotoMove2Start()
-        self.fsm_set(self._STM_MAIN_UI_ACT)
-        return TUP_SUCCESS;
+    def fsm_msg_calib_move_start_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_CALIB_UI_EXEC)
+        res, string = self.funcMotoMove2Start()
+        self.fsm_set(self._STM_CALIB_UI_ACT)
+        if (res < 0):
+            self.funcMotoErrTrace("L2MOTO: Moving to start point error!")
+            return TUP_FAILURE;
+        else:
+            self.funcMotoLogTrace("L2MOTO: " + string)
+            return TUP_SUCCESS;
     
     #主界面模式下的移动到孔N
     def fsm_msg_main_move_holen_rcv_handler(self, msgContent):
-        self.fsm_set(self._STM_MAIN_UI_EXEC)
-        holeIndex = int(msgContent['hole'])
-        self.funcMotoMove2HoleNbr(holeIndex)
-        self.fsm_set(self._STM_MAIN_UI_ACT)
-        return TUP_SUCCESS;
+        self.fsm_set(self._STM_CALIB_UI_EXEC)
+        holeNbr = int(msgContent['holeNbr'])
+        res = self.funcMotoMove2HoleNbr(holeNbr)
+        self.fsm_set(self._STM_CALIB_UI_ACT)
+        if (res < 0):
+            outputStr = "L2MOTO: Move to Hole#%d point error!" % (holeNbr)
+            self.funcMotoErrTrace(outputStr)
+            return TUP_FAILURE;
+        else:
+            outputStr = "L2MOTO: Move to Hole#%d point success!" % (holeNbr)
+            self.funcMotoLogTrace(outputStr)
+            return TUP_SUCCESS;
     
     #CALIB: 正常移动
     def fsm_msg_calib_moto_move_dir_req_rcv_handler(self, msgContent):
@@ -393,8 +405,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
 
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy):
         self.tup_dbg_print("L2MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy))
-        self.funcExecMoveDistance((newPx-curPx)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM, (newPy-curPy)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM);
-        return 1
+        return self.funcExecMoveDistance((newPx-curPx)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM, (newPy-curPy)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM);
     
     
     '''

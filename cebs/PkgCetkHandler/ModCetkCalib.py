@@ -17,7 +17,8 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_ACTIVE = 3
     _STM_CAM_DISP = 4
     _STM_MOTO_MV = 5
-
+    
+    CAM_DISP_SET = False
     timerDisplay = ''
     TIMER_DISP_CYCLE = 0.5
     
@@ -40,6 +41,13 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOMV_DIR_RESP, self.fsm_msg_moto_mv_dir_resp_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOFM_DIR_REQ, self.fsm_msg_moto_force_move_dir_req_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOFM_DIR_RESP, self.fsm_msg_moto_force_move_dir_resp_rcv_handler)
+        
+        #校准设置
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_RIGHT_UP_SET, self.fsm_msg_right_up_set_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_LEFT_DOWN_SET, self.fsm_msg_left_down_set_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOMV_START, self.fsm_msg_momv_start_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOMV_HOLEN, self.fsm_msg_momv_holen_rcv_handler)
+
 
         #START TASK
         self.fsm_set(TUP_STM_INIT)
@@ -64,7 +72,8 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     
     #打开摄像头
     def fsm_msg_open_req_rcv_handler(self, msgContent):
-        self.timerDisplay = self.tup_timer_start(self.TIMER_DISP_CYCLE, self.func_timer_display_process)
+        if (self.CAM_DISP_SET == True):
+            self.timerDisplay = self.tup_timer_start(self.TIMER_DISP_CYCLE, self.func_timer_display_process)
         self.fsm_set(self._STM_CAM_DISP)
         return TUP_SUCCESS;
     
@@ -131,11 +140,46 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         #停止马达
         self.fsm_set(self._STM_ACTIVE)
 
+    #设置参数
+    def fsm_msg_right_up_set_rcv_handler(self, msgContent):
+        ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0];
+        ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1];
+        ModCebsCom.GLPLT_PAR_OFC.med_update_plate_parameter()
+        self.updateSectionPar();
+        self.funcCalibLogTrace(str("L3CALIB: RightUp Axis set!  XY=%d/%d." % (ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2], ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3])))      
+        return TUP_SUCCESS;
 
+    #设置参数
+    def fsm_msg_left_down_set_rcv_handler(self, msgContent):
+        ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0];
+        ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1];
+        ModCebsCom.GLPLT_PAR_OFC.med_update_plate_parameter()
+        self.updateSectionPar();
+        self.funcCalibLogTrace("L3CALIB: LeftDown Axis set! XY=%d/%d." % (ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1]))
+        return TUP_SUCCESS;
 
+    #移动命令
+    def fsm_msg_momv_start_rcv_handler(self, msgContent):
+        self.funcCalibLogTrace("L3CALIB: Move to Hole#0 point.")
+        self.msg_send(TUP_MSGID_CALIB_MOMV_START, TUP_TASK_ID_MOTO, '')
+        return TUP_SUCCESS;
 
+    #移动命令
+    def fsm_msg_momv_holen_rcv_handler(self, msgContent):
+        holeIndex = int(msgContent['holeNbr'])
+        newHoldNbr = self.funcCheckHoldNumber(holeIndex)
+        mbuf={}
+        mbuf['holeNbr'] = newHoldNbr        
+        self.funcCalibLogTrace(str("L3CALIB: Move to Hole#%d point." % (int(msgContent['holeNbr']))))
+        self.msg_send(TUP_MSGID_CALIB_MOMV_HOLEN, TUP_TASK_ID_MOTO, mbuf)
+        return TUP_SUCCESS;
 
-
+    def funcCheckHoldNumber(self, holeNbr):
+        if (holeNbr <= 0):
+            return 1;
+        if (holeNbr >= ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH):
+            return ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH
+        return holeNbr
 
 
 

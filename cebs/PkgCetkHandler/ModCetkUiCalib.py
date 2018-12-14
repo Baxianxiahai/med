@@ -34,7 +34,6 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_MOMV_DIR_RESP, self.fsm_msg_momv_dir_resp_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_MOFM_DIR_RESP, self.fsm_msg_force_move_dir_resp_rcv_handler)
 
-        
         #START TASK
         self.fsm_set(TUP_STM_INIT)
         self.task_run()
@@ -103,9 +102,17 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
 
     def func_ui_click_right_up_set(self):
         print("I am func_ui_click_right_up_set!")
+        mbuf={}
+        mbuf['dir'] = dir
+        self.msg_send(TUP_MSGID_CALIB_RIGHT_UP_SET, TUP_TASK_ID_CALIB, mbuf)
+        return
 
     def func_ui_click_left_down_set(self):
         print("I am func_ui_click_left_down_set!")
+        mbuf={}
+        mbuf['dir'] = dir
+        self.msg_send(TUP_MSGID_CALIB_LEFT_DOWN_SET, TUP_TASK_ID_CALIB, mbuf)
+        return
 
     def func_ui_click_pilot_start(self):
         print("I am func_ui_click_pilot_start!")
@@ -115,9 +122,14 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
         
     def func_ui_click_pilot_move_0(self):
         print("I am func_ui_click_pilot_move_0!")        
+        self.msg_send(TUP_MSGID_CALIB_MOMV_START, TUP_TASK_ID_CALIB, "")
         
     def func_ui_click_pilot_move_n(self, holeNbr):
         print("I am func_ui_click_pilot_move_n!")
+        mbuf={}
+        mbuf['holeNbr'] = holeNbr
+        self.msg_send(TUP_MSGID_CALIB_MOMV_HOLEN, TUP_TASK_ID_CALIB, mbuf)
+        return
         
     def func_ui_click_cap_pic_by_hole(self, holeNbr):
         print("I am func_ui_click_cap_pic_by_hole!")        
