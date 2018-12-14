@@ -544,7 +544,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         #设置激活
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_WK_MODE_CMID, 1, 1, 0, 0)
         #设置速度
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_SPD_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, 0, 0)
+        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_SPD_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, 0, 0)
         #设置加速度
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ACC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_ACC, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_ACC, 0, 0)
         #设置加速度
