@@ -60,6 +60,8 @@ class clsL0_MedComCfgPar():
     FILE_ATT_FLUORESCEN = 'flu';  #荧光 Fluorescen
     CFG_FILE_NAME = r"cebsConfig.ini";
     
+    TEST_VALUE  = 1
+    
     #初始化
     def __init__(self):    
         super(clsL0_MedComCfgPar, self).__init__()  
@@ -350,6 +352,8 @@ class clsL0_MedComPicPar():
     CFY_THD_PAR2 = 2
     CFY_THD_PAR3 = 3
     CFY_THD_PAR4 = 4
+    #动态视频图像
+    CALIB_VDISP_OJB = ''
     
     
     def __init__(self):    

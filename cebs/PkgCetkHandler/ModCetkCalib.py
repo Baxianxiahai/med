@@ -20,7 +20,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     
     CAM_DISP_SET = True
     timerDisplay = ''
-    TIMER_DISP_CYCLE = 0.5
+    TIMER_DISP_CYCLE = 0.4
     
     
     def __init__(self, glPar):
@@ -49,6 +49,8 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOMV_START, self.fsm_msg_momv_start_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOMV_HOLEN, self.fsm_msg_momv_holen_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_PIC_CAP_HOLEN, self.fsm_msg_pic_cap_holen_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_PILOT_START, self.fsm_msg_pilot_start_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_PILOT_STOP, self.fsm_msg_pilot_start_rcv_handler)
 
         #START TASK
         self.fsm_set(TUP_STM_INIT)
@@ -81,8 +83,14 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
             self.timerDisplay = self.tup_timer_start(self.TIMER_DISP_CYCLE, self.func_timer_display_process)
         self.fsm_set(self._STM_CAM_DISP)
         
+        '''
         #每进来一次，照片批次号都被更新一次
-        self.createBatch(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
+        #为什么：因为操作摄像头的读取很麻烦，如果不这样做，会导致摄像头存下的照片相互之间重叠，为了简化这个逻辑，每次校准进来都主动+1批次号码
+        
+        #这部分代码还有问题，后面待完善
+        '''
+        #ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX += 1
+        #self.createBatch(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
         return TUP_SUCCESS;
     
     #传回来的显示结果
@@ -198,10 +206,14 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         self.funcCalibLogTrace(str("L3CALIB: Capture picture with Hole#%d point." % (int(msgContent['holeNbr']))))
         self.msg_send(TUP_MSGID_CALIB_PIC_CAP_HOLEN, TUP_TASK_ID_VISION, mbuf)
         return TUP_SUCCESS;
-
-#         zCebsCamPicCapInHole = holeNbr;
-#         self.instL2CalibCamDisThd.funcCalibCameraDispSetVidCap();
-
+    
+    #巡游开始
+    def fsm_msg_pilot_start_rcv_handler(self, msgContent):
+        return TUP_SUCCESS;
+    
+    #巡游停止
+    def fsm_msg_pilot_stop_rcv_handler(self, msgContent):
+        return TUP_SUCCESS;
 
 
 

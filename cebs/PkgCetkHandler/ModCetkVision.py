@@ -71,16 +71,13 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_GPAR_UI_SWITCH, self.fsm_msg_gpar_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_PIC_REFRESH_PAR, self.fsm_msg_refresh_par_rcv_handler)
 
-        #校准模式下的视频摄像头+抓图指令
-        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_PIC_CAP_REQ, self.fsm_msg_calib_pic_cap_req_rcv_handler)
+        #CALIB校准模式下的视频摄像头+抓图指令  CALIB校准界面下的抓图指令
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_VDISP_REQ, self.fsm_msg_calib_video_display_req_rcv_handler)
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_PIC_CAP_HOLEN, self.fsm_msg_calib_pic_cap_holen_rcv_handler)
 
         #MAIN主界面业务模式下的抓图指令
         self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_PIC_CAP_REQ, self.fsm_msg_main_pic_cap_req_rcv_handler)
         self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_PIC_CLFY_REQ, self.fsm_msg_main_pic_clfy_req_rcv_handler)
-        
-        #CALIB校准界面下的抓图指令
-        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_PIC_CAP_HOLEN, self.fsm_msg_calib_pic_cap_holen_rcv_handler)
         
         #GPAR训练图像
         self.add_stm_combine(self._STM_GPAR_UI_ACT, TUP_MSGID_GPAR_PIC_TRAIN_REQ, self.fsm_msg_pic_train_req_rcv_handler)
@@ -162,13 +159,10 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.tup_err_print(str(myString))
         return
     
-    def fsm_msg_calib_pic_cap_req_rcv_handler(self, msgContent):
-        scale = int(msgContent['scale'])
-        self.funcMotoMoveOneStep(scale, dir)        
-        return TUP_SUCCESS;
     
     #传递文件回去给显示界面
     #暂时没找到其它更好的办法，所以只能采用文件传输的方式
+    #尝试使用去全局变量传递视频图像对象
     def fsm_msg_calib_video_display_req_rcv_handler(self, msgContent):
         mbuf={}
         if self.capInit == '':
@@ -176,17 +170,41 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
             return TUP_FAILURE;
         #CAPTURE PICTURE
-        ret, outFrame = self.funcCap1Frame()
+        ret, outFrame = self.funcCapQtFrame()        
         if (ret <0):
             mbuf['res'] = -2
             self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
             return TUP_FAILURE;
         #正确处理过程
-        cv.imwrite("tempCalibDisp.jpg", outFrame)
+        ModCebsCom.GLVIS_PAR_OFC.CALIB_VDISP_OJB = outFrame
         mbuf['res'] = 1
-        mbuf['fileName'] = "tempCalibDisp.jpg"
+        mbuf['ComObj'] = True
+        #本来是通过文件读取，目前改为了对象指针共享，效率要高些
+        #cv.imwrite("tempCalibDisp.jpg", outFrame)
+        #mbuf['fileName'] = "tempCalibDisp.jpg"
         self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
-        return TUP_SUCCESS;            
+        return TUP_SUCCESS;      
+# 
+#         try:
+#             ret, frame = self.capInit.read()
+#         except Exception:
+#             pass;
+#         if (ret == True):
+#             height, width = frame.shape[:2]
+#             if frame.ndim == 3:
+#                 rgb = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+#             elif frame.ndim == 2:
+#                 rgb = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
+#             temp_image = QtGui.QImage(rgb.flatten(), width, height, QtGui.QImage.Format_RGB888)
+#             temp_pixmap = QtGui.QPixmap.fromImage(temp_image)
+#             ModCebsCom.GLVIS_PAR_OFC.CALIB_VDISP_OJB = temp_pixmap
+#             #self.instL4CalibForm.label_calib_RtCam_Fill.setPixmap(temp_pixmap.scaled(self.camRtFillWidth, self.camRtFillHeight))
+#             mbuf={}
+#             mbuf['res'] = 1
+#             mbuf['fileName'] = "tempCalibDisp.jpg"
+#             self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
+#             return TUP_SUCCESS;              
+
 
     #传递文件回去给显示界面
     def fsm_msg_calib_pic_cap_holen_rcv_handler(self, msgContent):
@@ -207,6 +225,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
 
     def fsm_msg_main_pic_cap_req_rcv_handler(self, msgContent):
+        scale = int(msgContent['scale'])
+        self.funcMotoMoveOneStep(scale, dir)        
         return TUP_SUCCESS;
 
     def fsm_msg_main_pic_clfy_req_rcv_handler(self, msgContent):
@@ -234,6 +254,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     '''
     SERVICE PART: 业务部分的函数，功能处理函数
     '''
+    #输出OpenCV可以识别的格式
     def funcCap1Frame(self):
         try:
             ret, frame = self.capInit.read()
@@ -256,6 +277,24 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         R = R * kr
         outputFrame = cv.merge([B, G, R])
         return 1, outputFrame
+    
+    #输出QT格式
+    def funcCapQtFrame(self):
+        try:
+            ret, frame = self.capInit.read()
+        except Exception:
+            pass
+        if (ret != True):
+            return -1,_;
+        
+        height, width = frame.shape[:2]
+        if frame.ndim == 3:
+            rgb = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+        elif frame.ndim == 2:
+            rgb = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
+        temp_image = QtGui.QImage(rgb.flatten(), width, height, QtGui.QImage.Format_RGB888)
+        temp_pixmap = QtGui.QPixmap.fromImage(temp_image)
+        return 1, temp_pixmap
    
     #截获图像
     def funcVisionCapture(self, batch, fileNbr, forceFlag):

@@ -6,8 +6,12 @@
 
 [BUG LIST]
 2. def func_vision_worm_binvalue_proc(self, img):  new = np.zeros(img.shape, np.uint8)   
+3. CALIB中对于批次号的处理 - cebsIni文件的保护
 
 
+//=ZJL, 2018/12/15, CURRENT_SW_DELIVERY R1.39 =>CEBS
+= 改进CALIB摄像头的工作模式：将文件传输模式改为内存对象传输指针模式，提高传输的通信速率。
+   目前将定时器提高到0.4s/2.5fps，还可以工作。当提高到5fps时，视频采集请求会大量积累在TK_VISION任务模块的消息队列中，这说明基于队列的消息通信无法满足视频帧处理的要求
 
 //=ZJL, 2018/12/14, CURRENT_SW_DELIVERY R1.38 =>CEBS
 = 完善CALIB中摄像头的显示问题

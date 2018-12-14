@@ -55,16 +55,23 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
         self.msg_send(TUP_MSGID_CALIB_OPEN_REQ, TUP_TASK_ID_CALIB, "")
         self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS;
-
+    
+    '''
     #业务功能
+    #之前采用了文件模式，目前采用指针对象模式
+    #为啥没有将图像采集及展示全部放在UI界面中：为了对摄像头的访问进行排序处理，防止同步抢占的问题
+    #self.fatherUiObj.cetk_calib_disp_cam(msgContent['fileName'])
+    '''
     def fsm_msg_calib_vdisp_resp_rcv_handler(self, msgContent):
         if (self.fatherUiObj == ''):
             print("CALIB_UI task lose 1 print message due to time sync.")
             return TUP_SUCCESS;
-        if (msgContent['res'] >= 0):
-            self.fatherUiObj.cetk_calib_disp_cam(msgContent['fileName'])        
-        return TUP_SUCCESS;
-    
+        if (msgContent['res'] >= 0) and (ModCebsCom.GLVIS_PAR_OFC.CALIB_VDISP_OJB != ''):
+            self.fatherUiObj.cetk_calib_disp_cam_by_obj(ModCebsCom.GLVIS_PAR_OFC.CALIB_VDISP_OJB)
+            return TUP_SUCCESS;
+        else:
+            return TUP_FAILURE;
+        
     #将马达移动的结果提示在界面上
     def fsm_msg_momv_dir_resp_rcv_handler(self, msgContent):
         self.funcDebugPrint2Qt(str(msgContent))
@@ -116,13 +123,18 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
 
     def func_ui_click_pilot_start(self):
         print("I am func_ui_click_pilot_start!")
+        self.msg_send(TUP_MSGID_CALIB_PILOT_START, TUP_TASK_ID_CALIB, "")
+        return
 
     def func_ui_click_pilot_stop(self):
         print("I am func_ui_click_pilot_stop!")
+        self.msg_send(TUP_MSGID_CALIB_PILOT_STOP, TUP_TASK_ID_CALIB, "")
+        return
         
     def func_ui_click_pilot_move_0(self):
         print("I am func_ui_click_pilot_move_0!")        
         self.msg_send(TUP_MSGID_CALIB_MOMV_START, TUP_TASK_ID_CALIB, "")
+        return
         
     def func_ui_click_pilot_move_n(self, holeNbr):
         print("I am func_ui_click_pilot_move_n!")
@@ -142,11 +154,13 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
     def func_ui_click_calib_close(self):
         print("I am func_ui_click_calib_close!")
         self.msg_send(TUP_MSGID_CALIB_CLOSE_REQ, TUP_TASK_ID_CALIB, "")
+        return
         
     #界面切走
     def func_ui_click_calib_switch_to_main(self):
         print("I am func_ui_click_calib_switch_to_main!")
-        self.fsm_set(self._STM_DEACT)        
+        self.fsm_set(self._STM_DEACT)  
+        return      
 
 
 

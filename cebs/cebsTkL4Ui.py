@@ -718,6 +718,8 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm, ModCebsCfg.clsL1_Co
             temp_pixmap = QtGui.QPixmap(fileName).scaled(self.calibRect.width(), self.calibRect.height())
             self.label_calib_RtCam_Fill.setPixmap(temp_pixmap)
 
+    def cetk_calib_disp_cam_by_obj(self, picObj):
+        self.label_calib_RtCam_Fill.setPixmap(picObj.scaled(self.calibRect.width(), self.calibRect.height()))
 
 #3rd Main Entry, 第三主入口
 #Calibration Widget
