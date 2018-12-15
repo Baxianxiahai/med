@@ -45,6 +45,8 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_init_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
         time.sleep(1)
+        #第一次界面启动，肯定在MAIN界面这儿，所以需要给CTRL_SCHD模块一个启动信号
+        self.msg_send(TUP_MSGID_CTRL_SCHD_SWITCH_ON, TUP_TASK_ID_CTRL_SCHD, "")
         return TUP_SUCCESS;
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
@@ -83,24 +85,31 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
     '''
     def func_ui_click_cap_start_nor(self):
         print("I am func_ui_click_cap_start_nor!")
+        self.msg_send(TUP_MSGID_CTRL_SCHD_CAPPIC_START, TUP_TASK_ID_CTRL_SCHD, "")
 
     def func_ui_click_cap_start_flu(self):
         print("I am func_ui_click_cap_start_flu!")
+        self.msg_send(TUP_MSGID_CTRL_SCHD_CAPFLU_START, TUP_TASK_ID_CTRL_SCHD, "")
 
     def func_ui_click_cap_stop(self):
         print("I am func_ui_click_cap_stop!")
+        self.msg_send(TUP_MSGID_CTRL_SCHD_CAPPIC_STOP, TUP_TASK_ID_CTRL_SCHD, "")
     
     def func_ui_click_move_zero(self):
         print("I am func_ui_click_move_zero!")
+        self.msg_send(TUP_MSGID_CTRL_SCHD_MV_ZERO, TUP_TASK_ID_CTRL_SCHD, "")
 
     def func_ui_click_clf_start_nor(self):
         print("I am func_ui_click_clf_start_nor!")
+        self.msg_send(TUP_MSGID_CTRL_SCHD_CFYFLU_START, TUP_TASK_ID_CTRL_SCHD, "")
 
     def func_ui_click_clf_start_flu(self):
         print("I am func_ui_click_clf_start_flu!")        
+        self.msg_send(TUP_MSGID_CTRL_SCHD_CFYFLU_START, TUP_TASK_ID_CTRL_SCHD, "")
         
     def func_ui_click_clf_stop(self):
         print("I am func_ui_click_clf_stop!")        
+        self.msg_send(TUP_MSGID_CTRL_SCHD_CFYPIC_STOP, TUP_TASK_ID_CTRL_SCHD, "")
     
     #切换界面
     def func_ui_click_calib_start(self):
@@ -108,7 +117,9 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         self.msg_send(TUP_MSGID_CALIB_UI_SWITCH, TUP_TASK_ID_UI_CALIB, "")
         self.msg_send(TUP_MSGID_CALIB_UI_SWITCH, TUP_TASK_ID_MOTO, "")
         self.msg_send(TUP_MSGID_CALIB_UI_SWITCH, TUP_TASK_ID_VISION, "")
-        #执行命令 
+        self.msg_send(TUP_MSGID_CTRL_SCHD_SWITCH_OFF, TUP_TASK_ID_CTRL_SCHD, "")     
+        #执行命令
+        #发送停止CAP， 发送CFY停止
         #转移状态
         self.fsm_set(self._STM_DEACT)
     
@@ -117,6 +128,7 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         print("I am func_ui_click_gpar_start!")
         self.msg_send(TUP_MSGID_GPAR_UI_SWITCH, TUP_TASK_ID_UI_GPAR, "")
         self.msg_send(TUP_MSGID_GPAR_UI_SWITCH, TUP_TASK_ID_VISION, "")
+        self.msg_send(TUP_MSGID_CTRL_SCHD_SWITCH_OFF, TUP_TASK_ID_CTRL_SCHD, "")     
         #执行命令 
         #转移状态
         self.fsm_set(self._STM_DEACT)
@@ -130,6 +142,7 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         print("I am func_ui_click_meng_start!")    
         self.msg_send(TUP_MSGID_MENG_UI_SWITCH, TUP_TASK_ID_UI_MENG, "") 
         self.msg_send(TUP_MSGID_MENG_UI_SWITCH, TUP_TASK_ID_MOTO, "") 
+        self.msg_send(TUP_MSGID_CTRL_SCHD_SWITCH_OFF, TUP_TASK_ID_CTRL_SCHD, "")     
         #执行命令 
         #转移状态
         self.fsm_set(self._STM_DEACT)
@@ -139,6 +152,7 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         print("I am func_ui_click_main_start!")
         self.msg_send(TUP_MSGID_MAIN_UI_SWITCH, TUP_TASK_ID_MOTO, "") 
         self.msg_send(TUP_MSGID_MAIN_UI_SWITCH, TUP_TASK_ID_VISION, "") 
+        self.msg_send(TUP_MSGID_CTRL_SCHD_SWITCH_ON, TUP_TASK_ID_CTRL_SCHD, "")
         #执行命令 
         #转移状态
         self.fsm_set(self._STM_ACTIVE)

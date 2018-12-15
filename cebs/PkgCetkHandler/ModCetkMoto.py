@@ -59,16 +59,19 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_TEST, self.fsm_msg_test_msg_rcv_handler)
 
         #通用功能
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_NORM_MOTO_STOP, self.fsm_msg_moto_stop_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CTRS_MOTO_STOP, self.fsm_msg_moto_stop_rcv_handler)
 
         #MAIN主界面模式的移动命令
-        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_NORM_MOTO_BACK_ZERO, self.fsm_msg_main_back_zero_rcv_handler)
+        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_CTRS_MOTO_ZERO_REQ, self.fsm_msg_main_back_zero_rcv_handler)
+        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_CTRS_MOTO_MV_HN_REQ, self.fsm_msg_ctrs_moto_mv_hn_rcv_handler)
+
+
 
         #CALIB校准模式下的移动命令
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOMV_DIR_REQ, self.fsm_msg_calib_moto_move_dir_req_rcv_handler)
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOFM_DIR_REQ, self.fsm_msg_calib_moto_force_move_req_rcv_handler)
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOMV_START, self.fsm_msg_calib_move_start_rcv_handler)
-        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOMV_HOLEN, self.fsm_msg_main_move_holen_rcv_handler)
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOMV_HOLEN, self.fsm_msg_calib_move_holen_rcv_handler)
         
         #CALIB校准模式的
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_PILOT_MV_HN_REQ, self.fsm_msg_calib_pilot_move_holen_rcv_handler)
@@ -156,9 +159,30 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         self.fsm_set(self._STM_MAIN_UI_EXEC)
         self.funcMotoBackZero()
         self.fsm_set(self._STM_MAIN_UI_ACT)
+        self.msg_send(TUP_MSGID_CTRS_MOTO_ZERO_RESP, TUP_TASK_ID_CTRL_SCHD, "")
         return TUP_SUCCESS;
 
-    #主界面模式下的移动到第一个孔
+    #主界面模式下的移动到某个孔位
+    def fsm_msg_ctrs_moto_mv_hn_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_MAIN_UI_EXEC)
+        holeNbr = int(msgContent['holeNbr'])
+        res = self.funcMotoMove2HoleNbr(holeNbr)
+        self.fsm_set(self._STM_MAIN_UI_ACT)
+        mbuf={}
+        if (res < 0):
+            outputStr = "L2MOTO: CRTS move to Hole#%d point error!" % (holeNbr)
+            self.funcMotoErrTrace(outputStr)
+            mbuf['res'] = -1
+            self.msg_send(TUP_MSGID_CTRS_MOTO_MV_HN_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+            return TUP_FAILURE;
+        else:
+            outputStr = "L2MOTO: CRTS move to Hole#%d point success!" % (holeNbr)
+            self.funcMotoLogTrace(outputStr)
+            mbuf['res'] = 1
+            self.msg_send(TUP_MSGID_CTRS_MOTO_MV_HN_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+            return TUP_SUCCESS;
+
+    #校准模式下的移动到第一个孔
     def fsm_msg_calib_move_start_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_CALIB_UI_EXEC)
         res, string = self.funcMotoMove2Start()
@@ -170,8 +194,8 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
             self.funcMotoLogTrace("L2MOTO: " + string)
             return TUP_SUCCESS;
     
-    #主界面模式下的移动到孔N
-    def fsm_msg_main_move_holen_rcv_handler(self, msgContent):
+    #CALIB校准模式下的移动到孔N
+    def fsm_msg_calib_move_holen_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_CALIB_UI_EXEC)
         holeNbr = int(msgContent['holeNbr'])
         res = self.funcMotoMove2HoleNbr(holeNbr)
@@ -394,10 +418,10 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         xWidth = ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0] - ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2];
         yHeight = ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1] - ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3];
         if (xWidth <= 0 or yHeight <= 0):
-            self.tup_dbg_print("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight))
+            self.tup_dbg_printstr(("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight)))
             return -1, ("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight));
         res = self.funcMotoMove2HoleNbr(1)
-        self.tup_dbg_print("L2MOTO: Feedback get from funcMotoMove2HoleNbr = ", res)
+        self.tup_dbg_print(str("L2MOTO: Feedback get from funcMotoMove2HoleNbr = ", res))
         if (res > 0):
             return res, "L2MOTO: Success!"
         else:
@@ -421,7 +445,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
             yTargetHoleNbr = ((holeIndex-1) // ModCebsCom.GLPLT_PAR_OFC.HB_HOLE_X_NUM) + 1;
             newPosX = int(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0] + (xTargetHoleNbr-1)*ModCebsCom.GLPLT_PAR_OFC.HB_WIDTH_X_SCALE);
             newPosY = int(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3] - (yTargetHoleNbr-1)*ModCebsCom.GLPLT_PAR_OFC.HB_HEIGHT_Y_SCALE);
-        self.tup_dbg_print("L2MOTO: Moving to working hole=%d, newPosX/Y=%d/%d." % (holeIndex, newPosX, newPosY))
+        self.tup_dbg_print(str("L2MOTO: Moving to working hole=%d, newPosX/Y=%d/%d." % (holeIndex, newPosX, newPosY)))
         if (self.funcMotoMove2AxisPos(ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1], newPosX, newPosY) > 0):
             ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] = newPosX;
             ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] = newPosY;
@@ -433,7 +457,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
             return -2;
 
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy):
-        self.tup_dbg_print("L2MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy))
+        self.tup_dbg_print(str("L2MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy)))
         return self.funcExecMoveDistance((newPx-curPx)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM, (newPy-curPy)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM);
     
     
@@ -628,9 +652,9 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
                 return 1
             time.sleep(1)
             cnt -= 1
-            self.tup_dbg_print("L2MOTO: Wait back zero progress, Counter = ", cnt)
+            self.tup_dbg_print(str("L2MOTO: Wait back zero progress, Counter = " + str(cnt)))
             if cnt <=0:
-                self.tup_err_print("L2MOTO: Time out on waiting for moto feedback.")
+                self.tup_err_print(str("L2MOTO: Time out on waiting for moto feedback."))
                 return -1;
 
     #连续带监控的命令执行：速度模式
@@ -645,7 +669,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
                 return 1
             time.sleep(1)
             cnt -= 1
-            self.tup_dbg_print("L2MOTO: Wait move speed progress, Counter = ", cnt)
+            self.tup_dbg_print(str("L2MOTO: Wait move speed progress, Counter = ", cnt))
             if cnt <=0:
                 self.tup_err_print("L2MOTO: Time out on waiting for moto feedback.")
                 return -1;
@@ -662,7 +686,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
                 return 1
             time.sleep(1)
             cnt -= 1
-            self.tup_dbg_print("L2MOTO: Wait move distance progress, Counter = " + str(cnt))
+            self.tup_dbg_print(str("L2MOTO: Wait move distance progress, Counter = " + str(cnt)))
             if cnt <=0:
                 self.tup_err_print("L2MOTO: Time out on waiting for moto feedback.")
                 return -1;

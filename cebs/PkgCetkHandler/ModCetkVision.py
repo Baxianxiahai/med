@@ -62,9 +62,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.HST_VISION_WORM_CLASSIFY_pic_filename = "1.jpg"
         self.HST_VISION_WORM_CLASSIFY_pic_sta_output = {'totalNbr':0, 'bigAlive':0, 'bigDead':0, 'middleAlive':0, 'middleDead':0, 'smallAlive':0, 'smallDead':0, 'totalAlive':0, 'totalDead':0}
         self.fsm_set(TUP_STM_NULL)
+
         #STM MATRIX
         self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
+        
         #通知界面切换
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_main_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_UI_SWITCH, self.fsm_msg_calib_ui_switch_rcv_handler)
@@ -76,8 +78,12 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_PIC_CAP_HOLEN, self.fsm_msg_calib_pic_cap_holen_rcv_handler)
 
         #MAIN主界面业务模式下的抓图指令
-        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_PIC_CAP_REQ, self.fsm_msg_main_pic_cap_req_rcv_handler)
-        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_PIC_CLFY_REQ, self.fsm_msg_main_pic_clfy_req_rcv_handler)
+        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_CTRS_PIC_CAP_REQ, self.fsm_msg_main_ctrs_pic_cap_req_rcv_handler)
+        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_CTRS_FLU_CAP_REQ, self.fsm_msg_main_ctrs_flu_cap_req_rcv_handler)
+
+        #MAIN主界面模式下的图像识别
+        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_CTRS_PIC_CLFY_REQ, self.fsm_msg_main_ctrs_pic_clfy_req_rcv_handler)
+        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_CTRS_FLU_CLFY_REQ, self.fsm_msg_main_ctrs_flu_clfy_req_rcv_handler)
         
         #GPAR训练图像
         self.add_stm_combine(self._STM_GPAR_UI_ACT, TUP_MSGID_GPAR_PIC_TRAIN_REQ, self.fsm_msg_pic_train_req_rcv_handler)
@@ -184,27 +190,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         #mbuf['fileName'] = "tempCalibDisp.jpg"
         self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
         return TUP_SUCCESS;      
-# 
-#         try:
-#             ret, frame = self.capInit.read()
-#         except Exception:
-#             pass;
-#         if (ret == True):
-#             height, width = frame.shape[:2]
-#             if frame.ndim == 3:
-#                 rgb = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-#             elif frame.ndim == 2:
-#                 rgb = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
-#             temp_image = QtGui.QImage(rgb.flatten(), width, height, QtGui.QImage.Format_RGB888)
-#             temp_pixmap = QtGui.QPixmap.fromImage(temp_image)
-#             ModCebsCom.GLVIS_PAR_OFC.CALIB_VDISP_OJB = temp_pixmap
-#             #self.instL4CalibForm.label_calib_RtCam_Fill.setPixmap(temp_pixmap.scaled(self.camRtFillWidth, self.camRtFillHeight))
-#             mbuf={}
-#             mbuf['res'] = 1
-#             mbuf['fileName'] = "tempCalibDisp.jpg"
-#             self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
-#             return TUP_SUCCESS;              
-
 
     #传递文件回去给显示界面
     def fsm_msg_calib_pic_cap_holen_rcv_handler(self, msgContent):
@@ -223,15 +208,29 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         cv.imwrite(fileName, outFrame)
         self.funcVisionLogTrace("VISION: Capture and save file, batch=%d, fileNbr=%d, fn=%s" % (ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, holeNbr, fileName));
         return TUP_SUCCESS;
-
-    def fsm_msg_main_pic_cap_req_rcv_handler(self, msgContent):
-        scale = int(msgContent['scale'])
-        self.funcMotoMoveOneStep(scale, dir)        
+    
+    #主界面模式下拍照
+    def fsm_msg_main_ctrs_pic_cap_req_rcv_handler(self, msgContent):
+        mbuf={}
+        self.msg_send(TUP_MSGID_CTRS_PIC_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         return TUP_SUCCESS;
 
-    def fsm_msg_main_pic_clfy_req_rcv_handler(self, msgContent):
+    def fsm_msg_main_ctrs_flu_cap_req_rcv_handler(self, msgContent):
+        mbuf={}
+        self.msg_send(TUP_MSGID_CTRS_FLU_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         return TUP_SUCCESS;
 
+    def fsm_msg_main_ctrs_pic_clfy_req_rcv_handler(self, msgContent):
+        mbuf={}
+        self.msg_send(TUP_MSGID_CRTS_PIC_CLFY_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+        return TUP_SUCCESS;
+
+    def fsm_msg_main_ctrs_flu_clfy_req_rcv_handler(self, msgContent):
+        mbuf={}
+        self.msg_send(TUP_MSGID_CRTS_FLU_CLFY_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+        return TUP_SUCCESS;
+    
+    #GPAR中的训练过程
     def fsm_msg_pic_train_req_rcv_handler(self, msgContent):
         picFile = msgContent['fileName']
         mbuf={}

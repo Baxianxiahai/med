@@ -132,7 +132,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         #摄像头采集
         self.func_clean_working_env()
         #停止马达
-        self.msg_send(TUP_MSGID_NORM_MOTO_STOP, TUP_TASK_ID_MOTO, '')
+        self.msg_send(TUP_MSGID_CTRS_MOTO_STOP, TUP_TASK_ID_MOTO, '')
         return TUP_SUCCESS;
         
     def funcCalibLogTrace(self, myString):
