@@ -145,10 +145,17 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.createBatch(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
         #self.capTimes = ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH+1;
         
+        #生成文件名字
+        fnPic = self.combineFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        fnScale = self.combineScaleFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        fnVideo = self.combineFileNameVideoWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        
         #移动到合适孔位，然后拍摄
         mbuf={}
         if (ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == False):
-            mbuf['fileName'] = "test.jpg"
+            mbuf['fnPic'] = fnPic
+            mbuf['fnScale'] = fnScale
+            mbuf['fnVideo'] = fnVideo
             self.msg_send(TUP_MSGID_CTRS_PIC_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
             mbuf['holeNbr'] = self.picSeqCnt
@@ -157,15 +164,29 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     
     #STEP2马达运动
     def fsm_msg_ctrs_moto_mv_hn_resp_rcv_handler(self, msgContent):
+        #生成文件名字
+        fnPic = self.combineFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        fnScale = self.combineScaleFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        fnVideo = self.combineFileNameVideoWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+
         mbuf={}
-        mbuf['fileName'] = "test.jpg"
+        mbuf['fnPic'] = fnPic
+        mbuf['fnScale'] = fnScale
+        mbuf['fnVideo'] = fnVideo
         self.msg_send(TUP_MSGID_CTRS_PIC_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         return TUP_SUCCESS;
     
     #STEP3获得了图像，然后进入下一次运动
     def fsm_msg_ctrs_pic_cap_resp_rcv_handler(self, msgContent):
+        #处理上一次成功的图像读取过程
+        self.addNormalBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        
+        #处理视频文件部分
+        #self.updBatchFileVideo(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        
+        #准备处理下一次
         self.picSeqCnt += 1
-        if (self.picSeqCnt > 96):
+        if (self.picSeqCnt > ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH):
             self.funcCtrlSchdLogTrace("L3SCHD: Normal picture capture accomplish successful!")
             self.fsm_set(self._STM_ACTIVE)
             return TUP_SUCCESS;
@@ -202,8 +223,12 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
 
     def fsm_msg_ctrs_flu_cap_resp_rcv_handler(self, msgContent):
+        #处理上一次成功的图像读取过程
+        self.addFluBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        
+        #准备处理下一次
         self.picSeqCnt += 1
-        if (self.picSeqCnt > 96):
+        if (self.picSeqCnt > ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH):
             self.funcCtrlSchdLogTrace("L3SCHD: Flu picture capture accomplish successful!")
             self.fsm_set(self._STM_ACTIVE)
             return TUP_SUCCESS;
@@ -224,6 +249,9 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_capture_pic_stop_rcv_handler(self, msgContent):
         self.funcCtrlSchdLogTrace("L3SCHD: Picture capture stop successful!")
         self.fsm_set(self._STM_ACTIVE)
+        #下次需要新
+        ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX +=1;
+        self.instL1ConfigOpr.updateCtrlCntInfo();        
         return TUP_SUCCESS;
     
 

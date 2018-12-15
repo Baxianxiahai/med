@@ -211,7 +211,12 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     
     #主界面模式下拍照
     def fsm_msg_main_ctrs_pic_cap_req_rcv_handler(self, msgContent):
+        fnPic = msgContent['fnPic']
+        fnScale = msgContent['fnScale']
+        fnVideo = msgContent['fnVideo']
+        res = self.funcPicVidCapAndSaveFile(fnPic, fnScale, fnVideo);
         mbuf={}
+        mbuf['res'] = res
         self.msg_send(TUP_MSGID_CTRS_PIC_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         return TUP_SUCCESS;
 
@@ -253,7 +258,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     '''
     SERVICE PART: 业务部分的函数，功能处理函数
     '''
-    #输出OpenCV可以识别的格式
+    #输出OpenCV可以识别的格式 => 为了本地存储只用
     def funcCap1Frame(self):
         try:
             ret, frame = self.capInit.read()
@@ -294,18 +299,17 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         temp_image = QtGui.QImage(rgb.flatten(), width, height, QtGui.QImage.Format_RGB888)
         temp_pixmap = QtGui.QPixmap.fromImage(temp_image)
         return 1, temp_pixmap
-   
-    #截获图像
-    def funcVisionCapture(self, batch, fileNbr, forceFlag):
+
+    #NEW截获图像
+    def funcPicVidCapAndSaveFile(self, fnPic, fnScale, fnVideo):
         if not self.capInit.isOpened():
-            self.funcVisionErrTrace("L2VISCAP: Cannot open webcam!, Batch/Nbr=%d/%d" % (batch, fileNbr))
+            self.funcVisionErrTrace("L2VISCAP: Cannot open webcam!")
             self.capInit.release()
             cv.destroyAllWindows()            
             return -1;
         width = int(self.capInit.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
         height = int(self.capInit.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
         fps = 20
-        time.sleep(1)
         ret, frame = self.capInit.read()
         if (ret == True):
             frame = cv.flip(frame, 1)#Operation in frame
@@ -323,18 +327,13 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             G = G * kg
             R = R * kr
             outputFrame = cv.merge([B, G, R])
-            fileName = clsL1_ConfigOpr.combineFileNameWithDir(batch, fileNbr)
-            cv.imwrite(fileName, outputFrame)
-            scaleFn = clsL1_ConfigOpr.combineScaleFileNameWithDir(batch, fileNbr)
+            cv.imwrite(fnPic, outputFrame)
             if ModCebsCom.GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG == True:
-                self.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), fileName, scaleFn)
-        if (forceFlag == True):
-            return 1;
+                self.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), fnPic, fnScale)
         if (ret == True) and (ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE == True):
             #Video capture with 3 second
             fourcc = cv.VideoWriter_fourcc(*'mp4v')  #mp4v(.mp4), XVID(.avi)
-            fileNameVideo = clsL1_ConfigOpr.combineFileNameVideoWithDir(batch, fileNbr)
-            out = cv.VideoWriter(fileNameVideo, fourcc, fps, (width, height))
+            out = cv.VideoWriter(fnVideo, fourcc, fps, (width, height))
             cnt = 0
             targetCnt = fps * ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC
             while self.capInit.isOpened():
@@ -352,6 +351,65 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             out.release()
             return 2;
         return 1;
+
+    #之前的函数，待删去
+    #截获图像
+#     def funcVisionCapture(self, batch, fileNbr, forceFlag):
+#         if not self.capInit.isOpened():
+#             self.funcVisionErrTrace("L2VISCAP: Cannot open webcam!, Batch/Nbr=%d/%d" % (batch, fileNbr))
+#             self.capInit.release()
+#             cv.destroyAllWindows()            
+#             return -1;
+#         width = int(self.capInit.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
+#         height = int(self.capInit.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
+#         fps = 20
+#         time.sleep(1)
+#         ret, frame = self.capInit.read()
+#         if (ret == True):
+#             frame = cv.flip(frame, 1)#Operation in frame
+#             frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_AREA)
+#             #白平衡算法
+#             B,G,R = cv.split(frame)
+#             bMean = cv.mean(B)
+#             gMean = cv.mean(G)
+#             rMean = cv.mean(R)
+#             print("L2VISCAP: Mean B/G/R = %d/%d/%d" %(bMean[0], gMean[0], rMean[0]))
+#             kb = (bMean[0] + gMean[0] + rMean[0])/(3*bMean[0]+0.0001)
+#             kg = (bMean[0] + gMean[0] + rMean[0])/(3*gMean[0]+0.0001)
+#             kr = (bMean[0] + gMean[0] + rMean[0])/(3*rMean[0]+0.0001)
+#             B = B * kb
+#             G = G * kg
+#             R = R * kr
+#             outputFrame = cv.merge([B, G, R])
+#             fileName = clsL1_ConfigOpr.combineFileNameWithDir(batch, fileNbr)
+#             cv.imwrite(fileName, outputFrame)
+#             scaleFn = clsL1_ConfigOpr.combineScaleFileNameWithDir(batch, fileNbr)
+#             if ModCebsCom.GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG == True:
+#                 self.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), fileName, scaleFn)
+#         if (forceFlag == True):
+#             return 1;
+#         if (ret == True) and (ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE == True):
+#             #Video capture with 3 second
+#             fourcc = cv.VideoWriter_fourcc(*'mp4v')  #mp4v(.mp4), XVID(.avi)
+#             fileNameVideo = clsL1_ConfigOpr.combineFileNameVideoWithDir(batch, fileNbr)
+#             out = cv.VideoWriter(fileNameVideo, fourcc, fps, (width, height))
+#             cnt = 0
+#             targetCnt = fps * ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC
+#             while self.capInit.isOpened():
+#                 cnt += 1
+#                 ret, frame = self.capInit.read()
+#                 if ret:
+#                     frame = cv.flip(frame, 0)
+#                     #write the flipped frame
+#                     time.sleep(1.0/fps)
+#                     out.write(frame)
+#                     if cnt >= targetCnt:
+#                         break
+#                 else:
+#                     break
+#             out.release()
+#             return 2;
+#         return 1;
       
       
     #计算弧度的方式
