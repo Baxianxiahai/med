@@ -272,7 +272,7 @@ class clsL2_MotoProc(object):
     '''    
     '这个移动算法跟显微镜的放置方式息息相关'
     def funcMotoMove2HoleNbr(self, holeIndex):
-        time.sleep(6)
+        time.sleep(6)     #这里需要加上延时 确保能够完整移动完
         if (holeIndex == 0):
             xTargetHoleNbr = 0;
             yTargetHoleNbr = 0;

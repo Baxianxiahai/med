@@ -119,11 +119,11 @@ class clsL3_CtrlSchdThread(QThread):
         #NEW STATE
         self.instL2VisCapProc.funcVisBatCapStart();
         #去掉初始3-4张黑屏幕的照片
+       
         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
         self.funcCamCapInBatch(ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
-
         self.funcCtrlSchdDebugPrint("L3CTRLST: Normal picture starting progress...")
         self.capTimes = ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH+1;
         self.funcCtrlSchdDebugPrint("L3CTRLST: Start to take normal picture, remaining TIMES=%d." %(self.capTimes-1))
@@ -232,26 +232,18 @@ class clsL3_CtrlSchdThread(QThread):
     *        fmtFlag, Normal or Flu格式
     '''                        
     #LOCAL FUNCTIONS  
+    #修改方式  先进行移动再进行拍照 
     def funcCamCapInBatch(self, capIndex, fmFlag, forceFlag):
         #计算当前批次
         curOne = ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH + 1 - capIndex;
         if ((curOne > ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH) or (curOne < 1)):
             self.funcCtrlSchdDebugPrint("L3CTRLST: Taking picture but serial number error!")
             return -1;
-        #获取图像
-        ret = self.instL2VisCapProc.funcVisionCapture(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, curOne, forceFlag);
-        print("L3CTRLST: Taking picture once! Current Batch=%d and Index =%d" % (ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, curOne));
         
-        #存盘
-        if (fmFlag == ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL):
-            self.instL1ConfigOpr.addNormalBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, curOne)
-        if (fmFlag == ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN):
-            self.instL1ConfigOpr.addFluBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, curOne)
-        #Video captured
-        if (ret == 2):
-            self.instL1ConfigOpr.updBatchFileVideo(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, curOne)
         #MOVINT TO NEXT WORKIN POSITION IN ADVANCE
-        nextOne = curOne ;
+        nextOne = curOne ;   # 这里不需要再进行加1的操作    因此nextOne和curOne 等效了  
+        
+        #print("CUR=",curOne)
         #Using FIX Point set to un-make the moto moving step
         if (ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == True):
             return 1;
@@ -264,6 +256,19 @@ class clsL3_CtrlSchdThread(QThread):
             if (self.instL2MotoProc.funcMotoBackZero() < 0):
                 self.funcCtrlSchdDebugPrint("L3CTRLST: System run to zero error!")
                 return -2;
+        #获取图像
+        
+        ret = self.instL2VisCapProc.funcVisionCapture(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, curOne, forceFlag);
+        print("L3CTRLST: Taking picture once! Current Batch=%d and Index =%d" % (ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, curOne));
+        
+        #存盘
+        if (fmFlag == ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL):
+            self.instL1ConfigOpr.addNormalBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, curOne)
+        if (fmFlag == ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN):
+            self.instL1ConfigOpr.addFluBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, curOne)
+        #Video captured
+        if (ret == 2):
+            self.instL1ConfigOpr.updBatchFileVideo(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, curOne)
         return 1;
     
     def setTakePicWorkRemainNumber(self, val):
@@ -298,8 +303,8 @@ class clsL3_CtrlSchdThread(QThread):
                 self.capTimes -= 1;
                 if (self.capTimes > 0):
                     self.funcCtrlSchdDebugPrint(str("L3CTRLST: Taking normal picture, remaining TIMES=" + str(self.capTimes-1)))
-                    self.funcCamCapInBatch(self.capTimes, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, False);
-                    ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT += 1;
+                    self.funcCamCapInBatch(self.capTimes, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
+                    ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT += 1;  
                 #CONTROL STOP ACTIONS
                 else:
                     self.CTRL_STM_STATE = self.__CEBS_STM_CTRL_CAP_NOR_CMPL

@@ -149,7 +149,17 @@ class clsL2_VisCapProc(object):
         #fourcc=-1**
         #3rd par is carmera speed，20 is normal，less than 20 is slow**
         #out = cv.VideoWriter('c://output.avi',fourcc,20,(640,480))
-        ret, frame = self.capInit.read()
+        #ret, frame = self.capInit.read()
+        #12.15 opencv获取图片方式的修改（之前抓的是上一张的图片）现在调用新的方式 就是分开来  先grab再retrieve（并且要retrieve2次才好使）
+        #资料连接：https://docs.opencv.org/3.3.0/d8/dfe/classcv_1_1VideoCapture.html
+        ret = self.capInit.grab()
+        #print("funcVisionCapture after grab:fileNbr=%d,ret=%d" %(fileNbr,ret))
+        if (ret == False):
+            return -1
+        
+        ret, frame = self.capInit.retrieve()
+        ret, frame = self.capInit.retrieve()
+        #print("funcVisionCapture after retrieve:fileNbr=%d,ret=%d" %(fileNbr,ret))
         if (ret == True):
             frame = cv.flip(frame, 1)#Operation in frame
             #frame = cv.resize(frame, None, fx=1.5, fy=1.5, interpolation=cv.INTER_AREA)
@@ -183,6 +193,8 @@ class clsL2_VisCapProc(object):
         #Video capture
         #Ref: http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_video_display/py_video_display.html
         #fourcc code: http://www.fourcc.org/codecs.php
+        #print("capture enable",ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE)
+        #print("forceFlag",forceFlag)
         if (forceFlag == True):
             return 1;
         if (ret == True) and (ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE == True):
