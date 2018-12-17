@@ -152,6 +152,13 @@ class clsL2_VisCapProc(object):
         #ret, frame = self.capInit.read()
         #12.15 opencv获取图片方式的修改（之前抓的是上一张的图片）现在调用新的方式 就是分开来  先grab再retrieve（并且要retrieve2次才好使）
         #资料连接：https://docs.opencv.org/3.3.0/d8/dfe/classcv_1_1VideoCapture.html
+#         retvalue = self.capInit.get(cv.CAP_PROP_FOCUS)
+#         retvalue1 = self.capInit.get(cv.CAP_PROP_AUTOFOCUS)
+#         retvalue2 = self.capInit.get(cv.CAP_PROP_AUTO_EXPOSURE)
+#         retvalue3 = self.capInit.get(cv.CAP_PROP_ZOOM)
+#         retvalue4 = self.capInit.get(cv.CAP_PROP_FORMAT)
+#         print("focus=%d,autofocus=%d,autoexposure=%d,zoom=%d,format=%d"%(retvalue,retvalue1,retvalue2,retvalue3,retvalue4))
+        
         ret = self.capInit.grab()
         #print("funcVisionCapture after grab:fileNbr=%d,ret=%d" %(fileNbr,ret))
         if (ret == False):
