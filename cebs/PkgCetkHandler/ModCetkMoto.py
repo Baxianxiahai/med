@@ -65,8 +65,6 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_CTRS_MOTO_ZERO_REQ, self.fsm_msg_main_back_zero_rcv_handler)
         self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_CTRS_MOTO_MV_HN_REQ, self.fsm_msg_ctrs_moto_mv_hn_rcv_handler)
 
-
-
         #CALIB校准模式下的移动命令
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOMV_DIR_REQ, self.fsm_msg_calib_moto_move_dir_req_rcv_handler)
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOFM_DIR_REQ, self.fsm_msg_calib_moto_force_move_req_rcv_handler)
@@ -85,11 +83,12 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         self.task_run()
 
     def fsm_msg_init_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_ACTIVE)
         if (self.funcInitSps() < 0):
             self.funcMotoErrTrace("Init sps port error!")
             return TUP_FAILURE;
-        else:
-            self.fsm_set(self._STM_ACTIVE)
+#         else:
+#             self.fsm_set(self._STM_ACTIVE)
         self.funcBatInitPar();
         return TUP_SUCCESS;
 
@@ -156,9 +155,11 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     #主界面模式下的归零
     def fsm_msg_main_back_zero_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_MAIN_UI_EXEC)
-        self.funcMotoBackZero()
+        res = self.funcMotoBackZero()
         self.fsm_set(self._STM_MAIN_UI_ACT)
-        self.msg_send(TUP_MSGID_CTRS_MOTO_ZERO_RESP, TUP_TASK_ID_CTRL_SCHD, "")
+        mbuf = {}
+        mbuf['res'] = res
+        self.msg_send(TUP_MSGID_CTRS_MOTO_ZERO_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         return TUP_SUCCESS;
 
     #主界面模式下的移动到某个孔位

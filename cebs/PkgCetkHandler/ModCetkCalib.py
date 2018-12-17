@@ -92,7 +92,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         #而且在一次校准更新中，批次号只能+1，不能重复。如果想要增加更多，需要多次进来
         #另外，每一次进来，固定+1，从而简化这个东西的操控
         '''
-        self.updateCtrlCntWithIniFileSyned(True, 0, 0, 0, 0)
+        self.updateBatCntWithIniFileSyned(True, 0, 0)
         self.createBatSectAndIniSyned(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
         return TUP_SUCCESS;
     
@@ -221,7 +221,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         #如果客户非常在意这种风险，需要给这个消息增加一个反馈消息，指示是否成功。如果不成功则不更新ini文件记录，那样就完美了
         #过程不困难，但比较累赘。这里考虑的是简要的过程。
         '''
-        self.updateCtrlCntWithIniFileSyned(False, 0, 0, 1, 0)
+        self.updateBatCntWithIniFileSyned(False, 1, 0)
         self.addNormalBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, newHoldNbr)
         
         return TUP_SUCCESS;

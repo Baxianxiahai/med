@@ -95,6 +95,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     
     #摄像头初始化
     def fsm_msg_init_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_ACTIVE)
         #全局搜索摄像头
         p = clsCamDevHdl()
         ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = p.dhSearchRunCam()
@@ -105,18 +106,18 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             self.funcVisionErrTrace("L2VISCAP: Camera not yet installed, init error!");
             return TUP_FAILURE;
         #正确的情况
-        self.capInit = cv.VideoCapture(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
-        self.capInit.set(3, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
-        self.capInit.set(4, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
-        if not self.capInit.isOpened():
-            self.capInit.release()
+        try:
+            self.capInit = cv.VideoCapture(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
+            self.capInit.set(3, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
+            self.capInit.set(4, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
+            if not self.capInit.isOpened():
+                self.capInit.release()
+        except Exception:
             cv.destroyAllWindows()
             self.funcVisionErrTrace("L2VISCAP: Camera not installed, but open error!");
             return TUP_FAILURE;
-        else:
-            self.fsm_set(self._STM_ACTIVE)
-            self.funcVisionLogTrace("L2VISCAP: Camera open successful!");
-            return TUP_SUCCESS;
+        self.funcVisionLogTrace("L2VISCAP: Camera open successful!");
+        return TUP_SUCCESS;
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
@@ -218,24 +219,37 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['res'] = res
         self.msg_send(TUP_MSGID_CTRS_PIC_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         return TUP_SUCCESS;
-
+    
+    #FLU图像拍摄的功能还未完善，暂时使用了白光拍摄的手法
     def fsm_msg_main_ctrs_flu_cap_req_rcv_handler(self, msgContent):
+        fnPic = msgContent['fnPic']
+        fnScale = msgContent['fnScale']
+        fnVideo = msgContent['fnVideo']
+        vdCtrl = msgContent['vdCtrl']
+        res = self.funcPicVidCapAndSaveFile(fnPic, fnScale, fnVideo, vdCtrl);
         mbuf={}
+        mbuf['res'] = res
         self.msg_send(TUP_MSGID_CTRS_FLU_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         return TUP_SUCCESS;
 
+    #识别算法
     def fsm_msg_main_ctrs_pic_clfy_req_rcv_handler(self, msgContent):
-        #识别算法
         fileName = msgContent['fileName']
         fileNukeName = msgContent['fileNukeName']
         ctrl = msgContent['ctrl']
-        self.func_vision_worm_clasification(fileName, fileNukeName, ctrl);
+        res = self.func_vision_worm_clasification(fileName, fileNukeName, ctrl);
         mbuf={}
+        mbuf['res'] = res
         self.msg_send(TUP_MSGID_CRTS_PIC_CLFY_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         return TUP_SUCCESS;
 
     def fsm_msg_main_ctrs_flu_clfy_req_rcv_handler(self, msgContent):
+        fileName = msgContent['fileName']
+        fileNukeName = msgContent['fileNukeName']
+        ctrl = msgContent['ctrl']
+        res = self.func_vision_worm_clasification(fileName, fileNukeName, ctrl);
         mbuf={}
+        mbuf['res'] = res
         self.msg_send(TUP_MSGID_CRTS_FLU_CLFY_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         return TUP_SUCCESS;
     
@@ -315,11 +329,14 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     #
     '''
     def funcPicVidCapAndSaveFile(self, fnPic, fnScale, fnVideo, vdCtrl):
-        if not self.capInit.isOpened():
-            self.funcVisionErrTrace("L2VISCAP: Cannot open webcam!")
-            self.capInit.release()
+        try:
+            if not self.capInit.isOpened():
+                self.funcVisionErrTrace("L2VISCAP: Cannot open webcam!")
+                self.capInit.release()
+        except Exception:
             cv.destroyAllWindows()            
             return -1;
+        #正确的情况
         width = int(self.capInit.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
         height = int(self.capInit.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
         fps = 20
@@ -364,66 +381,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             out.release()
             return 2;
         return 1;
-
-    #之前的函数，待删去
-    #截获图像
-#     def funcVisionCapture(self, batch, fileNbr, forceFlag):
-#         if not self.capInit.isOpened():
-#             self.funcVisionErrTrace("L2VISCAP: Cannot open webcam!, Batch/Nbr=%d/%d" % (batch, fileNbr))
-#             self.capInit.release()
-#             cv.destroyAllWindows()            
-#             return -1;
-#         width = int(self.capInit.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
-#         height = int(self.capInit.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
-#         fps = 20
-#         time.sleep(1)
-#         ret, frame = self.capInit.read()
-#         if (ret == True):
-#             frame = cv.flip(frame, 1)#Operation in frame
-#             frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_AREA)
-#             #白平衡算法
-#             B,G,R = cv.split(frame)
-#             bMean = cv.mean(B)
-#             gMean = cv.mean(G)
-#             rMean = cv.mean(R)
-#             print("L2VISCAP: Mean B/G/R = %d/%d/%d" %(bMean[0], gMean[0], rMean[0]))
-#             kb = (bMean[0] + gMean[0] + rMean[0])/(3*bMean[0]+0.0001)
-#             kg = (bMean[0] + gMean[0] + rMean[0])/(3*gMean[0]+0.0001)
-#             kr = (bMean[0] + gMean[0] + rMean[0])/(3*rMean[0]+0.0001)
-#             B = B * kb
-#             G = G * kg
-#             R = R * kr
-#             outputFrame = cv.merge([B, G, R])
-#             fileName = clsL1_ConfigOpr.combineFileNameWithDir(batch, fileNbr)
-#             cv.imwrite(fileName, outputFrame)
-#             scaleFn = clsL1_ConfigOpr.combineScaleFileNameWithDir(batch, fileNbr)
-#             if ModCebsCom.GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG == True:
-#                 self.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), fileName, scaleFn)
-#         if (forceFlag == True):
-#             return 1;
-#         if (ret == True) and (ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE == True):
-#             #Video capture with 3 second
-#             fourcc = cv.VideoWriter_fourcc(*'mp4v')  #mp4v(.mp4), XVID(.avi)
-#             fileNameVideo = clsL1_ConfigOpr.combineFileNameVideoWithDir(batch, fileNbr)
-#             out = cv.VideoWriter(fileNameVideo, fourcc, fps, (width, height))
-#             cnt = 0
-#             targetCnt = fps * ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC
-#             while self.capInit.isOpened():
-#                 cnt += 1
-#                 ret, frame = self.capInit.read()
-#                 if ret:
-#                     frame = cv.flip(frame, 0)
-#                     #write the flipped frame
-#                     time.sleep(1.0/fps)
-#                     out.write(frame)
-#                     if cnt >= targetCnt:
-#                         break
-#                 else:
-#                     break
-#             out.release()
-#             return 2;
-#         return 1;
-      
+    
       
     #计算弧度的方式
     #INPUT: refRadInUm, 孔半径长度，um单位
@@ -587,12 +545,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         baseLine = newRadians/refRadInUm
         return arcLenMax, baseLine, outputImg
 
-
-
-
-
-
-
     '''
     CLASSFICATION: 分类
     '''
@@ -602,52 +554,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.HST_VISION_WORM_CLASSIFY_mid2big = ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT;
         self.HST_VISION_WORM_CLASSIFY_big2top = ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT;
     
-    '''
-    * 核心的识别函数，其它任务调用的主入口
-    *
-    *    用于普通白光照片的识别处理过程
-    *
-    '''    
-#     def funcVisionNormalClassifyProc(self):
-#         self.funcVisRefreshPar()
-#         batch, fileNbr = self.findNormalUnclasFileBatchAndNbr();
-#         if (batch < 0):
-#             ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
-#             self.funcVisionLogTrace("L2VISCFY: Picture classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
-#             self.updateCtrlCntInfo();
-#             return -1;
-#         fileName = self.getStoredFileName(batch, fileNbr);
-#         fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
-#         if (fileName == None) or (fileNukeName == None):
-#             ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
-#             self.funcVisionLogTrace("L2VISCFY: Picture classification finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
-#             self.updateCtrlCntInfo();
-#             return -2;
-#         #REAL PROCESSING PROCEDURE
-#         print("L2VISCFY: Normal picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
-#         self.func_vision_worm_clasification(fileName, fileNukeName, False);
-#         ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT -= 1;
-#         #Update classified files
-#         self.updateUnclasFileAsClassified(batch, fileNbr);
-#         self.funcVisionLogTrace("L2VISCFY: Normal picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
-#         self.updateCtrlCntInfo();
-#         return 1;
-        
-#     def func_vision_worm_input_processing(self, inputStr):
-#         try:
-#             if ((inputStr['cfBase'] < inputStr['cfSmall2MidIndex']) and (inputStr['cfSmall2MidIndex'] < inputStr['cfMid2BigIndex']) and (inputStr['cfMid2BigIndex'] < inputStr['cfBig2TopIndex'])):
-#                 self.HST_VISION_WORM_CLASSIFY_base = inputStr['cfBase'];
-#                 self.HST_VISION_WORM_CLASSIFY_small2mid = inputStr['cfSmall2MidIndex'];
-#                 self.HST_VISION_WORM_CLASSIFY_mid2big = inputStr['cfMid2BigIndex'];
-#                 self.HST_VISION_WORM_CLASSIFY_big2top = inputStr['cfBig2TopIndex'];
-#                 self.HST_VISION_WORM_CLASSIFY_pic_filename = inputStr['fileName'];
-#             else:
-#                 print("L2VISCFY: func_vision_worm_input_processing on input error!")
-#         except Exception as err:
-#             text = "L2VISCFY: func_vision_worm_input_processing on input error = %s" % str(err)
-#             print("L2VISCFY: Input error = ", text);
-
-
     def func_vision_worm_binvalue_proc(self, img):
         new = np.zeros(img.shape, np.uint8)    
     
@@ -789,13 +695,13 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             errStr = "L2VISCFY: File %s not exist!" % (fileName)
             self.medErrorLog(errStr);
             print("L2VISCFY: File %s not exist!" % (fileName))
-            return;
+            return -1;
         self.HST_VISION_WORM_CLASSIFY_pic_filename = fileName
         try:
             inputImg = cv.imread(fileName)
         except Exception as err:
             print("L2VISCFY: Read file error, errinfo = ", str(err))
-            return;
+            return -2;
 
         #Processing procedure: 处理过程
         binImg = self.func_vision_worm_binvalue_proc(inputImg)
@@ -813,47 +719,9 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         a = '[%s], vision worm classification ones, save result as [%s] with output [%s].\n' % (time.asctime(), outputFn, str(self.HST_VISION_WORM_CLASSIFY_pic_sta_output))
         f.write(a)
         f.close()
-        
         #Show result or not: 根据指令，是否显示文件
         cv.destroyAllWindows()
-
-    '''
-    * 核心的识别函数，其它任务调用的主入口
-    *
-    *    用于荧光照片的识别处理过程
-    *
-    '''    
-#     def funcVisionFluClassifyProc(self):
-#         self.funcVisRefreshPar()
-#         batch, fileNbr = self.findFluUnclasFileBatchAndNbr();
-#         print("batch/FileNbr=%d/%d" % (batch, fileNbr))
-#         if (batch < 0):
-#             ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT = 0;
-#             self.funcVisionLogTrace("L2VISCFY: Picture flu classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
-#             self.updateCtrlCntInfo();
-#             return;
-#         fileName = self.getStoredFileName(batch, fileNbr);
-#         fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
-#         if (fileName == None) or (fileNukeName == None):
-#             ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
-#             self.funcVisionLogTrace("L2VISCFY: Picture flu classification finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
-#             self.updateCtrlCntInfo();
-#             return;
-#         #REAL PROCESSING PROCEDURE
-#         print("L2VISCFY: Flu picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
-#         self.algoVisFluWormCaculate(fileName, fileNukeName);
-#         ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT -= 1;
-#         #Update classified files
-#         self.updateUnclasFileAsClassified(batch, fileNbr);
-#         self.funcVisionLogTrace("L2VISCFY: Flu picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
-#         self.updateCtrlCntInfo();
-#         return;
-#     
-#     #荧光处理算法过程
-#     def algoVisFluWormCaculate(self, fileName, fileNukeName):
-#         self.funcVisionLogTrace("L2VISCFY: Flu picture classification simulation algorithms demo, to be finsihed!")
-
-
+        return 1
 
 #搜索摄像头进程：调用的win32com必须在进程里面干活，所以只能采用这种创造进程的方式干搜索设备号
 class clsCamDevHdl():

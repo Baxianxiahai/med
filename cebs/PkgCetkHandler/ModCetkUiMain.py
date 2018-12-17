@@ -47,6 +47,8 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         time.sleep(1)
         #第一次界面启动，肯定在MAIN界面这儿，所以需要给CTRL_SCHD模块一个启动信号
         self.msg_send(TUP_MSGID_CTRL_SCHD_SWITCH_ON, TUP_TASK_ID_CTRL_SCHD, "")
+        self.msg_send(TUP_MSGID_MAIN_UI_SWITCH, TUP_TASK_ID_MOTO, "") 
+        self.msg_send(TUP_MSGID_MAIN_UI_SWITCH, TUP_TASK_ID_VISION, "") 
         return TUP_SUCCESS;
 
     def fsm_msg_restart_rcv_handler(self, msgContent):

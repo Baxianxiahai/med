@@ -147,14 +147,14 @@ class clsL1_ConfigOpr():
             #ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = res
             self.updateStaticSectionEnvPar()
             delta = res - ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT
-            self.updateCtrlCntWithIniFileSyned(False, 0, 0, delta, 0)
+            self.updateBatCntWithIniFileSyned(False, delta, 0)
         #为了防止统计错误，重新扫描并计算荧光图像数量
         res = self.recheckRemaingUnclasBatchFile(ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN)
         if (res != ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT):
             print("CFG: Error find during re-check remaining un-clas Fluorescen pictures and recovered! Stored=%d, actual=%d." % (ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT, res))
             #ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT = res
             delta = res - ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT
-            self.updateCtrlCntWithIniFileSyned(False, 0, 0, 0, delta)
+            self.updateBatCntWithIniFileSyned(False, 0, delta)
             self.updateStaticSectionEnvPar()
             
     def getSection(self):
@@ -234,22 +234,61 @@ class clsL1_ConfigOpr():
     #单独的更新全局控制函数已经不能满足要求，必须将全局控制数与文件更新放在一起，才比较安全，不然会出现参数更新了，但配置文件并没有更新的情况
     #
     # BatFlg = True: +1，False: 不变  (这个是指针，所以只能不断增加)
-    # PicCfyCur = 就是当前全局变量：变化太大，使用delta不好控制
-    # FluCfyCur = 就是当前全局变量：变化太大，使用delta不好控制
     # PicRemDelta = delta部分，直接加或者减去
     # FluRemDelta = delta部分，直接加或者减去
     #
     # 本函数的应用，从最初完成后更新，改为进入以后直接更新，简化设计方案
     #
     '''
-    def updateCtrlCntWithIniFileSyned(self, BatFlg, PicCfyCur, FluCfyCur, PicRemDelta, FluRemDelta):
+    def updateBatCntWithIniFileSyned(self, BatFlg, PicRemDelta, FluRemDelta):
         #处理控制系数
         if (BatFlg == True):
             ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX += 1
+        ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT += PicRemDelta
+        ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT += FluRemDelta
+
+        #正式更新
+        self.CReader=configparser.ConfigParser()
+        self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
+        if (self.CReader.has_section("Counter") == False):
+            self.CReader.add_section("Counter")
+            self.CReader.set("Counter","PicBatchCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX))
+            #普通图像
+            self.CReader.set("Counter","PicBatchClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX))
+            self.CReader.set("Counter","PicRemainCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            #荧光图像控制参数
+            self.CReader.set("Counter","PicBatFluClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX))
+            self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
+            
+        else:
+            self.CReader.remove_section("Counter")
+            self.CReader.add_section("Counter")
+            self.CReader.set("Counter","PicBatchCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX))
+            #普通图像
+            self.CReader.set("Counter","PicBatchClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX))
+            self.CReader.set("Counter","PicRemainCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            #荧光图像控制参数
+            self.CReader.set("Counter","PicBatFluClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX))
+            self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
+        fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
+        self.CReader.write(fd)
+        fd.close()
+    
+    '''
+    #
+    #更新图像识别的计数器，并同步写到文件中去
+    # PicCfyCur = 就是当前全局变量：变化太大，使用delta不好控制
+    # FluCfyCur = 就是当前全局变量：变化太大，使用delta不好控制
+    # PicRemCnt = 实际部分，不再使用加减法
+    # FluRemCnt = 实际部分，不再使用加减法
+    #
+    '''
+    def updateCfyCntWithIniFileSyned(self, PicCfyCur, FluCfyCur, PicRemCnt, FluRemCnt):
+        #处理控制系数
         ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX = PicCfyCur
         ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX = FluCfyCur
-        ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT += PicRemDelta
-        ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT += PicRemDelta
+        ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = PicRemCnt
+        ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT = FluRemCnt
 
         #正式更新
         self.CReader=configparser.ConfigParser()
@@ -318,6 +357,9 @@ class clsL1_ConfigOpr():
         self.CReader=configparser.ConfigParser()
         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
         batchStr = "batch#" + str(batch)
+        if (self.CReader.has_section(batchStr) == False):
+            print("CFG: Batch not exist, batch = ", str(batchStr))
+            return -1
         fileName = self.combineFileName(batch, fileNbr)
         fileClas = str("batchFileClas#" + str(fileNbr))
         fileAtt = str("batchFileAtt#" + str(fileNbr))
@@ -330,7 +372,7 @@ class clsL1_ConfigOpr():
             fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
         except Exception as err:  
             print("CFG: Open file failure, err = " + str(err))
-            return -1;
+            return -2;
         finally:
             self.CReader.write(fd)
             fd.close()

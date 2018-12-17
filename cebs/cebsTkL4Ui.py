@@ -127,37 +127,37 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCfg.cl
     '''
     #Start taking picture
     def slot_ctrl_start_normal(self):
-        self.cetk_debug_print("L4MAIN: Taking normal picture start......")
+        #self.cetk_debug_print("L4MAIN: Taking normal picture start......")
         self.TkMainUi.func_ui_click_cap_start_nor();
 
     #Start taking picture
     def slot_ctrl_start_flu(self):
-        self.cetk_debug_print("L4MAIN: Taking Fluorescen picture start......")
+        #self.cetk_debug_print("L4MAIN: Taking Fluorescen picture start......")
         self.TkMainUi.func_ui_click_cap_start_flu();
     
     #Stop taking picture
     def slot_ctrl_stop(self):
-        self.cetk_debug_print("L4MAIN: Taking picture stop......")
+        #self.cetk_debug_print("L4MAIN: Taking picture stop......")
         self.TkMainUi.func_ui_click_cap_stop();
 
     #Control moto run to Zero position
     def slot_ctrl_zero(self):
-        self.cetk_debug_print("L4MAIN: Moto run to zero position......")
+        #self.cetk_debug_print("L4MAIN: Moto run to zero position......")
         self.TkMainUi.func_ui_click_move_zero();
 
     #Start vision classification
     def slot_ctrl_vclas_start_normal(self):
-        self.cetk_debug_print("L4MAIN: Normal picture classification starting......")
+        #self.cetk_debug_print("L4MAIN: Normal picture classification starting......")
         self.TkMainUi.func_ui_click_clf_start_nor();
 
     #Start vision classification
     def slot_ctrl_vclas_start_flu(self):
-        self.cetk_debug_print("L4MAIN: Fluorescen picture classification starting......")
+        #self.cetk_debug_print("L4MAIN: Fluorescen picture classification starting......")
         self.TkMainUi.func_ui_click_clf_start_flu();
 
     #Stop vision classification
     def slot_ctrl_vclas_stop(self):
-        self.cetk_debug_print("L4MAIN: Picture classification stop......")
+        #self.cetk_debug_print("L4MAIN: Picture classification stop......")
         self.TkMainUi.func_ui_click_clf_stop();
 
     #Enter calibration session
