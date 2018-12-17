@@ -76,6 +76,10 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.picSeqCnt = 0  #图像识别次序号
         self.capBtNbr = 0   #图像当前批次号
         self.cfyBtNbr = 0   #图像识别停留在的批次号
+        
+        #搜索到的图像识别批次和文件临时号
+        self.cfyBat = 0;
+        self.cfyFileNbr = 0;
                         
         return TUP_SUCCESS;
 
@@ -142,13 +146,14 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         #先初始化工作序号
         self.picSeqCnt = 1
         #更新批次存储文件
-        self.createBatch(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
-        #self.capTimes = ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH+1;
+        self.updateCtrlCntWithIniFileSyned(True, 0, 0, 0, 0)
+        self.createBatSectAndIniSyned(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
         
         #生成文件名字
         fnPic = self.combineFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         fnScale = self.combineScaleFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         fnVideo = self.combineFileNameVideoWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        vdCtrl = ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE 
         
         #移动到合适孔位，然后拍摄
         mbuf={}
@@ -156,6 +161,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['fnPic'] = fnPic
             mbuf['fnScale'] = fnScale
             mbuf['fnVideo'] = fnVideo
+            mbuf['vdCtrl'] = vdCtrl
             self.msg_send(TUP_MSGID_CTRS_PIC_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
             mbuf['holeNbr'] = self.picSeqCnt
@@ -168,32 +174,58 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         fnPic = self.combineFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         fnScale = self.combineScaleFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         fnVideo = self.combineFileNameVideoWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
-
+        vdCtrl = ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABL
+        
         mbuf={}
         mbuf['fnPic'] = fnPic
         mbuf['fnScale'] = fnScale
         mbuf['fnVideo'] = fnVideo
-        self.msg_send(TUP_MSGID_CTRS_PIC_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
+        mbuf['vdCtrl'] = vdCtrl
+        
+        #两个消息共享该控制消息，故而需要分别控制
+        if (self.fsm_get() == self._STM_PIC_CAP_EXEC):
+            self.msg_send(TUP_MSGID_CTRS_PIC_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
+        elif (self.fsm_get() == self._STM_FLU_CAP_EXEC):
+            self.msg_send(TUP_MSGID_CTRS_FLU_CAP_REQ, TUP_TASK_ID_VISION, mbuf)   
         return TUP_SUCCESS;
     
     #STEP3获得了图像，然后进入下一次运动
     def fsm_msg_ctrs_pic_cap_resp_rcv_handler(self, msgContent):
+        #错误处理
+        res = msgContent['res']
+        if res < 0:
+            self.funcCtrlSchdLogTrace("L3SCHD: Error feedback get from camera and can not continue!")
+            self.fsm_set(self._STM_ACTIVE)            
+            return TUP_SUCCESS;
+        
+        #如果成功，则更新剩余待识别的图片数量
+        self.updateCtrlCntWithIniFileSyned(False, 0, 0, 1, 0)
         #处理上一次成功的图像读取过程
         self.addNormalBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
-        
         #处理视频文件部分
-        #self.updBatchFileVideo(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        if ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABL == True:
+            self.updBatchFileVideo(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         
         #准备处理下一次
         self.picSeqCnt += 1
         if (self.picSeqCnt > ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH):
             self.funcCtrlSchdLogTrace("L3SCHD: Normal picture capture accomplish successful!")
-            self.fsm_set(self._STM_ACTIVE)
+            self.fsm_set(self._STM_ACTIVE)            
             return TUP_SUCCESS;
+
+        #生成文件名字
+        fnPic = self.combineFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        fnScale = self.combineScaleFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        fnVideo = self.combineFileNameVideoWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        vdCtrl = ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABL
+
         #继续干活
         mbuf={}
         if (ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == False):
-            mbuf['fileName'] = "test.jpg"
+            mbuf['fnPic'] = fnPic
+            mbuf['fnScale'] = fnScale
+            mbuf['fnVideo'] = fnVideo
+            mbuf['vdCtrl'] = vdCtrl
             self.msg_send(TUP_MSGID_CTRS_PIC_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
             mbuf['holeNbr'] = self.picSeqCnt
@@ -203,19 +235,29 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
 
     '''
     #FLU图像读取过程
+    #复用马达运动
     '''    
     def fsm_msg_capture_flu_pic_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_FLU_CAP_EXEC)
         #先初始化工作序号
         self.picSeqCnt = 1
         #更新批次存储文件
-        self.createBatch(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
-        #self.capTimes = ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH+1;
+        self.updateCtrlCntWithIniFileSyned(True, 0, 0, 0, 0)
+        self.createBatSectAndIniSyned(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
+
+        #生成文件名字
+        fnPic = self.combineFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        fnScale = self.combineScaleFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        fnVideo = self.combineFileNameVideoWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        vdCtrl = ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE
         
         #移动到合适孔位，然后拍摄
         mbuf={}
         if (ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == False):
-            mbuf['fileName'] = "test.jpg"
+            mbuf['fnPic'] = fnPic
+            mbuf['fnScale'] = fnScale
+            mbuf['fnVideo'] = fnVideo
+            mbuf['vdCtrl'] = vdCtrl
             self.msg_send(TUP_MSGID_CTRS_FLU_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
             mbuf['holeNbr'] = self.picSeqCnt
@@ -223,6 +265,15 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
 
     def fsm_msg_ctrs_flu_cap_resp_rcv_handler(self, msgContent):
+        #错误处理
+        res = msgContent['res']
+        if res < 0:
+            self.funcCtrlSchdLogTrace("L3SCHD: Error feedback get from camera and can not continue!")
+            self.fsm_set(self._STM_ACTIVE)            
+            return TUP_SUCCESS;
+
+        #如果成功，更新剩余待识别的图片数量
+        self.updateCtrlCntWithIniFileSyned(False, 0, 0, 0, 1)
         #处理上一次成功的图像读取过程
         self.addFluBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         
@@ -232,10 +283,20 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             self.funcCtrlSchdLogTrace("L3SCHD: Flu picture capture accomplish successful!")
             self.fsm_set(self._STM_ACTIVE)
             return TUP_SUCCESS;
+
+        #生成文件名字
+        fnPic = self.combineFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        fnScale = self.combineScaleFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        fnVideo = self.combineFileNameVideoWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        vdCtrl = ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABL
+        
         #继续干活
         mbuf={}
         if (ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == False):
-            mbuf['fileName'] = "test.jpg"
+            mbuf['fnPic'] = fnPic
+            mbuf['fnScale'] = fnScale
+            mbuf['fnVideo'] = fnVideo
+            mbuf['vdCtrl'] = vdCtrl
             self.msg_send(TUP_MSGID_CTRS_FLU_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
             mbuf['holeNbr'] = self.picSeqCnt
@@ -249,36 +310,83 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_capture_pic_stop_rcv_handler(self, msgContent):
         self.funcCtrlSchdLogTrace("L3SCHD: Picture capture stop successful!")
         self.fsm_set(self._STM_ACTIVE)
-        #下次需要新
-        ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX +=1;
-        self.instL1ConfigOpr.updateCtrlCntInfo();        
         return TUP_SUCCESS;
-    
-
     
     
     
     '''
     #PIC图像识别完整过程
     '''
-    #图像识别处理
+    #图像识别处理-从界面收到
     def fsm_msg_classify_normal_pic_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_PIC_CFY_EXEC)
-        #读取当前需要做图像识别的批次号
-        #生成图像文件
-        #发送给VISION任务模块
         mbuf={}
+        
+        #读取当前需要做图像识别的批次号
+        batch, fileNbr = self.findNormalUnclasFileBatchAndNbr();
+        self.cfyBat = batch;
+        self.cfyFileNbr = fileNbr;        
+        if (batch < 0):
+            self.updateCtrlCntWithIniFileSyned(False, 0, 0, ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT*(-1), 0)
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification not found: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.fsm_set(self._STM_ACTIVE)
+            return TUP_FAILURE;
+        
+        #CREATE FILE NAME
+        fileName = self.getStoredFileName(batch, fileNbr);
+        fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
+        if (fileName == None) or (fileNukeName == None):
+            self.updateCtrlCntWithIniFileSyned(False, 0, 0, ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT*(-1), 0)
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.fsm_set(self._STM_ACTIVE)
+            return TUP_FAILURE;
+
+        #REAL PROCESSING PROCEDURE
+        self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
+        #发送给VISION任务模块
+        mbuf['fileName'] = fileName
+        mbuf['fileNukeName'] = fileNukeName
+        mbuf['ctrl'] = False
         self.msg_send(TUP_MSGID_CTRS_PIC_CLFY_REQ, TUP_TASK_ID_VISION, mbuf)
         return TUP_SUCCESS;
     
-    #图像识别后的结果    
+    #图像识别后的结果-从VISION得到
     def fsm_msg_classify_pic_finish_rcv_handler(self, msgContent):
-        #读取当前需要做图像识别的批次号
-        #生成图像文件
-        #发送给VISION任务模块
+        #Fetch file Name
+        self.updateUnclasFileAsClassified(self.cfyBat, self.cfyFileNbr);
+        self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+
+        #读取未识别的批次号
+        batch, fileNbr = self.findNormalUnclasFileBatchAndNbr();
+        self.updateCtrlCntWithIniFileSyned(False, batch, 0, -1, 0)
+
         mbuf={}
+        #读取当前需要做图像识别的批次号
+        self.cfyBat = batch;
+        self.cfyFileNbr = fileNbr;        
+        if (batch < 0):
+            self.updateCtrlCntWithIniFileSyned(False, 0, 0, ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT*(-1), 0)
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification not found: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.fsm_set(self._STM_ACTIVE)
+            return TUP_SUCCESS;
+        
+        #CREATE FILE NAME
+        fileName = self.getStoredFileName(batch, fileNbr);
+        fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
+        if (fileName == None) or (fileNukeName == None):
+            self.updateCtrlCntWithIniFileSyned(False, 0, 0, ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT*(-1), 0)
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.fsm_set(self._STM_ACTIVE)
+            return TUP_SUCCESS;
+
+        #REAL PROCESSING PROCEDURE
+        self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
+        #发送给VISION任务模块
+        mbuf['fileName'] = fileName
+        mbuf['fileNukeName'] = fileNukeName
+        mbuf['ctrl'] = False
         self.msg_send(TUP_MSGID_CTRS_PIC_CLFY_REQ, TUP_TASK_ID_VISION, mbuf)
-        return TUP_SUCCESS;         
+        return TUP_SUCCESS;
     
 
     '''
@@ -286,22 +394,74 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     '''
     def fsm_msg_classify_flu_pic_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_FLU_CFY_EXEC)
-        #读取当前需要做图像识别的批次号
-        #生成图像文件
-        #发送给VISION任务模块
+
         mbuf={}
+        #读取当前需要做图像识别的批次号
+        batch, fileNbr = self.findNormalUnclasFileBatchAndNbr();
+        self.cfyBat = batch;
+        self.cfyFileNbr = fileNbr;        
+        if (batch < 0):
+            self.updateCtrlCntWithIniFileSyned(False, 0, 0, 0, ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT*(-1))
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification not found: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.fsm_set(self._STM_ACTIVE)
+            return TUP_FAILURE;
+        
+        #CREATE FILE NAME
+        fileName = self.getStoredFileName(batch, fileNbr);
+        fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
+        if (fileName == None) or (fileNukeName == None):
+            self.updateCtrlCntWithIniFileSyned(False, 0, 0, 0, ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT*(-1))
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.fsm_set(self._STM_ACTIVE)
+            return TUP_FAILURE;
+
+        #REAL PROCESSING PROCEDURE
+        self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
+        #发送给VISION任务模块
+        mbuf['fileName'] = fileName
+        mbuf['fileNukeName'] = fileNukeName
+        mbuf['ctrl'] = False
         self.msg_send(TUP_MSGID_CTRS_FLU_CLFY_REQ, TUP_TASK_ID_VISION, mbuf)
         return TUP_SUCCESS;
         
     #图像识别后的结果    
     def fsm_msg_classify_flu_finish_rcv_handler(self, msgContent):
-        #读取当前需要做图像识别的批次号
-        #生成图像文件
-        #发送给VISION任务模块
-        mbuf={}
-        self.msg_send(TUP_MSGID_CTRS_FLU_CLFY_REQ, TUP_TASK_ID_VISION, mbuf)
-        return TUP_SUCCESS;     
+        #Fetch file Name
+        self.updateUnclasFileAsClassified(self.cfyBat, self.cfyFileNbr);
+        self.updateCtrlCntWithIniFileSyned(False, 0, 0, 0, -1)
+        self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
 
+        mbuf={}
+        #读取当前需要做图像识别的批次号
+        batch, fileNbr = self.findNormalUnclasFileBatchAndNbr();
+        self.cfyBat = batch;
+        self.cfyFileNbr = fileNbr;        
+        if (batch < 0):
+            self.updateCtrlCntWithIniFileSyned(False, 0, 0, 0, ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT*(-1))
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification not found: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.fsm_set(self._STM_ACTIVE)
+            return TUP_SUCCESS;
+        
+        #CREATE FILE NAME
+        fileName = self.getStoredFileName(batch, fileNbr);
+        fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
+        if (fileName == None) or (fileNukeName == None):
+            self.updateCtrlCntWithIniFileSyned(False, 0, 0, 0, ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT*(-1))
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.fsm_set(self._STM_ACTIVE)
+            return TUP_SUCCESS;
+
+        #REAL PROCESSING PROCEDURE
+        self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
+        #发送给VISION任务模块
+        mbuf['fileName'] = fileName
+        mbuf['fileNukeName'] = fileNukeName
+        mbuf['ctrl'] = False
+        self.msg_send(TUP_MSGID_CTRS_FLU_CLFY_REQ, TUP_TASK_ID_VISION, mbuf)
+        return TUP_SUCCESS;    
+
+
+    
     '''
     #停止识别
     '''    

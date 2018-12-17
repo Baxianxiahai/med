@@ -53,6 +53,12 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         self.fsm_set(TUP_STM_INIT)
         self.task_run()
 
+
+    '''
+    #
+    #模块初始化
+    #
+    '''
     def fsm_msg_init_rcv_handler(self, msgContent):
         self.picDirFile = ''
         self.orgPicWidth = 0
@@ -61,6 +67,7 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         self.cfyPicHeight = 0
         self.timerTrain = ''
         self.timerTrainCnt = 0
+        
         self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS;
 
@@ -89,7 +96,9 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         return        
 
     '''
-    SERVICE PROCESSING
+    #
+    #SERVICE PROCESSING
+    #
     '''
     def fsm_msg_init_inf_rcv_handler(self, msgContent):
         self.orgPicWidth = msgContent['orgWidth']

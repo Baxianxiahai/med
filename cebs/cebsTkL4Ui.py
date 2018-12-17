@@ -80,9 +80,9 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, ModCebsCfg.cl
 
     #MUST Load global parameters, to initialize different UI and update the stored parameters.
     def initParameter(self):
-        #STEP1: INI FILE CONFIGURATION, 初始化配置文件
-        self.func_read_global_par_from_cfg_file();  #读取本地文件的配置数据，并写入全局变量中来
-        self.updateCtrlCntInfo() #更新进度控制参量
+#         #STEP1: INI FILE CONFIGURATION, 初始化配置文件
+#         self.func_read_global_par_from_cfg_file();  #读取本地文件的配置数据，并写入全局变量中来
+#         self.updateCtrlCntInfo() #更新进度控制参量
 
         #STEP2: START SUB-UI, 启动子界面        
         self.instL4CalibForm = SEUI_L4_CalibForm(self.TkCalibUi)
@@ -837,7 +837,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
         else: option = 6
         ModCebsCom.GLPLT_PAR_OFC.med_select_plate_board_type(option)
         #FINAL UPDATE         
-        self.updateSectionPar()
+        self.updateStaticSectionEnvPar()
 
     #Using global parameter set to UI during launch
     def funcGlobalParReadSet2Ui(self):
@@ -898,6 +898,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
     #    
     def slot_gpar_compl(self):
         self.funcGlobalParReadSave()
+        self.TkGparUi.func_ui_click_gpar_refresh_par()
         self.close()
 
     #Clear the command log text box

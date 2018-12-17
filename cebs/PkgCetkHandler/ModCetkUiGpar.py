@@ -85,6 +85,11 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['fileName'] = fileName
         self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_REQ, TUP_TASK_ID_GPAR, mbuf)
     
+    def func_ui_click_gpar_refresh_par(self):
+        print("I am func_ui_click_gpar_refresh_par!")
+        mbuf={}
+        self.msg_send(TUP_MSGID_GPAR_REFRESH_PAR, TUP_TASK_ID_VISION, mbuf)        
+    
     #清理各项操作
     def func_ui_click_gpar_close(self):
         print("I am func_ui_click_gpar_close!")

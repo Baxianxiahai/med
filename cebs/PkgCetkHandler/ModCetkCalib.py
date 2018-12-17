@@ -15,8 +15,7 @@ from PkgVmHandler.ModVmConsole import *
 
 class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_ACTIVE = 3
-    _STM_CAM_DISP = 4
-    _STM_MOTO_MV = 5
+    _STM_MOTO_MV = 4
     
     CAM_DISP_SET = True
     timerDisplay = ''
@@ -38,17 +37,17 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_VDISP_RESP, self.fsm_msg_cam_disp_resp_rcv_handler)
 
         #校准移动命令
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOMV_DIR_REQ, self.fsm_msg_moto_mv_dir_req_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOMV_DIR_RESP, self.fsm_msg_moto_mv_dir_resp_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOFM_DIR_REQ, self.fsm_msg_moto_force_move_dir_req_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOFM_DIR_RESP, self.fsm_msg_moto_force_move_dir_resp_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_MOMV_DIR_REQ, self.fsm_msg_moto_mv_dir_req_rcv_handler)
+        self.add_stm_combine(self._STM_MOTO_MV, TUP_MSGID_CALIB_MOMV_DIR_RESP, self.fsm_msg_moto_mv_dir_resp_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_MOFM_DIR_REQ, self.fsm_msg_moto_force_move_dir_req_rcv_handler)
+        self.add_stm_combine(self._STM_MOTO_MV, TUP_MSGID_CALIB_MOFM_DIR_RESP, self.fsm_msg_moto_force_move_dir_resp_rcv_handler)
         
         #校准设置
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_RIGHT_UP_SET, self.fsm_msg_right_up_set_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_LEFT_DOWN_SET, self.fsm_msg_left_down_set_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOMV_START, self.fsm_msg_momv_start_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_MOMV_HOLEN, self.fsm_msg_momv_holen_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_PIC_CAP_HOLEN, self.fsm_msg_pic_cap_holen_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_RIGHT_UP_SET, self.fsm_msg_right_up_set_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_LEFT_DOWN_SET, self.fsm_msg_left_down_set_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_MOMV_START, self.fsm_msg_momv_start_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_MOMV_HOLEN, self.fsm_msg_momv_holen_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_PIC_CAP_HOLEN, self.fsm_msg_pic_cap_holen_rcv_handler)
         
         #巡游
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_PILOT_START, self.fsm_msg_pilot_start_rcv_handler)
@@ -61,20 +60,15 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_init_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
-        #STEP1: 判定产品型号
-        GLPLT_PAR_OFC.med_init_plate_product_type()
-
-        #STEP2：初始化工作环境
-        GLPLT_PAR_OFC.med_init_plate_parameter()
+        #STEP1：初始化工作环境
         self.func_clean_working_env()
         
-        #STEP3: 干活的定时器
+        #STEP2: 干活的定时器
         self.timerDisplay = ''
         
-        #STEP4: 巡游的控制单元
+        #STEP3: 巡游的控制单元
         self.pilotCnt = 0
         self.pilotPos = 0
-        
         return TUP_SUCCESS;
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
@@ -89,16 +83,17 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_open_req_rcv_handler(self, msgContent):
         if (self.CAM_DISP_SET == True):
             self.timerDisplay = self.tup_timer_start(self.TIMER_DISP_CYCLE, self.func_timer_display_process)
-        self.fsm_set(self._STM_CAM_DISP)
         
         '''
         #每进来一次，照片批次号都被更新一次
         #为什么：因为操作摄像头的读取很麻烦，如果不这样做，会导致摄像头存下的照片相互之间重叠，为了简化这个逻辑，每次校准进来都主动+1批次号码
-        
-        #这部分代码还有问题，后面待完善
+        #
+        #固定先更新批次号码+1，简化这个参数的控制
+        #而且在一次校准更新中，批次号只能+1，不能重复。如果想要增加更多，需要多次进来
+        #另外，每一次进来，固定+1，从而简化这个东西的操控
         '''
-        #ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX += 1
-        #self.createBatch(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
+        self.updateCtrlCntWithIniFileSyned(True, 0, 0, 0, 0)
+        self.createBatSectAndIniSyned(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
         return TUP_SUCCESS;
     
     #传回来的显示结果
@@ -170,7 +165,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0];
         ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1];
         ModCebsCom.GLPLT_PAR_OFC.med_update_plate_parameter()
-        self.updateSectionPar();
+        self.updateStaticSectionEnvPar();
         self.funcCalibLogTrace(str("L3CALIB: RightUp Axis set!  XY=%d/%d." % (ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2], ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3])))      
         return TUP_SUCCESS;
 
@@ -179,7 +174,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0];
         ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1];
         ModCebsCom.GLPLT_PAR_OFC.med_update_plate_parameter()
-        self.updateSectionPar();
+        self.updateStaticSectionEnvPar();
         self.funcCalibLogTrace("L3CALIB: LeftDown Axis set! XY=%d/%d." % (ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1]))
         return TUP_SUCCESS;
 
@@ -210,10 +205,25 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_pic_cap_holen_rcv_handler(self, msgContent):
         holeIndex = int(msgContent['holeNbr'])
         newHoldNbr = self.funcCheckHoldNumber(holeIndex)
+        #生成文件
+        fileName = self.combineFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, newHoldNbr)
+        self.addNormalBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, newHoldNbr)
         mbuf={}
-        mbuf['holeNbr'] = newHoldNbr        
+        mbuf['holeNbr'] = newHoldNbr
+        mbuf['fileName'] = fileName
         self.funcCalibLogTrace(str("L3CALIB: Capture picture with Hole#%d point." % (int(msgContent['holeNbr']))))
         self.msg_send(TUP_MSGID_CALIB_PIC_CAP_HOLEN, TUP_TASK_ID_VISION, mbuf)
+        
+        '''
+        #更新文件记录
+        #这里稍微冒一些风险：就是拍照和记录没有成功，但这里已经记录了
+        #在实际使用的时候，这种风向比较小。重启程序，这部分记录UnClassifiedCounter会重新计算的
+        #如果客户非常在意这种风险，需要给这个消息增加一个反馈消息，指示是否成功。如果不成功则不更新ini文件记录，那样就完美了
+        #过程不困难，但比较累赘。这里考虑的是简要的过程。
+        '''
+        self.updateCtrlCntWithIniFileSyned(False, 0, 0, 1, 0)
+        self.addNormalBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, newHoldNbr)
+        
         return TUP_SUCCESS;
     
     #巡游开始
@@ -234,10 +244,10 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
             self.pilotPos = 0
             self.pilotCnt +=1
             #打印内容，不期望跟结束之间产生冲突矛盾
-            if (self.pilotCnt < ModCebsCom.GL_CEBS_PILOT_WOKING_ROUNDS_MAX):
+            if (self.pilotCnt < ModCebsCom.GLSPS_PAR_OFC.PILOT_WOKING_ROUNDS_MAX):
                 self.funcCalibLogTrace(str("L3CALIB: Pilot round #%d movement start!" % (self.pilotCnt)))
         #结束的时刻
-        if (self.pilotCnt >= ModCebsCom.GL_CEBS_PILOT_WOKING_ROUNDS_MAX):
+        if (self.pilotCnt >= ModCebsCom.GLSPS_PAR_OFC.PILOT_WOKING_ROUNDS_MAX):
             self.msg_send(TUP_MSGID_CALIB_PILOT_STOP, TUP_TASK_ID_MOTO, "");
             self.funcCalibLogTrace(str("L3CALIB: Pilot movement accomplished successful!"))
             return TUP_SUCCESS;

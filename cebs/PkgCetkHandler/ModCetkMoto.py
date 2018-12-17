@@ -85,7 +85,6 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         self.task_run()
 
     def fsm_msg_init_rcv_handler(self, msgContent):
-        ModCebsCom.GLPLT_PAR_OFC.med_init_plate_parameter()
         if (self.funcInitSps() < 0):
             self.funcMotoErrTrace("Init sps port error!")
             return TUP_FAILURE;
@@ -500,6 +499,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         self.drvVerNbr = -1
         if len(plist) <= 0:
             self.funcMotoErrTrace("L2MOTO: Not serial device installed!")
+            return -2
         else:
             maxList = len(plist)
             searchComPartString = ''

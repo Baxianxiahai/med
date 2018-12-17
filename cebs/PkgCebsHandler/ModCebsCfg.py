@@ -22,11 +22,16 @@ import json
 '''
 class clsL1_ConfigOpr():
     def __init__(self):
-        ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME = ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME
-        self.initGlobalPar()
+        pass
+        #self.loadInitFileAndInitGlComPar()
 
+    '''
+    * STEP0:
+    *    读取ini文件，如果发现不存在还需要重新创建。如果发现某些部分不合法或者错误，则需要重新创建并补充完整
+    *
+    '''   
     #INIT ALL STORAGE AREA
-    def initGlobalPar(self):
+    def loadInitFileAndInitGlComPar(self):
         #JUDGE WORKING DIR
         ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH = os.getcwd()+ self.osDifferentStr() + ModCebsCom.GLCFG_PAR_OFC.PIC_ORIGIN_PATH
         flag = os.path.exists(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH)
@@ -42,8 +47,10 @@ class clsL1_ConfigOpr():
         #JUDGE CREATE INIT FILE OR NOT
         self.CReader=configparser.ConfigParser()
         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
-        flag = os.path.exists(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME)
-        if (flag == False):
+        flagExist = os.path.exists(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME)
+        flagEvn = self.CReader.has_section("Env")
+        flagCounter = self.CReader.has_section("Counter")
+        if (flagExist == False) or (flagEvn == False):
             self.CReader.add_section("Env")
             self.CReader.set("Env","workdir", str(os.getcwd()+ self.osDifferentStr()))
             self.CReader.set("Env","pic_origin", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH))
@@ -65,16 +72,19 @@ class clsL1_ConfigOpr():
             self.CReader.set("Env","vision res addup set", str(ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET))
             self.CReader.set("Env","video capture enable set", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE))
             self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC))
+        if (flagExist == False) or (flagCounter == False):
             self.CReader.add_section("Counter")
             self.CReader.set("Counter","PicBatchCnt", "0")
             self.CReader.set("Counter","PicBatchClas", "0")
             self.CReader.set("Counter","PicRemainCnt", "0")
             self.CReader.set("Counter","PicBatFluClas", "0")
             self.CReader.set("Counter","PicRemFluCnt", "0")
+        if (flagExist == False) or (flagEvn == False) or (flagCounter == False):   
             self.CReader.write(open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, "w"))
+            
         #REWRITE FILE TO AVOID INI FILE ERROR
         if (self.CReader['Env']['workdir'] != str(os.getcwd()+ self.osDifferentStr())):
-            self.updateSectionPar()
+            self.updateStaticSectionEnvPar()
     '''
     * STEP1:
     *    控制参数读取及更新过程
@@ -134,14 +144,18 @@ class clsL1_ConfigOpr():
         res = self.recheckRemaingUnclasBatchFile(ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL)
         if (res != ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT):
             print("CFG: Error find during re-check remaining un-clas normal pictures and recovered! Stored=%d, actual=%d." % (ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT, res))
-            ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = res
-            self.updateSectionPar()
+            #ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = res
+            self.updateStaticSectionEnvPar()
+            delta = res - ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT
+            self.updateCtrlCntWithIniFileSyned(False, 0, 0, delta, 0)
         #为了防止统计错误，重新扫描并计算荧光图像数量
         res = self.recheckRemaingUnclasBatchFile(ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN)
         if (res != ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT):
             print("CFG: Error find during re-check remaining un-clas Fluorescen pictures and recovered! Stored=%d, actual=%d." % (ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT, res))
-            ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT = res
-            self.updateSectionPar()
+            #ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT = res
+            delta = res - ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT
+            self.updateCtrlCntWithIniFileSyned(False, 0, 0, 0, delta)
+            self.updateStaticSectionEnvPar()
             
     def getSection(self):
         return self.CReader.sections()
@@ -160,8 +174,9 @@ class clsL1_ConfigOpr():
             return '/'
         else:
             return '/'
-
-    def updateSectionPar(self):
+    
+    #更新板孔参数配置文件
+    def updateStaticSectionEnvPar(self):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')        
         if (self.CReader.has_section("Env") == False):
@@ -213,9 +228,30 @@ class clsL1_ConfigOpr():
         fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
         self.CReader.write(fd)
         fd.close()
-                
-    #FILLING GLOBAL CONTROL DATA
-    def updateCtrlCntInfo(self):
+    
+
+    '''
+    #单独的更新全局控制函数已经不能满足要求，必须将全局控制数与文件更新放在一起，才比较安全，不然会出现参数更新了，但配置文件并没有更新的情况
+    #
+    # BatFlg = True: +1，False: 不变  (这个是指针，所以只能不断增加)
+    # PicCfyCur = 就是当前全局变量：变化太大，使用delta不好控制
+    # FluCfyCur = 就是当前全局变量：变化太大，使用delta不好控制
+    # PicRemDelta = delta部分，直接加或者减去
+    # FluRemDelta = delta部分，直接加或者减去
+    #
+    # 本函数的应用，从最初完成后更新，改为进入以后直接更新，简化设计方案
+    #
+    '''
+    def updateCtrlCntWithIniFileSyned(self, BatFlg, PicCfyCur, FluCfyCur, PicRemDelta, FluRemDelta):
+        #处理控制系数
+        if (BatFlg == True):
+            ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX += 1
+        ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX = PicCfyCur
+        ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX = FluCfyCur
+        ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT += PicRemDelta
+        ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT += PicRemDelta
+
+        #正式更新
         self.CReader=configparser.ConfigParser()
         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
         if (self.CReader.has_section("Counter") == False):
@@ -242,14 +278,18 @@ class clsL1_ConfigOpr():
         self.CReader.write(fd)
         fd.close()
 
-
     '''
     * STEP2:
-    *    单个文件处理过程
+    *    单个文件处理过程，批次处理过程
     *
     '''   
+    '''
     #新增加一个批次时，需要创建批次表头
-    def createBatch(self, batch):
+    #目前创建新的批次，只有两种可能性
+    # 第一种：正常业务拍照+FLU
+    # 第二种：校准过程中截图
+    '''
+    def createBatSectAndIniSyned(self, batch):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
         batchStr = "batch#" + str(batch)
@@ -264,15 +304,16 @@ class clsL1_ConfigOpr():
         self.CReader.write(fd)
         fd.close()
 
-    #增加普通文件
+    #增加普通文件 => 写到ini文件中去
     def addNormalBatchFile(self, batch, fileNbr):
         return self.addBatchFileInElement(batch, fileNbr, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL)
     
-    #增加荧光文件
+    #增加荧光文件 => 写到ini文件中去
     def addFluBatchFile(self, batch, fileNbr):
         return self.addBatchFileInElement(batch, fileNbr, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN)
     
     #基础函数过程
+    #同一个图像在反复存储的情况下，这个函数是否不出错？
     def addBatchFileInElement(self, batch, fileNbr, eleTag):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')

@@ -27,14 +27,50 @@ from PkgCetkHandler import ModCetkUiMeng
 import cebsTkL4Ui
 
 
+
+'''
+#
+# START OF THIS PROGRAM
+#
+'''   
 #项目主入口
 def prj_cebs_main_entry():
-    #初始化全局变量表
+    '''
+    #
+    # PAR0: 初始化VM级别的全局参数，以及启动界面
+    #
+    '''        
+    #初始化VM任务层面的参数
     TUP_GL_CFG = tupGlbCfg()
     
     #START APP and UI：展示启动页面
     app, splash = cebsTkL4Ui.cetk_start_app()
+        
+    '''
+    #
+    # PAR1: 全局参数的初始化
+    #
+    '''
+    #STEP0：判定ini文件是否存在
+    cfgPar = clsL1_ConfigOpr()
+    cfgPar.loadInitFileAndInitGlComPar()
+
+    #STEP1: INI FILE CONFIGURATION, 初始化配置文件
+    cfgPar.func_read_global_par_from_cfg_file();  #读取本地文件的配置数据，并写入全局变量中来
     
+    #STEP2: 选择缺省的板孔产品型号
+    GLPLT_PAR_OFC.med_init_plate_product_type()
+    #更新参数 ->这个参数可能会随时更新
+    GLPLT_PAR_OFC.med_init_plate_parameter()
+
+    #STEP3: 
+    
+    
+    '''
+    #
+    # PAR2: 创建各项任务
+    #
+    '''
     #Init message and prepare send to all task, to make them transferred into ACTIVE state
     initMsg = {}
     initMsg['mid'] = TUP_MSGID_INIT
@@ -106,14 +142,26 @@ def prj_cebs_main_entry():
     initMsg['dst'] = TUP_TASK_ID_VISION
     VisionTaskInst.msg_send_in(initMsg)
     VisionTaskInst.tup_dbg_print("Create VISION task success!")
-               
+
+
+    '''
+    #
+    # PAR3: 正式进入用户界面
+    #
+    '''
     #FINAL QT UI：真正启动界面APP
     cebsTkL4Ui.cetk_show_app(app, splash, MainUiTaskInst, CalibUiTaskInst, GparUiTaskInst, MengUiTaskInst, 0)
-    
+
+
+
+    '''
+    #
+    # PAR4: 程序结束后，清理各个任务
+    #
+    '''    
     #CLOSE ALL TASK: total 12 tasks
     print("Project CETK terminate all existing tasks!")
     VmConslTaskInst.terminate()
-    TimerTaskInst.terminate()
     MainUiTaskInst.terminate()
     CalibUiTaskInst.terminate()
     GparUiTaskInst.terminate()
@@ -125,7 +173,11 @@ def prj_cebs_main_entry():
     MotoTaskInst.terminate()
     VisionTaskInst.terminate()
     
-    
+    '''
+    #
+    # END OF THIS PROGRAM
+    #
+    '''      
     
     
     

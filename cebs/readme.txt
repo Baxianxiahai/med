@@ -6,14 +6,18 @@
 
 [BUG LIST]
 2. def func_vision_worm_binvalue_proc(self, img):  new = np.zeros(img.shape, np.uint8)   
-3. CALIB中对于批次号的处理 - cebsIni文件的保护
 
+3.
+self.updateCtrlCntWithIniFileSyned(False, False, False, 1, 0) => 
+这个在连续读取unclassified文件时，可能连续跳过多个BatNbr，所以不见得是True or False  =>已经改为Delta值了
+但寻找新的UnClassified指针时，依然存在问题，待完善
 
+4.
+    #同一个图像在反复存储的情况下，这个函数是否不出错？
+    def addBatchFileInElement(self, batch, fileNbr, eleTag):
 
-
-
-
-
+5. 需要将本函数拆解为截图部分和识别部分，不然不好控制
+updateCtrlCntWithIniFileSyned(self, BatFlg, PicCfyCur, FluCfyCur, PicRemDelta, FluRemDelta):
 
 
 

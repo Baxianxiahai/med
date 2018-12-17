@@ -28,13 +28,6 @@ PART0: 全局定义的变量，不需要封装
 GL_CEBS_ERR_LOG_FILE_NAME_SET = r"cebsErrLog.txt"
 GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET = r"cebsVsClas.log";
 GL_CEBS_CMD_LOG_FILE_NAME_SET = r"cebsCmdLog.txt"
-#ROUNDS of auto-pilot run
-GL_CEBS_PILOT_WOKING_ROUNDS_MAX = 5;
-#SERIAL COM NUMBER => THIS NEED SET IN THE BEGINNING, CAN NOT WAIT UNTIL SYSTEM START!
-#SO WHOLE DESIGN LOGIC OF MOTO-API SHOULD RE-DONE!
-#NOT YET USE FOLLOWING PORT SETTING.
-GL_CEBS_COM_NUMBER_SET = 11;
-
 
 
 '''
@@ -158,11 +151,6 @@ class clsL0_MedComPlatePar():
         super(clsL0_MedComPlatePar, self).__init__()  
         pass
 
-#     def med_cfl_test1(self):
-#         global GL_CEBS_COM_NUMBER_SET
-#         print("Test functions! Global parameter Nbr Set = %d" % (GL_CEBS_COM_NUMBER_SET))
-#         pass
-
     def med_cfl_add(self, a, b):
         return a+b
     
@@ -183,7 +171,6 @@ class clsL0_MedComPlatePar():
 
     #INIT PLATE PARAMETER, 初始化孔板参数
     def med_init_plate_parameter(self):
-
         if (self.HB_WIDTH_X_SCALE == 0 or self.HB_HEIGHT_Y_SCALE == 0 or self.HB_HOLE_X_NUM == 0 or self.HB_HOLE_Y_NUM == 0):
             if (self.HB_TARGET_TYPE == self.HB_TARGET_96_STANDARD):
                 self.HB_HOLE_X_NUM = self.HB_TARGET_96_SD_XDIR_NBR
@@ -247,6 +234,8 @@ class clsL0_MedComPlatePar():
         self.HB_WIDTH_X_SCALE = (self.HB_POS_IN_UM[2] - self.HB_POS_IN_UM[0]) / (self.HB_HOLE_X_NUM-1);
         self.HB_HEIGHT_Y_SCALE = (self.HB_POS_IN_UM[3] - self.HB_POS_IN_UM[1]) / (self.HB_HOLE_Y_NUM-1);
     
+    #选择工作盘片
+    #只有在更换盘片且在GPAR中才能选择
     def med_select_plate_board_type(self, option):
         if (option == 96):
             self.HB_TARGET_TYPE = self.HB_TARGET_96_STANDARD;
@@ -299,6 +288,7 @@ class clsL0_MedComPlatePar():
         else:
             return self.HB_TARGET_96_SD_HOLE_RAD/2
         
+        
 #定义全局变量以及操作函数
 GLPLT_PAR_OFC = clsL0_MedComPlatePar()
 
@@ -331,8 +321,6 @@ class clsL0_MedComPicPar():
     VISION_CAMBER_RES_WITDH = 3584; #1792;
     VISION_CAMBER_RES_HEIGHT = 2748; #1374;
     #TEMP USAGE VARIABLES => 用于浮动式界面展示，暂时不用
-    #CAMERA_DISPLAY_POS_X = 0;
-    #CAMERA_DISPLAY_POS_Y = 0;
     #MAX search window of camera
     VISION_MAX_CAMERA_SEARCH = 15;
     #VISION calibration set
@@ -352,7 +340,15 @@ class clsL0_MedComPicPar():
     CFY_THD_PAR2 = 2
     CFY_THD_PAR3 = 3
     CFY_THD_PAR4 = 4
-    #动态视频图像
+    
+    '''
+    #
+    #动态视频图像 => 用于CALIB界面下的摄像头视频显示
+    #这是COM共享组件中唯一一个共享的复杂数据对象
+    #其它共享对象还都是比较简单的数据
+    #如果要换成进程模式，而非线程模式，使用这个方式就不能简单的共享使用了，文件或者其它连接模式可能要再考虑了
+    #
+    '''
     CALIB_VDISP_OJB = ''
     
     
@@ -454,6 +450,9 @@ class clsL0_MedSpsPar():
 
     #马达归零最大循环次数
     MOTOR_MAX_RETRY_TIMES = 10 #正常需要放置30次数，确保归零的时间预算
+
+    #ROUNDS of auto-pilot run
+    PILOT_WOKING_ROUNDS_MAX = 5;
     
     def __init__(self):    
         super(clsL0_MedSpsPar, self).__init__()  
@@ -469,7 +468,8 @@ GLSPS_PAR_OFC = clsL0_MedSpsPar()
 PART5: 全局静态handler传递存储地点
 
 #封装
-方便对参数进行维护，包括增删
+        方便对参数进行维护，包括增删，
+=> 结果证明这种方式不能正常工作
 '''
 
 class clsL0_MedHandlerPar():
@@ -503,3 +503,8 @@ class clsL0_MedHandlerPar():
                 
 #定义全局变量以及操作函数
 GLHLR_PAR_OFC = clsL0_MedHandlerPar()
+
+
+
+
+

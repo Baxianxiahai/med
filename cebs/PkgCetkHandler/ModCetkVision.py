@@ -24,7 +24,7 @@ import math
 from   ctypes import c_uint8
 import win32com.client  #pip install pyWin32
 from win32com.client import GetObject
-import usb.core
+#import usb.core
 #from   cv2 import waitKey
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import pyqtSlot
@@ -71,7 +71,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_main_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_UI_SWITCH, self.fsm_msg_calib_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_GPAR_UI_SWITCH, self.fsm_msg_gpar_ui_switch_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_PIC_REFRESH_PAR, self.fsm_msg_refresh_par_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_GPAR_REFRESH_PAR, self.fsm_msg_refresh_par_rcv_handler)
 
         #CALIB校准模式下的视频摄像头+抓图指令  CALIB校准界面下的抓图指令
         self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_VDISP_REQ, self.fsm_msg_calib_video_display_req_rcv_handler)
@@ -128,7 +128,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     
     def fsm_msg_calib_ui_switch_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_CALIB_UI_ACT)
-        self.createBatch(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
         return TUP_SUCCESS;
 
     def fsm_msg_gpar_ui_switch_rcv_handler(self, msgContent):
@@ -181,7 +180,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['res'] = -2
             self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
             return TUP_FAILURE;
-        #正确处理过程
+        #正确处理过程：这是主要通过全局变量传递的复杂数据对象
+        #其它的COM数据主要还是一些简单的共享参数信息
         ModCebsCom.GLVIS_PAR_OFC.CALIB_VDISP_OJB = outFrame
         mbuf['res'] = 1
         mbuf['ComObj'] = True
@@ -194,6 +194,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     #传递文件回去给显示界面
     def fsm_msg_calib_pic_cap_holen_rcv_handler(self, msgContent):
         holeNbr = msgContent['holeNbr']
+        fileName = msgContent['fileName']
         if self.capInit == '':
             self.funcVisionErrTrace("VISION: capture error as not init camera!")
             return TUP_FAILURE;
@@ -202,9 +203,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         if (ret <0):
             self.funcVisionErrTrace("VISION: capture picture error!")
             return TUP_FAILURE;
-        #正确处理过程
-        fileName = self.combineFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, holeNbr)
-        self.addNormalBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, holeNbr)
         cv.imwrite(fileName, outFrame)
         self.funcVisionLogTrace("VISION: Capture and save file, batch=%d, fileNbr=%d, fn=%s" % (ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, holeNbr, fileName));
         return TUP_SUCCESS;
@@ -214,7 +212,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         fnPic = msgContent['fnPic']
         fnScale = msgContent['fnScale']
         fnVideo = msgContent['fnVideo']
-        res = self.funcPicVidCapAndSaveFile(fnPic, fnScale, fnVideo);
+        vdCtrl = msgContent['vdCtrl']
+        res = self.funcPicVidCapAndSaveFile(fnPic, fnScale, fnVideo, vdCtrl);
         mbuf={}
         mbuf['res'] = res
         self.msg_send(TUP_MSGID_CTRS_PIC_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
@@ -226,6 +225,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
 
     def fsm_msg_main_ctrs_pic_clfy_req_rcv_handler(self, msgContent):
+        #识别算法
+        fileName = msgContent['fileName']
+        fileNukeName = msgContent['fileNukeName']
+        ctrl = msgContent['ctrl']
+        self.func_vision_worm_clasification(fileName, fileNukeName, ctrl);
         mbuf={}
         self.msg_send(TUP_MSGID_CRTS_PIC_CLFY_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         return TUP_SUCCESS;
@@ -243,7 +247,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['res'] = -1
             self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_RESP, TUP_TASK_ID_GPAR, mbuf)
             return TUP_SUCCESS;
-        self.funcVisionNormalClassifyDirect(picFile, 'tempPic.jpg')
+        self.func_vision_worm_clasification(picFile, 'tempPic.jpg', True)
         if (os.path.exists('tempPic.jpg') == False):
             mbuf['res'] = -2
             self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_RESP, TUP_TASK_ID_GPAR, mbuf)
@@ -300,8 +304,17 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         temp_pixmap = QtGui.QPixmap.fromImage(temp_image)
         return 1, temp_pixmap
 
+    '''
+    #
     #NEW截获图像
-    def funcPicVidCapAndSaveFile(self, fnPic, fnScale, fnVideo):
+    #
+    # fnPic: 图片文件名字
+    # fnScale: 需要增加为带尺度的文件名字
+    # fnVideo: 视频文件名字
+    # vdCtrl: 控制是否需要拍摄视频
+    #
+    '''
+    def funcPicVidCapAndSaveFile(self, fnPic, fnScale, fnVideo, vdCtrl):
         if not self.capInit.isOpened():
             self.funcVisionErrTrace("L2VISCAP: Cannot open webcam!")
             self.capInit.release()
@@ -330,7 +343,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             cv.imwrite(fnPic, outputFrame)
             if ModCebsCom.GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG == True:
                 self.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), fnPic, fnScale)
-        if (ret == True) and (ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE == True):
+        if (ret == True) and (vdCtrl == True):
             #Video capture with 3 second
             fourcc = cv.VideoWriter_fourcc(*'mp4v')  #mp4v(.mp4), XVID(.avi)
             out = cv.VideoWriter(fnVideo, fourcc, fps, (width, height))
@@ -595,49 +608,44 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     *    用于普通白光照片的识别处理过程
     *
     '''    
-    def funcVisionNormalClassifyProc(self):
-        self.funcVisRefreshPar()
-        batch, fileNbr = self.findNormalUnclasFileBatchAndNbr();
-        if (batch < 0):
-            ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
-            self.funcVisionLogTrace("L2VISCFY: Picture classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
-            self.updateCtrlCntInfo();
-            return;
-        fileName = self.getStoredFileName(batch, fileNbr);
-        fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
-        if (fileName == None) or (fileNukeName == None):
-            ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
-            self.funcVisionLogTrace("L2VISCFY: Picture classification finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
-            self.updateCtrlCntInfo();
-            return;
-        #REAL PROCESSING PROCEDURE
-        print("L2VISCFY: Normal picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
-        self.func_vision_worm_clasification(fileName, fileNukeName, False);
-        ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT -= 1;
-        #Update classified files
-        self.updateUnclasFileAsClassified(batch, fileNbr);
-        self.funcVisionLogTrace("L2VISCFY: Normal picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
-        self.updateCtrlCntInfo();
-        return;
-
-
-    def funcVisionNormalClassifyDirect(self, dirFn, tmpFn):
-        return self.func_vision_worm_clasification(dirFn, tmpFn, True);
+#     def funcVisionNormalClassifyProc(self):
+#         self.funcVisRefreshPar()
+#         batch, fileNbr = self.findNormalUnclasFileBatchAndNbr();
+#         if (batch < 0):
+#             ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
+#             self.funcVisionLogTrace("L2VISCFY: Picture classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+#             self.updateCtrlCntInfo();
+#             return -1;
+#         fileName = self.getStoredFileName(batch, fileNbr);
+#         fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
+#         if (fileName == None) or (fileNukeName == None):
+#             ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
+#             self.funcVisionLogTrace("L2VISCFY: Picture classification finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+#             self.updateCtrlCntInfo();
+#             return -2;
+#         #REAL PROCESSING PROCEDURE
+#         print("L2VISCFY: Normal picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
+#         self.func_vision_worm_clasification(fileName, fileNukeName, False);
+#         ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT -= 1;
+#         #Update classified files
+#         self.updateUnclasFileAsClassified(batch, fileNbr);
+#         self.funcVisionLogTrace("L2VISCFY: Normal picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+#         self.updateCtrlCntInfo();
+#         return 1;
         
-        
-    def func_vision_worm_input_processing(self, inputStr):
-        try:
-            if ((inputStr['cfBase'] < inputStr['cfSmall2MidIndex']) and (inputStr['cfSmall2MidIndex'] < inputStr['cfMid2BigIndex']) and (inputStr['cfMid2BigIndex'] < inputStr['cfBig2TopIndex'])):
-                self.HST_VISION_WORM_CLASSIFY_base = inputStr['cfBase'];
-                self.HST_VISION_WORM_CLASSIFY_small2mid = inputStr['cfSmall2MidIndex'];
-                self.HST_VISION_WORM_CLASSIFY_mid2big = inputStr['cfMid2BigIndex'];
-                self.HST_VISION_WORM_CLASSIFY_big2top = inputStr['cfBig2TopIndex'];
-                self.HST_VISION_WORM_CLASSIFY_pic_filename = inputStr['fileName'];
-            else:
-                print("L2VISCFY: func_vision_worm_input_processing on input error!")
-        except Exception as err:
-            text = "L2VISCFY: func_vision_worm_input_processing on input error = %s" % str(err)
-            print("L2VISCFY: Input error = ", text);
+#     def func_vision_worm_input_processing(self, inputStr):
+#         try:
+#             if ((inputStr['cfBase'] < inputStr['cfSmall2MidIndex']) and (inputStr['cfSmall2MidIndex'] < inputStr['cfMid2BigIndex']) and (inputStr['cfMid2BigIndex'] < inputStr['cfBig2TopIndex'])):
+#                 self.HST_VISION_WORM_CLASSIFY_base = inputStr['cfBase'];
+#                 self.HST_VISION_WORM_CLASSIFY_small2mid = inputStr['cfSmall2MidIndex'];
+#                 self.HST_VISION_WORM_CLASSIFY_mid2big = inputStr['cfMid2BigIndex'];
+#                 self.HST_VISION_WORM_CLASSIFY_big2top = inputStr['cfBig2TopIndex'];
+#                 self.HST_VISION_WORM_CLASSIFY_pic_filename = inputStr['fileName'];
+#             else:
+#                 print("L2VISCFY: func_vision_worm_input_processing on input error!")
+#         except Exception as err:
+#             text = "L2VISCFY: func_vision_worm_input_processing on input error = %s" % str(err)
+#             print("L2VISCFY: Input error = ", text);
 
 
     def func_vision_worm_binvalue_proc(self, img):
@@ -815,35 +823,35 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     *    用于荧光照片的识别处理过程
     *
     '''    
-    def funcVisionFluClassifyProc(self):
-        self.funcVisRefreshPar()
-        batch, fileNbr = self.findFluUnclasFileBatchAndNbr();
-        print("batch/FileNbr=%d/%d" % (batch, fileNbr))
-        if (batch < 0):
-            ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT = 0;
-            self.funcVisionLogTrace("L2VISCFY: Picture flu classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
-            self.updateCtrlCntInfo();
-            return;
-        fileName = self.getStoredFileName(batch, fileNbr);
-        fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
-        if (fileName == None) or (fileNukeName == None):
-            ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
-            self.funcVisionLogTrace("L2VISCFY: Picture flu classification finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
-            self.updateCtrlCntInfo();
-            return;
-        #REAL PROCESSING PROCEDURE
-        print("L2VISCFY: Flu picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
-        self.algoVisFluWormCaculate(fileName, fileNukeName);
-        ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT -= 1;
-        #Update classified files
-        self.updateUnclasFileAsClassified(batch, fileNbr);
-        self.funcVisionLogTrace("L2VISCFY: Flu picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
-        self.updateCtrlCntInfo();
-        return;
-    
-    #荧光处理算法过程
-    def algoVisFluWormCaculate(self, fileName, fileNukeName):
-        self.funcVisionLogTrace("L2VISCFY: Flu picture classification simulation algorithms demo, to be finsihed!")
+#     def funcVisionFluClassifyProc(self):
+#         self.funcVisRefreshPar()
+#         batch, fileNbr = self.findFluUnclasFileBatchAndNbr();
+#         print("batch/FileNbr=%d/%d" % (batch, fileNbr))
+#         if (batch < 0):
+#             ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT = 0;
+#             self.funcVisionLogTrace("L2VISCFY: Picture flu classification not finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
+#             self.updateCtrlCntInfo();
+#             return;
+#         fileName = self.getStoredFileName(batch, fileNbr);
+#         fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
+#         if (fileName == None) or (fileNukeName == None):
+#             ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = 0;
+#             self.funcVisionLogTrace("L2VISCFY: Picture flu classification finished: remaining NUMBERS=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
+#             self.updateCtrlCntInfo();
+#             return;
+#         #REAL PROCESSING PROCEDURE
+#         print("L2VISCFY: Flu picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
+#         self.algoVisFluWormCaculate(fileName, fileNukeName);
+#         ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT -= 1;
+#         #Update classified files
+#         self.updateUnclasFileAsClassified(batch, fileNbr);
+#         self.funcVisionLogTrace("L2VISCFY: Flu picture classification finished, remaining NUMBRES=%d." %(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
+#         self.updateCtrlCntInfo();
+#         return;
+#     
+#     #荧光处理算法过程
+#     def algoVisFluWormCaculate(self, fileName, fileNukeName):
+#         self.funcVisionLogTrace("L2VISCFY: Flu picture classification simulation algorithms demo, to be finsihed!")
 
 
 
