@@ -303,7 +303,7 @@ class clsL3_CtrlSchdThread(QThread):
                 self.capTimes -= 1;
                 if (self.capTimes > 0):
                     self.funcCtrlSchdDebugPrint(str("L3CTRLST: Taking normal picture, remaining TIMES=" + str(self.capTimes-1)))
-                    self.funcCamCapInBatch(self.capTimes, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, True);
+                    self.funcCamCapInBatch(self.capTimes, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL, False); #this is used for videos can not change
                     ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT += 1;  
                 #CONTROL STOP ACTIONS
                 else:
@@ -334,7 +334,7 @@ class clsL3_CtrlSchdThread(QThread):
                 self.capTimes -= 1;
                 if (self.capTimes > 0):
                     self.funcCtrlSchdDebugPrint(str("L3CTRLST: Taking flu picture, remaining TIMES=" + str(self.capTimes-1)))
-                    self.funcCamCapInBatch(self.capTimes, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN, False);
+                    self.funcCamCapInBatch(self.capTimes, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN, False);#this is used for videos can not change
                     ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT += 1;
                 #CONTROL STOP ACTIONS
                 else:
