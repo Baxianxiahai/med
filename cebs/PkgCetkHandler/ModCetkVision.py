@@ -244,7 +244,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         fileName = msgContent['fileName']
         fileNukeName = msgContent['fileNukeName']
         ctrl = msgContent['ctrl']
-        res = self.func_vision_worm_clasification(fileName, fileNukeName, ctrl);
+        addText = msgContent['addText']
+        res = self.func_vision_worm_clasification(fileName, fileNukeName, ctrl, addText);
         mbuf={}
         mbuf['res'] = res
         self.msg_send(TUP_MSGID_CRTS_PIC_CLFY_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
@@ -254,7 +255,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         fileName = msgContent['fileName']
         fileNukeName = msgContent['fileNukeName']
         ctrl = msgContent['ctrl']
-        res = self.func_vision_worm_clasification(fileName, fileNukeName, ctrl);
+        addText = msgContent['addText']
+        res = self.func_vision_worm_clasification(fileName, fileNukeName, ctrl, addText);
         mbuf={}
         mbuf['res'] = res
         self.msg_send(TUP_MSGID_CRTS_FLU_CLFY_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
@@ -268,7 +270,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['res'] = -1
             self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_RESP, TUP_TASK_ID_GPAR, mbuf)
             return TUP_SUCCESS;
-        self.func_vision_worm_clasification(picFile, 'tempPic.jpg', True)
+        self.func_vision_worm_clasification(picFile, 'tempPic.jpg', True, False)
         if (os.path.exists('tempPic.jpg') == False):
             mbuf['res'] = -2
             self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_RESP, TUP_TASK_ID_GPAR, mbuf)
@@ -605,7 +607,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     #http://blog.csdn.net/app_12062011/article/details/51953030
     #E = sqrt(1-I^2)
     #I = (u20+u02-sqrt(4u11*u11(u20-u02)*(u20-u02))/(u20+u02+sqrt(4u11*u11(u20-u02)*(u20-u02))
-    def func_vision_worm_find_contours(self, nfImg, orgImg):
+    def func_vision_worm_find_contours(self, nfImg, orgImg, addText):
         #Init output figure
         self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalNbr'] = 0
         self.HST_VISION_WORM_CLASSIFY_pic_sta_output['bigAlive'] = 0
@@ -689,14 +691,20 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
                     self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalAlive'] +=1                        
                 cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
         #叠加统计结果
-        if (GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET == True):
+        if (addText == True):
             font = cv.FONT_HERSHEY_SIMPLEX
             cv.putText(outputImg, str(self.HST_VISION_WORM_CLASSIFY_pic_sta_output), (10, 30), font, 0.7, (0, 0, 255), 2, cv.LINE_AA)
         return outputImg;
 
+    '''
+    #
     #Classified processing: 分类总处理
     #outCtrlFlag: 控制输出方式，是否直接使用fileNukeName而不增加文件名字选项
-    def func_vision_worm_clasification(self, fileName, fileNukeName, outCtrlFlag):
+    #
+    #    addText: 是否叠加文字输出
+    #
+    '''
+    def func_vision_worm_clasification(self, fileName, fileNukeName, outCtrlFlag, addText):
         #Reading file: 读取文件
         if (os.path.exists(fileName) == False):
             errStr = "L2VISCFY: File %s not exist!" % (fileName)
@@ -713,7 +721,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         #Processing procedure: 处理过程
         binImg = self.func_vision_worm_binvalue_proc(inputImg)
         nfImg = self.func_vision_worm_remove_noise_proc(binImg)
-        outputImg = self.func_vision_worm_find_contours(nfImg, inputImg)
+        outputImg = self.func_vision_worm_find_contours(nfImg, inputImg, addText)
         if (outCtrlFlag == True):
             outputFn = fileNukeName
         else:

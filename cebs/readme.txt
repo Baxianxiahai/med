@@ -13,6 +13,12 @@
 = 去掉CAMER-NBR的人工选择，由VISION模块自动探测
 = 修正CAPTURE_ENABLE的控制参数bug
 = 简化ModCebsCom.GL参数，去掉前缀
+= 增加功能：是否触发拍照完成后自动识别
+= 启动后触发归零操作
+= 启动后定时拍照触发+自动识别
+= 定时周期拍照触发+自动识别
+= 将识别图片后的叠加文字，改为CTRL-SCHD模块操控
+
 
 //=ZJL, 2018/12/17, CURRENT_SW_DELIVERY R1.41 =>CEBS
 = 完善ini文件中对于控制SECTION的处理

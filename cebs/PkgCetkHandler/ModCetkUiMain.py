@@ -49,6 +49,8 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         self.msg_send(TUP_MSGID_CTRL_SCHD_SWITCH_ON, TUP_TASK_ID_CTRL_SCHD, "")
         self.msg_send(TUP_MSGID_MAIN_UI_SWITCH, TUP_TASK_ID_MOTO, "") 
         self.msg_send(TUP_MSGID_MAIN_UI_SWITCH, TUP_TASK_ID_VISION, "") 
+        #触发归零操作
+        self.msg_send(TUP_MSGID_CTRL_SCHD_MV_ZERO, TUP_TASK_ID_CTRL_SCHD, "")
         return TUP_SUCCESS;
 
     def fsm_msg_restart_rcv_handler(self, msgContent):

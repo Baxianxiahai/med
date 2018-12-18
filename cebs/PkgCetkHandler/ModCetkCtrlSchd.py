@@ -25,6 +25,13 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     #归零阶段
     _STM_ZERO_EXEC = 8
     _STM_DEACT = 9
+    
+    #启动后是否自动干活的定时器，因为要等待归零，所以必须等待一会儿
+    timerStartWorkDirAfterMvZero = ''
+    TIMER_DUR_START_WK_AFTER_ZERO = 15
+    #启动第二个定时器：定时自动拍照
+    timerStartWorkDirAfterFixTti = ''
+
 
     def __init__(self, glPar):
         tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_CTRL_SCHD, taskName="TASK_CTRL_SCHD", glTabEntry=glPar)
@@ -81,7 +88,11 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         #搜索到的图像识别批次和文件临时号：这个信息是必须的，不然需要每次都传给下面的模块然后再传回来，太累赘
         self.cfyBat = 0;
         self.cfyFileNbr = 0;
-                        
+
+        #启动定时器，准备自动干活
+        if (GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET == True):
+            self.timerStartWorkDirAfterMvZero = self.tup_timer_start(self.TIMER_DUR_START_WK_AFTER_ZERO, self.func_timer_start_work_after_mv_zero)
+        
         #TEST测试区域
 
         return TUP_SUCCESS;
@@ -228,7 +239,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         #如果成功，则更新剩余待识别的图片数量
         self.updateBatCntWithIniFileSyned(False, 1, 0)
         #处理上一次成功的图像读取过程
-        self.addNormalBatchFile(GL.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        self.addNormalBatchFile(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         #处理视频文件部分
         if GLVIS_PAR_OFC.CAPTURE_ENABLE == True:
             self.updBatchFileVideo(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
@@ -237,7 +248,10 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.picSeqCnt += 1
         if (self.picSeqCnt > GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH):
             self.funcCtrlSchdLogTrace("L3SCHD: Normal picture capture accomplish successful!")
-            self.fsm_set(self._STM_ACTIVE)            
+            self.fsm_set(self._STM_ACTIVE)
+            #是否触发拍照完成后自动识别
+            if (GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET == True):
+                self.msg_send(TUP_MSGID_CTRL_SCHD_CAPPIC_START, TUP_TASK_ID_CTRL_SCHD, "")
             return TUP_SUCCESS;
 
         #生成文件名字
@@ -359,6 +373,14 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     
     '''
     #PIC图像识别完整过程
+    #
+    #    fileName - 指示输出文件名，带目录结构
+    #    fileNukeName - 指示文件名，带result标签
+    #    ctrl - 指示是佛使用fileNukeName。True: fileNukeName, False: fileName
+    #    addText - 指示输出的文件中是否需要叠加文字
+    #    下同
+    #
+    #
     '''
     #图像识别处理-从界面收到
     def fsm_msg_classify_normal_pic_start_rcv_handler(self, msgContent):
@@ -391,6 +413,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['fileName'] = fileName
         mbuf['fileNukeName'] = fileNukeName
         mbuf['ctrl'] = False
+        mbuf['addText'] = GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET
         self.msg_send(TUP_MSGID_CTRS_PIC_CLFY_REQ, TUP_TASK_ID_VISION, mbuf)
         return TUP_SUCCESS;
     
@@ -433,6 +456,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['fileName'] = fileName
         mbuf['fileNukeName'] = fileNukeName
         mbuf['ctrl'] = False
+        mbuf['addText'] = GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET
         self.msg_send(TUP_MSGID_CTRS_PIC_CLFY_REQ, TUP_TASK_ID_VISION, mbuf)
         return TUP_SUCCESS;
     
@@ -476,6 +500,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['fileName'] = fileName
         mbuf['fileNukeName'] = fileNukeName
         mbuf['ctrl'] = False
+        mbuf['addText'] = GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET
         self.msg_send(TUP_MSGID_CTRS_FLU_CLFY_REQ, TUP_TASK_ID_VISION, mbuf)
         return TUP_SUCCESS;
         
@@ -518,6 +543,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['fileName'] = fileName
         mbuf['fileNukeName'] = fileNukeName
         mbuf['ctrl'] = False
+        mbuf['addText'] = GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET
         self.msg_send(TUP_MSGID_CTRS_FLU_CLFY_REQ, TUP_TASK_ID_VISION, mbuf)
         return TUP_SUCCESS;    
 
@@ -532,12 +558,21 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;        
 
 
+    #定时器处理过程
+    def func_timer_start_work_after_mv_zero(self):
+        print("MyTest!")
+        self.msg_send(TUP_MSGID_CTRL_SCHD_CAPPIC_START, TUP_TASK_ID_CTRL_SCHD, "")
+        
+        #启动下一个TTI定时器，以便继续干活
+        self.timerStartWorkDirAfterFixTti = self.tup_timer_start(GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN*60, self.func_timer_start_work_after_fix_tti)
+        return
 
-
-
-
-
-
+    #TTI定时器到点后，再次自动干活
+    def func_timer_start_work_after_fix_tti(self):
+        #周期定时器重复启动
+        self.timerStartWorkDirAfterFixTti = self.tup_timer_start(GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN*60, self.func_timer_start_work_after_fix_tti)
+        #触发任务
+        self.msg_send(TUP_MSGID_CTRL_SCHD_CAPPIC_START, TUP_TASK_ID_CTRL_SCHD, "")
 
 
 
