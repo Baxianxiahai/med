@@ -64,7 +64,6 @@ class clsL1_ConfigOpr():
             self.CReader.set("Env","pic classification set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET))
             self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET))
             self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN))
-            self.CReader.set("Env","vision camera nbr", str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR))
             self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
             self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
             self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))
@@ -122,7 +121,6 @@ class clsL1_ConfigOpr():
         else:
             ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET = False
         ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN = int(self.CReader['Env']['pic auto-work tti']);
-        ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = int(self.CReader['Env']['vision camera nbr']);
         #New def
         ModCebsCom.GLVIS_PAR_OFC.saveLowLimit(int(self.CReader['Env']['vision small-low limit']));
         ModCebsCom.GLVIS_PAR_OFC.saveMidLimit(int(self.CReader['Env']['vision small-mid limit']));
@@ -193,7 +191,6 @@ class clsL1_ConfigOpr():
             self.CReader.set("Env","pic classification set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET))
             self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET))
             self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN))
-            self.CReader.set("Env","vision camera nbr", str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR))
             self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
             self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
             self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))
@@ -216,7 +213,6 @@ class clsL1_ConfigOpr():
             self.CReader.set("Env","pic classification set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET))
             self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET))
             self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN))
-            self.CReader.set("Env","vision camera nbr", str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR))
             self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
             self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
             self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))

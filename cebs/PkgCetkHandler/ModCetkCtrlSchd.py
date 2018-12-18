@@ -144,7 +144,17 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
 
 
     '''
+    #
     #PIC图像读取过程
+    #
+    # fnPic - 图像文件的名字
+    # fnScale - Scale标识的文件名字
+    # fnVideo - 视频文件名字
+    # vdCtrl - 视频是否拍摄的控制指示，TRUE-拍，FALSE-不拍
+    # sclCtlr - 指示scale标尺图像是否拍摄，TRUE-拍，FALSE-不拍
+    # 
+    # 这些控制参考，下同
+    #
     '''    
     #拍摄处理
     #STEP1: 启动
@@ -162,6 +172,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         fnScale = self.combineScaleFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         fnVideo = self.combineFileNameVideoWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         vdCtrl = ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE 
+        sclCtrl = ModCebsCom.GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG
         
         #移动到合适孔位，然后拍摄
         mbuf={}
@@ -170,6 +181,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['fnScale'] = fnScale
             mbuf['fnVideo'] = fnVideo
             mbuf['vdCtrl'] = vdCtrl
+            mbuf['sclCtrl'] = sclCtrl
             self.msg_send(TUP_MSGID_CTRS_PIC_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
             mbuf['holeNbr'] = self.picSeqCnt
@@ -182,13 +194,15 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         fnPic = self.combineFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         fnScale = self.combineScaleFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         fnVideo = self.combineFileNameVideoWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
-        vdCtrl = ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABL
+        vdCtrl = ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE
+        sclCtrl = ModCebsCom.GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG
         
         mbuf={}
         mbuf['fnPic'] = fnPic
         mbuf['fnScale'] = fnScale
         mbuf['fnVideo'] = fnVideo
         mbuf['vdCtrl'] = vdCtrl
+        mbuf['sclCtrl'] = sclCtrl
         
         #两个消息共享该控制消息，故而需要分别控制
         if (self.fsm_get() == self._STM_PIC_CAP_EXEC):
@@ -211,7 +225,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         #处理上一次成功的图像读取过程
         self.addNormalBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         #处理视频文件部分
-        if ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABL == True:
+        if ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE == True:
             self.updBatchFileVideo(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         
         #准备处理下一次
@@ -225,7 +239,8 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         fnPic = self.combineFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         fnScale = self.combineScaleFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         fnVideo = self.combineFileNameVideoWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
-        vdCtrl = ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABL
+        vdCtrl = ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE
+        sclCtrl = ModCebsCom.GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG
 
         #继续干活
         mbuf={}
@@ -234,6 +249,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['fnScale'] = fnScale
             mbuf['fnVideo'] = fnVideo
             mbuf['vdCtrl'] = vdCtrl
+            mbuf['sclCtrl'] = sclCtrl
             self.msg_send(TUP_MSGID_CTRS_PIC_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
             mbuf['holeNbr'] = self.picSeqCnt
@@ -259,6 +275,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         fnScale = self.combineScaleFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         fnVideo = self.combineFileNameVideoWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         vdCtrl = ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE
+        sclCtrl = ModCebsCom.GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG
         
         #移动到合适孔位，然后拍摄
         mbuf={}
@@ -267,6 +284,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['fnScale'] = fnScale
             mbuf['fnVideo'] = fnVideo
             mbuf['vdCtrl'] = vdCtrl
+            mbuf['sclCtrl'] = sclCtrl
             self.msg_send(TUP_MSGID_CTRS_FLU_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
             mbuf['holeNbr'] = self.picSeqCnt
@@ -297,7 +315,8 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         fnPic = self.combineFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         fnScale = self.combineScaleFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
         fnVideo = self.combineFileNameVideoWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
-        vdCtrl = ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABL
+        vdCtrl = ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE
+        sclCtrl = ModCebsCom.GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG
         
         #继续干活
         mbuf={}
@@ -306,6 +325,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['fnScale'] = fnScale
             mbuf['fnVideo'] = fnVideo
             mbuf['vdCtrl'] = vdCtrl
+            mbuf['sclCtrl'] = sclCtrl
             self.msg_send(TUP_MSGID_CTRS_FLU_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
             mbuf['holeNbr'] = self.picSeqCnt

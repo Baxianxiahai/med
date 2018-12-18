@@ -214,7 +214,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         fnScale = msgContent['fnScale']
         fnVideo = msgContent['fnVideo']
         vdCtrl = msgContent['vdCtrl']
-        res = self.funcPicVidCapAndSaveFile(fnPic, fnScale, fnVideo, vdCtrl);
+        sclCtrl = msgContent['sclCtrl']
+        res = self.funcPicVidCapAndSaveFile(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl);
         mbuf={}
         mbuf['res'] = res
         self.msg_send(TUP_MSGID_CTRS_PIC_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
@@ -226,7 +227,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         fnScale = msgContent['fnScale']
         fnVideo = msgContent['fnVideo']
         vdCtrl = msgContent['vdCtrl']
-        res = self.funcPicVidCapAndSaveFile(fnPic, fnScale, fnVideo, vdCtrl);
+        sclCtrl = msgContent['sclCtrl']
+        res = self.funcPicVidCapAndSaveFile(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl);
         mbuf={}
         mbuf['res'] = res
         self.msg_send(TUP_MSGID_CTRS_FLU_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
@@ -328,7 +330,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     # vdCtrl: 控制是否需要拍摄视频
     #
     '''
-    def funcPicVidCapAndSaveFile(self, fnPic, fnScale, fnVideo, vdCtrl):
+    def funcPicVidCapAndSaveFile(self, fnPic, fnScale, fnVideo, vdCtrl, sclCtrl):
         try:
             if not self.capInit.isOpened():
                 self.funcVisionErrTrace("L2VISCAP: Cannot open webcam!")
@@ -358,7 +360,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             R = R * kr
             outputFrame = cv.merge([B, G, R])
             cv.imwrite(fnPic, outputFrame)
-            if ModCebsCom.GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG == True:
+            if sclCtrl == True:
                 self.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), fnPic, fnScale)
         if (ret == True) and (vdCtrl == True):
             #Video capture with 3 second

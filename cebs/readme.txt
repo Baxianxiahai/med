@@ -9,6 +9,10 @@
 
 
 
+//=ZJL, 2018/12/18, CURRENT_SW_DELIVERY R1.42 =>CEBS
+= 去掉CAMER-NBR的人工选择，由VISION模块自动探测
+= 修正CAPTURE_ENABLE的控制参数bug
+
 //=ZJL, 2018/12/17, CURRENT_SW_DELIVERY R1.41 =>CEBS
 = 完善ini文件中对于控制SECTION的处理
 = 增加了batch#add-file的保护
