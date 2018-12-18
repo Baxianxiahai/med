@@ -204,14 +204,14 @@ class tupTaskTemplate():
     
     #秒级定时器
     def tup_timer_start(self, durInSec, funcCb):
-        timer = threading.Timer(durInSec, funcCb)
-        if timer == '':
+        mytimer = threading.Timer(durInSec, funcCb)
+        if mytimer == '':
             self.tup_err_print("Create timer error!")
             return
-        timer.start()
-        return timer
+        mytimer.start()
+        return mytimer
 
-    def tup_timer_stop(self, timer):
-        timer.cancel()
+    def tup_timer_stop(self, mytimer):
+        mytimer.cancel()
         
         

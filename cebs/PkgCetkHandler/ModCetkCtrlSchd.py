@@ -165,7 +165,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         
         #移动到合适孔位，然后拍摄
         mbuf={}
-        if (ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == False):
+        if (ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == True):
             mbuf['fnPic'] = fnPic
             mbuf['fnScale'] = fnScale
             mbuf['fnVideo'] = fnVideo
@@ -229,7 +229,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
 
         #继续干活
         mbuf={}
-        if (ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == False):
+        if (ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == True):
             mbuf['fnPic'] = fnPic
             mbuf['fnScale'] = fnScale
             mbuf['fnVideo'] = fnVideo
