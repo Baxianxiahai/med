@@ -66,8 +66,8 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
         if (self.fatherUiObj == ''):
             print("CALIB_UI task lose 1 print message due to time sync.")
             return TUP_SUCCESS;
-        if (msgContent['res'] >= 0) and (ModCebsCom.GLVIS_PAR_OFC.CALIB_VDISP_OJB != ''):
-            self.fatherUiObj.cetk_calib_disp_cam_by_obj(ModCebsCom.GLVIS_PAR_OFC.CALIB_VDISP_OJB)
+        if (msgContent['res'] >= 0) and (GLVIS_PAR_OFC.CALIB_VDISP_OJB != ''):
+            self.fatherUiObj.cetk_calib_disp_cam_by_obj(GLVIS_PAR_OFC.CALIB_VDISP_OJB)
             return TUP_SUCCESS;
         else:
             return TUP_FAILURE;

@@ -312,68 +312,68 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
             actualScale = 50000;
         #radioCalaH96l: 99000
         elif (scale == 11):
-            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_XDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_HOLE_DIS)
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_96_SD_XDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_96_SD_HOLE_DIS)
         #radioCalaH96s: 63000
         elif (scale == 12):
-            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_YDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_HOLE_DIS)
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_96_SD_YDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_96_SD_HOLE_DIS)
         #radioCalaH48l
         elif (scale == 13):
-            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_SD_XDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_SD_HOLE_DIS)
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_48_SD_XDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_48_SD_HOLE_DIS)
         #radioCalaH48s
         elif (scale == 14):
-            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_SD_YDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_SD_HOLE_DIS)
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_48_SD_YDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_48_SD_HOLE_DIS)
         #radioCalaH24l: 19.3*5 = 96.5mm
         elif (scale == 15):
-            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_SD_XDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_SD_HOLE_DIS)
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_24_SD_XDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_24_SD_HOLE_DIS)
         #radioCalaH24s: 85.25 - 13.67*2 = 57.91
         elif (scale == 16):
-            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_SD_YDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_SD_HOLE_DIS)
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_24_SD_YDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_24_SD_HOLE_DIS)
         #radioCalaH12l
         elif (scale == 17):
-            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_SD_XDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_SD_HOLE_DIS)
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_12_SD_XDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_12_SD_HOLE_DIS)
         #radioCalaH12s
         elif (scale == 18):
-            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_SD_YDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_SD_HOLE_DIS)
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_12_SD_YDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_12_SD_HOLE_DIS)
         #radioCalaH6l: 127.5-24.5*2 = 78.4mm
         elif (scale == 19):
-            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_SD_XDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_SD_HOLE_DIS)
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_6_SD_XDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_6_SD_HOLE_DIS)
         #radioCalaH6s: 85.3-23.05*2 = 39.2mm
         elif (scale == 20):
-            actualScale = (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_SD_YDIR_NBR-1) * (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_SD_HOLE_DIS)
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_6_SD_YDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_6_SD_HOLE_DIS)
         else:
             actualScale = 10;
-        Old_Px = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] #X-Axis
-        Old_Py = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] #Y-Axis
+        Old_Px = GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] #X-Axis
+        Old_Py = GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] #Y-Axis
         #Not specify this action to each real plastic board, but addiction to mechanical platform.
         #UP DIRECTION - Y add
         if (dir == "UP"):
-            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] += actualScale;
-            if (ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] > ModCebsCom.GLPLT_PAR_OFC.HB_MECHNICAL_PLATFORM_Y_MAX):
-                ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] = ModCebsCom.GLPLT_PAR_OFC.HB_MECHNICAL_PLATFORM_Y_MAX;
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] += actualScale;
+            if (GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] > GLPLT_PAR_OFC.HB_MECHNICAL_PLATFORM_Y_MAX):
+                GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] = GLPLT_PAR_OFC.HB_MECHNICAL_PLATFORM_Y_MAX;
                 
         #DOWN DIRECTION - Y sub
         elif (dir == "DOWN"):
-            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] -= actualScale;
-            if (ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] < 0):
-                ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] = 0;
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] -= actualScale;
+            if (GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] < 0):
+                GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] = 0;
                 
         #LEFT DIRECTION - X sub
         elif (dir == "LEFT"):
-            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] -= actualScale;
-            if (ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] < 0):
-                ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] = 0;
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] -= actualScale;
+            if (GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] < 0):
+                GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] = 0;
                 
         #RIGHT DIRECTION - X add
         elif (dir == "RIGHT"):
-            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] += actualScale;
-            if (ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] > ModCebsCom.GLPLT_PAR_OFC.HB_MECHNICAL_PLATFORM_X_MAX):
-                ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] = ModCebsCom.GLPLT_PAR_OFC.HB_MECHNICAL_PLATFORM_X_MAX;
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] += actualScale;
+            if (GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] > GLPLT_PAR_OFC.HB_MECHNICAL_PLATFORM_X_MAX):
+                GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] = GLPLT_PAR_OFC.HB_MECHNICAL_PLATFORM_X_MAX;
         
         #Error case
         else:
             pass
-        self.funcMotoLogTrace("L2MOTO: Moving one step! Scale=%d, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (scale, dir, Old_Px, Old_Py, ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]));
-        if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]) > 0):
+        self.funcMotoLogTrace("L2MOTO: Moving one step! Scale=%d, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (scale, dir, Old_Px, Old_Py, GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]));
+        if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]) > 0):
             return 1;
         else:
             self.funcMotoErrTrace("L2MOTO: funcMotoMoveOneStep error!")
@@ -382,31 +382,31 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     #Force Moving function, with scale = 1cm=10mm=10000um
     def funcMotoForceMoveOneStep(self, dir):
         actualScale = 10000;
-        Old_Px = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] #X-Axis
-        Old_Py = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] #Y-Axis
+        Old_Px = GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] #X-Axis
+        Old_Py = GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] #Y-Axis
 
         #Not specify this action to each real plastic board, but addiction to mechanical platform.
         #UP DIRECTION - Y add
         if (dir == "UP"):
-            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] += actualScale;
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] += actualScale;
                 
         #DOWN DIRECTION - Y sub
         elif (dir == "DOWN"):
-            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] -= actualScale;
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] -= actualScale;
                 
         #LEFT DIRECTION - X sub
         elif (dir == "LEFT"):
-            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] -= actualScale;
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] -= actualScale;
                 
         #RIGHT DIRECTION - X add
         elif (dir == "RIGHT"):
-            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] += actualScale;
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] += actualScale;
         
         #Error case
         else:
             pass
-        self.funcMotoLogTrace("L2MOTO: Moving one step! Scale=1cm, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (dir, Old_Px, Old_Py, ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]));
-        if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]) > 0):
+        self.funcMotoLogTrace("L2MOTO: Moving one step! Scale=1cm, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (dir, Old_Px, Old_Py, GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]));
+        if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]) > 0):
             return 1;
         else:
             self.funcMotoErrTrace("L2MOTO: funcMotoForceMoveOneStep error!")
@@ -415,8 +415,8 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     #运动到起点
     def funcMotoMove2Start(self):
         self.funcMotoLogTrace("L2MOTO: Move to start position - Left/up!")
-        xWidth = ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0] - ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2];
-        yHeight = ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1] - ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3];
+        xWidth = GLPLT_PAR_OFC.HB_POS_IN_UM[0] - GLPLT_PAR_OFC.HB_POS_IN_UM[2];
+        yHeight = GLPLT_PAR_OFC.HB_POS_IN_UM[1] - GLPLT_PAR_OFC.HB_POS_IN_UM[3];
         if (xWidth <= 0 or yHeight <= 0):
             self.tup_dbg_printstr(("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight)))
             return -1, ("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight));
@@ -441,14 +441,14 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
             newPosX = 0;
             newPosY = 0;
         else:
-            xTargetHoleNbr = ((holeIndex-1) % ModCebsCom.GLPLT_PAR_OFC.HB_HOLE_X_NUM) + 1;
-            yTargetHoleNbr = ((holeIndex-1) // ModCebsCom.GLPLT_PAR_OFC.HB_HOLE_X_NUM) + 1;
-            newPosX = int(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0] + (xTargetHoleNbr-1)*ModCebsCom.GLPLT_PAR_OFC.HB_WIDTH_X_SCALE);
-            newPosY = int(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3] - (yTargetHoleNbr-1)*ModCebsCom.GLPLT_PAR_OFC.HB_HEIGHT_Y_SCALE);
+            xTargetHoleNbr = ((holeIndex-1) % GLPLT_PAR_OFC.HB_HOLE_X_NUM) + 1;
+            yTargetHoleNbr = ((holeIndex-1) // GLPLT_PAR_OFC.HB_HOLE_X_NUM) + 1;
+            newPosX = int(GLPLT_PAR_OFC.HB_POS_IN_UM[0] + (xTargetHoleNbr-1)*GLPLT_PAR_OFC.HB_WIDTH_X_SCALE);
+            newPosY = int(GLPLT_PAR_OFC.HB_POS_IN_UM[3] - (yTargetHoleNbr-1)*GLPLT_PAR_OFC.HB_HEIGHT_Y_SCALE);
         self.tup_dbg_print(str("L2MOTO: Moving to working hole=%d, newPosX/Y=%d/%d." % (holeIndex, newPosX, newPosY)))
-        if (self.funcMotoMove2AxisPos(ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1], newPosX, newPosY) > 0):
-            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] = newPosX;
-            ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] = newPosY;
+        if (self.funcMotoMove2AxisPos(GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1], newPosX, newPosY) > 0):
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] = newPosX;
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] = newPosY;
             self.tup_dbg_print("L2MOTO: Finished once!")
             return 1;
         else:
@@ -458,7 +458,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
 
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy):
         self.tup_dbg_print(str("L2MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy)))
-        return self.funcExecMoveDistance((newPx-curPx)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM, (newPy-curPy)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM);
+        return self.funcExecMoveDistance((newPx-curPx)*GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM, (newPy-curPy)*GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM);
     
     
     '''
@@ -496,7 +496,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     #注意两种串口设备，描述符是不一样的，需要通过描述符来锁定设备端口
     def funcInitSps(self):
         plist = list(serial.tools.list_ports.comports())
-        self.targetComPortString = ModCebsCom.GLSPS_PAR_OFC.SPS_USB_CARD_SET
+        self.targetComPortString = GLSPS_PAR_OFC.SPS_USB_CARD_SET
         self.drvVerNbr = -1
         if len(plist) <= 0:
             self.funcMotoErrTrace("L2MOTO: Not serial device installed!")
@@ -538,15 +538,15 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         if (cmdId == 0x38):
             for i in range(1,par1+1,500):
                 fmt = ">BBiiii";
-                byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, i, par2, par3, par4)
-                crc = self.funcCacCrc(byteDataBuf, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
+                byteDataBuf = struct.pack(fmt, GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, i, par2, par3, par4)
+                crc = self.funcCacCrc(byteDataBuf, GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
                 fmt = "<H";
                 byteCrc = struct.pack(fmt, crc)
                 byteDataBuf += byteCrc
                 #打印完整的BYTE系列
                 index=0
                 outBuf=''
-                while index < (ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
+                while index < (GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
                     outBuf += str("%02X " % (byteDataBuf[index]))
                     index+=1
                 self.funcMotoLogTrace("L2MOTO: SND CMD = " + outBuf)
@@ -554,15 +554,15 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
             return 1    
         else:
             fmt = ">BBiiii";    
-            byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, par1, par2, par3, par4)
-            crc = self.funcCacCrc(byteDataBuf, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
+            byteDataBuf = struct.pack(fmt, GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, par1, par2, par3, par4)
+            crc = self.funcCacCrc(byteDataBuf, GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
             fmt = "<H";
             byteCrc = struct.pack(fmt, crc)
             byteDataBuf += byteCrc
             #打印完整的BYTE系列
             index=0
             outBuf=''
-            while index < (ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
+            while index < (GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
                 outBuf += str("%02X " % (byteDataBuf[index]))
                 index+=1
             
@@ -611,21 +611,21 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     #批量处理时的初始化
     def funcBatInitPar(self):
         #设置一圈步伐
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_PPC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_STEPS_PER_ROUND, 0, 0, 0)
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_SET_PPC_CMID, GLSPS_PAR_OFC.MOTOR_STEPS_PER_ROUND, 0, 0, 0)
         #设置激活
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_WK_MODE_CMID, 1, 1, 0, 0)
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_SET_WK_MODE_CMID, 1, 1, 0, 0)
         #设置速度
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_MV_SPD_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_SPD, 0, 0)
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_SET_MV_SPD_CMID, GLSPS_PAR_OFC.MOTOR_MAX_SPD, GLSPS_PAR_OFC.MOTOR_MAX_SPD, 0, 0)
         #设置加速度
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ACC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_ACC, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_ACC, 0, 0)
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_SET_ACC_CMID, GLSPS_PAR_OFC.MOTOR_MAX_ACC, GLSPS_PAR_OFC.MOTOR_MAX_ACC, 0, 0)
         #设置加速度
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_DEACC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_DEACC, ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_DEACC, 0, 0)
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_SET_DEACC_CMID, GLSPS_PAR_OFC.MOTOR_MAX_DEACC, GLSPS_PAR_OFC.MOTOR_MAX_DEACC, 0, 0)
         #设置归零速度
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ZO_SPD_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, 0, 0)
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_SET_ZO_SPD_CMID, GLSPS_PAR_OFC.MOTOR_ZERO_SPD, GLSPS_PAR_OFC.MOTOR_ZERO_SPD, 0, 0)
         #设置归零加速度
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_ZO_ACC_CMID, ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_ACC, ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_ACC, 0, 0)
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_SET_ZO_ACC_CMID, GLSPS_PAR_OFC.MOTOR_ZERO_ACC, GLSPS_PAR_OFC.MOTOR_ZERO_ACC, 0, 0)
         #全部停止
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_STP_IMD_CMID, 1, 1, 0, 0)
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_STP_IMD_CMID, 1, 1, 0, 0)
         return 1;
         
     #Fetch moto actual status, especially the moto is still under running
@@ -636,7 +636,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     #停止命令
     def funcMotoStop(self):
         self.funcMotoLogTrace("L2MOTO: Send full stop command to moto!")
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_STP_NOR_CMID, 1, 1, 0, 0)
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_STP_NOR_CMID, 1, 1, 0, 0)
         return 1
     
     def funcMotoResume(self):
@@ -645,9 +645,9 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         
     #连续带监控的命令执行
     def funcExecMoveZero(self):
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_ZERO_CMID, (-1)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, (-1)*ModCebsCom.GLSPS_PAR_OFC.MOTOR_ZERO_SPD, 0, 0)
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_MV_ZERO_CMID, (-1)*GLSPS_PAR_OFC.MOTOR_ZERO_SPD, (-1)*GLSPS_PAR_OFC.MOTOR_ZERO_SPD, 0, 0)
         #退出当前状态机
-        cnt = ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
+        cnt = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
         while (1):
             if (self.funcInqueryRunningStatus() == True):
                 return 1
@@ -663,8 +663,8 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         #定标10
         input1 = int(par1)
         input2 = int(par2)
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_SPD_CMID, input1, input2, 0, 0)
-        cnt = ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_MV_SPD_CMID, input1, input2, 0, 0)
+        cnt = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
         while (1):
             if (self.funcInqueryRunningStatus() == True):
                 return 1
@@ -680,8 +680,8 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         #定标NF0
         input1 = int(par1)
         input2 = int(par2)
-        self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_PULS_CMID, input1, input2, 0, 0)
-        cnt = ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_MV_PULS_CMID, input1, input2, 0, 0)
+        cnt = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
         while (1):
             if (self.funcInqueryRunningStatus() == True):
                 return 1
@@ -694,7 +694,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     
     #标准指令
     def funcInqueryRunningStatus(self):
-        res = self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_INQ_RUN_CMID, 1, 1, 1, 1)
+        res = self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_INQ_RUN_CMID, 1, 1, 1, 1)
         self.tup_dbg_print("L2MOTO: Inquiry Res = " + str(res))
         if res == 0:
             return True

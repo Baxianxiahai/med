@@ -24,6 +24,11 @@ import threading
 PART0: 全局定义的变量，不需要封装
 
 '''
+
+#
+# 固定参数部分
+#    
+
 #STATIC CONFIGURATION AND CAN NOT MODIFY BY HAND
 GL_CEBS_ERR_LOG_FILE_NAME_SET = r"cebsErrLog.txt"
 GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET = r"cebsVsClas.log";
@@ -37,6 +42,26 @@ PART1: 配置文件及控制参数
 '''
 
 class clsL0_MedComCfgPar():
+
+    #
+    # 固定参数部分
+    #    
+    PIC_ORIGIN_PATH = r"pic_origin";
+    PIC_MIDDLE_PATH = r"pic_middle";
+    #FILE ATTRIBUTE
+    FILE_ATT_NORMAL = 'normal';
+    FILE_ATT_FLUORESCEN = 'flu';  #荧光 Fluorescen
+    CFG_FILE_NAME = r"cebsConfig.ini";
+
+    #
+    # 可配参数部分
+    #    
+
+    #
+    # 临时参数部分
+    #    
+
+    
     #FOLLOWING DYNAMIC PARAMETERS SET
     #Global parameter set for PICTURE
     PIC_PROC_BATCH_INDEX = 0;
@@ -44,16 +69,10 @@ class clsL0_MedComCfgPar():
     PIC_PROC_REMAIN_CNT = 0;  #Pointer to remaining un-classified pictures
     PIC_FLU_CLAS_INDEX = 0    #指向FLU的指针起点
     PIC_FLU_REMAIN_CNT = 0    #剩余的FLU数量
-    PIC_ORIGIN_PATH = r"pic_origin";
-    PIC_MIDDLE_PATH = r"pic_middle";
     PIC_ABS_ORIGIN_PATH = "";
     PIC_ABS_MIDDLE_PATH = "";
-    #FILE ATTRIBUTE
-    FILE_ATT_NORMAL = 'normal';
-    FILE_ATT_FLUORESCEN = 'flu';  #荧光 Fluorescen
-    CFG_FILE_NAME = r"cebsConfig.ini";
     
-    TEST_VALUE  = 1
+    #TEST_VALUE  = 1
     
     #初始化
     def __init__(self):    
@@ -79,6 +98,11 @@ CURRENTLY STILL IN TEST PHASE, TO BE ENLARGED FURTHER
 
 '''
 class clsL0_MedComPlatePar():
+
+    #
+    # 固定参数部分
+    #    
+    
     #MEACHNICAL HARDWARE PLATFORM SCOPE DEFINATION
     HB_MECHNICAL_PLATFORM_X_MAX = 120000;
     HB_MECHNICAL_PLATFORM_Y_MAX = 110000;
@@ -128,11 +152,20 @@ class clsL0_MedComPlatePar():
     HB_TARGET_6_SD_YDIR_NBR = 2;
     HB_TARGET_6_SD_HOLE_DIS = 40000;  #in UM
     HB_TARGET_6_SD_HOLE_RAD = 30000;  #中值直径in UM，(顶+底)/2
+
+    #
+    # 可配置参数部分
+    #
     
     #ACTION SELCTION
     HB_TARGET_TYPE = HB_TARGET_96_STANDARD;
     HB_PIC_ONE_WHOLE_BATCH = HB_TARGET_96_SD_BATCH_MAX;
+
     
+    #
+    # 临时参量部分
+    #
+        
     HB_HOLE_X_NUM = 0;          #HOW MANY BOARD HOLES， X DIRECTION
     HB_HOLE_Y_NUM = 0;          #HOW MANY BOARD HOLES，Y DIRECTION
     HB_WIDTH_X_SCALE = 0;       #HOW MANY BOARD HOLES， X DIRECTION
@@ -303,6 +336,19 @@ PART3: 图像相关的参量
 方便对参数进行维护，包括增删
 '''
 class clsL0_MedComPicPar():
+    #
+    # 固定配置参数部分
+    #
+    #896*684 is basic resolution! 896*684 / 1792*1374 / 3584*2748
+    VISION_CAMBER_RES_WITDH = 3584; #1792;
+    VISION_CAMBER_RES_HEIGHT = 2748; #1374;
+    #MAX search window of camera
+    VISION_MAX_CAMERA_SEARCH = 15;
+
+
+    #
+    # 可配置参数部分
+    #
     #Fix point to take picture or not? Formally auto-working shall set as False.
     #定点拍照
     PIC_TAKING_FIX_POINT_SET = False; 
@@ -315,14 +361,7 @@ class clsL0_MedComPicPar():
     #Auto taking picture TTI times in minutes
     #定时工作时长间隔
     PIC_AUTO_WORKING_TTI_IN_MIN = 60;
-    #CAMERA NUMBER
-    VISION_CAMBER_NBR = -1;
-    #896*684 is basic resolution! 896*684 / 1792*1374 / 3584*2748
-    VISION_CAMBER_RES_WITDH = 3584; #1792;
-    VISION_CAMBER_RES_HEIGHT = 2748; #1374;
     #TEMP USAGE VARIABLES => 用于浮动式界面展示，暂时不用
-    #MAX search window of camera
-    VISION_MAX_CAMERA_SEARCH = 15;
     #VISION calibration set
     SMALL_LOW_LIMIT = 200;
     SMALL_MID_LIMIT = 500;
@@ -341,6 +380,7 @@ class clsL0_MedComPicPar():
     CFY_THD_PAR3 = 3
     CFY_THD_PAR4 = 4
     
+    #临时参量部分
     '''
     #
     #动态视频图像 => 用于CALIB界面下的摄像头视频显示
@@ -389,6 +429,9 @@ PART4: 串口指令
 方便对参数进行维护，包括增删
 '''
 class clsL0_MedSpsPar():
+    #
+    # 固定配置参数部分
+    #
     
     #完成黑线，USB转串口线缆，内置方式
     SPS_USB_DBG_CARD1 = 'Prolific USB-to-Serial Comm Port ('
@@ -454,6 +497,14 @@ class clsL0_MedSpsPar():
     #ROUNDS of auto-pilot run
     PILOT_WOKING_ROUNDS_MAX = 5;
     
+    #
+    # 可配置参数部分
+    #
+    
+    #
+    # 临时参量部分
+    #
+    
     def __init__(self):    
         super(clsL0_MedSpsPar, self).__init__()  
         pass
@@ -464,45 +515,45 @@ class clsL0_MedSpsPar():
 #定义全局变量以及操作函数
 GLSPS_PAR_OFC = clsL0_MedSpsPar()
 
-'''
-PART5: 全局静态handler传递存储地点
-
-#封装
-        方便对参数进行维护，包括增删，
-=> 结果证明这种方式不能正常工作
-'''
-
-class clsL0_MedHandlerPar():
-    
-    #Class Handler Instance
-    CHS_L4_FORM_MAINWIN = ''
-    CHS_L4_FORM_CALIB = ''
-    CHS_L4_FORM_GPAR = ''
-    CHS_L4_FORM_MENG = ''
-    CHS_L4_FORM_BROW = ''
-    CHS_L3_CTRL_SCHD_THD = ''
-    CHS_L3_CALIB_PROC = ''
-    CHS_L3_GPAR_PROC = ''
-    CHS_L3_MENG_PROC = ''
-    CHS_L2_MOTO_PROC = ''
-    CHS_L2_CALIB_PILOT_THD = ''
-    CHS_L2_CALIB_CAM_DISP_THD = ''
-    CHS_L2_VS_CAP_PROC = ''
-    CHS_L2_VS_CFY_PROC = ''
-    CHS_L1_MDC_THD = ''
-    CHS_L1_MOT_DRV_API = ''  #第一代板子支持部分
-    CHS_L1_CFG_OPR = ''
-    
-    #串口全局锁
-    CHS_MOTO_MUTEX = threading.Lock()
-    CHS_CAM_MUTEX = threading.Lock()
-    
-    def __init__(self):    
-        super(clsL0_MedHandlerPar, self).__init__()  
-        pass
-                
-#定义全局变量以及操作函数
-GLHLR_PAR_OFC = clsL0_MedHandlerPar()
+# '''
+# PART5: 全局静态handler传递存储地点
+# 
+# #封装
+#         方便对参数进行维护，包括增删，
+# => 结果证明这种方式不能正常工作
+# '''
+# 
+# class clsL0_MedHandlerPar():
+#     
+#     #Class Handler Instance
+#     CHS_L4_FORM_MAINWIN = ''
+#     CHS_L4_FORM_CALIB = ''
+#     CHS_L4_FORM_GPAR = ''
+#     CHS_L4_FORM_MENG = ''
+#     CHS_L4_FORM_BROW = ''
+#     CHS_L3_CTRL_SCHD_THD = ''
+#     CHS_L3_CALIB_PROC = ''
+#     CHS_L3_GPAR_PROC = ''
+#     CHS_L3_MENG_PROC = ''
+#     CHS_L2_MOTO_PROC = ''
+#     CHS_L2_CALIB_PILOT_THD = ''
+#     CHS_L2_CALIB_CAM_DISP_THD = ''
+#     CHS_L2_VS_CAP_PROC = ''
+#     CHS_L2_VS_CFY_PROC = ''
+#     CHS_L1_MDC_THD = ''
+#     CHS_L1_MOT_DRV_API = ''  #第一代板子支持部分
+#     CHS_L1_CFG_OPR = ''
+#     
+#     #串口全局锁
+#     CHS_MOTO_MUTEX = threading.Lock()
+#     CHS_CAM_MUTEX = threading.Lock()
+#     
+#     def __init__(self):    
+#         super(clsL0_MedHandlerPar, self).__init__()  
+#         pass
+#                 
+# #定义全局变量以及操作函数
+# GLHLR_PAR_OFC = clsL0_MedHandlerPar()
 
 
 

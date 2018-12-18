@@ -93,7 +93,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         #另外，每一次进来，固定+1，从而简化这个东西的操控
         '''
         self.updateBatCntWithIniFileSyned(True, 0, 0)
-        self.createBatSectAndIniSyned(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
+        self.createBatSectAndIniSyned(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
         return TUP_SUCCESS;
     
     #传回来的显示结果
@@ -162,20 +162,20 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
 
     #设置参数
     def fsm_msg_right_up_set_rcv_handler(self, msgContent):
-        ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0];
-        ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1];
-        ModCebsCom.GLPLT_PAR_OFC.med_update_plate_parameter()
+        GLPLT_PAR_OFC.HB_POS_IN_UM[2] = GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0];
+        GLPLT_PAR_OFC.HB_POS_IN_UM[3] = GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1];
+        GLPLT_PAR_OFC.med_update_plate_parameter()
         self.updateStaticSectionEnvPar();
-        self.funcCalibLogTrace(str("L3CALIB: RightUp Axis set!  XY=%d/%d." % (ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2], ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3])))      
+        self.funcCalibLogTrace(str("L3CALIB: RightUp Axis set!  XY=%d/%d." % (GLPLT_PAR_OFC.HB_POS_IN_UM[2], GLPLT_PAR_OFC.HB_POS_IN_UM[3])))      
         return TUP_SUCCESS;
 
     #设置参数
     def fsm_msg_left_down_set_rcv_handler(self, msgContent):
-        ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0];
-        ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1] = ModCebsCom.GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1];
-        ModCebsCom.GLPLT_PAR_OFC.med_update_plate_parameter()
+        GLPLT_PAR_OFC.HB_POS_IN_UM[0] = GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0];
+        GLPLT_PAR_OFC.HB_POS_IN_UM[1] = GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1];
+        GLPLT_PAR_OFC.med_update_plate_parameter()
         self.updateStaticSectionEnvPar();
-        self.funcCalibLogTrace("L3CALIB: LeftDown Axis set! XY=%d/%d." % (ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0], ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1]))
+        self.funcCalibLogTrace("L3CALIB: LeftDown Axis set! XY=%d/%d." % (GLPLT_PAR_OFC.HB_POS_IN_UM[0], GLPLT_PAR_OFC.HB_POS_IN_UM[1]))
         return TUP_SUCCESS;
 
     #移动命令
@@ -197,8 +197,8 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     def funcCheckHoldNumber(self, holeNbr):
         if (holeNbr <= 0):
             return 1;
-        if (holeNbr >= ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH):
-            return ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH
+        if (holeNbr >= GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH):
+            return GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH
         return holeNbr
 
     #截图命令
@@ -206,8 +206,8 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         holeIndex = int(msgContent['holeNbr'])
         newHoldNbr = self.funcCheckHoldNumber(holeIndex)
         #生成文件
-        fileName = self.combineFileNameWithDir(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, newHoldNbr)
-        self.addNormalBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, newHoldNbr)
+        fileName = self.combineFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, newHoldNbr)
+        self.addNormalBatchFile(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, newHoldNbr)
         mbuf={}
         mbuf['holeNbr'] = newHoldNbr
         mbuf['fileName'] = fileName
@@ -222,7 +222,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         #过程不困难，但比较累赘。这里考虑的是简要的过程。
         '''
         self.updateBatCntWithIniFileSyned(False, 1, 0)
-        self.addNormalBatchFile(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, newHoldNbr)
+        self.addNormalBatchFile(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, newHoldNbr)
         
         return TUP_SUCCESS;
     
@@ -244,10 +244,10 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
             self.pilotPos = 0
             self.pilotCnt +=1
             #打印内容，不期望跟结束之间产生冲突矛盾
-            if (self.pilotCnt < ModCebsCom.GLSPS_PAR_OFC.PILOT_WOKING_ROUNDS_MAX):
+            if (self.pilotCnt < GLSPS_PAR_OFC.PILOT_WOKING_ROUNDS_MAX):
                 self.funcCalibLogTrace(str("L3CALIB: Pilot round #%d movement start!" % (self.pilotCnt)))
         #结束的时刻
-        if (self.pilotCnt >= ModCebsCom.GLSPS_PAR_OFC.PILOT_WOKING_ROUNDS_MAX):
+        if (self.pilotCnt >= GLSPS_PAR_OFC.PILOT_WOKING_ROUNDS_MAX):
             self.msg_send(TUP_MSGID_CALIB_PILOT_STOP, TUP_TASK_ID_MOTO, "");
             self.funcCalibLogTrace(str("L3CALIB: Pilot movement accomplished successful!"))
             return TUP_SUCCESS;
@@ -255,11 +255,11 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         if (self.pilotPos == 0):
             mbuf['holeNbr'] = int(1)
         elif (self.pilotPos == 1):
-            mbuf['holeNbr'] = int(ModCebsCom.GLPLT_PAR_OFC.HB_HOLE_X_NUM)
+            mbuf['holeNbr'] = int(GLPLT_PAR_OFC.HB_HOLE_X_NUM)
         elif (self.pilotPos == 2):
-            mbuf['holeNbr'] = int(ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX)
+            mbuf['holeNbr'] = int(GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX)
         elif (self.pilotPos == 3):
-            mbuf['holeNbr'] = int(ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX - ModCebsCom.GLPLT_PAR_OFC.HB_HOLE_X_NUM + 1)
+            mbuf['holeNbr'] = int(GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX - GLPLT_PAR_OFC.HB_HOLE_X_NUM + 1)
         self.msg_send(TUP_MSGID_CALIB_PILOT_MV_HN_REQ, TUP_TASK_ID_MOTO, mbuf);
         return TUP_SUCCESS;    
     

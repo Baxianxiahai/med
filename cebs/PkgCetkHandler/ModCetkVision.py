@@ -48,17 +48,19 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_GPAR_UI_ACT = 6
     
     #摄像头初始化之后的对象指针
-    capInit = ''
+    camera_nbr = -1 #摄像头ID
+    capInit = ''    #视频对象句柄
+
 
     def __init__(self, glPar):
         tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_VISION, taskName="TASK_VISION", glTabEntry=glPar)
         #ModVmLayer.TUP_GL_CFG.save_task_by_id(TUP_TASK_ID_VISION, self)
         self.capInit = ''
-        self.HST_VISION_WORM_CLASSIFY_base = ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_small2mid = ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_mid2big = ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_big2top = ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_pic_filepath = ModCebsCom.GLCFG_PAR_OFC.PIC_MIDDLE_PATH + '/'
+        self.HST_VISION_WORM_CLASSIFY_base = GLVIS_PAR_OFC.SMALL_LOW_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_small2mid = GLVIS_PAR_OFC.SMALL_MID_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_mid2big = GLVIS_PAR_OFC.MID_BIG_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_big2top = GLVIS_PAR_OFC.BIG_UPPER_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_pic_filepath = GLCFG_PAR_OFC.PIC_MIDDLE_PATH + '/'
         self.HST_VISION_WORM_CLASSIFY_pic_filename = "1.jpg"
         self.HST_VISION_WORM_CLASSIFY_pic_sta_output = {'totalNbr':0, 'bigAlive':0, 'bigDead':0, 'middleAlive':0, 'middleDead':0, 'smallAlive':0, 'smallDead':0, 'totalAlive':0, 'totalDead':0}
         self.fsm_set(TUP_STM_NULL)
@@ -97,19 +99,20 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_init_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
         #全局搜索摄像头
+        self.camera_nbr = -1
         p = clsCamDevHdl()
-        ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = p.dhSearchRunCam()
-        res = "L2VISCAP: Valid camera number = " + str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR)     
+        self.camera_nbr = p.dhSearchRunCam()
+        res = "L2VISCAP: Valid camera number = " + str(self.camera_nbr)     
         self.funcVisionLogTrace(str(res))
         #INIT
-        if (ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR < 0):
+        if (self.camera_nbr < 0):
             self.funcVisionErrTrace("L2VISCAP: Camera not yet installed, init error!");
             return TUP_FAILURE;
         #正确的情况
         try:
-            self.capInit = cv.VideoCapture(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR) #CHECK WITH ls /dev/video*　RESULT
-            self.capInit.set(3, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
-            self.capInit.set(4, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
+            self.capInit = cv.VideoCapture(self.camera_nbr) #CHECK WITH ls /dev/video*　RESULT
+            self.capInit.set(3, GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
+            self.capInit.set(4, GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
             if not self.capInit.isOpened():
                 self.capInit.release()
         except Exception:
@@ -183,7 +186,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             return TUP_FAILURE;
         #正确处理过程：这是主要通过全局变量传递的复杂数据对象
         #其它的COM数据主要还是一些简单的共享参数信息
-        ModCebsCom.GLVIS_PAR_OFC.CALIB_VDISP_OJB = outFrame
+        GLVIS_PAR_OFC.CALIB_VDISP_OJB = outFrame
         mbuf['res'] = 1
         mbuf['ComObj'] = True
         #本来是通过文件读取，目前改为了对象指针共享，效率要高些
@@ -205,7 +208,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             self.funcVisionErrTrace("VISION: capture picture error!")
             return TUP_FAILURE;
         cv.imwrite(fileName, outFrame)
-        self.funcVisionLogTrace("VISION: Capture and save file, batch=%d, fileNbr=%d, fn=%s" % (ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, holeNbr, fileName));
+        self.funcVisionLogTrace("VISION: Capture and save file, batch=%d, fileNbr=%d, fn=%s" % (GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, holeNbr, fileName));
         return TUP_SUCCESS;
     
     #主界面模式下拍照
@@ -215,7 +218,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         fnVideo = msgContent['fnVideo']
         vdCtrl = msgContent['vdCtrl']
         sclCtrl = msgContent['sclCtrl']
-        res = self.funcPicVidCapAndSaveFile(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl);
+        vdDur = msgContent['vdDur']
+        res = self.funcPicVidCapAndSaveFile(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
         mbuf={}
         mbuf['res'] = res
         self.msg_send(TUP_MSGID_CTRS_PIC_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
@@ -228,7 +232,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         fnVideo = msgContent['fnVideo']
         vdCtrl = msgContent['vdCtrl']
         sclCtrl = msgContent['sclCtrl']
-        res = self.funcPicVidCapAndSaveFile(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl);
+        vdDur = msgContent['vdDur']
+        res = self.funcPicVidCapAndSaveFile(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
         mbuf={}
         mbuf['res'] = res
         self.msg_send(TUP_MSGID_CTRS_FLU_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
@@ -330,7 +335,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     # vdCtrl: 控制是否需要拍摄视频
     #
     '''
-    def funcPicVidCapAndSaveFile(self, fnPic, fnScale, fnVideo, vdCtrl, sclCtrl):
+    def funcPicVidCapAndSaveFile(self, fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur):
         try:
             if not self.capInit.isOpened():
                 self.funcVisionErrTrace("L2VISCAP: Cannot open webcam!")
@@ -361,13 +366,13 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             outputFrame = cv.merge([B, G, R])
             cv.imwrite(fnPic, outputFrame)
             if sclCtrl == True:
-                self.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), fnPic, fnScale)
+                self.algoVisGetRadians(GLPLT_PAR_OFC.med_get_radians_len_in_us(), fnPic, fnScale)
         if (ret == True) and (vdCtrl == True):
             #Video capture with 3 second
             fourcc = cv.VideoWriter_fourcc(*'mp4v')  #mp4v(.mp4), XVID(.avi)
             out = cv.VideoWriter(fnVideo, fourcc, fps, (width, height))
             cnt = 0
-            targetCnt = fps * ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC
+            targetCnt = fps * vdDur;
             while self.capInit.isOpened():
                 cnt += 1
                 ret, frame = self.capInit.read()
@@ -551,10 +556,10 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     CLASSFICATION: 分类
     '''
     def funcVisRefreshPar(self):
-        self.HST_VISION_WORM_CLASSIFY_base = ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_small2mid = ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_mid2big = ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_big2top = ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_base = GLVIS_PAR_OFC.SMALL_LOW_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_small2mid = GLVIS_PAR_OFC.SMALL_MID_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_mid2big = GLVIS_PAR_OFC.MID_BIG_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_big2top = GLVIS_PAR_OFC.BIG_UPPER_LIMIT;
     
     def func_vision_worm_binvalue_proc(self, img):
         new = np.zeros(img.shape, np.uint8)    
@@ -684,7 +689,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
                     self.HST_VISION_WORM_CLASSIFY_pic_sta_output['totalAlive'] +=1                        
                 cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
         #叠加统计结果
-        if (ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET == True):
+        if (GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET == True):
             font = cv.FONT_HERSHEY_SIMPLEX
             cv.putText(outputImg, str(self.HST_VISION_WORM_CLASSIFY_pic_sta_output), (10, 30), font, 0.7, (0, 0, 255), 2, cv.LINE_AA)
         return outputImg;
@@ -717,7 +722,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         cv.imwrite(outputFn, outputImg)
             
         #Save log record: 存储干活的log记录
-        f = open(ModCebsCom.GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET, "a+")
+        f = open(GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET, "a+")
         a = '[%s], vision worm classification ones, save result as [%s] with output [%s].\n' % (time.asctime(), outputFn, str(self.HST_VISION_WORM_CLASSIFY_pic_sta_output))
         f.write(a)
         f.close()
@@ -742,6 +747,7 @@ class clsCamDevHdl():
         return camId
         
     #独立读取的进程函数
+    #进程跟咱们的文件交互，这里投机取巧采用了临时文件交换，不然内存交互找不到简易的方式
     def dhFetchUsbCamId(self):
         wmi = win32com.client.GetObject("winmgmts:")
         camId = -2
