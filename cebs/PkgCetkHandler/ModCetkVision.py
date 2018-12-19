@@ -349,7 +349,13 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         width = int(self.capInit.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
         height = int(self.capInit.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
         fps = 20
-        ret, frame = self.capInit.read()
+        #ret, frame = self.capInit.read()
+        ret = self.capInit.grab()
+        if (ret == False):
+            return -1
+        
+        ret, frame = self.capInit.retrieve()
+        ret, frame = self.capInit.retrieve()
         if (ret == True):
             frame = cv.flip(frame, 1)#Operation in frame
             frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_AREA)

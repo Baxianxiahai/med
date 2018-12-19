@@ -200,6 +200,8 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         else:
             mbuf['holeNbr'] = self.picSeqCnt
             self.msg_send(TUP_MSGID_CTRS_MOTO_MV_HN_REQ, TUP_TASK_ID_MOTO, mbuf)
+        
+        
         return TUP_SUCCESS;
     
     #STEP2马达运动
