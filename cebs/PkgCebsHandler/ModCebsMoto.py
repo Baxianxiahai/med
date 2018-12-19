@@ -272,7 +272,7 @@ class clsL2_MotoProc(object):
     '''    
     '这个移动算法跟显微镜的放置方式息息相关'
     def funcMotoMove2HoleNbr(self, holeIndex):
-        time.sleep(1)
+        time.sleep(6)     #这里需要加上延时 确保能够完整移动完
         if (holeIndex == 0):
             xTargetHoleNbr = 0;
             yTargetHoleNbr = 0;
@@ -516,16 +516,37 @@ class clsL1_MdcThd(QThread):
                 self.funcMdctdDebugPrint("L1MDCT: SND CMD = " + outBuf)
                 res, Buf = self.funcCmdSend(byteDataBuf)
                 time.sleep(2)
-            return 1    
+            return 1  
+              #LC:add test for come and go pules to test stability  
+#             if (cmdId == 0x30):
+#             for i in range(1,500):
+#                 #print("A")
+#                 fmt = ">BBiiii";
+#                 if (i%2 == 0):
+#                     byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, (-1)*par1, par2, par3, par4)
+#                 else:
+#                     byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, par1, par2, par3, par4)
+#                 crc = self.funcCacCrc(byteDataBuf, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
+#                 fmt = "<H";
+#                 byteCrc = struct.pack(fmt, crc)
+#                 byteDataBuf += byteCrc
+#                 #打印完整的BYTE系列
+#                 index=0
+#                 outBuf=''
+#                 while index < (ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
+#                     outBuf += str("%02X " % (byteDataBuf[index]))
+#                     index+=1
+#                 self.funcMdctdDebugPrint("L1MDCT: SND CMD = " + outBuf)
+#                 res, Buf = self.funcCmdSend(byteDataBuf)
+#                 time.sleep(12)
+#             return 1  
         else:
             fmt = ">BBiiii";    
             byteDataBuf = struct.pack(fmt, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, par1, par2, par3, par4)
             crc = self.funcCacCrc(byteDataBuf, ModCebsCom.GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
             fmt = "<H";
             byteCrc = struct.pack(fmt, crc)
-            byteDataBuf += byteCrc
-            
-                
+            byteDataBuf += byteCrc   
             #打印完整的BYTE系列
             index=0
             outBuf=''
