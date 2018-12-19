@@ -10,7 +10,7 @@ import time
 from asyncio.tasks import sleep
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
-from cebsMain import *
+from cebsL4Ui import *
 from PkgCebsHandler import ModCebsCom  #Common Support module
 from PkgCebsHandler import ModCebsCfg
 

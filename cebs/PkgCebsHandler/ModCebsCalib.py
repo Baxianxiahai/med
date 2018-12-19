@@ -30,7 +30,7 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
 
 #Local include
-from cebsMain import *
+from cebsL4Ui import *
 from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsVision
@@ -155,13 +155,11 @@ class clsL3_CalibProc(object):
         self.funcCalibLogTrace("L3CALIB: Pilot camera start to open...")
         print("L3CALIB: CAM NBR = ", ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR)
         #做必要的判定，放置是无效摄像头，实际上，没整到位
-     
         if (ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR < 0):
             self.funcCalibLogTrace("L3CALIB: Camera is not yet installed!") 
             return -1;
     
         #真正启动
-        
         self.instL2CalibCamDisThd = clsL2_CalibCamDispThread(self.instL4CalibForm, 2)
         self.instL2CalibCamDisThd.setIdentity("TASK_CalibCameraDisplay")
         self.instL2CalibCamDisThd.start();
@@ -170,6 +168,8 @@ class clsL3_CalibProc(object):
     
     '''
     NEW FUN: 捕获VIDEO中的图像
+        这个是DISP中的子功能，不再需要单独获得摄像头的权限
+        这个截面启动正常之后，DISP就启动了
     '''
     def funcCalibPilotCameraCapture(self, holeNbr):
         if (holeNbr <= 0 ) or (holeNbr > ModCebsCom.GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH):
@@ -359,18 +359,17 @@ class clsL2_CalibCamDispThread(threading.Thread):
         else:
             self.funcCalibCamDisLogTrace("L2CALCMDI: Error STM transfer!");
     
-    #任意状态均可以停止，从而任意状态都可以转移到STOP
-    def funcCalibCameraDispStop(self):
-        self.CDT_STM_STATE = self.__CEBS_STM_CDT_STOP;
-
     def funcCamDisRtInit(self):
+        ModCebsCom.GLHLR_PAR_OFC.CHS_CAM_MUTEX.acquire(5)
         #确定是否安装
         if (ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR < 0):
+            ModCebsCom.GLHLR_PAR_OFC.CHS_CAM_MUTEX.release()
             return -1;
         #正常打开
         self.cap = cv.VideoCapture(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR)
         self.cap.set(3, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
         self.cap.set(4, ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
+        #设置位置
         rect = self.instL4CalibForm.label_calib_RtCam_Fill.geometry()
         self.camRtFillWidth = rect.width()
         self.camRtFillHeight = rect.height()
@@ -379,7 +378,8 @@ class clsL2_CalibCamDispThread(threading.Thread):
         if not self.cap.isOpened():
             self.cap.release()
             cv.destroyAllWindows()
-            return -1
+            ModCebsCom.GLHLR_PAR_OFC.CHS_CAM_MUTEX.release()
+            return -2
         #之前需要独立的界面，现在不需要了
         #Prepare to show window
         #cv.namedWindow('CAMERA CAPTURED', 0)
@@ -387,6 +387,16 @@ class clsL2_CalibCamDispThread(threading.Thread):
         #Not yet able to embed vision into UI, so has to put at another side
         #cv.moveWindow('CAMERA CAPTURED', 0, ModCebsCom.GLVIS_PAR_OFC.CAMERA_DISPLAY_POS_Y)
         return 1
+
+    #任意状态均可以停止，从而任意状态都可以转移到STOP
+    def funcCalibCameraDispStop(self):
+        self.CDT_STM_STATE = self.__CEBS_STM_CDT_STOP;
+        #组赛式释放
+        while True:
+            if (self.CDT_STM_STATE != self.__CEBS_STM_CDT_STOP):
+                ModCebsCom.GLHLR_PAR_OFC.CHS_CAM_MUTEX.release()
+                return 1;
+            time.sleep(0.1)
                 
     #主任务
     def run(self):
@@ -465,7 +475,6 @@ class clsL2_CalibCamDispThread(threading.Thread):
             
             #销毁现场摄像头
             elif (self.CDT_STM_STATE == self.__CEBS_STM_CDT_STOP):
-                time.sleep(0.2)
                 try:
                     self.cap.release()
                 except Exception:
@@ -473,8 +482,9 @@ class clsL2_CalibCamDispThread(threading.Thread):
                 try:
                     cv.destroyAllWindows()
                 except Exception:
-                    pass                
+                    pass
                 print("L2CALCMDI: Task finished and run exit!")
+                self.CDT_STM_STATE = self.__CEBS_STM_CDT_INITSTOP
                 return 1;
             
             #无效状态

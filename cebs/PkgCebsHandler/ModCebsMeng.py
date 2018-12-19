@@ -19,9 +19,10 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
 
 #Local include
-from cebsMain import *
+from cebsL4Ui import *
 from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
+from PkgCebsHandler import ModCebsMoto
 
 
 

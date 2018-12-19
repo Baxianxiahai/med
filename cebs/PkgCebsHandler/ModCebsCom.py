@@ -24,17 +24,15 @@ import threading
 PART0: 全局定义的变量，不需要封装
 
 '''
+
+#
+# 固定参数部分
+#    
+
 #STATIC CONFIGURATION AND CAN NOT MODIFY BY HAND
 GL_CEBS_ERR_LOG_FILE_NAME_SET = r"cebsErrLog.txt"
 GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET = r"cebsVsClas.log";
 GL_CEBS_CMD_LOG_FILE_NAME_SET = r"cebsCmdLog.txt"
-#ROUNDS of auto-pilot run
-GL_CEBS_PILOT_WOKING_ROUNDS_MAX = 5;
-#SERIAL COM NUMBER => THIS NEED SET IN THE BEGINNING, CAN NOT WAIT UNTIL SYSTEM START!
-#SO WHOLE DESIGN LOGIC OF MOTO-API SHOULD RE-DONE!
-#NOT YET USE FOLLOWING PORT SETTING.
-GL_CEBS_COM_NUMBER_SET = 11;
-
 
 
 '''
@@ -44,6 +42,26 @@ PART1: 配置文件及控制参数
 '''
 
 class clsL0_MedComCfgPar():
+
+    #
+    # 固定参数部分
+    #    
+    PIC_ORIGIN_PATH = r"pic_origin";
+    PIC_MIDDLE_PATH = r"pic_middle";
+    #FILE ATTRIBUTE
+    FILE_ATT_NORMAL = 'normal';
+    FILE_ATT_FLUORESCEN = 'flu';  #荧光 Fluorescen
+    CFG_FILE_NAME = r"cebsConfig.ini";
+
+    #
+    # 可配参数部分
+    #    
+
+    #
+    # 临时参数部分
+    #    
+
+    
     #FOLLOWING DYNAMIC PARAMETERS SET
     #Global parameter set for PICTURE
     PIC_PROC_BATCH_INDEX = 0;
@@ -51,14 +69,10 @@ class clsL0_MedComCfgPar():
     PIC_PROC_REMAIN_CNT = 0;  #Pointer to remaining un-classified pictures
     PIC_FLU_CLAS_INDEX = 0    #指向FLU的指针起点
     PIC_FLU_REMAIN_CNT = 0    #剩余的FLU数量
-    PIC_ORIGIN_PATH = r"pic_origin";
-    PIC_MIDDLE_PATH = r"pic_middle";
     PIC_ABS_ORIGIN_PATH = "";
     PIC_ABS_MIDDLE_PATH = "";
-    #FILE ATTRIBUTE
-    FILE_ATT_NORMAL = 'normal';
-    FILE_ATT_FLUORESCEN = 'flu';  #荧光 Fluorescen
-    CFG_FILE_NAME = r"cebsConfig.ini";
+    
+    #TEST_VALUE  = 1
     
     #初始化
     def __init__(self):    
@@ -84,6 +98,11 @@ CURRENTLY STILL IN TEST PHASE, TO BE ENLARGED FURTHER
 
 '''
 class clsL0_MedComPlatePar():
+
+    #
+    # 固定参数部分
+    #    
+    
     #MEACHNICAL HARDWARE PLATFORM SCOPE DEFINATION
     HB_MECHNICAL_PLATFORM_X_MAX = 120000;
     HB_MECHNICAL_PLATFORM_Y_MAX = 110000;
@@ -133,11 +152,20 @@ class clsL0_MedComPlatePar():
     HB_TARGET_6_SD_YDIR_NBR = 2;
     HB_TARGET_6_SD_HOLE_DIS = 40000;  #in UM
     HB_TARGET_6_SD_HOLE_RAD = 30000;  #中值直径in UM，(顶+底)/2
+
+    #
+    # 可配置参数部分
+    #
     
     #ACTION SELCTION
     HB_TARGET_TYPE = HB_TARGET_96_STANDARD;
     HB_PIC_ONE_WHOLE_BATCH = HB_TARGET_96_SD_BATCH_MAX;
+
     
+    #
+    # 临时参量部分
+    #
+        
     HB_HOLE_X_NUM = 0;          #HOW MANY BOARD HOLES， X DIRECTION
     HB_HOLE_Y_NUM = 0;          #HOW MANY BOARD HOLES，Y DIRECTION
     HB_WIDTH_X_SCALE = 0;       #HOW MANY BOARD HOLES， X DIRECTION
@@ -155,11 +183,6 @@ class clsL0_MedComPlatePar():
     def __init__(self):    
         super(clsL0_MedComPlatePar, self).__init__()  
         pass
-
-#     def med_cfl_test1(self):
-#         global GL_CEBS_COM_NUMBER_SET
-#         print("Test functions! Global parameter Nbr Set = %d" % (GL_CEBS_COM_NUMBER_SET))
-#         pass
 
     def med_cfl_add(self, a, b):
         return a+b
@@ -181,7 +204,6 @@ class clsL0_MedComPlatePar():
 
     #INIT PLATE PARAMETER, 初始化孔板参数
     def med_init_plate_parameter(self):
-
         if (self.HB_WIDTH_X_SCALE == 0 or self.HB_HEIGHT_Y_SCALE == 0 or self.HB_HOLE_X_NUM == 0 or self.HB_HOLE_Y_NUM == 0):
             if (self.HB_TARGET_TYPE == self.HB_TARGET_96_STANDARD):
                 self.HB_HOLE_X_NUM = self.HB_TARGET_96_SD_XDIR_NBR
@@ -245,6 +267,8 @@ class clsL0_MedComPlatePar():
         self.HB_WIDTH_X_SCALE = (self.HB_POS_IN_UM[2] - self.HB_POS_IN_UM[0]) / (self.HB_HOLE_X_NUM-1);
         self.HB_HEIGHT_Y_SCALE = (self.HB_POS_IN_UM[3] - self.HB_POS_IN_UM[1]) / (self.HB_HOLE_Y_NUM-1);
     
+    #选择工作盘片
+    #只有在更换盘片且在GPAR中才能选择
     def med_select_plate_board_type(self, option):
         if (option == 96):
             self.HB_TARGET_TYPE = self.HB_TARGET_96_STANDARD;
@@ -297,6 +321,7 @@ class clsL0_MedComPlatePar():
         else:
             return self.HB_TARGET_96_SD_HOLE_RAD/2
         
+        
 #定义全局变量以及操作函数
 GLPLT_PAR_OFC = clsL0_MedComPlatePar()
 
@@ -311,28 +336,32 @@ PART3: 图像相关的参量
 方便对参数进行维护，包括增删
 '''
 class clsL0_MedComPicPar():
+    #
+    # 固定配置参数部分
+    #
+    #896*684 is basic resolution! 896*684 / 1792*1374 / 3584*2748
+    VISION_CAMBER_RES_WITDH = 3584; #1792;
+    VISION_CAMBER_RES_HEIGHT = 2748; #1374;
+    #MAX search window of camera
+    VISION_MAX_CAMERA_SEARCH = 15;
+
+
+    #
+    # 可配置参数部分
+    #
     #Fix point to take picture or not? Formally auto-working shall set as False.
     #定点拍照
     PIC_TAKING_FIX_POINT_SET = False; 
     #After taking picture, whether the pic identification will be run automatically
     #拍照后是否自动识别
-    PIC_CLASSIFIED_AFTER_TAKE_SET = True;
+    PIC_CLASSIFIED_AFTER_TAKE_SET = False;
     #Whether taking picture will be happened automatically after starting.
-    #设备启动后是否自动工作
-    PIC_AUTO_WORKING_AFTER_START_SET = True;
+    #设备启动后是否自动工作-界面叫定时自动拍照
+    PIC_AUTO_WORKING_AFTER_START_SET = False;
     #Auto taking picture TTI times in minutes
     #定时工作时长间隔
     PIC_AUTO_WORKING_TTI_IN_MIN = 60;
-    #CAMERA NUMBER
-    VISION_CAMBER_NBR = -1;
-    #896*684 is basic resolution! 896*684 / 1792*1374 / 3584*2748
-    VISION_CAMBER_RES_WITDH = 3584; #1792;
-    VISION_CAMBER_RES_HEIGHT = 2748; #1374;
     #TEMP USAGE VARIABLES => 用于浮动式界面展示，暂时不用
-    #CAMERA_DISPLAY_POS_X = 0;
-    #CAMERA_DISPLAY_POS_Y = 0;
-    #MAX search window of camera
-    VISION_MAX_CAMERA_SEARCH = 15;
     #VISION calibration set
     SMALL_LOW_LIMIT = 200;
     SMALL_MID_LIMIT = 500;
@@ -350,6 +379,17 @@ class clsL0_MedComPicPar():
     CFY_THD_PAR2 = 2
     CFY_THD_PAR3 = 3
     CFY_THD_PAR4 = 4
+    
+    #临时参量部分
+    '''
+    #
+    #动态视频图像 => 用于CALIB界面下的摄像头视频显示
+    #这是COM共享组件中唯一一个共享的复杂数据对象
+    #其它共享对象还都是比较简单的数据
+    #如果要换成进程模式，而非线程模式，使用这个方式就不能简单的共享使用了，文件或者其它连接模式可能要再考虑了
+    #
+    '''
+    CALIB_VDISP_OJB = ''
     
     
     def __init__(self):    
@@ -389,6 +429,9 @@ PART4: 串口指令
 方便对参数进行维护，包括增删
 '''
 class clsL0_MedSpsPar():
+    #
+    # 固定配置参数部分
+    #
     
     #完成黑线，USB转串口线缆，内置方式
     SPS_USB_DBG_CARD1 = 'Prolific USB-to-Serial Comm Port ('
@@ -439,17 +482,28 @@ class clsL0_MedSpsPar():
     SPS_MENGPAR_CMD_LEN = 18
     
     MOTOR_STEPS_PER_ROUND = 12800   #NF0
-    MOTOR_MAX_SPD = 6  #NF1 rad/s
-    MOTOR_MAX_ACC = 3  #NF1 rad/s2
-    MOTOR_MAX_DEACC = 3  #NF1 rad/s2
-    MOTOR_ZERO_SPD = 6 #NF1 rad/s
-    MOTOR_ZERO_ACC = 3 #NF1 rad/s2
+    MOTOR_MAX_SPD = 8  #NF1 rad/s
+    MOTOR_MAX_ACC = 4  #NF1 rad/s2
+    MOTOR_MAX_DEACC = 4  #NF1 rad/s2
+    MOTOR_ZERO_SPD = 8 #NF1 rad/s
+    MOTOR_ZERO_ACC = 4 #NF1 rad/s2
     MOTOR_DIS_MM_PER_ROUND = 3.1415926*20*1.05
     MOTOR_STEPS_PER_DISTANCE_MM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND
     MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND / 1000    
 
     #马达归零最大循环次数
-    MOTOR_MAX_RETRY_TIMES = 10 #正常需要放置30次数，确保归零的时间预算
+    MOTOR_MAX_RETRY_TIMES = 25 #正常需要放置30次数，确保归零的时间预算
+
+    #ROUNDS of auto-pilot run
+    PILOT_WOKING_ROUNDS_MAX = 5;
+    
+    #
+    # 可配置参数部分
+    #
+    
+    #
+    # 临时参量部分
+    #
     
     def __init__(self):    
         super(clsL0_MedSpsPar, self).__init__()  
@@ -461,41 +515,47 @@ class clsL0_MedSpsPar():
 #定义全局变量以及操作函数
 GLSPS_PAR_OFC = clsL0_MedSpsPar()
 
-'''
-PART5: 全局静态handler传递存储地点
+# '''
+# PART5: 全局静态handler传递存储地点
+# 
+# #封装
+#         方便对参数进行维护，包括增删，
+# => 结果证明这种方式不能正常工作
+# '''
+# 
+# class clsL0_MedHandlerPar():
+#     
+#     #Class Handler Instance
+#     CHS_L4_FORM_MAINWIN = ''
+#     CHS_L4_FORM_CALIB = ''
+#     CHS_L4_FORM_GPAR = ''
+#     CHS_L4_FORM_MENG = ''
+#     CHS_L4_FORM_BROW = ''
+#     CHS_L3_CTRL_SCHD_THD = ''
+#     CHS_L3_CALIB_PROC = ''
+#     CHS_L3_GPAR_PROC = ''
+#     CHS_L3_MENG_PROC = ''
+#     CHS_L2_MOTO_PROC = ''
+#     CHS_L2_CALIB_PILOT_THD = ''
+#     CHS_L2_CALIB_CAM_DISP_THD = ''
+#     CHS_L2_VS_CAP_PROC = ''
+#     CHS_L2_VS_CFY_PROC = ''
+#     CHS_L1_MDC_THD = ''
+#     CHS_L1_MOT_DRV_API = ''  #第一代板子支持部分
+#     CHS_L1_CFG_OPR = ''
+#     
+#     #串口全局锁
+#     CHS_MOTO_MUTEX = threading.Lock()
+#     CHS_CAM_MUTEX = threading.Lock()
+#     
+#     def __init__(self):    
+#         super(clsL0_MedHandlerPar, self).__init__()  
+#         pass
+#                 
+# #定义全局变量以及操作函数
+# GLHLR_PAR_OFC = clsL0_MedHandlerPar()
 
-#封装
-方便对参数进行维护，包括增删
-'''
 
-class clsL0_MedHandlerPar():
-    
-    #Class Handler Instance
-    CHS_L4_FORM_MAINWIN = ''
-    CHS_L4_FORM_CALIB = ''
-    CHS_L4_FORM_GPAR = ''
-    CHS_L4_FORM_MENG = ''
-    CHS_L4_FORM_BROW = ''
-    CHS_L3_CTRL_SCHD_THD = ''
-    CHS_L3_CALIB_PROC = ''
-    CHS_L3_GPAR_PROC = ''
-    CHS_L3_MENG_PROC = ''
-    CHS_L2_MOTO_PROC = ''
-    CHS_L2_CALIB_PILOT_THD = ''
-    CHS_L2_CALIB_CAM_DISP_THD = ''
-    CHS_L2_VS_CAP_PROC = ''
-    CHS_L2_VS_CFY_PROC = ''
-    CHS_L1_MDC_THD = ''
-    CHS_L1_MOT_DRV_API = ''  #第一代板子支持部分
-    CHS_L1_CFG_OPR = ''
-    
-    #串口全局锁
-    CHS_MOTO_MUTEX = threading.Lock()
-    CHS_CAM_MUTEX = threading.Lock()
-    
-    def __init__(self):    
-        super(clsL0_MedHandlerPar, self).__init__()  
-        pass
-                
-#定义全局变量以及操作函数
-GLHLR_PAR_OFC = clsL0_MedHandlerPar()
+
+
+

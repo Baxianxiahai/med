@@ -4,7 +4,74 @@
 2. 荧光识别算法：待定
 
 
+[BUG LIST]
+2. def func_vision_worm_binvalue_proc(self, img):  new = np.zeros(img.shape, np.uint8)
 
+
+
+//=ZJL, 2018/12/18, CURRENT_SW_DELIVERY R1.42 =>CEBS
+= 去掉CAMER-NBR的人工选择，由VISION模块自动探测
+= 修正CAPTURE_ENABLE的控制参数bug
+= 简化ModCebsCom.GL参数，去掉前缀
+= 增加功能：是否触发拍照完成后自动识别
+= 启动后触发归零操作
+= 启动后定时拍照触发+自动识别
+= 定时周期拍照触发+自动识别
+= 将识别图片后的叠加文字，改为CTRL-SCHD模块操控
+
+
+//=ZJL, 2018/12/17, CURRENT_SW_DELIVERY R1.41 =>CEBS
+= 完善ini文件中对于控制SECTION的处理
+= 增加了batch#add-file的保护
+
+//=ZJL, 2018/12/15, CURRENT_SW_DELIVERY R1.40 =>CEBS
+= 完成基本的图像获取和识别消息框架
+
+//=ZJL, 2018/12/15, CURRENT_SW_DELIVERY R1.39 =>CEBS
+= 改进CALIB摄像头的工作模式：将文件传输模式改为内存对象传输指针模式，提高传输的通信速率。
+   目前将定时器提高到0.4s/2.5fps，还可以工作。当提高到5fps时，视频采集请求会大量积累在TK_VISION任务模块的消息队列中，这说明基于队列的消息通信无法满足视频帧处理的要求
+= 完善校准任务中的巡游功能
+
+//=ZJL, 2018/12/14, CURRENT_SW_DELIVERY R1.38 =>CEBS
+= 完善CALIB中摄像头的显示问题
+= 去掉老旧TIMER工作机制
+= 完善打印机制
+= 解决了摄像头显示的问题，并将周期调整为0.5s的周期
+= 校准位置移动
+= 去掉TIMER的全局定义
+= 完善校准模式下的拍照功能
+= 去掉所有本地打印，在TRACE功能完善的情况下，这个是不需要的
+= 增加一个去掉摄像头无限消息的TRACE-LEVEL，这样CALIB中的摄像头就可以打开了
+
+//=ZJL, 2018/12/13, CURRENT_SW_DELIVERY R1.37 =>CEBS
+= 优化msg_send函数
+= 完成GPAR模块的完整工作流程
+= 完善定时器工作模式
+= 增加CALIB的视频展示框架
+
+//=ZJL, 2018/12/13, CURRENT_SW_DELIVERY R1.36 =>CEBS
+= 界面切换完善
+= ERR: funcVisionDetectAllCamera()
+= 因为要取出数据，字符串必须使用标准字符串格式
+= 重要技巧：内部消息交换的格式，其实是嵌套的DICT格式，而不是字符串格式。当需要将参数从一个模块送到另外一个模块时，最好采用DICT的方式
+          如果一定要使用字符串方式进行数据交互，则需要做json.loads(str())操作，而且字符串必须采用双引号的方式继续格式化
+= 完成工参MENG模块的改造
+
+//=ZJL, 2018/12/12, CURRENT_SW_DELIVERY R1.35 =>CEBS
+= 建立起基本的任务框架 
+= 进程模式改为了线程模式，速度快的不是一点点。VM中任务启动直接控制。
+= 改为线程模式之后，可以使用全局变量来进行参数和对象传递
+
+//=ZJL, 2018/12/10, CURRENT_SW_DELIVERY R1.34 =>CEBS
+= 使用新的架构，创建VM机制
+= 更新SPS-MOTO的处理过程
+= 更新VISION函数
+= 完善多任务之间的消息交互过程
+
+//=ZJL, 2018/12/8, CURRENT_SW_DELIVERY R1.33 =>CEBS
+= 完善CEBS REL2 RE-ARCH的代码框架
+= CAM的权限管理完善
+= 去掉了摄像头初始化后的3-4张黑屏照片
 
 //=ZJL, 2018/12/5, CURRENT_SW_DELIVERY R1.32 =>CEBS
 = 拉REL1的分支，保持原先的设计方法

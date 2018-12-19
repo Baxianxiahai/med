@@ -22,7 +22,7 @@ import struct
 
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
-from cebsMain import *
+from cebsL4Ui import *
 from PkgCebsHandler import ModCebsCom
 from PkgCebsHandler import ModCebsCfg
 from PkgCebsHandler import ModCebsMotorApi
@@ -41,7 +41,7 @@ if L1MOTO_API_SELECTION == True:
         instL1MotoDrvApi = ModCebsMotorApi.clsL1_MotoDrvApi()
     except Exception:
         instL1MotoDrvApiFlag = False
-    print("L2MOTO: Status of Moto driver =", instL1MotoDrvApiFlag)
+    #print("L2MOTO: Status of Moto driver =", instL1MotoDrvApiFlag)
 else:
     instL1MotoDrvApiFlag = False
     print("L2MOTO: Using self-designed board!")
@@ -75,7 +75,7 @@ class clsL2_MotoProc(object):
                 self.funcMotoLogTrace("L2MOTO: Fetch moto hardware driver ver nbr = %s" % str(self.motoSpsDrvVer))
         #第二部分：启动马达控制的具体逻辑
         #自研部分肯定启动，简化程序的设计
-        self.objMdcThd = ModCebsMoto.clsL1_MdcThd(self.instL4WinForm, 2);
+        self.objMdcThd = clsL1_MdcThd(self.instL4WinForm, 2);
         self.objMdcThd.setIdentity("TASK_MotoDrvCtrlThread"+str(self.instL4WinForm))
         self.objMdcThd.sgL4MainWinPrtLog.connect(self.funcMotoLogTrace)
         self.objMdcThd.start();
@@ -637,8 +637,8 @@ class clsL1_MdcThd(QThread):
             self.funcMdctdDebugPrint("L1MDCT: Exec move speed, not in EXEC state and can not continue support this command!")
             return -1
         #定标10
-        input1 = int(par1 * 10)
-        input2 = int(par2 * 10)
+        input1 = int(par1)
+        input2 = int(par2)
         self.MDCT_CTRL_CNT = ModCebsCom.GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
         self.funcSendCmdPack(ModCebsCom.GLSPS_PAR_OFC.SPS_MV_SPD_CMID, input1, input2, 0, 0)
         self.MDCT_STM_STATE = self.__CEBS_STM_MDCT_CMD_EXE_MV
