@@ -16,6 +16,7 @@ from PkgVmHandler.ModVmConsole import *
 class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_ACTIVE = 3
     _STM_MOTO_MV = 4
+    _STM_PILOT = 5
     
     CAM_DISP_SET = True
     timerDisplay = ''
@@ -50,9 +51,9 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_PIC_CAP_HOLEN, self.fsm_msg_pic_cap_holen_rcv_handler)
         
         #巡游
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_PILOT_START, self.fsm_msg_pilot_start_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_PILOT_START, self.fsm_msg_pilot_start_rcv_handler)
+        self.add_stm_combine(self._STM_PILOT, TUP_MSGID_CALIB_PILOT_MV_HN_RESP, self.fsm_msg_pilot_mv_hn_resp_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_PILOT_STOP, self.fsm_msg_pilot_stop_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_PILOT_MV_HN_RESP, self.fsm_msg_pilot_mv_hn_resp_rcv_handler)
 
         #START TASK
         self.fsm_set(TUP_STM_INIT)
@@ -104,7 +105,11 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     #移动动作需要等待MOTO反馈并解锁状态
     def fsm_msg_moto_mv_dir_req_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_MOTO_MV)
-        self.msg_send(TUP_MSGID_CALIB_MOMV_DIR_REQ, TUP_TASK_ID_MOTO, msgContent)
+        mbuf={}
+        mbuf['scale'] = msgContent['scale']
+        mbuf['dir'] = msgContent['dir']
+        mbuf['maxTry'] = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
+        self.msg_send(TUP_MSGID_CALIB_MOMV_DIR_REQ, TUP_TASK_ID_MOTO, mbuf)
         return TUP_SUCCESS;
 
     def fsm_msg_moto_mv_dir_resp_rcv_handler(self, msgContent):
@@ -114,6 +119,9 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_moto_force_move_dir_req_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_MOTO_MV)
+        mbuf={}
+        mbuf['dir'] = msgContent['dir']
+        mbuf['maxTry'] = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
         self.msg_send(TUP_MSGID_CALIB_MOFM_DIR_REQ, TUP_TASK_ID_MOTO, msgContent)
         return TUP_SUCCESS;
 
@@ -181,7 +189,9 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     #移动命令
     def fsm_msg_momv_start_rcv_handler(self, msgContent):
         self.funcCalibLogTrace("L3CALIB: Move to Hole#0 point.")
-        self.msg_send(TUP_MSGID_CALIB_MOMV_START, TUP_TASK_ID_MOTO, '')
+        mbuf={}
+        mbuf['maxTry'] = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES   
+        self.msg_send(TUP_MSGID_CALIB_MOMV_START, TUP_TASK_ID_MOTO, mbuf)
         return TUP_SUCCESS;
 
     #移动命令
@@ -189,7 +199,8 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         holeIndex = int(msgContent['holeNbr'])
         newHoldNbr = self.funcCheckHoldNumber(holeIndex)
         mbuf={}
-        mbuf['holeNbr'] = newHoldNbr        
+        mbuf['holeNbr'] = newHoldNbr
+        mbuf['maxTry'] = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
         self.funcCalibLogTrace(str("L3CALIB: Move to Hole#%d point." % (int(msgContent['holeNbr']))))
         self.msg_send(TUP_MSGID_CALIB_MOMV_HOLEN, TUP_TASK_ID_MOTO, mbuf)
         return TUP_SUCCESS;
@@ -233,7 +244,9 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         self.funcCalibLogTrace(str("L3CALIB: Pilot round #0 movement start!"))
         mbuf={}
         mbuf['holeNbr'] = int(1)
+        mbuf['maxTry'] = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
         self.msg_send(TUP_MSGID_CALIB_PILOT_MV_HN_REQ, TUP_TASK_ID_MOTO, mbuf);
+        self.fsm_set(self._STM_PILOT)
         return TUP_SUCCESS;
     
     #巡游持续
@@ -250,6 +263,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         if (self.pilotCnt >= GLSPS_PAR_OFC.PILOT_WOKING_ROUNDS_MAX):
             self.msg_send(TUP_MSGID_CALIB_PILOT_STOP, TUP_TASK_ID_MOTO, "");
             self.funcCalibLogTrace(str("L3CALIB: Pilot movement accomplished successful!"))
+            self.fsm_set(self._STM_ACTIVE)
             return TUP_SUCCESS;
         #正常继续
         if (self.pilotPos == 0):
@@ -260,12 +274,14 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['holeNbr'] = int(GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX)
         elif (self.pilotPos == 3):
             mbuf['holeNbr'] = int(GLPLT_PAR_OFC.HB_TARGET_96_SD_BATCH_MAX - GLPLT_PAR_OFC.HB_HOLE_X_NUM + 1)
+        mbuf['maxTry'] = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
         self.msg_send(TUP_MSGID_CALIB_PILOT_MV_HN_REQ, TUP_TASK_ID_MOTO, mbuf);
         return TUP_SUCCESS;    
     
     #巡游停止
     def fsm_msg_pilot_stop_rcv_handler(self, msgContent):
         self.msg_send(TUP_MSGID_CALIB_PILOT_STOP, TUP_TASK_ID_MOTO, "");
+        self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS;
 
 

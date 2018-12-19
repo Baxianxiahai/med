@@ -482,11 +482,13 @@ class clsL1_ConfigOpr():
         #Find the result!
         if ((fileNbr >= 0) and (eleTag == ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL)):
             ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX = index;
-            self.updateCtrlCntInfo()
+            self.updateCfyCntWithIniFileSyned(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX, ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX, ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT, ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT);
+            #self.updateCtrlCntInfo()
             return index, fileNbr;
         elif ((fileNbr >= 0) and (eleTag == ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN)):
             ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX = index;
-            self.updateCtrlCntInfo()
+            self.updateCfyCntWithIniFileSyned(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX, ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX, ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT, ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT);
+            #self.updateCtrlCntInfo()
             return index, fileNbr;
         else:
             return -2, -2;

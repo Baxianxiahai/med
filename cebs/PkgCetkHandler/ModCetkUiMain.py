@@ -105,7 +105,7 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
 
     def func_ui_click_clf_start_nor(self):
         print("I am func_ui_click_clf_start_nor!")
-        self.msg_send(TUP_MSGID_CTRL_SCHD_CFYFLU_START, TUP_TASK_ID_CTRL_SCHD, "")
+        self.msg_send(TUP_MSGID_CTRL_SCHD_CFYPIC_START, TUP_TASK_ID_CTRL_SCHD, "")
 
     def func_ui_click_clf_start_flu(self):
         print("I am func_ui_click_clf_start_flu!")        

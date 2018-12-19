@@ -110,14 +110,12 @@ class tupTaskUiCalib(tupTaskTemplate, clsL1_ConfigOpr):
     def func_ui_click_right_up_set(self):
         print("I am func_ui_click_right_up_set!")
         mbuf={}
-        mbuf['dir'] = dir
         self.msg_send(TUP_MSGID_CALIB_RIGHT_UP_SET, TUP_TASK_ID_CALIB, mbuf)
         return
 
     def func_ui_click_left_down_set(self):
         print("I am func_ui_click_left_down_set!")
         mbuf={}
-        mbuf['dir'] = dir
         self.msg_send(TUP_MSGID_CALIB_LEFT_DOWN_SET, TUP_TASK_ID_CALIB, mbuf)
         return
 

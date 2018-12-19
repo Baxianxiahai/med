@@ -142,7 +142,9 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_move_back_zero_rcv_handler(self, msgContent):
         self.funcCtrlSchdLogTrace("L3SCHD: Start to move zero!")
         self.fsm_set(self._STM_ZERO_EXEC)
-        self.msg_send(TUP_MSGID_CTRS_MOTO_ZERO_REQ, TUP_TASK_ID_MOTO, "")
+        mbuf={}
+        mbuf['maxTry'] = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
+        self.msg_send(TUP_MSGID_CTRS_MOTO_ZERO_REQ, TUP_TASK_ID_MOTO, mbuf)
         return TUP_SUCCESS;
 
     def fsm_msg_moto_zero_resp_rcv_handler(self, msgContent):
@@ -199,8 +201,8 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             self.msg_send(TUP_MSGID_CTRS_PIC_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
             mbuf['holeNbr'] = self.picSeqCnt
+            mbuf['maxTry'] = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
             self.msg_send(TUP_MSGID_CTRS_MOTO_MV_HN_REQ, TUP_TASK_ID_MOTO, mbuf)
-        
         
         return TUP_SUCCESS;
     
@@ -276,6 +278,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             self.msg_send(TUP_MSGID_CTRS_PIC_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
             mbuf['holeNbr'] = self.picSeqCnt
+            mbuf['maxTry'] = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
             self.msg_send(TUP_MSGID_CTRS_MOTO_MV_HN_REQ, TUP_TASK_ID_MOTO, mbuf)
         return TUP_SUCCESS;
 
@@ -303,7 +306,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         
         #移动到合适孔位，然后拍摄
         mbuf={}
-        if (GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == False):
+        if (GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == True):
             mbuf['fnPic'] = fnPic
             mbuf['fnScale'] = fnScale
             mbuf['fnVideo'] = fnVideo
@@ -313,6 +316,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             self.msg_send(TUP_MSGID_CTRS_FLU_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
             mbuf['holeNbr'] = self.picSeqCnt
+            mbuf['maxTry'] = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
             self.msg_send(TUP_MSGID_CTRS_MOTO_MV_HN_REQ, TUP_TASK_ID_MOTO, mbuf)
         return TUP_SUCCESS;
 
@@ -346,7 +350,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         
         #继续干活
         mbuf={}
-        if (GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == False):
+        if (GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == True):
             mbuf['fnPic'] = fnPic
             mbuf['fnScale'] = fnScale
             mbuf['fnVideo'] = fnVideo
@@ -356,6 +360,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             self.msg_send(TUP_MSGID_CTRS_FLU_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
             mbuf['holeNbr'] = self.picSeqCnt
+            mbuf['maxTry'] = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
             self.msg_send(TUP_MSGID_CTRS_MOTO_MV_HN_REQ, TUP_TASK_ID_MOTO, mbuf)
         return TUP_SUCCESS;
 
@@ -389,6 +394,12 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.funcCtrlSchdLogTrace("L3CTRLSCHD: Start to classify normal picture!")
         self.fsm_set(self._STM_PIC_CFY_EXEC)
         
+        #判定是否结束
+        if (GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT<=0):
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture classification accomplished.")
+            self.fsm_set(self._STM_ACTIVE)
+            return TUP_SUCCESS;
+        
         #读取当前需要做图像识别的批次号
         batch, fileNbr = self.findNormalUnclasFileBatchAndNbr();
         mbuf={}
@@ -396,9 +407,9 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.cfyFileNbr = fileNbr;
         if (batch < 0):
             self.updateBatCntWithIniFileSyned(False, GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT*(-1), 0)
-            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification not found: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
-            self.fsm_set(self._STM_ACTIVE)
-            return TUP_FAILURE;
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture classification not found: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+#             self.fsm_set(self._STM_ACTIVE)
+#             return TUP_FAILURE;
         
         #CREATE FILE NAME
         fileName = self.getStoredFileName(batch, fileNbr);
@@ -424,12 +435,15 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         res = msgContent['res']
         if (res < 0):
             self.funcCtrlSchdErrTrace("L3CTRLSCHD: Normal picture classification failure, remaining NUMBRES=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
-            self.fsm_set(self._STM_ACTIVE)
-            return TUP_FAILURE;
+
+        #不成功则继续搜索下一个文件，而不能直接结束
+#             self.fsm_set(self._STM_ACTIVE)
+#             return TUP_FAILURE;
 
         #更新成功完成后的文件信息
         self.updateBatCntWithIniFileSyned(False, -1, 0)
-        self.updateUnclasFileAsClassified(self.cfyBat, self.cfyFileNbr, GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT, GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT);
+        self.updateCfyCntWithIniFileSyned(self.cfyBat, self.cfyFileNbr, GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT, GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT);
+        self.updateUnclasFileAsClassified(self.cfyBat, self.cfyFileNbr)
         self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture classification finished, remaining NUMBRES=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
 
         #选在下一次需要后续处理的新文件号
@@ -439,7 +453,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.cfyFileNbr = fileNbr;        
         if (batch < 0):
             self.updateBatCntWithIniFileSyned(False, GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT*(-1), 0)
-            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification not found: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture classification not found: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
             self.fsm_set(self._STM_ACTIVE)
             return TUP_SUCCESS;
         
@@ -448,7 +462,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
         if (fileName == None) or (fileNukeName == None):
             self.updateBatCntWithIniFileSyned(False, GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT*(-1), 0)
-            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification finished: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture classification finished: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
             self.fsm_set(self._STM_ACTIVE)
             return TUP_SUCCESS;
         
@@ -476,6 +490,12 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.funcCtrlSchdLogTrace("L3CTRLSCHD: Start to classify flu picture!")
         self.fsm_set(self._STM_FLU_CFY_EXEC)
 
+        #判定是否结束
+        if (GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT<=0):
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Flu picture classification accomplished.")
+            self.fsm_set(self._STM_ACTIVE)
+            return TUP_SUCCESS;
+
         #读取当前需要做图像识别的批次号
         batch, fileNbr = self.findFluUnclasFileBatchAndNbr();
         mbuf={}
@@ -483,7 +503,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.cfyFileNbr = fileNbr;        
         if (batch < 0):
             self.updateBatCntWithIniFileSyned(False, 0, GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT*(-1))
-            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification not found: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Flu picture classification not found: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
             self.fsm_set(self._STM_ACTIVE)
             return TUP_FAILURE;
         
@@ -492,12 +512,12 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
         if (fileName == None) or (fileNukeName == None):
             self.updateBatCntWithIniFileSyned(False, 0, GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT*(-1))
-            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification finished: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Flu picture classification finished: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
             self.fsm_set(self._STM_ACTIVE)
             return TUP_FAILURE;
 
         #REAL PROCESSING PROCEDURE
-        self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
+        self.funcCtrlSchdLogTrace("L3CTRLSCHD: Flu picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
         #发送给VISION任务模块
         mbuf['fileName'] = fileName
         mbuf['fileNukeName'] = fileNukeName
@@ -510,14 +530,15 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_classify_flu_accomplish_rcv_handler(self, msgContent):
         res = msgContent['res']
         if (res < 0):
-            self.funcCtrlSchdErrTrace("L3CTRLSCHD: Normal picture classification failure, remaining NUMBRES=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.funcCtrlSchdErrTrace("L3CTRLSCHD: Flu picture classification failure, remaining NUMBRES=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
             self.fsm_set(self._STM_ACTIVE)
             return TUP_FAILURE;
 
         #更新成功完成后的文件信息
         self.updateBatCntWithIniFileSyned(False, 0, -1)
-        self.updateUnclasFileAsClassified(self.cfyBat, self.cfyFileNbr, GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT, GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT);
-        self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture classification finished, remaining NUMBRES=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+        self.updateCfyCntWithIniFileSyned(self.cfyBat, self.cfyFileNbr, GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT, GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT);
+        self.updateUnclasFileAsClassified(self.cfyBat, self.cfyFileNbr)
+        self.funcCtrlSchdLogTrace("L3CTRLSCHD: Flu picture classification finished, remaining NUMBRES=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
 
         #选在下一次需要后续处理的新文件号
         batch, fileNbr = self.findFluUnclasFileBatchAndNbr();
@@ -526,7 +547,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.cfyFileNbr = fileNbr;        
         if (batch < 0):
             self.updateBatCntWithIniFileSyned(False, 0, GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT*(-1))
-            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification not found: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Flu picture classification not found: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
             self.fsm_set(self._STM_ACTIVE)
             return TUP_SUCCESS;
         
@@ -535,12 +556,12 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
         if (fileName == None) or (fileNukeName == None):
             self.updateBatCntWithIniFileSyned(False, 0, GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT*(-1))
-            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification finished: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+            self.funcCtrlSchdLogTrace("L3CTRLSCHD: Flu picture classification finished: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
             self.fsm_set(self._STM_ACTIVE)
             return TUP_SUCCESS;
 
         #REAL PROCESSING PROCEDURE
-        self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
+        self.funcCtrlSchdLogTrace("L3CTRLSCHD: Flu picture batch/FileNbr=%d/%d, FileName=%s." %(batch, fileNbr, fileName))
         #发送给VISION任务模块
         mbuf['fileName'] = fileName
         mbuf['fileNukeName'] = fileNukeName

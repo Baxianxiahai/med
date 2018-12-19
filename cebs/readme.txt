@@ -9,6 +9,15 @@
 
 
 
+//=ZJL, 2018/12/19, CURRENT_SW_DELIVERY R1.43 =>CEBS
+= 小罗完善图像延迟帧的问题
+= 查阅为啥拍照中，荧光和普通图像的处理过程不一样
+= 改进了maxTry的参数控制区域
+= 改进pilot的状态机控制，这样可以随时停止巡游
+= 解决了控制FLU/PIC的定点拍照bug
+= 解决了识别文件的bug
+
+
 //=ZJL, 2018/12/18, CURRENT_SW_DELIVERY R1.42 =>CEBS
 = 去掉CAMER-NBR的人工选择，由VISION模块自动探测
 = 修正CAPTURE_ENABLE的控制参数bug
@@ -18,7 +27,6 @@
 = 启动后定时拍照触发+自动识别
 = 定时周期拍照触发+自动识别
 = 将识别图片后的叠加文字，改为CTRL-SCHD模块操控
-
 
 //=ZJL, 2018/12/17, CURRENT_SW_DELIVERY R1.41 =>CEBS
 = 完善ini文件中对于控制SECTION的处理

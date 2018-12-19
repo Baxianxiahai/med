@@ -87,8 +87,6 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         if (self.funcInitSps() < 0):
             self.funcMotoErrTrace("Init sps port error!")
             return TUP_FAILURE;
-#         else:
-#             self.fsm_set(self._STM_ACTIVE)
         self.funcBatInitPar();
         return TUP_SUCCESS;
 
@@ -155,7 +153,8 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     #主界面模式下的归零
     def fsm_msg_main_back_zero_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_MAIN_UI_EXEC)
-        res = self.funcMotoBackZero()
+        maxTry = msgContent['maxTry']
+        res = self.funcMotoBackZero(maxTry)
         self.fsm_set(self._STM_MAIN_UI_ACT)
         mbuf = {}
         mbuf['res'] = res
@@ -166,7 +165,8 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_ctrs_moto_mv_hn_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_MAIN_UI_EXEC)
         holeNbr = int(msgContent['holeNbr'])
-        res = self.funcMotoMove2HoleNbr(holeNbr)
+        maxTry = msgContent['maxTry']
+        res = self.funcMotoMove2HoleNbr(holeNbr, maxTry)
         self.fsm_set(self._STM_MAIN_UI_ACT)
         mbuf={}
         if (res < 0):
@@ -185,7 +185,8 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     #校准模式下的移动到第一个孔
     def fsm_msg_calib_move_start_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_CALIB_UI_EXEC)
-        res, string = self.funcMotoMove2Start()
+        maxTry = msgContent['maxTry']
+        res, string = self.funcMotoMove2Start(maxTry)
         self.fsm_set(self._STM_CALIB_UI_ACT)
         if (res < 0):
             self.funcMotoErrTrace("L2MOTO: Moving to start point error!")
@@ -198,7 +199,8 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_calib_move_holen_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_CALIB_UI_EXEC)
         holeNbr = int(msgContent['holeNbr'])
-        res = self.funcMotoMove2HoleNbr(holeNbr)
+        maxTry = msgContent['maxTry']
+        res = self.funcMotoMove2HoleNbr(holeNbr, maxTry)
         self.fsm_set(self._STM_CALIB_UI_ACT)
         if (res < 0):
             outputStr = "L2MOTO: Move to Hole#%d point error!" % (holeNbr)
@@ -214,7 +216,8 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         self.fsm_set(self._STM_CALIB_UI_EXEC)
         scale = int(msgContent['scale'])
         dir = msgContent['dir']
-        self.funcMotoMoveOneStep(scale, dir)
+        maxTry = msgContent['maxTry']
+        self.funcMotoMoveOneStep(scale, dir, maxTry)
         self.fsm_set(self._STM_CALIB_UI_ACT)
         self.msg_send(TUP_MSGID_CALIB_MOMV_DIR_RESP, TUP_TASK_ID_CALIB, msgContent)
         return TUP_SUCCESS;
@@ -223,7 +226,8 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_calib_moto_force_move_req_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_CALIB_UI_EXEC)
         dir = msgContent['dir']
-        self.funcMotoForceMoveOneStep(dir)
+        maxTry = msgContent['maxTry']
+        self.funcMotoForceMoveOneStep(dir, maxTry)
         self.fsm_set(self._STM_CALIB_UI_ACT)
         self.msg_send(TUP_MSGID_CALIB_MOFM_DIR_RESP, TUP_TASK_ID_CALIB, msgContent)
         return TUP_SUCCESS;
@@ -250,7 +254,8 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf={}
         self.fsm_set(self._STM_CALIB_UI_EXEC)
         holeNbr = int(msgContent['holeNbr'])
-        res = self.funcMotoMove2HoleNbr(holeNbr)
+        maxTry = msgContent['maxTry']
+        res = self.funcMotoMove2HoleNbr(holeNbr, maxTry)
         self.fsm_set(self._STM_CALIB_UI_ACT)
         if (res < 0):
             outputStr = "L2MOTO: Move to Hole#%d point error!" % (holeNbr)
@@ -274,12 +279,12 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     '''
     SERVICE PART: 业务部分的函数，功能处理函数
     '''
-    def funcMotoBackZero(self):
+    def funcMotoBackZero(self, maxTry):
         self.funcMotoLogTrace("L2MOTO: Running Zero Position!")
-        return self.funcExecMoveZero()
+        return self.funcExecMoveZero(maxTry)
         
     #Normal moving with limitation    
-    def funcMotoMoveOneStep(self, scale, dir):
+    def funcMotoMoveOneStep(self, scale, dir, maxTry):
         #10um
         if (scale == 1):
             actualScale = 10;
@@ -373,14 +378,14 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         else:
             pass
         self.funcMotoLogTrace("L2MOTO: Moving one step! Scale=%d, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (scale, dir, Old_Px, Old_Py, GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]));
-        if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]) > 0):
+        if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1], maxTry) > 0):
             return 1;
         else:
             self.funcMotoErrTrace("L2MOTO: funcMotoMoveOneStep error!")
             return -2;
 
     #Force Moving function, with scale = 1cm=10mm=10000um
-    def funcMotoForceMoveOneStep(self, dir):
+    def funcMotoForceMoveOneStep(self, dir, maxTry):
         actualScale = 10000;
         Old_Px = GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] #X-Axis
         Old_Py = GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] #Y-Axis
@@ -406,21 +411,22 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         else:
             pass
         self.funcMotoLogTrace("L2MOTO: Moving one step! Scale=1cm, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (dir, Old_Px, Old_Py, GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]));
-        if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]) > 0):
+        if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1], maxTry) > 0):
             return 1;
         else:
             self.funcMotoErrTrace("L2MOTO: funcMotoForceMoveOneStep error!")
             return -2;
     
     #运动到起点
-    def funcMotoMove2Start(self):
+    def funcMotoMove2Start(self, maxTry):
         self.funcMotoLogTrace("L2MOTO: Move to start position - Left/up!")
         xWidth = GLPLT_PAR_OFC.HB_POS_IN_UM[0] - GLPLT_PAR_OFC.HB_POS_IN_UM[2];
         yHeight = GLPLT_PAR_OFC.HB_POS_IN_UM[1] - GLPLT_PAR_OFC.HB_POS_IN_UM[3];
         if (xWidth <= 0 or yHeight <= 0):
-            self.tup_dbg_printstr(("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight)))
-            return -1, ("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight));
-        res = self.funcMotoMove2HoleNbr(1)
+            string = str("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight))
+            self.tup_dbg_print(string)
+            return -1, str("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight));
+        res = self.funcMotoMove2HoleNbr(1, maxTry)
         self.tup_dbg_print(str("L2MOTO: Feedback get from funcMotoMove2HoleNbr = ", res))
         if (res > 0):
             return res, "L2MOTO: Success!"
@@ -434,7 +440,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     LEFT-BOTTOM for X1/Y1 save in [0/1], RIGHT-UP for X2/Y2 save in [2/3]
     '''    
     '这个移动算法跟显微镜的放置方式息息相关'
-    def funcMotoMove2HoleNbr(self, holeIndex):
+    def funcMotoMove2HoleNbr(self, holeIndex, maxTry):
         if (holeIndex == 0):
             xTargetHoleNbr = 0;
             yTargetHoleNbr = 0;
@@ -446,7 +452,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
             newPosX = int(GLPLT_PAR_OFC.HB_POS_IN_UM[0] + (xTargetHoleNbr-1)*GLPLT_PAR_OFC.HB_WIDTH_X_SCALE);
             newPosY = int(GLPLT_PAR_OFC.HB_POS_IN_UM[3] - (yTargetHoleNbr-1)*GLPLT_PAR_OFC.HB_HEIGHT_Y_SCALE);
         self.tup_dbg_print(str("L2MOTO: Moving to working hole=%d, newPosX/Y=%d/%d." % (holeIndex, newPosX, newPosY)))
-        if (self.funcMotoMove2AxisPos(GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1], newPosX, newPosY) > 0):
+        if (self.funcMotoMove2AxisPos(GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1], newPosX, newPosY, maxTry) > 0):
             GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] = newPosX;
             GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] = newPosY;
             self.tup_dbg_print("L2MOTO: Finished once!")
@@ -456,9 +462,9 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
             self.medErrorLog("L2MOTO: Error get feedback from funcMotoMove2AxisPos")
             return -2;
 
-    def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy):
+    def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy, maxTry):
         self.tup_dbg_print(str("L2MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy)))
-        return self.funcExecMoveDistance((newPx-curPx)*GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM, (newPy-curPy)*GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM);
+        return self.funcExecMoveDistance((newPx-curPx)*GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM, (newPy-curPy)*GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM, maxTry);
     
     
     '''
@@ -549,7 +555,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
                 while index < (GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
                     outBuf += str("%02X " % (byteDataBuf[index]))
                     index+=1
-                self.funcMotoLogTrace("L2MOTO: SND CMD = " + outBuf)
+                #self.funcMotoLogTrace("L2MOTO: SND CMD = " + outBuf)
                 res, Buf = self.funcCmdSend(byteDataBuf)
             return 1    
         else:
@@ -566,7 +572,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
                 outBuf += str("%02X " % (byteDataBuf[index]))
                 index+=1
             
-            self.funcMotoLogTrace("L2MOTO: SND CMD = " + outBuf)
+            #self.funcMotoLogTrace("L2MOTO: SND CMD = " + outBuf)
             res, Buf = self.funcCmdSend(byteDataBuf)
             if (res > 0):
                 return Buf
@@ -644,10 +650,10 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         return 1;
         
     #连续带监控的命令执行
-    def funcExecMoveZero(self):
+    def funcExecMoveZero(self, maxTry):
         self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_MV_ZERO_CMID, (-1)*GLSPS_PAR_OFC.MOTOR_ZERO_SPD, (-1)*GLSPS_PAR_OFC.MOTOR_ZERO_SPD, 0, 0)
         #退出当前状态机
-        cnt = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
+        cnt = maxTry
         while (1):
             if (self.funcInqueryRunningStatus() == True):
                 return 1
@@ -659,12 +665,12 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
                 return -1;
 
     #连续带监控的命令执行：速度模式
-    def funcExecMoveSpeed(self, par1, par2):
+    def funcExecMoveSpeed(self, par1, par2, maxTry):
         #定标10
         input1 = int(par1)
         input2 = int(par2)
         self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_MV_SPD_CMID, input1, input2, 0, 0)
-        cnt = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
+        cnt = maxTry
         while (1):
             if (self.funcInqueryRunningStatus() == True):
                 return 1
@@ -676,12 +682,12 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
                 return -1;
 
     #连续带监控的命令执行：距离模式
-    def funcExecMoveDistance(self, par1, par2):
+    def funcExecMoveDistance(self, par1, par2, maxTry):
         #定标NF0
         input1 = int(par1)
         input2 = int(par2)
         self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_MV_PULS_CMID, input1, input2, 0, 0)
-        cnt = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
+        cnt = maxTry
         while (1):
             if (self.funcInqueryRunningStatus() == True):
                 return 1
