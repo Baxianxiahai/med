@@ -81,8 +81,11 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
     #主界面承接过来的执行函数   
     def func_ui_click_pic_train(self, fileName):
         print("I am func_ui_click_pic_train!")
+        #LC:before click train you need to send message to refresh train pars
         mbuf={}
-        mbuf['fileName'] = fileName
+        self.msg_send(TUP_MSGID_GPAR_REFRESH_PAR, TUP_TASK_ID_VISION, mbuf) 
+        mbuf={}
+        mbuf['fileName'] = fileName 
         self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_REQ, TUP_TASK_ID_GPAR, mbuf)
     
     def func_ui_click_gpar_refresh_par(self):

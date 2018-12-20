@@ -270,7 +270,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['res'] = -1
             self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_RESP, TUP_TASK_ID_GPAR, mbuf)
             return TUP_SUCCESS;
-        self.func_vision_worm_clasification(picFile, 'tempPic.jpg', True, False)
+        self.func_vision_worm_clasification(picFile, 'tempPic.jpg', True, True)
         if (os.path.exists('tempPic.jpg') == False):
             mbuf['res'] = -2
             self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_RESP, TUP_TASK_ID_GPAR, mbuf)
@@ -564,10 +564,10 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     CLASSFICATION: 分类
     '''
     def funcVisRefreshPar(self):
-        self.HST_VISION_WORM_CLASSIFY_base = GLVIS_PAR_OFC.SMALL_LOW_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_small2mid = GLVIS_PAR_OFC.SMALL_MID_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_mid2big = GLVIS_PAR_OFC.MID_BIG_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_big2top = GLVIS_PAR_OFC.BIG_UPPER_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_base = ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_small2mid = ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_mid2big = ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT;
+        self.HST_VISION_WORM_CLASSIFY_big2top = ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT;
     
     def func_vision_worm_binvalue_proc(self, img):
         new = np.zeros(img.shape, np.uint8)    
