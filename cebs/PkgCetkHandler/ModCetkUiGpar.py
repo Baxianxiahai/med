@@ -103,6 +103,9 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
         print("I am func_ui_click_gpar_switch_to_main!")
         self.fsm_set(self._STM_DEACT)           
         
+    #荧光细胞计数        
+    def func_ui_click_gpar_flu_cell_cnt(self):
+        print("I am func_ui_click_gpar_flu_cell_cnt!")
         
         
         

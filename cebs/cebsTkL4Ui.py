@@ -792,6 +792,10 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
         img = QtGui.QPixmap(fileName)
         img=img.scaled(self.rectCfy.width(), self.rectCfy.height())
         self.label_gpar_pic_cfy_fill.setPixmap(img)
+
+
+    def slot_gpar_flu_cell_cnt(self):
+        self.TkGparUi.func_ui_click_gpar_flu_cell_cnt();
         
     #
     #  SERVICE FUNCTION PART, 业务函数部分
