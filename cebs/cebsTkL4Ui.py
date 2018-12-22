@@ -784,7 +784,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
         #Firstly read parameter into classified variable sets, to let Train Func use.
         self.funcReadVisParToCfySets();    #获取SAV
         #在训练之前，需要将系统参数保存在临时变量中，借助于全局变量的传递，进行算法训练。一旦完成，还要再回写。
-        savetmp = ModCebsCom.GLVIS_PAR_SAV   #将SAV值传给临时变量
+        savetmp = ModCebsCom.GLVIS_PAR_OFC   #将SAV值传给临时变量
         ModCebsCom.GLVIS_PAR_OFC = ModCebsCom.GLVIS_PAR_SAV   #将SAV值传给OFC
         self.TkGparUi.func_ui_click_pic_train(self.picOrgFile)
         ModCebsCom.GLVIS_PAR_OFC = savetmp                  #SAV给OFC
@@ -801,9 +801,11 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
         #Firstly read parameter into classified variable sets, to let Train Func use.
         self.funcReadVisParToCfySets();    #获取SAV
         #在训练之前，需要将系统参数保存在临时变量中，借助于全局变量的传递，进行算法训练。一旦完成，还要再回写。
-        savetmp = ModCebsCom.GLVIS_PAR_SAV   #将SAV值传给临时变量
+        savetmp = ModCebsCom.GLVIS_PAR_OFC   #将SAV值传给临时变量
         ModCebsCom.GLVIS_PAR_OFC = ModCebsCom.GLVIS_PAR_SAV   #将SAV值传给OFC
-        self.TkGparUi.func_ui_click_gpar_flu_cell_cnt(self.picOrgFile);
+        self.TkGparUi.func_ui_click_gpar_flu_cell_cnt(self.picOrgFile, ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT, \
+            ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT, ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT, ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT, \
+            ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR1, ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR2, ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR3, ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR4);
         ModCebsCom.GLVIS_PAR_OFC = savetmp                  #SAV给OFC
         
     #
