@@ -30,6 +30,7 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
         
         #业务处理函数
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GPAR_PIC_TRAIN_RESP, self.fsm_msg_pic_train_resp_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GPAR_PIC_FCC_RESP, self.fsm_msg_pic_flu_cell_count_resp_rcv_handler)
         
         #START TASK
         self.fsm_set(TUP_STM_INIT)
@@ -49,10 +50,20 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_pic_train_resp_rcv_handler(self, msgContent):
         if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Train picture failure!");
+            self.funcDebugPrint2Qt("Open train picture failure!");
         else:
             self.fatherUiObj.gpar_callback_train_resp(msgContent['fileName'])
         return TUP_SUCCESS;
+
+    def fsm_msg_pic_flu_cell_count_resp_rcv_handler(self, msgContent):
+        if (msgContent['res'] < 0):
+            self.funcDebugPrint2Qt("Open Flu Cell Count picture failure!");
+        else:
+            pass
+            #self.fatherUiObj.gpar_callback_train_resp(msgContent['fileName'])
+        return TUP_SUCCESS;
+
+
 
     #界面切换进来
     def fsm_msg_ui_focus_rcv_handler(self, msgContent):
@@ -91,6 +102,14 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
     def func_ui_click_gpar_refresh_par(self):
         print("I am func_ui_click_gpar_refresh_par!")
         mbuf={}
+        mbuf['baseLimit'] = GLVIS_PAR_OFC.SMALL_LOW_LIMIT 
+        mbuf['small2Mid'] = GLVIS_PAR_OFC.SMALL_MID_LIMIT 
+        mbuf['mid2Big'] = GLVIS_PAR_OFC.MID_BIG_LIMIT 
+        mbuf['bigLimit'] = GLVIS_PAR_OFC.BIG_UPPER_LIMIT
+        mbuf['genrPar1'] = GLVIS_PAR_OFC.CFY_THD_GENR_PAR1
+        mbuf['genrPar2'] = GLVIS_PAR_OFC.CFY_THD_GENR_PAR2
+        mbuf['genrPar3'] = GLVIS_PAR_OFC.CFY_THD_GENR_PAR3
+        mbuf['genrPar4'] = GLVIS_PAR_OFC.CFY_THD_GENR_PAR4
         self.msg_send(TUP_MSGID_GPAR_REFRESH_PAR, TUP_TASK_ID_VISION, mbuf)        
     
     #清理各项操作
@@ -104,8 +123,13 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
         self.fsm_set(self._STM_DEACT)           
         
     #荧光细胞计数        
-    def func_ui_click_gpar_flu_cell_cnt(self):
+    def func_ui_click_gpar_flu_cell_cnt(self, fileName):
         print("I am func_ui_click_gpar_flu_cell_cnt!")
+        mbuf={}
+        self.msg_send(TUP_MSGID_GPAR_REFRESH_PAR, TUP_TASK_ID_VISION, mbuf) 
+        mbuf={}
+        mbuf['fileName'] = fileName 
+        self.msg_send(TUP_MSGID_GPAR_PIC_FCC_REQ, TUP_TASK_ID_GPAR, mbuf)
         
         
         

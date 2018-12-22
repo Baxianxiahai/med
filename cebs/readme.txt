@@ -18,6 +18,9 @@
 
 //=ZJL, 2018/12/21, CURRENT_SW_DELIVERY R1.44 =>CEBS
 = 增加荧光体内细胞计数的程序框架
+= 打通荧光识别的消息体系
+= 将GPAR中4个通用参数纳入到代码体系中
+= 准备完善算法过程
 
 
 //=ZJL, 2018/12/19, CURRENT_SW_DELIVERY R1.43 =>CEBS

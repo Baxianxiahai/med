@@ -247,7 +247,7 @@
    </widget>
    <widget class="QLineEdit" name="lineEdit_gpar_vision_coef1">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -271,12 +271,12 @@
      </rect>
     </property>
     <property name="text">
-     <string>中值滤波1</string>
+     <string>通用参数1</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_gpar_vision_coef2">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -300,7 +300,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>二值滤波2</string>
+     <string>通用参数2</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_gpar_vision_c3">
@@ -313,12 +313,12 @@
      </rect>
     </property>
     <property name="text">
-     <string>腐蚀系数</string>
+     <string>通用参数3</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_gpar_vision_coef3">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -334,7 +334,7 @@
    </widget>
    <widget class="QLineEdit" name="lineEdit_gpar_vision_coef4">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -358,7 +358,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>去噪系数</string>
+     <string>通用参数4</string>
     </property>
    </widget>
   </widget>

@@ -374,11 +374,11 @@ class clsL0_MedComPicPar():
     CAPTURE_DUR_IN_SEC = 3;
     #SCALE ENABLE SET
     PIC_SCALE_ENABLE_FLAG = False;
-    #图像识别中所用到的部分参数：将根据算法演进，待完善
-    CFY_THD_PAR1 = 1
-    CFY_THD_PAR2 = 2
-    CFY_THD_PAR3 = 3
-    CFY_THD_PAR4 = 4
+    #图像识别中所用到的部分参数：将根据算法演进
+    CFY_THD_GENR_PAR1 = 0
+    CFY_THD_GENR_PAR2 = 0
+    CFY_THD_GENR_PAR3 = 0
+    CFY_THD_GENR_PAR4 = 0
     
     #临时参量部分
     '''
@@ -416,6 +416,18 @@ class clsL0_MedComPicPar():
 
     def saveCapDur(self, par):
         self.CAPTURE_DUR_IN_SEC = par
+                
+    def saveGenrPar1(self, par):
+        self.CFY_THD_GENR_PAR1 = par
+
+    def saveGenrPar2(self, par):
+        self.CFY_THD_GENR_PAR2 = par
+
+    def saveGenrPar3(self, par):
+        self.CFY_THD_GENR_PAR3 = par
+
+    def saveGenrPar4(self, par):
+        self.CFY_THD_GENR_PAR4 = par
                 
 #定义全局变量以及操作函数
 GLVIS_PAR_OFC = clsL0_MedComPicPar()

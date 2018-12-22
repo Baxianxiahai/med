@@ -71,6 +71,10 @@ class clsL1_ConfigOpr():
             self.CReader.set("Env","vision res addup set", str(ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET))
             self.CReader.set("Env","video capture enable set", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE))
             self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC))
+            self.CReader.set("Env","classification general par1", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR1))
+            self.CReader.set("Env","classification general par2", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR2))
+            self.CReader.set("Env","classification general par3", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR3))
+            self.CReader.set("Env","classification general par4", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR4))
         if (flagExist == False) or (flagCounter == False):
             self.CReader.add_section("Counter")
             self.CReader.set("Counter","PicBatchCnt", "0")
@@ -137,6 +141,24 @@ class clsL1_ConfigOpr():
         else:
             ModCebsCom.GLVIS_PAR_OFC.saveCapEnable(False)
         ModCebsCom.GLVIS_PAR_OFC.saveCapDur(int(self.CReader['Env']['video capture dur in sec']))
+        #通用参数部分
+        try:
+            ModCebsCom.GLVIS_PAR_OFC.saveGenrPar1(int(self.CReader['Env']['classification general par1']));
+        except Exception:
+            ModCebsCom.GLVIS_PAR_OFC.saveGenrPar1(1)
+        try:
+            ModCebsCom.GLVIS_PAR_OFC.saveGenrPar2(int(self.CReader['Env']['classification general par2']));
+        except Exception:
+            ModCebsCom.GLVIS_PAR_OFC.saveGenrPar2(1)
+        try:
+            ModCebsCom.GLVIS_PAR_OFC.saveGenrPar3(int(self.CReader['Env']['classification general par3']));
+        except Exception:
+            ModCebsCom.GLVIS_PAR_OFC.saveGenrPar3(1)
+        try:
+            ModCebsCom.GLVIS_PAR_OFC.saveGenrPar4(int(self.CReader['Env']['classification general par4']));
+        except Exception:
+            ModCebsCom.GLVIS_PAR_OFC.saveGenrPar4(1)
+        
         #In case of store error, re-caculate remaining unclas-pictures
         #为了防止统计错误，重新根据
         res = self.recheckRemaingUnclasBatchFile(ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL)
@@ -198,6 +220,10 @@ class clsL1_ConfigOpr():
             self.CReader.set("Env","vision res addup set", str(ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET))
             self.CReader.set("Env","video capture enable set", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE))
             self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC))
+            self.CReader.set("Env","classification general par1", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR1))
+            self.CReader.set("Env","classification general par2", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR2))
+            self.CReader.set("Env","classification general par3", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR3))
+            self.CReader.set("Env","classification general par4", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR4))
         else:
             self.CReader.remove_section("Env")
             self.CReader.add_section("Env")        
@@ -220,6 +246,10 @@ class clsL1_ConfigOpr():
             self.CReader.set("Env","vision res addup set", str(ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET))
             self.CReader.set("Env","video capture enable set", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE))
             self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC))
+            self.CReader.set("Env","classification general par1", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR1))
+            self.CReader.set("Env","classification general par2", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR2))
+            self.CReader.set("Env","classification general par3", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR3))
+            self.CReader.set("Env","classification general par4", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR4))
         #回写                    
         fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
         self.CReader.write(fd)

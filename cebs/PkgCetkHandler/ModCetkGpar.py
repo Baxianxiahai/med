@@ -18,6 +18,7 @@ from PyQt5 import QtGui
 class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_ACTIVE = 3
     _STM_TRAINING = 4
+    _STM_FCC = 5
     
     #模块中的局部变量
     picDirFile = ''
@@ -48,11 +49,16 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         '''
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GPAR_PIC_TRAIN_REQ, self.fsm_msg_pic_train_req_rcv_handler)
         self.add_stm_combine(self._STM_TRAINING, TUP_MSGID_GPAR_PIC_TRAIN_RESP, self.fsm_msg_pic_train_resp_rcv_handler)
+
+        #FLU CELL COUNT
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GPAR_PIC_FCC_REQ, self.fsm_msg_pic_flu_cell_count_req_rcv_handler)
+        self.add_stm_combine(self._STM_FCC, TUP_MSGID_GPAR_PIC_FCC_RESP, self.fsm_msg_pic_flu_cell_count_resp_rcv_handler)
         
         #START TASK
         self.fsm_set(TUP_STM_INIT)
         self.task_run()
 
+        
 
     '''
     #
@@ -118,6 +124,18 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         self.funcGparLogTrace("Picture training accomplish!")
         self.tup_timer_stop(self.timerTrain)
         self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_RESP, TUP_TASK_ID_UI_GPAR, msgContent)
+        self.fsm_set(self._STM_ACTIVE)
+        return TUP_SUCCESS
+
+    def fsm_msg_pic_flu_cell_count_req_rcv_handler(self, msgContent):
+        self.funcGparLogTrace("Flu Cell counting starting!")
+        self.msg_send(TUP_MSGID_GPAR_PIC_FCC_REQ, TUP_TASK_ID_VISION, msgContent)
+        self.fsm_set(self._STM_FCC)
+        return TUP_SUCCESS
+
+    def fsm_msg_pic_flu_cell_count_resp_rcv_handler(self, msgContent):
+        self.funcGparLogTrace("Flu Cell counting accomplish!")
+        self.msg_send(TUP_MSGID_GPAR_PIC_FCC_RESP, TUP_TASK_ID_UI_GPAR, msgContent)
         self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS
     

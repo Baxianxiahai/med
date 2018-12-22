@@ -777,6 +777,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
             img=img.scaled(self.rectOrg.width(), self.rectOrg.height())
             self.label_gpar_pic_origin_fill.setPixmap(img)
 
+    #使用临时参数进行识别
     def slot_gpar_pic_train(self):
         if (self.picOrgFile == ''):
             return;
@@ -793,16 +794,28 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
         img=img.scaled(self.rectCfy.width(), self.rectCfy.height())
         self.label_gpar_pic_cfy_fill.setPixmap(img)
 
-
+    #使用临时参数进行识别
     def slot_gpar_flu_cell_cnt(self):
-        self.TkGparUi.func_ui_click_gpar_flu_cell_cnt();
+        if (self.picOrgFile == ''):
+            return;
+        #Firstly read parameter into classified variable sets, to let Train Func use.
+        self.funcReadVisParToCfySets();    #获取SAV
+        #在训练之前，需要将系统参数保存在临时变量中，借助于全局变量的传递，进行算法训练。一旦完成，还要再回写。
+        savetmp = ModCebsCom.GLVIS_PAR_SAV   #将SAV值传给临时变量
+        ModCebsCom.GLVIS_PAR_OFC = ModCebsCom.GLVIS_PAR_SAV   #将SAV值传给OFC
+        self.TkGparUi.func_ui_click_gpar_flu_cell_cnt(self.picOrgFile);
+        ModCebsCom.GLVIS_PAR_OFC = savetmp                  #SAV给OFC
         
     #
     #  SERVICE FUNCTION PART, 业务函数部分
     #
     #
     #Local function
-    def funcGlobalParReadSave(self):
+    #将界面上的参数读取到临时变量SAVE中
+    def funcGlobalParReadFromSaveVarAndSaveIni(self):
+        #先将SAVE变量中的参数从界面读取出来
+        self.funcReadVisParToCfySets();
+        #然后再将SAVE变量拷贝到OFC参数中
         ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET = self.checkBox_gpar_autoIdf.isChecked();
         ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET = self.checkBox_gpar_autoPic.isChecked();
         ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET = self.checkBox_gpar_picFixPos.isChecked();
@@ -822,12 +835,16 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
         radioGparHts24 = self.radioButton_gpar_bts_24.isChecked();
         radioGparHts12 = self.radioButton_gpar_bts_12.isChecked();
         radioGparHts6 = self.radioButton_gpar_bts_6.isChecked();
-        
+        #核心系数
         ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT = ModCebsCom.GLVIS_PAR_SAV.SMALL_LOW_LIMIT
         ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT = ModCebsCom.GLVIS_PAR_SAV.SMALL_MID_LIMIT
         ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT = ModCebsCom.GLVIS_PAR_SAV.MID_BIG_LIMIT
         ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT = ModCebsCom.GLVIS_PAR_SAV.BIG_UPPER_LIMIT
-         
+        ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR1 = ModCebsCom.GLVIS_PAR_SAV.CFY_THD_GENR_PAR1
+        ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR2 = ModCebsCom.GLVIS_PAR_SAV.CFY_THD_GENR_PAR2
+        ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR3 = ModCebsCom.GLVIS_PAR_SAV.CFY_THD_GENR_PAR3
+        ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR4 = ModCebsCom.GLVIS_PAR_SAV.CFY_THD_GENR_PAR4
+        #托盘型号
         option = 0;
         if (radioGparHts96 == 1): option = 96
         elif (radioGparHts48 == 1): option = 48
@@ -836,10 +853,12 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
         elif (radioGparHts6 == 1): option = 6
         else: option = 6
         ModCebsCom.GLPLT_PAR_OFC.med_select_plate_board_type(option)
-        #FINAL UPDATE         
+        #最后更新INI文件
+        #FINAL UPDATE
         self.updateStaticSectionEnvPar()
 
     #Using global parameter set to UI during launch
+    #读取到UI界面上
     def funcGlobalParReadSet2Ui(self):
         self.checkBox_gpar_picFixPos.setChecked(ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET)
         self.checkBox_gpar_autoIdf.setChecked(ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET)
@@ -864,7 +883,13 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
             self.radioButton_gpar_bts_6.setChecked(True)
         else:
             self.radioButton_gpar_bts_96.setChecked(True)
+        #通用系数部分
+        self.lineEdit_gpar_vision_coef1.setText(str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR1))
+        self.lineEdit_gpar_vision_coef2.setText(str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR2))
+        self.lineEdit_gpar_vision_coef3.setText(str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR3))
+        self.lineEdit_gpar_vision_coef4.setText(str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR4))
 
+    #设置到界面上
     def funcReadVisParToCfySets(self):
         try: 
             ModCebsCom.GLVIS_PAR_SAV.saveLowLimit(int(self.lineEdit_gpar_vision_small_low_limit.text()))
@@ -884,10 +909,26 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
             ModCebsCom.GLVIS_PAR_SAV.saveUpperLimit(2000)
         ModCebsCom.GLVIS_PAR_SAV.saveAddupSet(self.checkBox_gpar_vision_res_addup.isChecked())
         ModCebsCom.GLVIS_PAR_SAV.saveCapEnable(self.checkBox_gpar_video_enable.isChecked())
+
+        #通用系数部分
         try: 
-            ModCebsCom.GLVIS_PAR_SAV.saveCapDur(int(self.lineEdit_gpar_video_input.text()))
+            ModCebsCom.GLVIS_PAR_SAV.saveGenrPar1(int(self.lineEdit_gpar_vision_coef1.text()))
         except Exception: 
-            ModCebsCom.GLVIS_PAR_SAV.saveCapDur(3)    
+            ModCebsCom.GLVIS_PAR_SAV.saveGenrPar1(1)
+        try: 
+            ModCebsCom.GLVIS_PAR_SAV.saveGenrPar2(int(self.lineEdit_gpar_vision_coef2.text()))
+        except Exception: 
+            ModCebsCom.GLVIS_PAR_SAV.saveGenrPar2(1)
+        try: 
+            ModCebsCom.GLVIS_PAR_SAV.saveGenrPar3(int(self.lineEdit_gpar_vision_coef3.text()))
+        except Exception: 
+            ModCebsCom.GLVIS_PAR_SAV.saveGenrPar3(1)
+        try: 
+            ModCebsCom.GLVIS_PAR_SAV.saveGenrPar4(int(self.lineEdit_gpar_vision_coef4.text()))
+        except Exception: 
+            ModCebsCom.GLVIS_PAR_SAV.saveGenrPar4(1)
+
+
 
     #
     #  SLOT FUNCTION, 槽函数部分
@@ -896,7 +937,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, ModCebsCfg.clsL1_Conf
     #
     #    
     def slot_gpar_compl(self):
-        self.funcGlobalParReadSave()
+        self.funcGlobalParReadFromSaveVarAndSaveIni()
         self.TkGparUi.func_ui_click_gpar_refresh_par()
         self.close()
 

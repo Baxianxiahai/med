@@ -63,6 +63,10 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.HST_VISION_WORM_CLASSIFY_pic_filepath = GLCFG_PAR_OFC.PIC_MIDDLE_PATH + '/'
         self.HST_VISION_WORM_CLASSIFY_pic_filename = "1.jpg"
         self.HST_VISION_WORM_CLASSIFY_pic_sta_output = {'totalNbr':0, 'bigAlive':0, 'bigDead':0, 'middleAlive':0, 'middleDead':0, 'smallAlive':0, 'smallDead':0, 'totalAlive':0, 'totalDead':0}
+        self.HST_VISION_FLU_CELL_COUNT_genr_par1 = GLVIS_PAR_OFC.CFY_THD_GENR_PAR1
+        self.HST_VISION_FLU_CELL_COUNT_genr_par2 = GLVIS_PAR_OFC.CFY_THD_GENR_PAR2
+        self.HST_VISION_FLU_CELL_COUNT_genr_par3 = GLVIS_PAR_OFC.CFY_THD_GENR_PAR3
+        self.HST_VISION_FLU_CELL_COUNT_genr_par4 = GLVIS_PAR_OFC.CFY_THD_GENR_PAR4
         self.fsm_set(TUP_STM_NULL)
 
         #STM MATRIX
@@ -89,6 +93,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         
         #GPAR训练图像
         self.add_stm_combine(self._STM_GPAR_UI_ACT, TUP_MSGID_GPAR_PIC_TRAIN_REQ, self.fsm_msg_pic_train_req_rcv_handler)
+        self.add_stm_combine(self._STM_GPAR_UI_ACT, TUP_MSGID_GPAR_PIC_FCC_REQ, self.fsm_msg_pic_flu_cell_count_req_rcv_handler)
         
         #切换状态机
         self.fsm_set(TUP_STM_INIT)
@@ -139,7 +144,15 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;    
 
     def fsm_msg_refresh_par_rcv_handler(self, msgContent):
-        self.funcVisRefreshPar();
+        self.HST_VISION_WORM_CLASSIFY_base = msgContent['baseLimit'];
+        self.HST_VISION_WORM_CLASSIFY_small2mid = msgContent['small2Mid'];
+        self.HST_VISION_WORM_CLASSIFY_mid2big = msgContent['mid2Big'];
+        self.HST_VISION_WORM_CLASSIFY_big2top = msgContent['bigLimit'];
+        self.HST_VISION_FLU_CELL_COUNT_genr_par1 = msgContent['genrPar1'];
+        self.HST_VISION_FLU_CELL_COUNT_genr_par2 = msgContent['genrPar2'];
+        self.HST_VISION_FLU_CELL_COUNT_genr_par3 = msgContent['genrPar3'];
+        self.HST_VISION_FLU_CELL_COUNT_genr_par4 = msgContent['genrPar4'];
+                
         return TUP_SUCCESS;
 
     def funcVisionLogTrace(self, myString):
@@ -281,9 +294,31 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_RESP, TUP_TASK_ID_GPAR, mbuf)
         return TUP_SUCCESS;
 
+    #GPAR中的荧光细胞计数过程
+    def fsm_msg_pic_flu_cell_count_req_rcv_handler(self, msgContent):
+        picOrgFile = msgContent['fileName']
+        mbuf={}
+        if (os.path.exists(picOrgFile) == False):
+            mbuf['res'] = -1
+            self.msg_send(TUP_MSGID_GPAR_PIC_FCC_RESP, TUP_TASK_ID_GPAR, mbuf)
+            return TUP_SUCCESS;
+        self.func_vision_flu_cell_count(picOrgFile, 'tempPic.jpg')
+        if (os.path.exists('tempPic.jpg') == False):
+            mbuf['res'] = -2
+            self.msg_send(TUP_MSGID_GPAR_PIC_FCC_RESP, TUP_TASK_ID_GPAR, mbuf)
+            return TUP_SUCCESS;
+        #Final feedback
+        mbuf['res'] = 1
+        mbuf['fileName'] = 'tempPic.jpg'
+        self.msg_send(TUP_MSGID_GPAR_PIC_FCC_RESP, TUP_TASK_ID_GPAR, mbuf)
+        return TUP_SUCCESS;
+
+
+
 
     '''
-    SERVICE PART: 业务部分的函数，功能处理函数
+    #SERVICE PART: 业务部分的函数，功能处理函数
+    #获取图像的函数
     '''
     #输出OpenCV可以识别的格式 => 为了本地存储只用
     def funcCap1Frame(self):
@@ -326,6 +361,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         temp_image = QtGui.QImage(rgb.flatten(), width, height, QtGui.QImage.Format_RGB888)
         temp_pixmap = QtGui.QPixmap.fromImage(temp_image)
         return 1, temp_pixmap
+
 
     '''
     #
@@ -397,7 +433,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             return 2;
         return 1;
     
-      
+
     #计算弧度的方式
     #INPUT: refRadInUm, 孔半径长度，um单位
     #OUTPUT: 对应比例关系
@@ -484,7 +520,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         cv.putText(inputImg, '500um', (start[0], start[1]-10), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
         #cv.imshow("inputImg", inputImg)
         cv.imwrite(newFileFn, inputImg)
-        
+
+
     '''
     * 参考文档： https://blog.csdn.net/sinat_36458870/article/details/78825571
     #寻找边缘算法，待优化
@@ -560,30 +597,22 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         baseLine = newRadians/refRadInUm
         return arcLenMax, baseLine, outputImg
 
+
     '''
     CLASSFICATION: 分类
     '''
-    def funcVisRefreshPar(self):
-        self.HST_VISION_WORM_CLASSIFY_base = ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_small2mid = ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_mid2big = ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT;
-        self.HST_VISION_WORM_CLASSIFY_big2top = ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT;
-    
     def func_vision_worm_binvalue_proc(self, img):
-        new = np.zeros(img.shape, np.uint8)    
-    
+        new = np.zeros(img.shape, np.uint8)
         #Gray transaction: 灰度化
         for i in range(new.shape[0]):  #Axis-y/height/Rows
             for j in range(new.shape[1]):
                 (b,g,r) = img[i,j]
                 #加权平均法
                 new[i,j] = int(0.3*float(b) + 0.59*float(g) + 0.11*float(r))&0xFF
-    
         #Middle value filter: 中值滤波
         blur= cv.medianBlur(new, 5)
         midGray = cv.cvtColor(blur, cv.COLOR_BGR2GRAY)
         #cv.imshow('Middle Blur', midGray)
-    
         #Adaptive bin-translation: 自适应二值化
         binGray = cv.adaptiveThreshold(midGray, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 43, 5)   # ADAPTIVE_THRESH_MEAN_C ADAPTIVE_THRESH_GAUSSIAN_C
         binRes= cv.GaussianBlur(binGray, (5,5), 1.5) #medianBlur
@@ -594,10 +623,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         #Enlarge + Erosion: shape translation 膨胀+腐蚀等形态学变化  
         kerne1 = np.ones((7, 7), np.uint8)  
         img_erosin = cv.erode(img, kerne1, iterations=1)
-           
         #2nd time mid-value filter: 再次中值滤波
         midFilter= cv.medianBlur(img_erosin, 5)
-        
         #Fix bin-value: 固定二值化
         ret, binImg = cv.threshold(midFilter, 130, 255, cv.THRESH_BINARY)
         #cv.imshow("img_erosin and Noise removal", binImg)
@@ -702,6 +729,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             cv.putText(outputImg, str(self.HST_VISION_WORM_CLASSIFY_pic_sta_output), (10, 30), font, 0.7, (0, 0, 255), 2, cv.LINE_AA)
         return outputImg;
 
+
     '''
     #
     #Classified processing: 分类总处理
@@ -743,6 +771,23 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         #Show result or not: 根据指令，是否显示文件
         cv.destroyAllWindows()
         return 1
+
+
+    #细胞识别函数
+    def func_vision_flu_cell_count(self, fileName, fileNukeName):
+        return 1
+
+
+
+
+
+
+
+
+
+
+
+
 
 #搜索摄像头进程：调用的win32com必须在进程里面干活，所以只能采用这种创造进程的方式干搜索设备号
 class clsCamDevHdl():
