@@ -541,8 +541,8 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     def funcSendCmdPack(self, cmdId, par1, par2, par3, par4):
         #Build MODBUS COMMAND:系列化
         #add for test pules  command ID 0x38   
-        if (cmdId == 0x38):
-            for i in range(1,par1+1,500):
+        if (cmdId == GLSPS_PAR_OFC.SPS_TEST_PULES_CMID):
+            for i in range(1, par1+1, 500):
                 fmt = ">BBiiii";
                 byteDataBuf = struct.pack(fmt, GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, i, par2, par3, par4)
                 crc = self.funcCacCrc(byteDataBuf, GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
@@ -571,7 +571,6 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
             while index < (GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
                 outBuf += str("%02X " % (byteDataBuf[index]))
                 index+=1
-            
             #self.funcMotoLogTrace("L2MOTO: SND CMD = " + outBuf)
             res, Buf = self.funcCmdSend(byteDataBuf)
             if (res > 0):

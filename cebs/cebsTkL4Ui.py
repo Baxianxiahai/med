@@ -167,6 +167,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
             self.TkMainUi.func_ui_click_calib_start();
             self.sgL4MainWinUnvisible.emit()
             self.instL4CalibForm.show()
+            #指示CALIB界面进入事件
+            self.instL4CalibForm.switchOn()
 
     #Enter parameter setting session
     def slot_gpar_start(self):
@@ -175,7 +177,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
             self.TkMainUi.func_ui_click_gpar_start();
             self.sgL4MainWinUnvisible.emit()
             self.instL4GparForm.show()
-            #特别增加的钩子函数，重新初始化参数
+            #指示GPAR界面进入事件
             self.instL4GparForm.switchOn()
 
     #Enter Moto Engineering Mode
@@ -185,6 +187,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
             self.TkMainUi.func_ui_click_meng_start();
             self.sgL4MainWinUnvisible.emit()
             self.instL4MengForm.show()
+            #指示MENG界面进入事件
+            self.instL4MengForm.switchOn()
 
     #Enter Selection Active Hole Target Mode
     def slot_saht_sel(self):
@@ -260,7 +264,11 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm, clsL1_ConfigOpr):
         self.textEdit_calib_runProgress.moveCursor(QtGui.QTextCursor.End)
         self.textEdit_calib_runProgress.ensureCursorVisible()
         self.textEdit_calib_runProgress.insertPlainText("")       
-        
+    
+    #界面的二次进入触发事件
+    def switchOn(self):
+        print("I am CALIB and enter again!")
+    
     #
     #  SLOT FUNCTION, 槽函数部分
     #    DO NOT MODIFY SLOT FUNCTION NAMES, 以下部分为系统接口对应的槽函数，函数命名不得动
@@ -995,7 +1003,12 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm, clsL1_ConfigOpr):
         self.textEdit_meng_trace_log.append(strOut);
         self.textEdit_meng_trace_log.moveCursor(QtGui.QTextCursor.End)
         self.textEdit_meng_trace_log.ensureCursorVisible()
-        self.textEdit_meng_trace_log.insertPlainText("")        
+        self.textEdit_meng_trace_log.insertPlainText("")
+        
+    #界面的二次进入触发事件
+    def switchOn(self):
+        print("I am MENG and enter again!")
+        
     #
     #  SLOT FUNCTION, 槽函数部分
     #    DO NOT MODIFY FUNCTION NAMES, 以下部分为系统接口对应的槽函数，函数命名不得动
@@ -1043,7 +1056,7 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm, clsL1_ConfigOpr):
             cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_INQ_STATUS_CMID
         elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_TEST_PULES) > 0):
             cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_TEST_PULES_CMID
-        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_EXTI_DELAY_TIME_CMID) > 0):
+        elif (str(text).find(ModCebsCom.GLSPS_PAR_OFC.SPS_SET_EXTI_DELAY_TIME) > 0):
             cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SET_EXTI_DELAY_TIME_CMID
         else:
             cmd = ModCebsCom.GLSPS_PAR_OFC.SPS_SHK_HAND_CMID
@@ -1099,6 +1112,7 @@ class SEUI_L4_BroswerForm(QtWidgets.QMainWindow, Ui_BroswerForm, clsL1_ConfigOpr
         self.TkBrowUi = TaskInstBrowUi
         self.setupUi(self)
         self.openBroswer()
+        
     def openBroswer(self):
         print("[CEBS]  Open Broswer is Start")
         config=clsL1_ConfigOpr()
@@ -1114,6 +1128,10 @@ class SEUI_L4_BroswerForm(QtWidgets.QMainWindow, Ui_BroswerForm, clsL1_ConfigOpr
         self.broswer=QtWebEngineWidgets.QWebEngineView()
         self.broswer.load(QtCore.QUrl(url))
         self.setCentralWidget(self.broswer)
+    
+    #界面的二次进入触发事件
+    def switchOn(self):
+        print("I am BROWSE and enter again!")
 
     def closeEvent(self, event):
         config = clsL1_ConfigOpr()

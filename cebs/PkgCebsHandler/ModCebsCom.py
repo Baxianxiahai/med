@@ -467,8 +467,8 @@ class clsL0_MedSpsPar():
     SPS_INQ_EN = '查询激活状态（inq_enable）'
     SPS_INQ_RUN = '查询运行状态（inq_run）'
     SPS_INQ_STATUS = '查询一般状态（inq_status）'
-    SPS_TEST_PULES = '测试脉冲数（test_pules)'
-    SPS_SET_EXTI_DELAY_TIME = '设置限位器触发迟滞（set_exti_delay_time)'
+    SPS_TEST_PULES = '测试脉冲数（test_pules）'
+    SPS_SET_EXTI_DELAY_TIME = '设置限位器触发迟滞（set_exti_delay_time）'
     SPS_SHK_HAND_CMID = 0x20
     SPS_SET_WK_MODE_CMID = 0x21
     SPS_SET_ACC_CMID = 0x22

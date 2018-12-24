@@ -1,19 +1,29 @@
 ﻿====CEBS=====
-
-【已知BUG LIST】
-2. 荧光识别算法：待定
+【待完成FEATURE LIST】
+1. 荧光识别算法：待定
+2. VISION中图像识别参数控制，通用参数来调控
+3. 全局参数表，更新到本地化
 
 
 [BUG LIST]
 2. def func_vision_worm_binvalue_proc(self, img):  new = np.zeros(img.shape, np.uint8)
 
-[待完成功能]
-1. VISION中图像识别参数控制，通用参数来调控
-2. 全局参数表，更新到本地化
 
 
 
 
+
+
+
+
+
+
+
+
+
+//=ZJL, 2018/12/24, CURRENT_SW_DELIVERY R1.46 =>CEBS
+= 给每个界面增加swithOn()函数钩子，以便需要时做界面参数的初始化：其中GPAR是必须的，但其它界面暂时不需要
+= 修正MENG界面中（设置限位器触发迟滞）的选择性BUG
 
 //=ZJL, 2018/12/24, CURRENT_SW_DELIVERY R1.45 =>CEBS
 = 完善TRAIN/FCC参数机制
