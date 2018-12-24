@@ -384,7 +384,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     #    fileName - 指示输出文件名，带目录结构
     #    fileNukeName - 指示文件名，带result标签
     #    ctrl - 指示是佛使用fileNukeName。True: fileNukeName, False: fileName
-    #    addText - 指示输出的文件中是否需要叠加文字
+    #    addupSet - 指示输出的文件中是否需要叠加文字
     #    下同
     #
     #
@@ -426,7 +426,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['fileName'] = fileName
         mbuf['fileNukeName'] = fileNukeName
         mbuf['ctrl'] = False
-        mbuf['addText'] = GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET
+        mbuf['addupSet'] = GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET
         self.msg_send(TUP_MSGID_CTRS_PIC_CLFY_REQ, TUP_TASK_ID_VISION, mbuf)
         return TUP_SUCCESS;
     
@@ -472,7 +472,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['fileName'] = fileName
         mbuf['fileNukeName'] = fileNukeName
         mbuf['ctrl'] = False
-        mbuf['addText'] = GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET
+        mbuf['addupSet'] = GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET
         self.msg_send(TUP_MSGID_CTRS_PIC_CLFY_REQ, TUP_TASK_ID_VISION, mbuf)
         return TUP_SUCCESS;
     
@@ -522,7 +522,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['fileName'] = fileName
         mbuf['fileNukeName'] = fileNukeName
         mbuf['ctrl'] = False
-        mbuf['addText'] = GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET
+        mbuf['addupSet'] = GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET
         self.msg_send(TUP_MSGID_CTRS_FLU_CLFY_REQ, TUP_TASK_ID_VISION, mbuf)
         return TUP_SUCCESS;
         
@@ -566,7 +566,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['fileName'] = fileName
         mbuf['fileNukeName'] = fileNukeName
         mbuf['ctrl'] = False
-        mbuf['addText'] = GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET
+        mbuf['addupSet'] = GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET
         self.msg_send(TUP_MSGID_CTRS_FLU_CLFY_REQ, TUP_TASK_ID_VISION, mbuf)
         return TUP_SUCCESS;    
 

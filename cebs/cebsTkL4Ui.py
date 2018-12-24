@@ -799,7 +799,8 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, clsL1_ConfigOpr):
     def slot_gpar_pic_train(self):
         if (self.picOrgFile == ''):
             return;
-        self.TkGparUi.func_ui_click_pic_train(self.picOrgFile, self.picOrgFile, self.func_read_vis_train_par())
+        l1, l2, l3, l4, add, g1, g2, g3, g4 = self.func_read_vis_train_par()
+        self.TkGparUi.func_ui_click_pic_train(self.picOrgFile, l1, l2, l3, l4, add, g1, g2, g3, g4)
     
     def gpar_callback_train_resp(self, fileName):
         img = QtGui.QPixmap(fileName)
@@ -810,7 +811,8 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, clsL1_ConfigOpr):
     def slot_gpar_flu_cell_cnt(self):
         if (self.picOrgFile == ''):
             return;
-        self.TkGparUi.func_ui_click_gpar_flu_cell_cnt(self.picOrgFile, self.func_read_vis_train_par());
+        l1, l2, l3, l4, add, g1, g2, g3, g4 = self.func_read_vis_train_par()
+        self.TkGparUi.func_ui_click_gpar_flu_cell_cnt(self.picOrgFile, l1, l2, l3, l4, add, g1, g2, g3, g4);
         
     #
     #  SERVICE FUNCTION PART, 业务函数部分

@@ -106,7 +106,7 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['genrPar4'] = gePar4;
         self.msg_send(TUP_MSGID_GPAR_REFRESH_PAR, TUP_TASK_ID_VISION, mbuf) 
         mbuf={}
-        mbuf['fileName'] = fileName 
+        mbuf['fileName'] = fileName
         self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_REQ, TUP_TASK_ID_GPAR, mbuf)
     
     def func_ui_click_gpar_refresh_par(self):

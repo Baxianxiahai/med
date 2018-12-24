@@ -7,8 +7,9 @@
 [BUG LIST]
 2. def func_vision_worm_binvalue_proc(self, img):  new = np.zeros(img.shape, np.uint8)
 
-
-
+[待完成功能]
+1. VISION中图像识别参数控制，通用参数来调控
+2. 全局参数表，更新到本地化
 
 
 

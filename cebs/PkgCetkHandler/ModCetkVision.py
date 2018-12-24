@@ -61,13 +61,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.WORM_CLASSIFY_mid2big = GLVIS_PAR_OFC.MID_BIG_LIMIT;
         self.WORM_CLASSIFY_big2top = GLVIS_PAR_OFC.BIG_UPPER_LIMIT;
         self.WORM_CLASSIFY_addupSet = GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET;
-        self.WORM_CLASSIFY_pic_filepath = GLCFG_PAR_OFC.PIC_MIDDLE_PATH + '/'
-        self.WORM_CLASSIFY_pic_filename = "1.jpg"
-        self.WORM_CLASSIFY_pic_sta_output = {'totalNbr':0, 'bigAlive':0, 'bigDead':0, 'middleAlive':0, 'middleDead':0, 'smallAlive':0, 'smallDead':0, 'totalAlive':0, 'totalDead':0}
         self.FLU_CELL_COUNT_genr_par1 = GLVIS_PAR_OFC.CFY_THD_GENR_PAR1
         self.FLU_CELL_COUNT_genr_par2 = GLVIS_PAR_OFC.CFY_THD_GENR_PAR2
         self.FLU_CELL_COUNT_genr_par3 = GLVIS_PAR_OFC.CFY_THD_GENR_PAR3
         self.FLU_CELL_COUNT_genr_par4 = GLVIS_PAR_OFC.CFY_THD_GENR_PAR4
+        #想办法整到函数本地去
         self.fsm_set(TUP_STM_NULL)
 
         #STM MATRIX
@@ -184,10 +182,21 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.tup_err_print(str(myString))
         return
     
-    
+    '''
+    #
+    # 本函数需要通过QT的过程截获图像并通过全局变量传递给UI，从而实现实时显示
+    #
     #传递文件回去给显示界面
     #暂时没找到其它更好的办法，所以只能采用文件传输的方式
     #尝试使用去全局变量传递视频图像对象
+    #本来是通过文件读取，目前改为了对象指针共享，效率要高些
+    #cv.imwrite("tempCalibDisp.jpg", outFrame)
+    #mbuf['fileName'] = "tempCalibDisp.jpg"
+    #
+    #正确处理过程：这是主要通过全局变量传递的复杂数据对象
+    #其它的COM数据主要还是一些简单的共享参数信息
+    #
+    '''
     def fsm_msg_calib_video_display_req_rcv_handler(self, msgContent):
         mbuf={}
         if self.capInit == '':
@@ -195,19 +204,14 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
             return TUP_FAILURE;
         #CAPTURE PICTURE
-        ret, outFrame = self.funcCapQtFrame()        
+        ret, outFrame = self.func_cap_qt_frame()        
         if (ret <0):
             mbuf['res'] = -2
             self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
             return TUP_FAILURE;
-        #正确处理过程：这是主要通过全局变量传递的复杂数据对象
-        #其它的COM数据主要还是一些简单的共享参数信息
         GLVIS_PAR_OFC.CALIB_VDISP_OJB = outFrame
         mbuf['res'] = 1
         mbuf['ComObj'] = True
-        #本来是通过文件读取，目前改为了对象指针共享，效率要高些
-        #cv.imwrite("tempCalibDisp.jpg", outFrame)
-        #mbuf['fileName'] = "tempCalibDisp.jpg"
         self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
         return TUP_SUCCESS;      
 
@@ -219,7 +223,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             self.funcVisionErrTrace("VISION: capture error as not init camera!")
             return TUP_FAILURE;
         #CAPTURE PICTURE
-        ret, outFrame = self.funcCap1Frame()
+        ret, outFrame = self.func_cap_one_frame()
         if (ret <0):
             self.funcVisionErrTrace("VISION: capture picture error!")
             return TUP_FAILURE;
@@ -235,7 +239,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         vdCtrl = msgContent['vdCtrl']
         sclCtrl = msgContent['sclCtrl']
         vdDur = msgContent['vdDur']
-        res = self.funcPicVidCapAndSaveFile(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
+        res = self.func_pic_vid_cap_and_save_file(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
         mbuf={}
         mbuf['res'] = res
         self.msg_send(TUP_MSGID_CTRS_PIC_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
@@ -249,7 +253,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         vdCtrl = msgContent['vdCtrl']
         sclCtrl = msgContent['sclCtrl']
         vdDur = msgContent['vdDur']
-        res = self.funcPicVidCapAndSaveFile(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
+        res = self.func_pic_vid_cap_and_save_file(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
         mbuf={}
         mbuf['res'] = res
         self.msg_send(TUP_MSGID_CTRS_FLU_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
@@ -260,8 +264,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         fileName = msgContent['fileName']
         fileNukeName = msgContent['fileNukeName']
         ctrl = msgContent['ctrl']
-        addText = msgContent['addText']
-        res = self.func_vision_worm_clasification(fileName, fileNukeName, ctrl, addText);
+        addupSet = msgContent['addupSet']
+        res = self.func_vision_worm_clasification(fileName, fileNukeName, ctrl, addupSet);
         mbuf={}
         mbuf['res'] = res
         self.msg_send(TUP_MSGID_CRTS_PIC_CLFY_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
@@ -271,8 +275,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         fileName = msgContent['fileName']
         fileNukeName = msgContent['fileNukeName']
         ctrl = msgContent['ctrl']
-        addText = msgContent['addText']
-        res = self.func_vision_worm_clasification(fileName, fileNukeName, ctrl, addText);
+        addupSet = msgContent['addupSet']
+        res = self.func_vision_worm_clasification(fileName, fileNukeName, ctrl, addupSet);
         mbuf={}
         mbuf['res'] = res
         self.msg_send(TUP_MSGID_CRTS_FLU_CLFY_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
@@ -286,7 +290,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['res'] = -1
             self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_RESP, TUP_TASK_ID_GPAR, mbuf)
             return TUP_SUCCESS;
-        self.func_vision_worm_clasification(picFile, 'tempPic.jpg', True, True)
+        self.func_vision_worm_clasification(picFile, 'tempPic.jpg', True, self.WORM_CLASSIFY_addupSet)
         if (os.path.exists('tempPic.jpg') == False):
             mbuf['res'] = -2
             self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_RESP, TUP_TASK_ID_GPAR, mbuf)
@@ -305,7 +309,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['res'] = -1
             self.msg_send(TUP_MSGID_GPAR_PIC_FCC_RESP, TUP_TASK_ID_GPAR, mbuf)
             return TUP_SUCCESS;
-        totalCnt = self.func_vision_flu_cell_count(picOrgFile, 'tempPic.jpg', self.FLU_CELL_COUNT_genr_par1, self.WORM_CLASSIFY_base, self.WORM_CLASSIFY_big2top, self.FLU_CELL_COUNT_genr_par2)
+        totalCnt = self.func_vision_flu_cell_count(picOrgFile, 'tempPic.jpg', self.FLU_CELL_COUNT_genr_par1, self.WORM_CLASSIFY_base, self.WORM_CLASSIFY_big2top, self.FLU_CELL_COUNT_genr_par2, self.WORM_CLASSIFY_addupSet)
         if (os.path.exists('tempPic.jpg') == False):
             mbuf['res'] = -2
             self.msg_send(TUP_MSGID_GPAR_PIC_FCC_RESP, TUP_TASK_ID_GPAR, mbuf)
@@ -321,12 +325,17 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
 
 
 
+
+
+
+
+
     '''
     #SERVICE PART: 业务部分的函数，功能处理函数
     #获取图像的函数
     '''
     #输出OpenCV可以识别的格式 => 为了本地存储只用
-    def funcCap1Frame(self):
+    def func_cap_one_frame(self):
         try:
             ret, frame = self.capInit.read()
         except Exception:
@@ -350,7 +359,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         return 1, outputFrame
     
     #输出QT格式
-    def funcCapQtFrame(self):
+    def func_cap_qt_frame(self):
         try:
             ret, frame = self.capInit.read()
         except Exception:
@@ -368,6 +377,10 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         return 1, temp_pixmap
 
 
+
+
+
+
     '''
     #
     #NEW截获图像
@@ -378,7 +391,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     # vdCtrl: 控制是否需要拍摄视频
     #
     '''
-    def funcPicVidCapAndSaveFile(self, fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur):
+    def func_pic_vid_cap_and_save_file(self, fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur):
         try:
             if not self.capInit.isOpened():
                 self.funcVisionErrTrace("L2VISCAP: Cannot open webcam!")
@@ -415,7 +428,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             outputFrame = cv.merge([B, G, R])
             cv.imwrite(fnPic, outputFrame)
             if sclCtrl == True:
-                self.algoVisGetRadians(GLPLT_PAR_OFC.med_get_radians_len_in_us(), fnPic, fnScale)
+                self.proc_algo_vis_get_radians(GLPLT_PAR_OFC.med_get_radians_len_in_us(), fnPic, fnScale)
         if (ret == True) and (vdCtrl == True):
             #Video capture with 3 second
             fourcc = cv.VideoWriter_fourcc(*'mp4v')  #mp4v(.mp4), XVID(.avi)
@@ -442,14 +455,13 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     #计算弧度的方式
     #INPUT: refRadInUm, 孔半径长度，um单位
     #OUTPUT: 对应比例关系
-    def algoVisGetRadians(self, refRadInUm, dirFn, newFileFn):
+    def proc_algo_vis_get_radians(self, refRadInUm, dirFn, newFileFn):
         #Reading file: 读取文件
         if (os.path.exists(dirFn) == False):
             errStr = "L2VISCFY: File %s not exist!" % (dirFn)
             self.medErrorLog(errStr);
             print("L2VISCFY: File %s not exist!" % (dirFn))
             return;
-        self.WORM_CLASSIFY_pic_filename = dirFn
         try:
             inputImg = cv.imread(dirFn)
         except Exception as err:
@@ -469,28 +481,28 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         arcSave = 0
         stdRatio = 0
         #PART1
-        arcLen, lenSqrRatio, resImgLU = self.algoVisFindMaxEdge(refRadInUm, imgLeftUp)
+        arcLen, lenSqrRatio, resImgLU = self.proc_algo_vis_find_max_edge(refRadInUm, imgLeftUp)
         #print("LU Length/baseline = %f/%f" % (arcLen, lenSqrRatio))
         if (arcLen < arcLenMax) and (lenSqrRatio < 1) and (lenSqrRatio > 0.1) and (arcLen > arcSave):
             flagIndex = 1
             arcSave = arcLen
             stdRatio = lenSqrRatio
         #PART2
-        arcLen, lenSqrRatio, resImgRU = self.algoVisFindMaxEdge(refRadInUm, imgRightUp)
+        arcLen, lenSqrRatio, resImgRU = self.proc_algo_vis_find_max_edge(refRadInUm, imgRightUp)
         #print("RU Length/baseline = %f/%f" % (arcLen, lenSqrRatio))
         if (arcLen < arcLenMax) and (lenSqrRatio < 1) and (lenSqrRatio > 0.1) and (arcLen > arcSave):
             flagIndex = 2
             arcSave = arcLen
             stdRatio = lenSqrRatio
         #PART3
-        arcLen, lenSqrRatio, resImgLB = self.algoVisFindMaxEdge(refRadInUm, imgLeftBot)
+        arcLen, lenSqrRatio, resImgLB = self.proc_algo_vis_find_max_edge(refRadInUm, imgLeftBot)
         #print("LB Length/baseline = %f/%f" % (arcLen, lenSqrRatio))
         if (arcLen < arcLenMax) and (lenSqrRatio < 1) and (lenSqrRatio > 0.1) and (arcLen > arcSave):
             flagIndex = 3
             arcSave = arcLen
             stdRatio = lenSqrRatio
         #PART4
-        arcLen, lenSqrRatio, resImgRB = self.algoVisFindMaxEdge(refRadInUm, imgRightBot)
+        arcLen, lenSqrRatio, resImgRB = self.proc_algo_vis_find_max_edge(refRadInUm, imgRightBot)
         #print("RB Length/baseline = %f/%f" % (arcLen, lenSqrRatio))
         if (arcLen < arcLenMax) and (lenSqrRatio < 1) and (lenSqrRatio > 0.1) and (arcLen > arcSave):
             flagIndex = 4
@@ -531,7 +543,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     * 参考文档： https://blog.csdn.net/sinat_36458870/article/details/78825571
     #寻找边缘算法，待优化
     '''
-    def algoVisFindMaxEdge(self, refRadInUm, inputImg):
+    def proc_algo_vis_find_max_edge(self, refRadInUm, inputImg):
         #噪声处理过程
         new = np.zeros(inputImg.shape, np.uint8)    
         #Gray transaction: 灰度化
@@ -603,10 +615,53 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         return arcLenMax, baseLine, outputImg
 
 
+
+
     '''
-    CLASSFICATION: 分类
+    #
+    #
+    #CLASSFICATION: 分类
+    #
+    #Classified processing: 分类总处理
+    #outCtrlFlag: 控制输出方式，是否直接使用fileNukeName而不增加文件名字选项
+    #addupSet: 是否叠加文字输出
+    #
+    #
     '''
-    def func_vision_worm_binvalue_proc(self, img):
+    def func_vision_worm_clasification(self, fileName, fileNukeName, outCtrlFlag, addupSet):
+        #Reading file: 读取文件
+        if (os.path.exists(fileName) == False):
+            errStr = "L2VISCFY: File %s not exist!" % (fileName)
+            self.medErrorLog(errStr);
+            print("L2VISCFY: File %s not exist!" % (fileName))
+            return -1;
+        try:
+            inputImg = cv.imread(fileName)
+        except Exception as err:
+            print("L2VISCFY: Read file error, errinfo = ", str(err))
+            return -2;
+
+        #Processing procedure: 处理过程
+        binImg = self.proc_vision_worm_binvalue(inputImg)
+        nfImg = self.proc_vision_worm_remove_noise(binImg)
+        outputImg, outText = self.func_vision_worm_find_contours(nfImg, inputImg, addupSet)
+        if (outCtrlFlag == True):
+            outputFn = fileNukeName
+        else:
+            outputFn = GLCFG_PAR_OFC.PIC_MIDDLE_PATH + '/' + "result_" + fileNukeName
+        cv.imwrite(outputFn, outputImg)
+            
+        #Save log record: 存储干活的log记录
+        f = open(GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET, "a+")
+        a = '[%s], vision worm classification ones, save result as [%s] with output [%s].\n' % (time.asctime(), outputFn, str(outText))
+        f.write(a)
+        f.flush()
+        f.close()
+        #Show result or not: 根据指令，是否显示文件
+        cv.destroyAllWindows()
+        return 1
+
+    def proc_vision_worm_binvalue(self, img):
         new = np.zeros(img.shape, np.uint8)
         #Gray transaction: 灰度化
         for i in range(new.shape[0]):  #Axis-y/height/Rows
@@ -624,7 +679,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         #cv.imshow('Adaptive Bin', binRes)
         return binRes;
     
-    def func_vision_worm_remove_noise_proc(self, img):
+    def proc_vision_worm_remove_noise(self, img):
         #Enlarge + Erosion: shape translation 膨胀+腐蚀等形态学变化  
         kerne1 = np.ones((7, 7), np.uint8)  
         img_erosin = cv.erode(img, kerne1, iterations=1)
@@ -645,17 +700,18 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     #http://blog.csdn.net/app_12062011/article/details/51953030
     #E = sqrt(1-I^2)
     #I = (u20+u02-sqrt(4u11*u11(u20-u02)*(u20-u02))/(u20+u02+sqrt(4u11*u11(u20-u02)*(u20-u02))
-    def func_vision_worm_find_contours(self, nfImg, orgImg, addText):
+    def func_vision_worm_find_contours(self, nfImg, orgImg, addupSet):
         #Init output figure
-        self.WORM_CLASSIFY_pic_sta_output['totalNbr'] = 0
-        self.WORM_CLASSIFY_pic_sta_output['bigAlive'] = 0
-        self.WORM_CLASSIFY_pic_sta_output['bigDead'] = 0
-        self.WORM_CLASSIFY_pic_sta_output['middleAlive'] = 0
-        self.WORM_CLASSIFY_pic_sta_output['middleDead'] = 0
-        self.WORM_CLASSIFY_pic_sta_output['smallAlive'] = 0
-        self.WORM_CLASSIFY_pic_sta_output['smallDead'] = 0
-        self.WORM_CLASSIFY_pic_sta_output['totalAlive'] = 0
-        self.WORM_CLASSIFY_pic_sta_output['totalDead'] = 0
+        outText = {'totalNbr':0, 'bigAlive':0, 'bigDead':0, 'middleAlive':0, 'middleDead':0, 'smallAlive':0, 'smallDead':0, 'totalAlive':0, 'totalDead':0}
+        outText['totalNbr'] = 0
+        outText['bigAlive'] = 0
+        outText['bigDead'] = 0
+        outText['middleAlive'] = 0
+        outText['middleDead'] = 0
+        outText['smallAlive'] = 0
+        outText['smallDead'] = 0
+        outText['totalAlive'] = 0
+        outText['totalDead'] = 0
         
         #Searching out-form shape: 找到轮廓
         _, contours, hierarchy = cv.findContours(nfImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
@@ -696,86 +752,46 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             if cArea < self.WORM_CLASSIFY_base:
                 pass
             elif cArea < self.WORM_CLASSIFY_small2mid:
-                self.WORM_CLASSIFY_pic_sta_output['totalNbr'] +=1
+                outText['totalNbr'] +=1
                 #cv.floodFill(outputImg, mask, seed_point,(0,0,255))
                 cv.drawContours(outputImg, c, -1, (0,0,255), 2)  
                 if (cE < 0.5):
-                    self.WORM_CLASSIFY_pic_sta_output['smallDead'] +=1
-                    self.WORM_CLASSIFY_pic_sta_output['totalDead'] +=1
+                    outText['smallDead'] +=1
+                    outText['totalDead'] +=1
                 else:
-                    self.WORM_CLASSIFY_pic_sta_output['smallAlive'] +=1
-                    self.WORM_CLASSIFY_pic_sta_output['totalAlive'] +=1               
+                    outText['smallAlive'] +=1
+                    outText['totalAlive'] +=1               
                 cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
             elif cArea < self.WORM_CLASSIFY_mid2big:
-                self.WORM_CLASSIFY_pic_sta_output['totalNbr'] +=1
+                outText['totalNbr'] +=1
                 #cv.floodFill(outputImg, mask, seed_point,(0,255,0))  
                 cv.drawContours(outputImg, c, -1, (0,255,0), 2)
                 if (cE < 0.5):
-                    self.WORM_CLASSIFY_pic_sta_output['middleDead'] +=1
-                    self.WORM_CLASSIFY_pic_sta_output['totalDead'] +=1
+                    outText['middleDead'] +=1
+                    outText['totalDead'] +=1
                 else:
-                    self.WORM_CLASSIFY_pic_sta_output['middleAlive'] +=1
-                    self.WORM_CLASSIFY_pic_sta_output['totalAlive'] +=1            
+                    outText['middleAlive'] +=1
+                    outText['totalAlive'] +=1            
                 cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
             elif cArea < self.WORM_CLASSIFY_big2top:
-                self.WORM_CLASSIFY_pic_sta_output['totalNbr'] +=1
+                outText['totalNbr'] +=1
                 #cv.floodFill(outputImg, mask, seed_point,(255,0,0))  
                 cv.drawContours(outputImg, c, -1, (255,0,0), 2)
                 if (cE < 0.5):
-                    self.WORM_CLASSIFY_pic_sta_output['bigDead'] +=1
-                    self.WORM_CLASSIFY_pic_sta_output['totalDead'] +=1
+                    outText['bigDead'] +=1
+                    outText['totalDead'] +=1
                 else:
-                    self.WORM_CLASSIFY_pic_sta_output['bigAlive'] +=1
-                    self.WORM_CLASSIFY_pic_sta_output['totalAlive'] +=1                        
+                    outText['bigAlive'] +=1
+                    outText['totalAlive'] +=1                        
                 cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
         #叠加统计结果
-        if (addText == True):
+        if (addupSet == True):
             font = cv.FONT_HERSHEY_SIMPLEX
-            cv.putText(outputImg, str(self.WORM_CLASSIFY_pic_sta_output), (10, 30), font, 0.7, (0, 0, 255), 2, cv.LINE_AA)
-        return outputImg;
+            cv.putText(outputImg, str("XHT: " + str(outText)), (10, 30), font, 0.7, (0, 0, 255), 2, cv.LINE_AA)
+        return outputImg, outText;
 
 
-    '''
-    #
-    #Classified processing: 分类总处理
-    #outCtrlFlag: 控制输出方式，是否直接使用fileNukeName而不增加文件名字选项
-    #
-    #    addText: 是否叠加文字输出
-    #
-    '''
-    def func_vision_worm_clasification(self, fileName, fileNukeName, outCtrlFlag, addText):
-        #Reading file: 读取文件
-        if (os.path.exists(fileName) == False):
-            errStr = "L2VISCFY: File %s not exist!" % (fileName)
-            self.medErrorLog(errStr);
-            print("L2VISCFY: File %s not exist!" % (fileName))
-            return -1;
-        self.WORM_CLASSIFY_pic_filename = fileName
-        try:
-            inputImg = cv.imread(fileName)
-        except Exception as err:
-            print("L2VISCFY: Read file error, errinfo = ", str(err))
-            return -2;
 
-        #Processing procedure: 处理过程
-        binImg = self.func_vision_worm_binvalue_proc(inputImg)
-        nfImg = self.func_vision_worm_remove_noise_proc(binImg)
-        outputImg = self.func_vision_worm_find_contours(nfImg, inputImg, addText)
-        if (outCtrlFlag == True):
-            outputFn = fileNukeName
-        else:
-            outputFn = self.WORM_CLASSIFY_pic_filepath + "result_" + fileNukeName
-        print("L2VISCFY: OutputFn = %s, nuke name = %s" %(outputFn, fileNukeName))
-        cv.imwrite(outputFn, outputImg)
-            
-        #Save log record: 存储干活的log记录
-        f = open(GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET, "a+")
-        a = '[%s], vision worm classification ones, save result as [%s] with output [%s].\n' % (time.asctime(), outputFn, str(self.WORM_CLASSIFY_pic_sta_output))
-        f.write(a)
-        f.close()
-        #Show result or not: 根据指令，是否显示文件
-        cv.destroyAllWindows()
-        return 1
 
     '''
     #
@@ -785,15 +801,17 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     #cAreaMin, =100, 最小面积，通过这个方式去掉噪点
     #cAreaMax, =500, 最大面积，通过这个方式去掉不可靠的垃圾
     #ceMin, =20(NF2定标), 圆形门限
+    #叠加面积属性
     #
     '''
     #细胞识别函数
-    def func_vision_flu_cell_count(self, fileName, fileNukeName, tarBlkSize, cAreaMin, cAreaMax, ceMin):
-        #处理参数
+    def func_vision_flu_cell_count(self, fileName, fileNukeName, tarBlkSize, cAreaMin, cAreaMax, ceMin, addupSet):
+        #处理参数，确保奇数性质的参数
         if ((tarBlkSize//2)*2) == tarBlkSize:
             tarBlkSize +=1
         ceMin = ceMin/100
-        print("tarBlkSize=%d, cAreaMin=%d, cAreaMax=%d, ceMin=%f" % (tarBlkSize, cAreaMin, cAreaMax, ceMin))
+        #使用LOCAL方式进行叠加，不再使用全局属性，简化处理
+        outputText = {'totalNbr':0, 'validNbr':0}
         
         #Reading file: 读取文件
         if (os.path.exists(fileName) == False):
@@ -801,7 +819,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             self.medErrorLog(errStr);
             print("L2VISCFY: File %s not exist!" % (fileName))
             return -1;
-        self.WORM_CLASSIFY_pic_filename = fileName
         try:
             inputImg = cv.imread(fileName)
         except Exception as err:
@@ -840,23 +857,12 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         mask = np.zeros((inputImg.shape[0]+2, inputImg.shape[1]+2), np.uint8)
         mask[:] = 1
         #Analysis one by one: 分别分析
-        totCnt = 0
         for c in contours:
-            #External retangle: 外矩形框
-            (x,y,w,h)=cv.boundingRect(c)
-            pointx=x+w/2
-            pointy=y+h/2
-            # compute the center of the contour
+            outputText['totalNbr'] +=1
             M = cv.moments(c)
             cX = int(M["m10"] / (M["m00"]+0.01))
             cY = int(M["m01"] / (M["m00"]+0.01))
-            #seed_point = (cX, cY)
-            #Shape square: 轮廓面积
             cArea = cv.contourArea(c)
-            #Shape length: 轮廓弧长
-            #cPerimeter = cv.arcLength(c,True)
-            
-            #4th method: 第四种方法
             rect = cv.minAreaRect(c)
             #width / height: 长宽,总有 width>=height  
             width, height = rect[1]
@@ -870,19 +876,29 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             if (cArea < cAreaMin) or (cE < ceMin) or (cArea > cAreaMax):
                 pass
             else:
-                totCnt+=1
-                cv.drawContours(outputImg, c, -1, (0,0,255), 2)  
-                cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
-            #font = cv.FONT_HERSHEY_SIMPLEX
-            #cv.putText(outputImg, str(self.WORM_CLASSIFY_pic_sta_output), (10, 30), font, 0.7, (0, 0, 255), 2, cv.LINE_AA)        
+                outputText['validNbr'] +=1
+                cv.drawContours(outputImg, c, -1, (0,0,255), 2)
+                cv.putText(outputImg, str(cArea), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
         
+        #整体叠加输出
+        if (addupSet == True):
+            font = cv.FONT_HERSHEY_SIMPLEX
+            cv.putText(outputImg, str("XHT: " + str(outputText)), (10, 30), font, 0.7, (0, 0, 255), 2, cv.LINE_AA)
         
         #最后一步，反馈结果
         outputFn = fileNukeName
-        #outputImg = binRes
         cv.imwrite(outputFn, outputImg)
-        cv.destroyAllWindows()    
-        return totCnt
+
+        #Save log record: 存储干活的log记录
+        f = open(GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET, "a+")
+        a = '[%s], Flu cell counting, save result as [%s] with output [%s].\n' % (time.asctime(), outputFn, str(outputText))
+        f.write(a)
+        f.flush()
+        f.close()
+        
+        #CLEAN SITES ENV.
+        cv.destroyAllWindows()
+        return outputText['validNbr']
 
 
 
