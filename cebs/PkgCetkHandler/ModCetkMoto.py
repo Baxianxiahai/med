@@ -45,9 +45,11 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         #ModVmLayer.TUP_GL_CFG.save_task_by_id(TUP_TASK_ID_MOTO, self)
         self.fsm_set(TUP_STM_NULL)
         self.IsSerialOpenOk = False
+        self.serialFd = ''
         #STM MATRIX
         self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_HW_REL, self.fsm_msg_moto_hw_release_rcv_handler)
 
         #通知界面切换
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_main_ui_switch_rcv_handler)
@@ -92,6 +94,15 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
+        return TUP_SUCCESS;
+    
+    #释放所有的硬件资源
+    def fsm_msg_moto_hw_release_rcv_handler(self, msgContent):
+        if (self.IsSerialOpenOk != False) and (self.serialFd != ''):
+            try:
+                self.serialFd.close()
+            except Exception:
+                pass
         return TUP_SUCCESS;
 
     def fsm_msg_trace_msg_rcv_handler(self, msgContent):

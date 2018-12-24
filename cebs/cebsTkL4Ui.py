@@ -68,8 +68,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         exitAction = QAction(QIcon('.\icon_res\cebsExit.ico'), '&Exit', self)
         exitAction.setShortcut('Ctrl+Q')
         exitAction.setStatusTip('EXIT SYSTEM')
-        exitAction.triggered.connect(qApp.quit)
-        #exitAction.triggered.connect(self.close(True))
+        #exitAction.triggered.connect(qApp.quit)
+        exitAction.triggered.connect(self.quit)
         toolbar = self.addToolBar('EXIT')  
         toolbar.addAction(exitAction)
         aboutAction = QAction(QIcon('.\icon_res\cebsAbout.ico'), '&About', self)
@@ -224,10 +224,16 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         self.cetk_debug_print("L4MAIN: Main form hide!")
         if self.isVisible():
             self.hide()
+    
+    #自己制造的结束函数，代替qApp.quit()方式，目的是为了菜单上的退出函数的截获，从而可以做一些硬件清理的事            
+    def quit(self):
+        self.close()
 
-
+    #需要捕获关闭界面的事件，然后将其通知给所有的其它任务，关闭硬件设备，然后再行退出主界面
     def closeEvent(self, event):
         print("I am MAINUI and closed!")
+        self.TkMainUi.func_ui_click_main_prog_exit();
+        time.sleep(1)
         self.close()
 
 

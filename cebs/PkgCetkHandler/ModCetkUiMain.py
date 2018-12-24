@@ -162,7 +162,12 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         self.fsm_set(self._STM_ACTIVE)
 
 
-
+    #程序退出
+    def func_ui_click_main_prog_exit(self):
+        print("I am func_ui_click_main_prog_exit!")
+        self.msg_send(TUP_MSGID_HW_REL, TUP_TASK_ID_MOTO, "")
+        self.msg_send(TUP_MSGID_HW_REL, TUP_TASK_ID_VISION, "")
+        self.fsm_set(self._STM_ACTIVE)
     
 
 

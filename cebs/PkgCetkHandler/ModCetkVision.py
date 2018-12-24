@@ -71,6 +71,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         #STM MATRIX
         self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_msg_restart_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_HW_REL, self.fsm_msg_vision_hw_release_rcv_handler)
         
         #通知界面切换
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_main_ui_switch_rcv_handler)
@@ -128,6 +129,16 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_restart_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
+        return TUP_SUCCESS;
+
+    #释放所有的硬件资源
+    def fsm_msg_vision_hw_release_rcv_handler(self, msgContent):
+        if (self.camera_nbr >= 0):
+            try:
+                self.capInit.release()
+                cv.destroyAllWindows()
+            except Exception:
+                pass
         return TUP_SUCCESS;
 
     def fsm_msg_main_ui_switch_rcv_handler(self, msgContent):
