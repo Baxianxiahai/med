@@ -11,7 +11,11 @@
 
 
 
-
+[程序打包]
+1.windows下cmd进入cebsMain.py文件所在目录下
+2.执行：pyinstaller -F -w cebsMain.py 进行打包
+3.注意：pyinstaller打包多进程程序出错解决办法
+https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
