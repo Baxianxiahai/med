@@ -60,6 +60,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.WORM_CLASSIFY_small2mid = GLVIS_PAR_OFC.SMALL_MID_LIMIT;
         self.WORM_CLASSIFY_mid2big = GLVIS_PAR_OFC.MID_BIG_LIMIT;
         self.WORM_CLASSIFY_big2top = GLVIS_PAR_OFC.BIG_UPPER_LIMIT;
+        self.WORM_CLASSIFY_addupSet = GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET;
         self.WORM_CLASSIFY_pic_filepath = GLCFG_PAR_OFC.PIC_MIDDLE_PATH + '/'
         self.WORM_CLASSIFY_pic_filename = "1.jpg"
         self.WORM_CLASSIFY_pic_sta_output = {'totalNbr':0, 'bigAlive':0, 'bigDead':0, 'middleAlive':0, 'middleDead':0, 'smallAlive':0, 'smallDead':0, 'totalAlive':0, 'totalDead':0}
@@ -148,11 +149,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.WORM_CLASSIFY_small2mid = msgContent['small2Mid'];
         self.WORM_CLASSIFY_mid2big = msgContent['mid2Big'];
         self.WORM_CLASSIFY_big2top = msgContent['bigLimit'];
+        self.WORM_CLASSIFY_addupSet = msgContent['addupSet'];
         self.FLU_CELL_COUNT_genr_par1 = msgContent['genrPar1'];
         self.FLU_CELL_COUNT_genr_par2 = msgContent['genrPar2'];
         self.FLU_CELL_COUNT_genr_par3 = msgContent['genrPar3'];
         self.FLU_CELL_COUNT_genr_par4 = msgContent['genrPar4'];
-                
         return TUP_SUCCESS;
 
     def funcVisionLogTrace(self, myString):

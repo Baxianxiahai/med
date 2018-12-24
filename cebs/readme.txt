@@ -14,6 +14,12 @@
 
 
 
+//=ZJL, 2018/12/24, CURRENT_SW_DELIVERY R1.45 =>CEBS
+= 完善TRAIN/FCC参数机制
+= 完善func_ui_click_gpar_refresh_par()函数的放置过程：必须在close_event()的处理过程中更新VISION参数，将COM参数传进去，确保更新参数和放弃时（原始参数）都能正确的传到VISION模块
+  确保下次操作还是正确的
+= 增加GPAR在放弃参数时，二次进入后重新装载之前的参数，确保“放弃”动作是完善的
+= 去掉GLVIS_PAR_SAV全局参量，只保留GLVIS_PAR_OFC，简化参数的存储逻辑
 
 
 //=ZJL, 2018/12/21, CURRENT_SW_DELIVERY R1.44 =>CEBS
@@ -22,8 +28,6 @@
 = 将GPAR中4个通用参数纳入到代码体系中
 = 准备完善算法过程
 = FLU-CELL-COUNT: 门限参数有4个：小尺寸门限-细胞的最小面积尺寸，大尺寸门限-细胞的最大面积尺寸，通用门限1-细胞的高斯滤波门限，通用门限2-细胞的圆形度门限（NF2）
-
-
 
 //=ZJL, 2018/12/19, CURRENT_SW_DELIVERY R1.43 =>CEBS
 = 小罗完善图像延迟帧的问题

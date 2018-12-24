@@ -91,18 +91,19 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
             self.fatherUiObj.cetk_debug_print(str(string))
             
     #主界面承接过来的执行函数   
-    def func_ui_click_pic_train(self, fileName):
+    def func_ui_click_pic_train(self, fileName, liPar1, liPar2, liPar3, liPar4, addupSet, gePar1, gePar2, gePar3, gePar4):
         print("I am func_ui_click_pic_train!")
         #LC:before click train you need to send message to refresh train pars
         mbuf={}
-        mbuf['baseLimit'] = GLVIS_PAR_OFC.SMALL_LOW_LIMIT 
-        mbuf['small2Mid'] = GLVIS_PAR_OFC.SMALL_MID_LIMIT 
-        mbuf['mid2Big'] = GLVIS_PAR_OFC.MID_BIG_LIMIT 
-        mbuf['bigLimit'] = GLVIS_PAR_OFC.BIG_UPPER_LIMIT
-        mbuf['genrPar1'] = GLVIS_PAR_OFC.CFY_THD_GENR_PAR1
-        mbuf['genrPar2'] = GLVIS_PAR_OFC.CFY_THD_GENR_PAR2
-        mbuf['genrPar3'] = GLVIS_PAR_OFC.CFY_THD_GENR_PAR3
-        mbuf['genrPar4'] = GLVIS_PAR_OFC.CFY_THD_GENR_PAR4
+        mbuf['baseLimit'] = liPar1; 
+        mbuf['small2Mid'] = liPar2;
+        mbuf['mid2Big'] = liPar3;
+        mbuf['bigLimit'] = liPar4;
+        mbuf['addupSet'] = addupSet;
+        mbuf['genrPar1'] = gePar1;
+        mbuf['genrPar2'] = gePar2;
+        mbuf['genrPar3'] = gePar3;
+        mbuf['genrPar4'] = gePar4;
         self.msg_send(TUP_MSGID_GPAR_REFRESH_PAR, TUP_TASK_ID_VISION, mbuf) 
         mbuf={}
         mbuf['fileName'] = fileName 
@@ -115,6 +116,7 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['small2Mid'] = GLVIS_PAR_OFC.SMALL_MID_LIMIT 
         mbuf['mid2Big'] = GLVIS_PAR_OFC.MID_BIG_LIMIT 
         mbuf['bigLimit'] = GLVIS_PAR_OFC.BIG_UPPER_LIMIT
+        mbuf['addupSet'] = GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET
         mbuf['genrPar1'] = GLVIS_PAR_OFC.CFY_THD_GENR_PAR1
         mbuf['genrPar2'] = GLVIS_PAR_OFC.CFY_THD_GENR_PAR2
         mbuf['genrPar3'] = GLVIS_PAR_OFC.CFY_THD_GENR_PAR3
@@ -132,17 +134,18 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
         self.fsm_set(self._STM_DEACT)           
         
     #荧光细胞计数        
-    def func_ui_click_gpar_flu_cell_cnt(self, fileName, lim1, lim2, lim3, lim4, par1, par2, par3, par4):
+    def func_ui_click_gpar_flu_cell_cnt(self, fileName, liPar1, liPar2, liPar3, liPar4, addupSet, gePar1, gePar2, gePar3, gePar4):
         print("I am func_ui_click_gpar_flu_cell_cnt!")
         mbuf={}
-        mbuf['baseLimit'] = lim1; 
-        mbuf['small2Mid'] = lim2;
-        mbuf['mid2Big'] = lim3;
-        mbuf['bigLimit'] = lim4;
-        mbuf['genrPar1'] = par1;
-        mbuf['genrPar2'] = par2;
-        mbuf['genrPar3'] = par3;
-        mbuf['genrPar4'] = par4;
+        mbuf['baseLimit'] = liPar1; 
+        mbuf['small2Mid'] = liPar2;
+        mbuf['mid2Big'] = liPar3;
+        mbuf['bigLimit'] = liPar4;
+        mbuf['addupSet'] = addupSet;
+        mbuf['genrPar1'] = gePar1;
+        mbuf['genrPar2'] = gePar2;
+        mbuf['genrPar3'] = gePar3;
+        mbuf['genrPar4'] = gePar4;
         self.msg_send(TUP_MSGID_GPAR_REFRESH_PAR, TUP_TASK_ID_VISION, mbuf) 
         mbuf={}
         mbuf['fileName'] = fileName 

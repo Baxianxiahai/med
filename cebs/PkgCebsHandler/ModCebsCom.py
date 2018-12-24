@@ -431,7 +431,6 @@ class clsL0_MedComPicPar():
                 
 #定义全局变量以及操作函数
 GLVIS_PAR_OFC = clsL0_MedComPicPar()
-GLVIS_PAR_SAV = clsL0_MedComPicPar()
 
 
 '''
