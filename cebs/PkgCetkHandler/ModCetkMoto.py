@@ -652,6 +652,9 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     #连续带监控的命令执行
     def funcExecMoveZero(self, maxTry):
         self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_MV_ZERO_CMID, (-1)*GLSPS_PAR_OFC.MOTOR_ZERO_SPD, (-1)*GLSPS_PAR_OFC.MOTOR_ZERO_SPD, 0, 0)
+        #LC:you need to clear the par when exc back to zero
+        GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] = 0
+        GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] = 0
         #退出当前状态机
         cnt = maxTry
         while (1):
