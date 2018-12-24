@@ -703,10 +703,6 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm, clsL1_ConfigOpr):
         self.TkCalibUi.func_ui_click_force_move('RIGHT');
     
     def slot_calib_close(self):
-#         try:
-#             self.instL3CalibProc.funcCtrlCalibComp()
-#         except Exception:
-#             self.instL1ConfigOpr1.medErrorLog("L4CALIBMAIN: Execute instL3CalibProc.funcCtrlCalibComp() get error feedback.")
         self.close()
 
     def closeEvent(self, event):
@@ -761,7 +757,11 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, clsL1_ConfigOpr):
         self.rectOrg = self.label_gpar_pic_origin_fill.geometry()
         self.rectCfy = self.label_gpar_pic_cfy_fill.geometry()
         self.TkGparUi.funcGparInitBascPar(self.rectOrg.width(), self.rectOrg.height(), self.rectCfy.width(), self.rectCfy.height())
-        self.picOrgFile = ''       
+        self.picOrgFile = ''
+        #一定要清理掉原始图像，防止二次操作时误操作
+        self.label_gpar_pic_origin_fill.clear()
+        self.label_gpar_pic_cfy_fill.clear()
+        self.lineEdit_gpar_pic_file_load.clear()
 
     def cetk_debug_print(self, info):
         time.sleep(0.01)
@@ -788,6 +788,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, clsL1_ConfigOpr):
             fileName, _ = QFileDialog.getOpenFileName(self, "选取文件", "D:\\", "All Files (*);;Text Files (*.txt)")   #设置文件扩展名过滤,注意用双分号间隔
         else:
             fileName, _ = QFileDialog.getOpenFileName(self, "选取文件", "/home/", "All Files (*);;Text Files (*.txt)")   #设置文件扩展名过滤,注意用双分号间隔
+        self.lineEdit_gpar_pic_file_load.setText(str(fileName))
         #将文件导入到目标框中
         if (fileName != ''):
             self.picOrgFile = fileName

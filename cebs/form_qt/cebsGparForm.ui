@@ -715,7 +715,7 @@ p, li { white-space: pre-wrap; }
   </widget>
   <widget class="QLineEdit" name="lineEdit_gpar_pic_file_load">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>

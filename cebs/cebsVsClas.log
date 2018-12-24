@@ -1038,3 +1038,5 @@
 [Mon Dec 24 11:42:10 2018], Flu cell counting, save result as [tempPic.jpg] with output [{'totalNbr': 674, 'validNbr': 185}].
 [Mon Dec 24 11:42:59 2018], vision worm classification ones, save result as [tempPic.jpg] with output [{'totalNbr': 151, 'bigAlive': 9, 'bigDead': 2, 'middleAlive': 36, 'middleDead': 17, 'smallAlive': 73, 'smallDead': 14, 'totalAlive': 118, 'totalDead': 33}].
 [Mon Dec 24 11:43:37 2018], vision worm classification ones, save result as [tempPic.jpg] with output [{'totalNbr': 151, 'bigAlive': 9, 'bigDead': 2, 'middleAlive': 36, 'middleDead': 17, 'smallAlive': 73, 'smallDead': 14, 'totalAlive': 118, 'totalDead': 33}].
+[Mon Dec 24 15:08:22 2018], Flu cell counting, save result as [tempPic.jpg] with output [{'totalNbr': 674, 'validNbr': 185}].
+[Mon Dec 24 15:17:20 2018], Flu cell counting, save result as [tempPic.jpg] with output [{'totalNbr': 674, 'validNbr': 185}].

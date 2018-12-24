@@ -181,7 +181,7 @@ class Ui_cebsGparForm(object):
         self.pushButton_gpar_pic_file_load.setGeometry(QtCore.QRect(1070, 20, 91, 21))
         self.pushButton_gpar_pic_file_load.setObjectName("pushButton_gpar_pic_file_load")
         self.lineEdit_gpar_pic_file_load = QtWidgets.QLineEdit(cebsGparForm)
-        self.lineEdit_gpar_pic_file_load.setEnabled(False)
+        self.lineEdit_gpar_pic_file_load.setEnabled(True)
         self.lineEdit_gpar_pic_file_load.setGeometry(QtCore.QRect(580, 20, 471, 20))
         self.lineEdit_gpar_pic_file_load.setObjectName("lineEdit_gpar_pic_file_load")
         self.label_gpar_pic_file_load = QtWidgets.QLabel(cebsGparForm)
