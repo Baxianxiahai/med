@@ -67,6 +67,7 @@ class tupTaskTemplate():
     process = '';
     state = 0;
     msgStateMatrix = []
+    ctrlRun = True
     
     def __init__(self, taskid, taskName, glTabEntry):
         super(tupTaskTemplate, self).__init__()
@@ -76,6 +77,7 @@ class tupTaskTemplate():
         self.queue = self.glTab.queTab[taskid];
         self.process = '';
         self.state = 0;
+        self.ctrlRun = True;
         self.msgStateMatrix = [[TUP_INIT_VALUE for i in range(self.glTab.TUP_MSGID_MAX)] for j in range(self.glTab.TUP_STATE_MAX)]
         self.task_create();
         
@@ -153,7 +155,7 @@ class tupTaskTemplate():
             self.process = Process(target=self.task_handler_enginee, args=(self.queue,))
             
     def task_handler_enginee(self, myque):
-        while True:
+        while (self.ctrlRun == True):
             result = myque.get()
             msgId = int(result['mid'])
             srcId = int(result['src'])
@@ -189,7 +191,13 @@ class tupTaskTemplate():
 
     def task_run(self):
         self.process.start()
-
+    
+    def task_stop(self):
+        #self.process.terminate()
+        self.ctrlRun = False
+        self.msg_send(TUP_MSGID_EXIT, self.taskId, "")
+        self.process.join()
+    
     def tup_trace(self, string):
         if (TUP_PRINT_FLAG_SET_TRC == True):
             print(time.asctime(), ", [TRC] [", self.taskName, "]: ", str(string))

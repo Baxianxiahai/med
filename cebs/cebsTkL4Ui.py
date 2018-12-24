@@ -69,6 +69,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         exitAction.setShortcut('Ctrl+Q')
         exitAction.setStatusTip('EXIT SYSTEM')
         exitAction.triggered.connect(qApp.quit)
+        #exitAction.triggered.connect(self.close(True))
         toolbar = self.addToolBar('EXIT')  
         toolbar.addAction(exitAction)
         aboutAction = QAction(QIcon('.\icon_res\cebsAbout.ico'), '&About', self)
@@ -80,17 +81,13 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
 
     #MUST Load global parameters, to initialize different UI and update the stored parameters.
     def initParameter(self):
-#         #STEP1: INI FILE CONFIGURATION, 初始化配置文件
-#         self.func_read_global_par_from_cfg_file();  #读取本地文件的配置数据，并写入全局变量中来
-#         self.updateCtrlCntInfo() #更新进度控制参量
-
-        #STEP2: START SUB-UI, 启动子界面        
+        #STEP1: START SUB-UI, 启动子界面        
         self.instL4CalibForm = SEUI_L4_CalibForm(self.TkCalibUi)
         self.instL4GparForm = SEUI_L4_GparForm(self.TkGparUi)
         self.instL4MengForm = SEUI_L4_MengForm(self.TkMenUi)
         #self.instL4BroserForm=SEUI_L4_BroswerForm(self.TkBrowUi)
         
-        #STEP3: CONNECT SIGNAL SLOT, 连接信号槽
+        #STEP2: CONNECT SIGNAL SLOT, 连接信号槽
         self.sgL4MainWinUnvisible.connect(self.funcMainWinUnvisible);
         self.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.instL4CalibForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
@@ -98,7 +95,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         self.instL4MengForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         #self.instL4BroserForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         
-        #STEP4: 使用传递指针的方式
+        #STEP3: 使用传递指针的方式
         self.TkMainUi.funcSaveFatherInst(self)
 
     def aboutCompanyBox(self):
@@ -228,6 +225,10 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         if self.isVisible():
             self.hide()
 
+
+    def closeEvent(self, event):
+        print("I am MAINUI and closed!")
+        self.close()
 
 
 #第二主入口
@@ -1173,8 +1174,8 @@ def cetk_show_app(app, splash, TkMainUi, TkCalibUi, TkGparUi, TkMenUi, TkBrowUi)
     mainWindow = SEUI_L4_MainWindow(TkMainUi, TkCalibUi, TkGparUi, TkMenUi, TkBrowUi)
     mainWindow.show()
     cetk_hide_startup_pic(splash)
-    sys.exit(app.exec_())
-    print("Main App done!")
+    #换用新机制，不然整个应用程序退出不成功
+    app.exec_()
     return    
 
 #THE MAIN ENTRY: 第0主入口，MAIN函数部分
@@ -1187,7 +1188,6 @@ def cetk_l4ui_main_form_entry(TkMainUi, TkCalibUi, TkGparUi, TkMenUi):
     mainWindow.show()
     cetk_hide_startup_pic(splash)
     sys.exit(app.exec_())
-    print("Main App done!")
     return
     
     

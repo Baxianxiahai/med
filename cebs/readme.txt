@@ -24,6 +24,7 @@
 //=ZJL, 2018/12/24, CURRENT_SW_DELIVERY R1.46 =>CEBS
 = 给每个界面增加swithOn()函数钩子，以便需要时做界面参数的初始化：其中GPAR是必须的，但其它界面暂时不需要
 = 修正MENG界面中（设置限位器触发迟滞）的选择性BUG
+= 完善任务的退出机制，确保安全退出
 
 //=ZJL, 2018/12/24, CURRENT_SW_DELIVERY R1.45 =>CEBS
 = 完善TRAIN/FCC参数机制

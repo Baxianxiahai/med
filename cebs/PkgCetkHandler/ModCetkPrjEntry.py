@@ -143,7 +143,6 @@ def prj_cebs_main_entry():
     VisionTaskInst.msg_send_in(initMsg)
     VisionTaskInst.tup_dbg_print("Create VISION task success!")
 
-
     '''
     #
     # PAR3: 正式进入用户界面
@@ -160,18 +159,19 @@ def prj_cebs_main_entry():
     #
     '''    
     #CLOSE ALL TASK: total 12 tasks
-    print("Project CETK terminate all existing tasks!")
-    VmConslTaskInst.terminate()
-    MainUiTaskInst.terminate()
-    CalibUiTaskInst.terminate()
-    GparUiTaskInst.terminate()
-    MengUiTaskInst.terminate()
-    CalibTaskInst.terminate()
-    CtrlSchdTaskInst.terminate()
-    GparTaskInst.terminate()
-    MengTaskInst.terminate()
-    MotoTaskInst.terminate()
-    VisionTaskInst.terminate()
+    print("Project CETK terminate all existing tasks Start!")
+    VmConslTaskInst.task_stop()
+    MainUiTaskInst.task_stop()
+    CalibUiTaskInst.task_stop()
+    GparUiTaskInst.task_stop()
+    MengUiTaskInst.task_stop()
+    CalibTaskInst.task_stop()
+    CtrlSchdTaskInst.task_stop()
+    GparTaskInst.task_stop()
+    MengTaskInst.task_stop()
+    MotoTaskInst.task_stop()
+    VisionTaskInst.task_stop()
+    print("Project CETK terminate all existing tasks Accomplish!")
     
     '''
     #
