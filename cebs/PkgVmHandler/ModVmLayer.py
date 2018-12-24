@@ -221,5 +221,39 @@ class tupTaskTemplate():
 
     def tup_timer_stop(self, mytimer):
         mytimer.cancel()
+    
+    #公共处理函数
+    def fsm_com_msg_restart_rcv_handler(self, msgContent):
+        self.fsm_set(self.TUP_STM_INIT)
+        self.msg_send(TUP_MSGID_INIT, self.taskId, "")
+        return TUP_SUCCESS;
+
+    #公共处理函数
+    def fsm_com_msg_exit_rcv_handler(self, msgContent):
+        return TUP_SUCCESS;
+
+    #公共处理函数
+    def fsm_com_msg_test_rcv_handler(self, msgContent):
+        print("I am %s, I get test message!" % (str(self.taskName)))
+        return TUP_SUCCESS;
+
+    #公共处理函数
+    def fsm_com_msg_do_nothing_handler(self, msgContent):
+        return TUP_SUCCESS;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
         

@@ -231,7 +231,6 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
 
     #需要捕获关闭界面的事件，然后将其通知给所有的其它任务，关闭硬件设备，然后再行退出主界面
     def closeEvent(self, event):
-        print("I am MAINUI and closed!")
         self.TkMainUi.func_ui_click_main_prog_exit();
         time.sleep(1)
         self.close()

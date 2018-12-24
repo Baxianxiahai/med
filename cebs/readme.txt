@@ -30,6 +30,7 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 = 修正MENG界面中（设置限位器触发迟滞）的选择性BUG
 = 完善任务的退出机制，确保安全退出
 = 清理MOTO/VISION的硬件资源过程
+= 增加公共FSM函数过程
 
 //=ZJL, 2018/12/24, CURRENT_SW_DELIVERY R1.45 =>CEBS
 = 完善TRAIN/FCC参数机制
