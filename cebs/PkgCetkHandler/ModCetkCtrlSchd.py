@@ -415,6 +415,8 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         #CREATE FILE NAME
         fileName = self.getStoredFileName(batch, fileNbr);
         fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
+        print("file name",fileName)
+        print("fileNukeName",fileNukeName)
         if (fileName == None) or (fileNukeName == None):
             self.updateBatCntWithIniFileSyned(False, GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT*(-1), 0)
             self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification finished: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))

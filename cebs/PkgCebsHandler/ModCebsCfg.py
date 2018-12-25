@@ -444,7 +444,22 @@ class clsL1_ConfigOpr():
         return res;
 
     def combineFileName(self, batch, fileNbr):
-        return str("batch#" + str(batch) + "FileName#" + str(fileNbr))
+        if (0<fileNbr<13):
+            return str("batch#" + str(batch) + "FileName#" + "A"+ str(fileNbr))
+        if (12<fileNbr<25):
+            return str("batch#" + str(batch) + "FileName#" + "B"+ str(fileNbr-12))
+        if (24<fileNbr<37):
+            return str("batch#" + str(batch) + "FileName#" + "C"+ str(fileNbr-24))
+        if (36<fileNbr<49):
+            return str("batch#" + str(batch) + "FileName#" + "D"+ str(fileNbr-36))
+        if (48<fileNbr<61):
+            return str("batch#" + str(batch) + "FileName#" + "E"+ str(fileNbr-48))
+        if (60<fileNbr<73):
+            return str("batch#" + str(batch) + "FileName#" + "F"+ str(fileNbr-60))
+        if (72<fileNbr<85):
+            return str("batch#" + str(batch) + "FileName#" + "G"+ str(fileNbr-72))
+        if (84<fileNbr<97):
+            return str("batch#" + str(batch) + "FileName#" + "H"+ str(fileNbr-84))
 
     def combineScaleFileName(self, batch, fileNbr):
         return str("scale_batch#" + str(batch) + "FileName#" + str(fileNbr))
@@ -453,15 +468,62 @@ class clsL1_ConfigOpr():
         return str("batch#" + str(batch) + "VideoName#" + str(fileNbr))
 
     def combineFileNameWithDir(self, batch, fileNbr):
-        fileName = str("batch#" + str(batch) + "FileName#" + str(fileNbr))
+        if (0<fileNbr<13):
+            fileName = str("batch#" + str(batch) + "FileName#" + "A"+ str(fileNbr))
+        if (12<fileNbr<25):
+            fileName = str("batch#" + str(batch) + "FileName#" + "B"+ str(fileNbr-12))
+        if (24<fileNbr<37):
+            fileName = str("batch#" + str(batch) + "FileName#" + "C"+ str(fileNbr-24))
+        if (36<fileNbr<49):
+            fileName = str("batch#" + str(batch) + "FileName#" + "D"+ str(fileNbr-36))
+        if (48<fileNbr<61):
+            fileName = str("batch#" + str(batch) + "FileName#" + "E"+ str(fileNbr-48))
+        if (60<fileNbr<73):
+            fileName = str("batch#" + str(batch) + "FileName#" + "F"+ str(fileNbr-60))
+        if (72<fileNbr<85):
+            fileName = str("batch#" + str(batch) + "FileName#" + "G"+ str(fileNbr-72))
+        if (84<fileNbr<97):
+            fileName = str("batch#" + str(batch) + "FileName#" + "H"+ str(fileNbr-84))
         return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
 
     def combineScaleFileNameWithDir(self, batch, fileNbr):
-        fileName = str("scale_batch#" + str(batch) + "FileName#" + str(fileNbr))
+        if (0<fileNbr<13):
+            fileName = str("batch#" + str(batch) + "FileName#" + "A"+ str(fileNbr))
+        if (12<fileNbr<25):
+            fileName = str("batch#" + str(batch) + "FileName#" + "B"+ str(fileNbr-12))
+        if (24<fileNbr<37):
+            fileName = str("batch#" + str(batch) + "FileName#" + "C"+ str(fileNbr-24))
+        if (36<fileNbr<49):
+            fileName = str("batch#" + str(batch) + "FileName#" + "D"+ str(fileNbr-36))
+        if (48<fileNbr<61):
+            fileName = str("batch#" + str(batch) + "FileName#" + "E"+ str(fileNbr-48))
+        if (60<fileNbr<73):
+            fileName = str("batch#" + str(batch) + "FileName#" + "F"+ str(fileNbr-60))
+        if (72<fileNbr<85):
+            fileName = str("batch#" + str(batch) + "FileName#" + "G"+ str(fileNbr-72))
+        if (84<fileNbr<97):
+            fileName = str("batch#" + str(batch) + "FileName#" + "H"+ str(fileNbr-84))
+        #fileName = str("scale_batch#" + str(batch) + "FileName#" + str(fileNbr))
         return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
     
     def combineFileNameVideoWithDir(self, batch, fileNbr):
-        fileName = str("batch#" + str(batch) + "FileName#" + str(fileNbr))
+        if (0<fileNbr<13):
+            fileName = str("batch#" + str(batch) + "FileName#" + "A"+ str(fileNbr))
+        if (12<fileNbr<25):
+            fileName = str("batch#" + str(batch) + "FileName#" + "B"+ str(fileNbr-12))
+        if (24<fileNbr<37):
+            fileName = str("batch#" + str(batch) + "FileName#" + "C"+ str(fileNbr-24))
+        if (36<fileNbr<49):
+            fileName = str("batch#" + str(batch) + "FileName#" + "D"+ str(fileNbr-36))
+        if (48<fileNbr<61):
+            fileName = str("batch#" + str(batch) + "FileName#" + "E"+ str(fileNbr-48))
+        if (60<fileNbr<73):
+            fileName = str("batch#" + str(batch) + "FileName#" + "F"+ str(fileNbr-60))
+        if (72<fileNbr<85):
+            fileName = str("batch#" + str(batch) + "FileName#" + "G"+ str(fileNbr-72))
+        if (84<fileNbr<97):
+            fileName = str("batch#" + str(batch) + "FileName#" + "H"+ str(fileNbr-84))
+        #fileName = str("batch#" + str(batch) + "FileName#" + str(fileNbr))
         return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.mp4'  #.mp4, .avi
 
 
