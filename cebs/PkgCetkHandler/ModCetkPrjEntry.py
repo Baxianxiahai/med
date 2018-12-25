@@ -17,12 +17,14 @@ from PkgCetkHandler import ModCetkCalib
 from PkgCetkHandler import ModCetkCtrlSchd
 from PkgCetkHandler import ModCetkGpar
 from PkgCetkHandler import ModCetkMeng
+from PkgCetkHandler import ModCetkStest
 from PkgCetkHandler import ModCetkMoto
 from PkgCetkHandler import ModCetkVision
 from PkgCetkHandler import ModCetkUiMain
 from PkgCetkHandler import ModCetkUiCalib
 from PkgCetkHandler import ModCetkUiGpar
 from PkgCetkHandler import ModCetkUiMeng
+from PkgCetkHandler import ModCetkUiStest
 
 import cebsTkL4Ui
 
@@ -106,6 +108,12 @@ def prj_cebs_main_entry():
     initMsg['dst'] = TUP_TASK_ID_UI_MENG
     MengUiTaskInst.msg_send_in(initMsg)            
     MengUiTaskInst.tup_dbg_print("Create MENG UI task success!")
+
+    #UI_STEST
+    StestUiTaskInst = ModCetkUiStest.tupTaskUiStest(TUP_GL_CFG);
+    initMsg['dst'] = TUP_TASK_ID_UI_STEST
+    StestUiTaskInst.msg_send_in(initMsg)            
+    StestUiTaskInst.tup_dbg_print("Create STEST UI task success!")
         
     #Calib Task
     CalibTaskInst = ModCetkCalib.tupTaskCalib(TUP_GL_CFG);
@@ -131,6 +139,12 @@ def prj_cebs_main_entry():
     MengTaskInst.msg_send_in(initMsg)    
     MengTaskInst.tup_dbg_print("Create MENG task success!")
 
+    #Stest Task
+    StestTaskInst = ModCetkStest.tupTaskStest(TUP_GL_CFG);
+    initMsg['dst'] = TUP_TASK_ID_STEST
+    StestTaskInst.msg_send_in(initMsg)    
+    StestTaskInst.tup_dbg_print("Create STEST task success!")
+    
     #Moto Task
     MotoTaskInst = ModCetkMoto.tupTaskMoto(TUP_GL_CFG);
     initMsg['dst'] = TUP_TASK_ID_MOTO
@@ -149,7 +163,7 @@ def prj_cebs_main_entry():
     #
     '''
     #FINAL QT UI：真正启动界面APP
-    cebsTkL4Ui.cetk_show_app(app, splash, MainUiTaskInst, CalibUiTaskInst, GparUiTaskInst, MengUiTaskInst, 0)
+    cebsTkL4Ui.cetk_show_app(app, splash, MainUiTaskInst, CalibUiTaskInst, GparUiTaskInst, MengUiTaskInst, StestUiTaskInst, 0)
 
 
 
@@ -165,10 +179,12 @@ def prj_cebs_main_entry():
     CalibUiTaskInst.task_stop()
     GparUiTaskInst.task_stop()
     MengUiTaskInst.task_stop()
+    StestUiTaskInst.task_stop()
     CalibTaskInst.task_stop()
     CtrlSchdTaskInst.task_stop()
     GparTaskInst.task_stop()
     MengTaskInst.task_stop()
+    StestTaskInst.task_stop()
     MotoTaskInst.task_stop()
     VisionTaskInst.task_stop()
     print("Project CETK terminate all existing tasks Accomplish!")

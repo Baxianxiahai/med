@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>SPS COMMAND</string>
+   <string>工程模式</string>
   </property>
   <widget class="QLabel" name="label_meng_cmd_sel">
    <property name="geometry">

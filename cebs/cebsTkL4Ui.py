@@ -23,6 +23,7 @@ from form_qt.cebsmainform import Ui_cebsMainWindow
 from form_qt.cebscalibform import Ui_cebsCalibForm
 from form_qt.cebsgparform import Ui_cebsGparForm
 from form_qt.cebsmengform import Ui_cebsMengForm
+from form_qt.cebsstestform import Ui_cebsStestForm
 from form_qt.cebsBroswerForm import Ui_BroswerForm
 
 #Local Class
@@ -30,6 +31,10 @@ from PkgVmHandler.ModVmLayer import *
 from PkgCebsHandler.ModCebsCom import *
 from PkgCebsHandler.ModCebsCom import *
 from PkgCebsHandler.ModCebsCfg import *
+
+
+
+
 
 
 
@@ -48,17 +53,12 @@ Main Windows
     #拍照 - Main - Pic
     #识别 - Main - Cfy
     #设置 - Sset
-
-
-
-
-
 '''
 class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigOpr):
     sgL4MainWinUnvisible = pyqtSignal()
     sgL4MainWinVisible = pyqtSignal()
 
-    def __init__(self, TaskInstMainUi, TaskInstCalibUi, TaskInstGparUi, TaskInstMenUi, TaskInstBrowUi):    
+    def __init__(self, TaskInstMainUi, TaskInstCalibUi, TaskInstGparUi, TaskInstMengUi, TaskInstStestUi, TaskInstBrowUi):    
         super(SEUI_L4_MainWindow, self).__init__()
         #CASE1:
         #SYSTEM LEVEL UI INIT, 系统级别的界面初始化
@@ -71,7 +71,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         self.TkMainUi = TaskInstMainUi
         self.TkCalibUi = TaskInstCalibUi
         self.TkGparUi = TaskInstGparUi
-        self.TkMenUi = TaskInstMenUi
+        self.TkMengUi = TaskInstMengUi
+        self.TkStestUi = TaskInstStestUi
         self.TkBrowUi = TaskInstBrowUi
 
         #CASE3: HARDWARE LEVEL INIT, 硬件初始化
@@ -96,6 +97,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         #主菜单跟命令关联
         #自测
         self.actionMenuStestProc.triggered.connect(self.slot_Stest_sel)
+        self.actionMenuStestRndCmd.triggered.connect(self.slot_runpg_test)
         #工参 
         self.actionMenuGparSet.triggered.connect(self.slot_gpar_start)
         #马达
@@ -124,7 +126,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         #STEP1: START SUB-UI, 启动子界面        
         self.instL4CalibForm = SEUI_L4_CalibForm(self.TkCalibUi)
         self.instL4GparForm = SEUI_L4_GparForm(self.TkGparUi)
-        self.instL4MengForm = SEUI_L4_MengForm(self.TkMenUi)
+        self.instL4MengForm = SEUI_L4_MengForm(self.TkMengUi)
+        self.instL4StestForm = SEUI_L4_StestForm(self.TkStestUi)
         #self.instL4BroserForm=SEUI_L4_BroswerForm(self.TkBrowUi)
         
         #STEP2: CONNECT SIGNAL SLOT, 连接信号槽
@@ -133,6 +136,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         self.instL4CalibForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.instL4GparForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.instL4MengForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
+        self.instL4StestForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         #self.instL4BroserForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         
         #STEP3: 使用传递指针的方式
@@ -249,8 +253,13 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
 
     #Enter Self Test Procedure
     def slot_Stest_sel(self):
-        self.cetk_debug_print("L4MAIN: Self test function under construction......")
-
+        self.cetk_debug_print("L4MAIN: Stest start......")
+        if not self.instL4StestForm.isVisible():
+            self.TkMainUi.func_ui_click_stest_start();
+            self.sgL4MainWinUnvisible.emit()
+            self.instL4StestForm.show()
+            #指示STEST界面进入事件
+            self.instL4StestForm.switchOn()
 
 
     '''
@@ -283,6 +292,11 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         self.TkMainUi.func_ui_click_main_prog_exit();
         time.sleep(1)
         self.close()
+
+
+
+
+
 
 
 #第二主入口
@@ -782,6 +796,10 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm, clsL1_ConfigOpr):
     def cetk_calib_disp_cam_by_obj(self, picObj):
         self.label_calib_RtCam_Fill.setPixmap(picObj.scaled(self.calibRect.width(), self.calibRect.height()))
 
+
+
+
+
 '''
 #
 #3rd Main Entry, 第三主入口
@@ -1030,19 +1048,20 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, clsL1_ConfigOpr):
         self.close()
 
 
+
 #4rd Main Entry, 第四主入口
 #Meng Widget
 class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm, clsL1_ConfigOpr):
     sgL4MainWinUnvisible = pyqtSignal()
     sgL4MainWinVisible = pyqtSignal()
 
-    def __init__(self, TaskInstGparUi):    
+    def __init__(self, TaskInstMengUi):    
         super(SEUI_L4_MengForm, self).__init__()
         #CASE1: 
         self.setupUi(self)
 
         #CASE2: 
-        self.TkMengUi = TaskInstGparUi
+        self.TkMengUi = TaskInstMengUi
         #使用传递指针的方式
         self.TkMengUi.funcSaveFatherInst(self)
         
@@ -1159,6 +1178,70 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm, clsL1_ConfigOpr):
         self.sgL4MainWinVisible.emit()
         self.close()
         
+
+        
+#5rd Main Entry, 第五主入口
+#Stest Widget
+class SEUI_L4_StestForm(QtWidgets.QWidget, Ui_cebsStestForm, clsL1_ConfigOpr):
+    sgL4MainWinUnvisible = pyqtSignal()
+    sgL4MainWinVisible = pyqtSignal()
+
+    def __init__(self, TaskInstStestUi):    
+        super(SEUI_L4_StestForm, self).__init__()
+        #CASE1: 
+        self.setupUi(self)
+
+        #CASE2: 
+        self.TkStestUi = TaskInstStestUi
+        #使用传递指针的方式
+        self.TkStestUi.funcSaveFatherInst(self)
+        
+        #CASE3: 
+        self.initParameter()
+    
+    def initParameter(self):
+        pass        
+
+    def cetk_debug_print(self, info):
+        time.sleep(0.01)
+        strOut = ">> " + str(time.asctime()) + " " + str(info);
+        self.textEdit_meng_trace_log.append(strOut);
+        self.textEdit_meng_trace_log.moveCursor(QtGui.QTextCursor.End)
+        self.textEdit_meng_trace_log.ensureCursorVisible()
+        self.textEdit_meng_trace_log.insertPlainText("")
+        
+    #界面的二次进入触发事件
+    def switchOn(self):
+        print("I am Stest and enter again!")
+        
+    #
+    #  SLOT FUNCTION, 槽函数部分
+    #    DO NOT MODIFY FUNCTION NAMES, 以下部分为系统接口对应的槽函数，函数命名不得动
+    #
+    #               
+    def slot_stest_start(self):
+        self.TkStestUi.func_ui_click_stest_self_test_start()
+
+    def slot_stest_stop(self):
+        self.TkStestUi.func_ui_click_stest_self_test_stop()
+
+    def slot_stest_clear(self):
+        self.textEdit_Stest_Trace_log.clear();
+
+    def slot_stest_compl(self):
+        self.close()
+
+    #Give up and not save parameters
+    def closeEvent(self, event):
+        self.TkStestUi.func_ui_click_stest_close()
+        self.TkStestUi.func_ui_click_stest_switch_to_main()
+        self.sgL4MainWinVisible.emit()
+        self.close()
+
+
+
+#6rd Main Entry, 第六主入口
+#Broswer Widget
 class SEUI_L4_BroswerForm(QtWidgets.QMainWindow, Ui_BroswerForm, clsL1_ConfigOpr):
     sgL4MainWinUnvisible = pyqtSignal()
     sgL4MainWinVisible = pyqtSignal()
@@ -1169,7 +1252,7 @@ class SEUI_L4_BroswerForm(QtWidgets.QMainWindow, Ui_BroswerForm, clsL1_ConfigOpr
         self.openBroswer()
         
     def openBroswer(self):
-        print("[CEBS]  Open Broswer is Start")
+        print("[CEBS]  Open Browser is Start")
         config=clsL1_ConfigOpr()
         name,configure=config.GetMachineTagandConfigure()
         number=int(configure.split("_")[0])
@@ -1193,6 +1276,15 @@ class SEUI_L4_BroswerForm(QtWidgets.QMainWindow, Ui_BroswerForm, clsL1_ConfigOpr
         config.SetDishRowandColumn()
         self.sgL4MainWinVisible.emit()
         self.close()
+
+
+
+
+
+
+
+
+
 
         
 '''
@@ -1223,9 +1315,9 @@ def cetk_show_startup_pic():
 def cetk_hide_startup_pic(splash):
     splash.hide()
 
-def cetk_show_app(app, splash, TkMainUi, TkCalibUi, TkGparUi, TkMenUi, TkBrowUi):
+def cetk_show_app(app, splash, TkMainUi, TkCalibUi, TkGparUi, TkMengUi, tkStestUi, TkBrowUi):
     QtWidgets.qApp.processEvents()
-    mainWindow = SEUI_L4_MainWindow(TkMainUi, TkCalibUi, TkGparUi, TkMenUi, TkBrowUi)
+    mainWindow = SEUI_L4_MainWindow(TkMainUi, TkCalibUi, TkGparUi, TkMengUi, tkStestUi, TkBrowUi)
     mainWindow.show()
     cetk_hide_startup_pic(splash)
     #换用新机制，不然整个应用程序退出不成功

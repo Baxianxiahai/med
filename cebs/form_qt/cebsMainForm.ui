@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>CEBS SYSTEM</string>
+   <string>小慧-CEBS-生物识别系统</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTextEdit" name="textEdit_runProgress">
@@ -271,6 +271,7 @@ p, li { white-space: pre-wrap; }
      <string>自测</string>
     </property>
     <addaction name="actionMenuStestProc"/>
+    <addaction name="actionMenuStestRndCmd"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -409,6 +410,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionMenuBrowseSelect">
    <property name="text">
     <string>活孔选择</string>
+   </property>
+  </action>
+  <action name="actionMenuStestRndCmd">
+   <property name="text">
+    <string>研发测试</string>
    </property>
   </action>
  </widget>

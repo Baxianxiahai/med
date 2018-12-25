@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>CALIBRATION</string>
+   <string>系统校准</string>
   </property>
   <widget class="QGroupBox" name="groupBox_calib_set">
    <property name="geometry">

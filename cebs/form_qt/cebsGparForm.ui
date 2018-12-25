@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>GLOBAL PARAMETER</string>
+   <string>工参配置</string>
   </property>
   <widget class="QGroupBox" name="groupBox_gpar_normal">
    <property name="geometry">

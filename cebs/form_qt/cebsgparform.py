@@ -199,7 +199,7 @@ class Ui_cebsGparForm(object):
 
     def retranslateUi(self, cebsGparForm):
         _translate = QtCore.QCoreApplication.translate
-        cebsGparForm.setWindowTitle(_translate("cebsGparForm", "GLOBAL PARAMETER"))
+        cebsGparForm.setWindowTitle(_translate("cebsGparForm", "工参配置"))
         self.groupBox_gpar_normal.setTitle(_translate("cebsGparForm", "全局参数设置"))
         self.checkBox_gpar_autoIdf.setText(_translate("cebsGparForm", "拍照后自动识别"))
         self.lineEdit_gpar_picTti.setText(_translate("cebsGparForm", "60"))

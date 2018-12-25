@@ -4,14 +4,21 @@
 2. VISION中图像识别参数控制，通用参数来调控
 3. 全局参数表，更新到本地化
 
-
-[BUG LIST]
+【BUG LIST】
 2. def func_vision_worm_binvalue_proc(self, img):  new = np.zeros(img.shape, np.uint8)
 
+【将QT工具生成的ui文件转化为py文件】
+  cd form_qt, 
+  pyuic5 -o  cebsmainform.py cebsMainform.ui    
+  pyuic5 -o  cebscalibform.py cebsCalibform.ui
+  pyuic5 -o  cebsgparform.py cebsGparform.ui
+  pyuic5 -o  cebsmengform.py cebsMengform.ui  //Moto Engineering Command
+  pyuic5 -o  cebssahtform.py cebsSahtform.ui  //Set Active Hole Target
+  pyuic5 -o  cebsstestform.py cebsStestform.ui
+  d:, cd \IHUSRC\med\cebs
+  pyinstaller -F -w --icon=.\icon_res\cebs.ico cebsMain.py
 
-
-
-[程序打包]
+【程序打包过程】
 1.windows下cmd进入cebsMain.py文件所在目录下
 2.执行：pyinstaller -F -w cebsMain.py 进行打包
 3.注意：pyinstaller打包多进程程序出错解决办法
@@ -23,10 +30,9 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
-
 //=ZJL, 2018/12/25, CURRENT_SW_DELIVERY R1.47 =>CEBS
 = 完善菜单界面
-
+= 搭建了Stest的框架，目标是自检测试，方便客户进行自检测试，查找问题之所在
 
 
 

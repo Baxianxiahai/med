@@ -110,7 +110,7 @@ class Ui_cebsMengForm(object):
 
     def retranslateUi(self, cebsMengForm):
         _translate = QtCore.QCoreApplication.translate
-        cebsMengForm.setWindowTitle(_translate("cebsMengForm", "SPS COMMAND"))
+        cebsMengForm.setWindowTitle(_translate("cebsMengForm", "工程模式"))
         self.label_meng_cmd_sel.setText(_translate("cebsMengForm", "命令选择"))
         __sortingEnabled = self.listWidget_meng_cmd.isSortingEnabled()
         self.listWidget_meng_cmd.setSortingEnabled(False)

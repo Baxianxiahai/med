@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'cebscalibform.ui'
+# Form implementation generated from reading ui file 'cebsCalibform.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.3
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -201,7 +201,7 @@ class Ui_cebsCalibForm(object):
 
     def retranslateUi(self, cebsCalibForm):
         _translate = QtCore.QCoreApplication.translate
-        cebsCalibForm.setWindowTitle(_translate("cebsCalibForm", "CALIBRATION"))
+        cebsCalibForm.setWindowTitle(_translate("cebsCalibForm", "系统校准"))
         self.groupBox_calib_set.setTitle(_translate("cebsCalibForm", "校准设定"))
         self.groupBox_calib_move_scale.setTitle(_translate("cebsCalibForm", "运动刻度"))
         self.radioButton_calib_5cm.setText(_translate("cebsCalibForm", "5cm"))

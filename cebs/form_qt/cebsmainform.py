@@ -131,7 +131,10 @@ class Ui_cebsMainWindow(object):
         self.actionMenuCfyStop.setObjectName("actionMenuCfyStop")
         self.actionMenuBrowseSelect = QtWidgets.QAction(cebsMainWindow)
         self.actionMenuBrowseSelect.setObjectName("actionMenuBrowseSelect")
+        self.actionMenuStestRndCmd = QtWidgets.QAction(cebsMainWindow)
+        self.actionMenuStestRndCmd.setObjectName("actionMenuStestRndCmd")
         self.menu.addAction(self.actionMenuStestProc)
+        self.menu.addAction(self.actionMenuStestRndCmd)
         self.menu_2.addAction(self.actionMenuGparSet)
         self.menu_3.addAction(self.actionMenuMengMode)
         self.menu_3.addAction(self.actionMenuMengZero)
@@ -173,7 +176,7 @@ class Ui_cebsMainWindow(object):
 
     def retranslateUi(self, cebsMainWindow):
         _translate = QtCore.QCoreApplication.translate
-        cebsMainWindow.setWindowTitle(_translate("cebsMainWindow", "CEBS SYSTEM"))
+        cebsMainWindow.setWindowTitle(_translate("cebsMainWindow", "小慧-CEBS-生物识别系统"))
         self.textEdit_runProgress.setHtml(_translate("cebsMainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -218,4 +221,5 @@ class Ui_cebsMainWindow(object):
         self.actionMenuCfyFluStart.setText(_translate("cebsMainWindow", "荧光识别"))
         self.actionMenuCfyStop.setText(_translate("cebsMainWindow", "停止识别"))
         self.actionMenuBrowseSelect.setText(_translate("cebsMainWindow", "活孔选择"))
+        self.actionMenuStestRndCmd.setText(_translate("cebsMainWindow", "研发测试"))
 

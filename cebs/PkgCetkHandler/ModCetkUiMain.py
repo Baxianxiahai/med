@@ -154,6 +154,16 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         self.fsm_set(self._STM_DEACT)
 
     #切换界面
+    def func_ui_click_stest_start(self):
+        print("I am func_ui_click_stest_start!")    
+        self.msg_send(TUP_MSGID_STEST_UI_SWITCH, TUP_TASK_ID_UI_STEST, "") 
+        #self.msg_send(TUP_MSGID_STEST_UI_SWITCH, TUP_TASK_ID_MOTO, "") 
+        #self.msg_send(TUP_MSGID_STEST_UI_SWITCH, TUP_TASK_ID_VISION, "")
+        #执行命令 
+        #转移状态
+        self.fsm_set(self._STM_DEACT)
+
+    #切换界面
     def func_ui_click_main_start(self):
         print("I am func_ui_click_main_start!")
         self.msg_send(TUP_MSGID_MAIN_UI_SWITCH, TUP_TASK_ID_MOTO, "") 
