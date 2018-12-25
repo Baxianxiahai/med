@@ -70,7 +70,7 @@ class tupTaskUiStest(tupTaskTemplate, clsL1_ConfigOpr):
     #主界面承接过来的执行函数
     def func_ui_click_stest_self_test_start(self):
         print("I am func_ui_click_stest_self_test_start!")
-
+        
     def func_ui_click_stest_self_test_stop(self):
         print("I am func_ui_click_stest_self_test_stop!")
 
