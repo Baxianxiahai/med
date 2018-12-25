@@ -57,6 +57,9 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(self._STM_PILOT, TUP_MSGID_CALIB_PILOT_MV_HN_RESP, self.fsm_msg_pilot_mv_hn_resp_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_PILOT_STOP, self.fsm_msg_pilot_stop_rcv_handler)
 
+        #STEST
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_STEST_CALIB_INQ, self.fsm_msg_stest_inq_rcv_handler)
+
         #START TASK
         self.fsm_set(TUP_STM_INIT)
         self.task_run()
@@ -72,10 +75,6 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         #STEP3: 巡游的控制单元
         self.pilotCnt = 0
         self.pilotPos = 0
-        return TUP_SUCCESS;
-
-    def fsm_msg_restart_rcv_handler(self, msgContent):
-        self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS;
 
     def fsm_msg_trace_inc_rcv_handler(self, msgContent):
@@ -139,6 +138,16 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         #停止马达
         self.msg_send(TUP_MSGID_CTRS_MOTO_STOP, TUP_TASK_ID_MOTO, '')
         return TUP_SUCCESS;
+        
+    #STEST查询校准工作状态
+    def fsm_msg_stest_inq_rcv_handler(self, msgContent):
+        mbuf={}
+        if (GLPLT_PAR_OFC.HB_POS_IN_UM[0] != 0) and (GLPLT_PAR_OFC.HB_POS_IN_UM[1] !=0) and (GLPLT_PAR_OFC.HB_POS_IN_UM[2] != 0) and (GLPLT_PAR_OFC.HB_POS_IN_UM[3] !=0):
+            mbuf['calibStatus'] = 1
+        else:
+            mbuf['calibStatus'] = -1
+        self.msg_send(TUP_MSGID_STEST_CALIB_FDB, TUP_TASK_ID_UI_STEST, mbuf)
+        return TUP_SUCCESS; 
         
     def funcCalibLogTrace(self, myString):
         self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, myString)

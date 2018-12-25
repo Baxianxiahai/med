@@ -39,6 +39,9 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     #工程模式，操控马达配置
     _STM_MENG_UI_ACT = 8
     _STM_MENG_UI_EXEC = 9
+    #自测模式
+    _STM_STEST_UI_ACT = 10
+
 
     def __init__(self, glPar):
         tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_MOTO, taskName="TASK_MOTO", glTabEntry=glPar)
@@ -57,6 +60,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_main_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_UI_SWITCH, self.fsm_msg_calib_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MENG_UI_SWITCH, self.fsm_msg_meng_ui_switch_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_STEST_UI_SWITCH, self.fsm_msg_stest_ui_switch_rcv_handler)
         
         #测试功能
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_msg_rcv_handler)
@@ -82,6 +86,9 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         #MENG马达工程模式下的命令
         self.add_stm_combine(self._STM_MENG_UI_ACT, TUP_MSGID_MENG_MOTO_COMMAND, self.fsm_msg_meng_command_rcv_handler)
         
+        #STEST状态下的命令
+        self.add_stm_combine(self._STM_STEST_UI_ACT, TUP_MSGID_STEST_MOTO_INQ, self.fsm_msg_stest_moto_inq_rcv_handler)
+        
         #START TASK
         self.fsm_set(TUP_STM_INIT)
         self.task_run()
@@ -92,10 +99,6 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
             self.funcMotoErrTrace("Init sps port error!")
             return TUP_FAILURE;
         self.funcBatInitPar();
-        return TUP_SUCCESS;
-
-    def fsm_msg_restart_rcv_handler(self, msgContent):
-        self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS;
     
     #释放所有的硬件资源
@@ -129,6 +132,10 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_meng_ui_switch_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_MENG_UI_ACT)
+        return TUP_SUCCESS;
+
+    def fsm_msg_stest_ui_switch_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_STEST_UI_ACT)
         return TUP_SUCCESS;
     
     #复合TRACE       
@@ -286,7 +293,24 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_calib_pilot_stop_rcv_handler(self, msgContent):
         self.funcMotoStop()
         return TUP_SUCCESS;
-
+    
+    #STEST业务
+    def fsm_msg_stest_moto_inq_rcv_handler(self, msgContent):
+        mbuf={}
+        if (self.IsSerialOpenOk == False):
+            mbuf['spsOpen'] = -1
+        else:
+            mbuf['spsOpen'] = 1
+            if (self.funcMotoMoveX1Pules(1) == 1):
+                mbuf['motoX'] = 1
+            else:
+                mbuf['motoX'] = -1
+            if (self.funcMotoMoveY1Pules(1) == 1):
+                mbuf['motoY'] = 1
+            else:
+                mbuf['motoY'] = -1
+        self.msg_send(TUP_MSGID_STEST_MOTO_FDB, TUP_TASK_ID_STEST, mbuf)
+        return TUP_SUCCESS;
 
     
     '''
@@ -474,10 +498,21 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
             self.tup_dbg_print("L2MOTO: funcMotoMove2HoleNbr() error get feedback from funcMotoMove2AxisPos.")
             self.medErrorLog("L2MOTO: Error get feedback from funcMotoMove2AxisPos")
             return -2;
+    
+    #试图在X轴上移动1个PULES，测试X轴是否可用
+    def funcMotoMoveX1Pules(self, dir):
+        return 1
+    
+    #试图在Y轴上移动1个PULES，测试X轴是否可用
+    def funcMotoMoveY1Pules(self, dir):
+        return 1
 
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy, maxTry):
         self.tup_dbg_print(str("L2MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy)))
         return self.funcExecMoveDistance((newPx-curPx)*GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM, (newPy-curPy)*GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM, maxTry);
+    
+    
+    
     
     
     '''

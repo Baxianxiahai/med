@@ -79,10 +79,6 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS;
 
-    def fsm_msg_restart_rcv_handler(self, msgContent):
-        self.fsm_set(self._STM_ACTIVE)
-        return TUP_SUCCESS;
-
     def fsm_msg_trace_inc_rcv_handler(self, msgContent):
         self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_GPAR, msgContent)
         return TUP_SUCCESS;

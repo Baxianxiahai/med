@@ -43,10 +43,6 @@ class tupTaskUiMeng(tupTaskTemplate, clsL1_ConfigOpr):
         self.fsm_set(self._STM_DEACT)
         return TUP_SUCCESS;
 
-    def fsm_msg_restart_rcv_handler(self, msgContent):
-        self.fsm_set(self._STM_DEACT)
-        return TUP_SUCCESS;
-
     def fsm_msg_trace_inc_rcv_handler(self, msgContent):
         self.funcDebugPrint2Qt(msgContent);
         return TUP_SUCCESS;

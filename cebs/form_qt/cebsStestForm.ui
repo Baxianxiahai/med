@@ -147,7 +147,7 @@ p, li { white-space: pre-wrap; }
     <string>最新拍摄批次号</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_Stest_batch_cfy">
+  <widget class="QLabel" name="label_Stest_batch_cfy_pic">
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -157,20 +157,20 @@ p, li { white-space: pre-wrap; }
     </rect>
    </property>
    <property name="text">
-    <string>最新识别批次号</string>
+    <string>白光识别批次号</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_Stest_hb">
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>310</y>
+     <y>400</y>
      <width>91</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>板孔型号选择</string>
+    <string>板孔型号</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEdit_Stest_batch_nbr">
@@ -183,7 +183,7 @@ p, li { white-space: pre-wrap; }
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_Stest_batch_cfy">
+  <widget class="QLineEdit" name="lineEdit_Stest_batch_cfy_pic">
    <property name="geometry">
     <rect>
      <x>150</x>
@@ -197,7 +197,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>310</y>
+     <y>400</y>
      <width>113</width>
      <height>20</height>
     </rect>
@@ -307,6 +307,75 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>返回</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_Stest_batch_cfy_flu">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>310</y>
+     <width>113</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_Stest_batch_cfy_flu">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>310</y>
+     <width>91</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>荧光识别批次号</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_Stest_cfy_flu_rem_cnt">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>370</y>
+     <width>91</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>荧光剩余数量</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_Stest_cfy_pic_rem_cnt">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>340</y>
+     <width>113</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_Stest_cfy_pic_rem_cnt">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>340</y>
+     <width>91</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>白光剩余数量</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_Stest_cfy_flu_rem_cnt">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>370</y>
+     <width>113</width>
+     <height>20</height>
+    </rect>
    </property>
   </widget>
  </widget>

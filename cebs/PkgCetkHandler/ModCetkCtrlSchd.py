@@ -78,6 +78,9 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(self._STM_PIC_CFY_EXEC, TUP_MSGID_CRTS_PIC_CLFY_RESP, self.fsm_msg_classify_pic_accomplish_rcv_handler)
         self.add_stm_combine(self._STM_FLU_CFY_EXEC, TUP_MSGID_CRTS_FLU_CLFY_RESP, self.fsm_msg_classify_flu_accomplish_rcv_handler)
         
+        #STEST查询
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_STEST_CTRL_SCHD_INQ, self.fsm_msg_stest_inq_rcv_handler)
+        
         #START TASK
         self.fsm_set(TUP_STM_INIT)
         self.task_run()
@@ -97,10 +100,6 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         
         #TEST测试区域
 
-        return TUP_SUCCESS;
-
-    def fsm_msg_restart_rcv_handler(self, msgContent):
-        self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS;
 
     def fsm_msg_trace_inc_rcv_handler(self, msgContent):
@@ -598,6 +597,23 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.timerStartWorkDirAfterFixTti = self.tup_timer_start(GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN*60, self.func_timer_start_work_after_fix_tti)
         #触发任务
         self.msg_send(TUP_MSGID_CTRL_SCHD_CAPPIC_START, TUP_TASK_ID_CTRL_SCHD, "")
+
+    #STEST查询过程
+    def fsm_msg_stest_inq_rcv_handler(self, msgContent):
+        mbuf={}
+        mbuf['picBatch'] = GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX
+        mbuf['cfyPicBatch'] = GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX
+        mbuf['cfyFluBatch'] = GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX
+        mbuf['cfyPicRemCnt'] = GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT
+        mbuf['cfyFluRemCnt'] = GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT
+        mbuf['hbType'] = GLPLT_PAR_OFC.HB_TARGET_TYPE
+        self.msg_send(TUP_MSGID_STEST_CTRL_SCHD_FDB, TUP_TASK_ID_UI_STEST, mbuf)
+        return TUP_SUCCESS;       
+
+
+
+
+
 
 
 

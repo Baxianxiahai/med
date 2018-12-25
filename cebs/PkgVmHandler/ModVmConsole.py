@@ -33,12 +33,6 @@ class tupTaskVmConsl(tupTaskTemplate):
 
     def fsm_msg_init_rcv_handler(self, msgContent):
         return TUP_SUCCESS;
-
-    def fsm_msg_restart_rcv_handler(self, msgContent):
-        self.tup_dbg_print("I am in fsm_msg_restart_rcv_handler = ", msgContent)
-        self.msg_send(TUP_MSGID_GEN_TRIG, TUP_TASK_ID_VMCONSL, "test> " + str(random.random()))
-        self.fsm_set(self._STM_ACTIVE)
-        return TUP_SUCCESS;
         
     def fsm_msg_gen_trig_rcv_handler(self, msgContent):
         self.tup_dbg_print("I am in fsm_msg_gen_trig_rcv_handler = ", msgContent)

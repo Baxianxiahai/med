@@ -55,10 +55,6 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         self.msg_send(TUP_MSGID_CTRL_SCHD_MV_ZERO, TUP_TASK_ID_CTRL_SCHD, "")
         return TUP_SUCCESS;
 
-    def fsm_msg_restart_rcv_handler(self, msgContent):
-        self.fsm_set(self._STM_ACTIVE)
-        return TUP_SUCCESS;
-
     def fsm_msg_trace_inc_rcv_handler(self, msgContent):
         self.funcDebugPrint2Qt(msgContent);
         return TUP_SUCCESS;
@@ -157,8 +153,8 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
     def func_ui_click_stest_start(self):
         print("I am func_ui_click_stest_start!")    
         self.msg_send(TUP_MSGID_STEST_UI_SWITCH, TUP_TASK_ID_UI_STEST, "") 
-        #self.msg_send(TUP_MSGID_STEST_UI_SWITCH, TUP_TASK_ID_MOTO, "") 
-        #self.msg_send(TUP_MSGID_STEST_UI_SWITCH, TUP_TASK_ID_VISION, "")
+        self.msg_send(TUP_MSGID_STEST_UI_SWITCH, TUP_TASK_ID_MOTO, "") 
+        self.msg_send(TUP_MSGID_STEST_UI_SWITCH, TUP_TASK_ID_VISION, "")
         #执行命令 
         #转移状态
         self.fsm_set(self._STM_DEACT)

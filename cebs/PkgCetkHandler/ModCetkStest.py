@@ -28,6 +28,10 @@ class tupTaskStest(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_inc_rcv_handler)
         
         #业务处理部分
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_STEST_MOTO_INQ, self.fsm_msg_moto_inq_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_STEST_CAM_INQ, self.fsm_msg_cam_inq_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_STEST_MOTO_FDB, self.fsm_msg_moto_fdb_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_STEST_CAM_FDB, self.fsm_msg_cam_fdb_rcv_handler)
         
         #START TASK
         self.fsm_set(TUP_STM_INIT)
@@ -38,16 +42,24 @@ class tupTaskStest(tupTaskTemplate, clsL1_ConfigOpr):
         time.sleep(0.5) #WAIT FOR OTHER TASK STARTUP
         return TUP_SUCCESS;
 
-    def fsm_msg_restart_rcv_handler(self, msgContent):
-        self.fsm_set(self._STM_ACTIVE)
-        return TUP_SUCCESS;
-
     def fsm_msg_trace_inc_rcv_handler(self, msgContent):
         self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_STEST, msgContent)
         return TUP_SUCCESS;
-    
-    def fsm_msg_close_req_rcv_handler(self, msgContent):
-        self.func_clean_working_env()
+
+    def fsm_msg_moto_inq_rcv_handler(self, msgContent):
+        self.msg_send(TUP_MSGID_STEST_MOTO_INQ, TUP_TASK_ID_MOTO, msgContent)
+        return TUP_SUCCESS;
+
+    def fsm_msg_cam_inq_rcv_handler(self, msgContent):
+        self.msg_send(TUP_MSGID_STEST_CAM_INQ, TUP_TASK_ID_VISION, msgContent)
+        return TUP_SUCCESS;
+
+    def fsm_msg_moto_fdb_rcv_handler(self, msgContent):
+        self.msg_send(TUP_MSGID_STEST_MOTO_FDB, TUP_TASK_ID_UI_STEST, msgContent)
+        return TUP_SUCCESS;
+
+    def fsm_msg_cam_fdb_rcv_handler(self, msgContent):
+        self.msg_send(TUP_MSGID_STEST_CAM_FDB, TUP_TASK_ID_UI_STEST, msgContent)
         return TUP_SUCCESS;
 
     def funcStestLogTrace(self, myString):
@@ -66,9 +78,7 @@ class tupTaskStest(tupTaskTemplate, clsL1_ConfigOpr):
         self.tup_err_print(str(myString))
         return        
     
-    #业务函数    
-    def func_clean_working_env(self):
-        pass
+
     
     
     

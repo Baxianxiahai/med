@@ -46,6 +46,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_CALIB_UI_ACT = 5
     #参数模式下图像直接读取
     _STM_GPAR_UI_ACT = 6
+    #STEST模式
+    _STM_STEST_UI_ACT = 7
     
     #摄像头初始化之后的对象指针
     camera_nbr = -1 #摄像头ID
@@ -79,6 +81,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_main_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_UI_SWITCH, self.fsm_msg_calib_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_GPAR_UI_SWITCH, self.fsm_msg_gpar_ui_switch_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_STEST_UI_SWITCH, self.fsm_msg_stest_ui_switch_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_GPAR_REFRESH_PAR, self.fsm_msg_refresh_par_rcv_handler)
 
         #CALIB校准模式下的视频摄像头+抓图指令  CALIB校准界面下的抓图指令
@@ -96,6 +99,10 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         #GPAR训练图像
         self.add_stm_combine(self._STM_GPAR_UI_ACT, TUP_MSGID_GPAR_PIC_TRAIN_REQ, self.fsm_msg_pic_train_req_rcv_handler)
         self.add_stm_combine(self._STM_GPAR_UI_ACT, TUP_MSGID_GPAR_PIC_FCC_REQ, self.fsm_msg_pic_flu_cell_count_req_rcv_handler)
+        
+        #STEST模式
+        self.add_stm_combine(self._STM_STEST_UI_ACT, TUP_MSGID_STEST_CAM_INQ, self.fsm_msg_stest_cam_inq_rcv_handler)
+        
         
         #切换状态机
         self.fsm_set(TUP_STM_INIT)
@@ -155,6 +162,10 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.fsm_set(self._STM_GPAR_UI_ACT)
         return TUP_SUCCESS;    
 
+    def fsm_msg_stest_ui_switch_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_STEST_UI_ACT)
+        return TUP_SUCCESS;    
+    
     def fsm_msg_refresh_par_rcv_handler(self, msgContent):
         self.WORM_CLASSIFY_base = msgContent['baseLimit'];
         self.WORM_CLASSIFY_small2mid = msgContent['small2Mid'];
@@ -165,6 +176,16 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.FLU_CELL_COUNT_genr_par2 = msgContent['genrPar2'];
         self.FLU_CELL_COUNT_genr_par3 = msgContent['genrPar3'];
         self.FLU_CELL_COUNT_genr_par4 = msgContent['genrPar4'];
+        return TUP_SUCCESS;
+
+    #STEST业务
+    def fsm_msg_stest_cam_inq_rcv_handler(self, msgContent):
+        mbuf={}
+        if (self.camera_nbr < 0) or (self.capInit == ''):
+            mbuf['camOpen'] = -1
+        else:
+            mbuf['camOpen'] = 1
+        self.msg_send(TUP_MSGID_STEST_CAM_FDB, TUP_TASK_ID_STEST, mbuf)
         return TUP_SUCCESS;
 
     def funcVisionLogTrace(self, myString):
