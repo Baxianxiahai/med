@@ -38,6 +38,21 @@ from PkgCebsHandler.ModCebsCfg import *
 #SEUI => System Entry UI，表示系统级的主入口
 第一主入口
 Main Windows
+
+主菜单分解：
+    #自测 - Stest
+    #工参 - Gpar
+    #马达 - Meng
+    #板孔 - Browse
+    #校准 - Calib
+    #拍照 - Main - Pic
+    #识别 - Main - Cfy
+    #设置 - Sset
+
+
+
+
+
 '''
 class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigOpr):
     sgL4MainWinUnvisible = pyqtSignal()
@@ -78,6 +93,31 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         #aboutAction.triggered.connect(self.aboutCompanyBox())
         toolbar = self.addToolBar('About')  
         toolbar.addAction(aboutAction)
+        #主菜单跟命令关联
+        #自测
+        self.actionMenuStestProc.triggered.connect(self.slot_Stest_sel)
+        #工参 
+        self.actionMenuGparSet.triggered.connect(self.slot_gpar_start)
+        #马达
+        self.actionMenuMengMode.triggered.connect(self.slot_meng_sel)
+        self.actionMenuMengZero.triggered.connect(self.slot_ctrl_zero)
+        #板孔
+        self.actionMenuBrowseSelect.triggered.connect(self.slot_saht_sel)
+        #校准
+        self.actionMenuCalibMode.triggered.connect(self.slot_ctrl_calib)
+        #拍照
+        self.actionMenuPicNorStart.triggered.connect(self.slot_ctrl_start_normal)
+        self.actionMenuPicFluStart.triggered.connect(self.slot_ctrl_start_flu)
+        self.actionMenuPicStop.triggered.connect(self.slot_ctrl_stop)
+        #识别
+        self.actionMenuCfyNorStart.triggered.connect(self.slot_ctrl_vclas_start_normal)
+        self.actionMenuCfyFluStart.triggered.connect(self.slot_ctrl_vclas_start_flu)
+        self.actionMenuCfyStop.triggered.connect(self.slot_ctrl_vclas_stop)
+        #设置
+        self.actionMenuSsetExit.triggered.connect(self.quit)
+        self.actionMenuSsetAbout.triggered.connect(self.about)
+        
+        
 
     #MUST Load global parameters, to initialize different UI and update the stored parameters.
     def initParameter(self):
@@ -189,7 +229,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
 
     #Enter Selection Active Hole Target Mode
     def slot_saht_sel(self):
-        self.cetk_debug_print("L4MAIN: Active Hole Selection start......")
+        self.cetk_debug_print("L4MAIN: Active Hole Selection function under construction......")
         #if not self.instL4BroserForm.isVisible():
             #self.sgL4MainWinUnvisible.emit()
             #self.instL4BroserForm.show()
@@ -206,6 +246,12 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         #obj.algoVisGetRadians(ModCebsCom.GLPLT_PAR_OFC.med_get_radians_len_in_us(), "ref.jpg", "scale_ref.jpg")
         
         self.TkMainUi.funcPrintTestCalledByQt("TEST! Send test msg to UI_MAIN and then send back to UI show by signal slot.")
+
+    #Enter Self Test Procedure
+    def slot_Stest_sel(self):
+        self.cetk_debug_print("L4MAIN: Self test function under construction......")
+
+
 
     '''
     #  SLOT FUNCTION, 槽函数部分
@@ -228,6 +274,9 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
     #自己制造的结束函数，代替qApp.quit()方式，目的是为了菜单上的退出函数的截获，从而可以做一些硬件清理的事            
     def quit(self):
         self.close()
+
+    def about(self):
+        self.cetk_debug_print("版权所有：上海小慧智能科技有限公司, 上海纳贤路800号，科海大厦3楼")
 
     #需要捕获关闭界面的事件，然后将其通知给所有的其它任务，关闭硬件设备，然后再行退出主界面
     def closeEvent(self, event):

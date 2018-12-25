@@ -24,6 +24,11 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
+//=ZJL, 2018/12/25, CURRENT_SW_DELIVERY R1.47 =>CEBS
+= 完善菜单界面
+
+
+
 
 //=ZJL, 2018/12/24, CURRENT_SW_DELIVERY R1.46 =>CEBS
 = 给每个界面增加swithOn()函数钩子，以便需要时做界面参数的初始化：其中GPAR是必须的，但其它界面暂时不需要
