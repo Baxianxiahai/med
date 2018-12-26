@@ -251,6 +251,11 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         
         self.TkMainUi.funcPrintTestCalledByQt("TEST! Send test msg to UI_MAIN and then send back to UI show by signal slot.")
 
+
+    #密钥过程的处理方法
+    def mainui_callback_chk_pswd_failure(self):
+        self.close()
+
     #Enter Self Test Procedure
     def slot_Stest_sel(self):
         self.cetk_debug_print("L4MAIN: Stest start......")

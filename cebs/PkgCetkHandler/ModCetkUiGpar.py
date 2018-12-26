@@ -50,7 +50,8 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
         if (msgContent['res'] < 0):
             self.funcDebugPrint2Qt("Open train picture failure!");
         else:
-            self.fatherUiObj.gpar_callback_train_resp(msgContent['fileName'])
+            if (self.fatherUiObj != ''):
+                self.fatherUiObj.gpar_callback_train_resp(msgContent['fileName'])
         return TUP_SUCCESS;
     
     #复用上面的显示过程
@@ -58,8 +59,8 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
         if (msgContent['res'] < 0):
             self.funcDebugPrint2Qt("Open Flu Cell Count picture failure!");
         else:
-            pass
-            self.fatherUiObj.gpar_callback_train_resp(msgContent['fileName'])
+            if (self.fatherUiObj != ''):
+                self.fatherUiObj.gpar_callback_train_resp(msgContent['fileName'])
         return TUP_SUCCESS;
 
 

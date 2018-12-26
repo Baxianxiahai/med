@@ -31,6 +31,10 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     TIMER_DUR_START_WK_AFTER_ZERO = 15
     #启动第二个定时器：定时自动拍照
     timerStartWorkDirAfterFixTti = ''
+    
+    #密码验证并控制是否继续干活
+    timerMdcPswdChk = ''
+    TIMER_DUR_MDC_PSWD_CHK = 60*5
 
 
     def __init__(self, glPar):
@@ -43,6 +47,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_EXIT, self.fsm_com_msg_exit_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TEST, self.fsm_com_msg_test_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_inc_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CRTS_MDC_CHK_PSWD_RESP, self.fsm_msg_mdc_pswd_chk_resp_rcv_handler)
         
         #控制业务逻辑
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CTRL_SCHD_SWITCH_ON, self.fsm_msg_switch_on_rcv_handler)
@@ -96,7 +101,11 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
 
         #启动定时器，准备自动干活
         if (GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET == True):
-            self.timerStartWorkDirAfterMvZero = self.tup_timer_start(self.TIMER_DUR_START_WK_AFTER_ZERO, self.func_timer_start_work_after_mv_zero)
+            self.timerMdcPswdChk = self.tup_timer_start(self.TIMER_DUR_MDC_PSWD_CHK, self.func_timer_start_work_after_mv_zero)
+        
+        #查询PSWD
+        time.sleep(1)
+        self.msg_send(TUP_MSGID_CRTS_MDC_CHK_PSWD_REQ, TUP_TASK_ID_MOTO, "")
         
         #TEST测试区域
 
@@ -106,6 +115,15 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, msgContent)
         return TUP_SUCCESS;
 
+    #CHECK PSWD
+    def fsm_msg_mdc_pswd_chk_resp_rcv_handler(self, msgContent):
+        res = msgContent['res']
+        pswd = msgContent['pswd']
+        #start timer
+        if (res < 0) or (self.func_pswd_check(pswd) != True):
+            self.timerStartWorkDirAfterMvZero = self.tup_timer_start(self.TIMER_DUR_START_WK_AFTER_ZERO, self.func_timer_start_after_check_pswd_failure)        
+        return TUP_SUCCESS;
+    
     def funcCtrlSchdLogTrace(self, myString):
         self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)
         #SAVE INTO MED FILE
@@ -121,6 +139,25 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         #PRINT to local
         self.tup_err_print(str(myString))
         return        
+    
+    #通知界面，退出程序
+    def func_timer_start_after_check_pswd_failure(self):
+        self.msg_send(TUP_MSGID_CRTS_MDC_CHK_PSWD_RESP, TUP_TASK_ID_UI_MAIN, "")
+        return
+    
+    #检查PSWD
+    def func_pswd_check(self, input):
+        res = 0;
+        for i in range(0, 16):
+            mask = 1<<(2*i)
+            tmp = input & mask;
+            tmp = tmp>>i
+            res += tmp;
+        if (res == 0xAB56):
+            return True;
+        else:
+            return False;
+
     
     '''
     #业务处理部分 - 界面切换
@@ -631,9 +668,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
 
     #定时器处理过程
     def func_timer_start_work_after_mv_zero(self):
-        print("MyTest!")
         self.msg_send(TUP_MSGID_CTRL_SCHD_CAPPIC_START, TUP_TASK_ID_CTRL_SCHD, "")
-        
         #启动下一个TTI定时器，以便继续干活
         self.timerStartWorkDirAfterFixTti = self.tup_timer_start(GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN*60, self.func_timer_start_work_after_fix_tti)
         return

@@ -73,14 +73,16 @@ class tupTaskUiStest(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_cam_fdb_rcv_handler(self, msgContent):
         self.funcDebugPrint2Qt(str(msgContent))
         par1 = msgContent['camOpen']
-        self.fatherUiObj.stest_callback_fetch_cam_status(par1)
+        if (self.fatherUiObj != ''):
+            self.fatherUiObj.stest_callback_fetch_cam_status(par1)
         return TUP_SUCCESS;
 
     #业务功能    
     def fsm_msg_calib_fdb_rcv_handler(self, msgContent):
         self.funcDebugPrint2Qt(str(msgContent))
         par1 = msgContent['calibStatus']
-        self.fatherUiObj.stest_callback_fetch_calib_status(par1)
+        if (self.fatherUiObj != ''):
+            self.fatherUiObj.stest_callback_fetch_calib_status(par1)
         return TUP_SUCCESS;
 
     #业务功能    
@@ -92,7 +94,8 @@ class tupTaskUiStest(tupTaskTemplate, clsL1_ConfigOpr):
         cfyPicRemCnt = msgContent['cfyPicRemCnt']
         cfyFluRemCnt = msgContent['cfyFluRemCnt']
         hbType = msgContent['hbType']
-        self.fatherUiObj.stest_callback_fetch_ctrl_schd_status(picBat, cfyPicBat, cfyFlubat, cfyPicRemCnt, cfyFluRemCnt, hbType)
+        if (self.fatherUiObj != ''):
+            self.fatherUiObj.stest_callback_fetch_ctrl_schd_status(picBat, cfyPicBat, cfyFlubat, cfyPicRemCnt, cfyFluRemCnt, hbType)
         return TUP_SUCCESS;
     
     #将界面对象传递给本任务，以便将打印信息送到界面上

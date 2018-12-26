@@ -29,6 +29,9 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
+//=ZJL, 2018/12/27, CURRENT_SW_DELIVERY R1.49 =>CEBS
+= 增加密钥控制过程
+
 //=ZJL, 2018/12/26, CURRENT_SW_DELIVERY R1.48 =>CEBS
 = 完善自测自检的功能列表
 = 完善摄像头的初始化设置

@@ -89,6 +89,9 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         #STEST状态下的命令
         self.add_stm_combine(self._STM_STEST_UI_ACT, TUP_MSGID_STEST_MOTO_INQ, self.fsm_msg_stest_moto_inq_rcv_handler)
         
+        #CHECK PSWD
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CRTS_MDC_CHK_PSWD_REQ, self.fsm_msg_ctrs_chk_pswd_rcv_handler)
+        
         #START TASK
         self.fsm_set(TUP_STM_INIT)
         self.task_run()
@@ -311,7 +314,23 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
                 mbuf['motoY'] = -1
         self.msg_send(TUP_MSGID_STEST_MOTO_FDB, TUP_TASK_ID_STEST, mbuf)
         return TUP_SUCCESS;
-
+    
+    #检查PSWD
+    def fsm_msg_ctrs_chk_pswd_rcv_handler(self, msgContent):
+        mbuf={}
+        mbuf['res'] = -1;
+        mbuf['pswd'] = -1;
+        if (self.IsSerialOpenOk == False) or (self.serialFd == ''):
+            self.msg_send(TUP_MSGID_CRTS_MDC_CHK_PSWD_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+        #Get pswd
+        pswd = self.funcMdcReadPswd()
+        try:
+            mbuf['pswd'] = int(pswd)
+        except Exception:
+            mbuf['pswd'] = -1;
+        self.msg_send(TUP_MSGID_CRTS_MDC_CHK_PSWD_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+        return TUP_SUCCESS;
+    
     
     '''
     SERVICE PART: 业务部分的函数，功能处理函数
@@ -508,6 +527,11 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     # def funcMotoMoveY1Pules(self, dir):
     #     return 1
     #===========================================================================
+    
+    #跟下位机握手，取得PSWD
+    def funcMdcReadPswd(self):
+        res = self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_CHECK_PSWD_CMID, 0, 0, 0, 0)
+        return res;
 
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy, maxTry):
         self.tup_dbg_print(str("L2MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy)))

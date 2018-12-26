@@ -39,6 +39,8 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_ui_focus_rcv_handler)
         #测试消息，后面可以去掉
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TEST, self.fsm_msg_print_test_inc_rcv_handler)
+        #特殊功能：密码检查错误，退出程序
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CRTS_MDC_CHK_PSWD_RESP, self.fsm_msg_mdc_chk_pswd_resp_rcv_handler)
         #START TASK
         self.fsm_set(TUP_STM_INIT)
         self.task_run()
@@ -80,6 +82,16 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
     #主界面承接过来的执行函数-测试函数
     def funcPrintTestCalledByQt(self, string):
         self.funcDebugPrint2Qt(string);
+
+
+    #业务逻辑
+    def fsm_msg_mdc_chk_pswd_resp_rcv_handler(self, msgContent):
+        #调用父进程中的退出方法
+        if (self.fatherUiObj == ''):
+            print("MAIN_UI task lose 1 print message due to time sync.")
+        else:
+            self.fatherUiObj.mainui_callback_chk_pswd_failure();
+        return TUP_SUCCESS;    
 
         
     '''
