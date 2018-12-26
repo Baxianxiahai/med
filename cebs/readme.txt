@@ -31,6 +31,8 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 //=ZJL, 2018/12/26, CURRENT_SW_DELIVERY R1.48 =>CEBS
 = 完善自测自检的功能列表
+= 完善摄像头的初始化设置
+= 拍照走S形道路
 
 //=ZJL, 2018/12/25, CURRENT_SW_DELIVERY R1.47 =>CEBS
 = 完善菜单界面

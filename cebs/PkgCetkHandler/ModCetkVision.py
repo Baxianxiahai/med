@@ -109,7 +109,54 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         #START TASK
         self.task_run()
     
+    '''
+    #
     #摄像头初始化
+    #https://docs.opencv.org/3.3.0/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d
+    enum   cv::VideoCaptureProperties { 
+       cv::CAP_PROP_POS_MSEC =0, 
+       cv::CAP_PROP_POS_FRAMES =1, 
+       cv::CAP_PROP_POS_AVI_RATIO =2, 
+       cv::CAP_PROP_FRAME_WIDTH =3, 
+       cv::CAP_PROP_FRAME_HEIGHT =4, 
+       cv::CAP_PROP_FPS =5, 
+       cv::CAP_PROP_FOURCC =6, 
+       cv::CAP_PROP_FRAME_COUNT =7, 
+       cv::CAP_PROP_FORMAT =8, 
+       cv::CAP_PROP_MODE =9, 
+       cv::CAP_PROP_BRIGHTNESS =10, 
+       cv::CAP_PROP_CONTRAST =11, 
+       cv::CAP_PROP_SATURATION =12, 
+       cv::CAP_PROP_HUE =13, 
+       cv::CAP_PROP_GAIN =14, 
+       cv::CAP_PROP_EXPOSURE =15, 
+       cv::CAP_PROP_CONVERT_RGB =16, 
+       cv::CAP_PROP_WHITE_BALANCE_BLUE_U =17, 
+       cv::CAP_PROP_RECTIFICATION =18, 
+       cv::CAP_PROP_MONOCHROME =19, 
+       cv::CAP_PROP_SHARPNESS =20, 
+       cv::CAP_PROP_AUTO_EXPOSURE =21, 
+       cv::CAP_PROP_GAMMA =22, 
+       cv::CAP_PROP_TEMPERATURE =23, 
+       cv::CAP_PROP_TRIGGER =24, 
+       cv::CAP_PROP_TRIGGER_DELAY =25, 
+       cv::CAP_PROP_WHITE_BALANCE_RED_V =26, 
+       cv::CAP_PROP_ZOOM =27, 
+       cv::CAP_PROP_FOCUS =28, 
+       cv::CAP_PROP_GUID =29, 
+       cv::CAP_PROP_ISO_SPEED =30, 
+       cv::CAP_PROP_BACKLIGHT =32, 
+       cv::CAP_PROP_PAN =33, 
+       cv::CAP_PROP_TILT =34, 
+       cv::CAP_PROP_ROLL =35, 
+       cv::CAP_PROP_IRIS =36, 
+       cv::CAP_PROP_SETTINGS =37, 
+       cv::CAP_PROP_BUFFERSIZE =38, 
+       cv::CAP_PROP_AUTOFOCUS =39 
+     } 
+    #
+    #
+    '''    
     def fsm_msg_init_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
         #全局搜索摄像头
@@ -127,6 +174,12 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             self.capInit = cv.VideoCapture(self.camera_nbr) #CHECK WITH ls /dev/video*　RESULT
             self.capInit.set(3, GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
             self.capInit.set(4, GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
+            print("CAP_PROP_BRIGHTNESS = ", self.capInit.get(cv.CAP_PROP_BRIGHTNESS))
+            print("CAP_PROP_EXPOSURE = ", self.capInit.get(cv.CAP_PROP_EXPOSURE))
+            print("CAP_PROP_ZOOM = ", self.capInit.get(cv.CAP_PROP_ZOOM))
+            print("CAP_PROP_FOCUS = ", self.capInit.get(cv.CAP_PROP_FOCUS))
+            print("CAP_PROP_GAIN = ", self.capInit.get(cv.CAP_PROP_GAIN))
+            print("CAP_PROP_WHITE_BALANCE_BLUE_U = ", self.capInit.get(cv.CAP_PROP_WHITE_BALANCE_BLUE_U))
             if not self.capInit.isOpened():
                 self.capInit.release()
         except Exception:

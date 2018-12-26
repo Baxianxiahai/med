@@ -108,15 +108,11 @@ class tupTaskUiStest(tupTaskTemplate, clsL1_ConfigOpr):
     #主界面承接过来的执行函数
     def func_ui_click_stest_self_test_start(self):
         print("I am func_ui_click_stest_self_test_start!")
-<<<<<<< HEAD
         self.msg_send(TUP_MSGID_STEST_MOTO_INQ, TUP_TASK_ID_STEST, "")
         self.msg_send(TUP_MSGID_STEST_CAM_INQ, TUP_TASK_ID_STEST, "")
         self.msg_send(TUP_MSGID_STEST_CALIB_INQ, TUP_TASK_ID_CALIB, "")
         self.msg_send(TUP_MSGID_STEST_CTRL_SCHD_INQ, TUP_TASK_ID_CTRL_SCHD, "")
 
-=======
-        
->>>>>>> 1350b66bf63f0eb9a50f2e41915aad708d610ddd
     def func_ui_click_stest_self_test_stop(self):
         print("I am func_ui_click_stest_self_test_stop!")
 

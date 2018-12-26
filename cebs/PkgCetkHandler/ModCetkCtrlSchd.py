@@ -183,9 +183,9 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.createBatSectAndIniSyned(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
         
         #生成文件名字
-        fnPic = self.combineFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
-        fnScale = self.combineScaleFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
-        fnVideo = self.combineFileNameVideoWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        fnPic = self.combineFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
+        fnScale = self.combineScaleFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
+        fnVideo = self.combineFileNameVideoWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
         vdCtrl = GLVIS_PAR_OFC.CAPTURE_ENABLE 
         sclCtrl = GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG
         vdDur = GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC
@@ -201,7 +201,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['vdDur'] = vdDur
             self.msg_send(TUP_MSGID_CTRS_PIC_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
-            mbuf['holeNbr'] = self.picSeqCnt
+            mbuf['holeNbr'] = self.func_cvt_index2hole(self.picSeqCnt)
             mbuf['maxTry'] = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
             self.msg_send(TUP_MSGID_CTRS_MOTO_MV_HN_REQ, TUP_TASK_ID_MOTO, mbuf)
         
@@ -210,9 +210,9 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     #STEP2马达运动
     def fsm_msg_ctrs_moto_mv_hn_resp_rcv_handler(self, msgContent):
         #生成文件名字
-        fnPic = self.combineFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
-        fnScale = self.combineScaleFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
-        fnVideo = self.combineFileNameVideoWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        fnPic = self.combineFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
+        fnScale = self.combineScaleFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
+        fnVideo = self.combineFileNameVideoWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
         vdCtrl = GLVIS_PAR_OFC.CAPTURE_ENABLE
         sclCtrl = GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG
         vdDur = GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC
@@ -244,10 +244,10 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         #如果成功，则更新剩余待识别的图片数量
         self.updateBatCntWithIniFileSyned(False, 1, 0)
         #处理上一次成功的图像读取过程
-        self.addNormalBatchFile(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        self.addNormalBatchFile(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
         #处理视频文件部分
         if GLVIS_PAR_OFC.CAPTURE_ENABLE == True:
-            self.updBatchFileVideo(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+            self.updBatchFileVideo(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
         
         #准备处理下一次
         self.picSeqCnt += 1
@@ -260,9 +260,9 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             return TUP_SUCCESS;
 
         #生成文件名字
-        fnPic = self.combineFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
-        fnScale = self.combineScaleFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
-        fnVideo = self.combineFileNameVideoWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        fnPic = self.combineFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
+        fnScale = self.combineScaleFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
+        fnVideo = self.combineFileNameVideoWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
         vdCtrl = GLVIS_PAR_OFC.CAPTURE_ENABLE
         sclCtrl = GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG
         vdDur = GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC
@@ -278,7 +278,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['vdDur'] = vdDur
             self.msg_send(TUP_MSGID_CTRS_PIC_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
-            mbuf['holeNbr'] = self.picSeqCnt
+            mbuf['holeNbr'] = self.func_cvt_index2hole(self.picSeqCnt)
             mbuf['maxTry'] = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
             self.msg_send(TUP_MSGID_CTRS_MOTO_MV_HN_REQ, TUP_TASK_ID_MOTO, mbuf)
         return TUP_SUCCESS;
@@ -298,9 +298,9 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.createBatSectAndIniSyned(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
 
         #生成文件名字
-        fnPic = self.combineFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
-        fnScale = self.combineScaleFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
-        fnVideo = self.combineFileNameVideoWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        fnPic = self.combineFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
+        fnScale = self.combineScaleFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
+        fnVideo = self.combineFileNameVideoWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
         vdCtrl = GLVIS_PAR_OFC.CAPTURE_ENABLE
         sclCtrl = GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG
         vdDur = GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC
@@ -316,7 +316,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['vdDur'] = vdDur
             self.msg_send(TUP_MSGID_CTRS_FLU_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
-            mbuf['holeNbr'] = self.picSeqCnt
+            mbuf['holeNbr'] = self.func_cvt_index2hole(self.picSeqCnt)
             mbuf['maxTry'] = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
             self.msg_send(TUP_MSGID_CTRS_MOTO_MV_HN_REQ, TUP_TASK_ID_MOTO, mbuf)
         return TUP_SUCCESS;
@@ -332,7 +332,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         #如果成功，更新剩余待识别的图片数量
         self.updateBatCntWithIniFileSyned(False, 0, 1)
         #处理上一次成功的图像读取过程
-        self.addFluBatchFile(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        self.addFluBatchFile(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
         
         #准备处理下一次
         self.picSeqCnt += 1
@@ -342,9 +342,9 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             return TUP_SUCCESS;
 
         #生成文件名字
-        fnPic = self.combineFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
-        fnScale = self.combineScaleFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
-        fnVideo = self.combineFileNameVideoWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.picSeqCnt)
+        fnPic = self.combineFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
+        fnScale = self.combineScaleFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
+        fnVideo = self.combineFileNameVideoWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
         vdCtrl = GLVIS_PAR_OFC.CAPTURE_ENABLE
         sclCtrl = GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG
         vdDur = GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC
@@ -360,10 +360,30 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['vdDur'] = vdDur
             self.msg_send(TUP_MSGID_CTRS_FLU_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         else:
-            mbuf['holeNbr'] = self.picSeqCnt
+            mbuf['holeNbr'] = self.func_cvt_index2hole(self.picSeqCnt)
             mbuf['maxTry'] = GLSPS_PAR_OFC.MOTOR_MAX_RETRY_TIMES
             self.msg_send(TUP_MSGID_CTRS_MOTO_MV_HN_REQ, TUP_TASK_ID_MOTO, mbuf)
         return TUP_SUCCESS;
+    
+    #走S形路线
+    _MOD_CTRL_SCHD_HB96 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,\
+                           24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13,\
+                           25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,\
+                           48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37,\
+                           49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60,\
+                           72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61,\
+                           73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84,\
+                           96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85,\
+                           ];
+    _MOD_CTRL_SCHD_HB48 = [];
+    _MOD_CTRL_SCHD_HB24 = [];
+    _MOD_CTRL_SCHD_HB12 = [];
+    _MOD_CTRL_SCHD_HB6 = [];
+    def func_cvt_index2hole(self, index):
+        if (GLPLT_PAR_OFC.HB_TARGET_TYPE == GLPLT_PAR_OFC.HB_TARGET_96_STANDARD):
+            return self._MOD_CTRL_SCHD_HB96[index];
+        else:
+            return index;
 
 
     '''
