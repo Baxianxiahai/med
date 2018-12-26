@@ -352,9 +352,14 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         fileNukeName = msgContent['fileNukeName']
         ctrl = msgContent['ctrl']
         addupSet = msgContent['addupSet']
-        res = self.func_vision_worm_clasification(fileName, fileNukeName, ctrl, addupSet);
+        res, outputFn, outText= self.func_vision_worm_clasification(fileName, fileNukeName, ctrl, addupSet);
         mbuf={}
         mbuf['res'] = res
+        mbuf['outputFn'] = outputFn
+        mbuf['outText'] = outText
+        print(mbuf['res'])
+        print(mbuf['outputFn'])
+        print(mbuf['outText'])
         self.msg_send(TUP_MSGID_CRTS_PIC_CLFY_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         return TUP_SUCCESS;
 
@@ -746,7 +751,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         f.close()
         #Show result or not: 根据指令，是否显示文件
         cv.destroyAllWindows()
-        return 1
+        return 1,outputFn,str(outText)
 
     def proc_vision_worm_binvalue(self, img):
         new = np.zeros(img.shape, np.uint8)

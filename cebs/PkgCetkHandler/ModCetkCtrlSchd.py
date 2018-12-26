@@ -261,7 +261,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['vdCtrl'] = vdCtrl
         mbuf['sclCtrl'] = sclCtrl
         mbuf['vdDur'] = vdDur
-        
+        time.sleep(0.2)
         #两个消息共享该控制消息，故而需要分别控制
         if (self.fsm_get() == self._STM_PIC_CAP_EXEC):
             self.msg_send(TUP_MSGID_CTRS_PIC_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
@@ -518,6 +518,8 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     #图像识别后的结果-从VISION得到
     def fsm_msg_classify_pic_accomplish_rcv_handler(self, msgContent):
         res = msgContent['res']
+        outText = msgContent['outText']
+        print("outText",outText)
         if (res < 0):
             self.funcCtrlSchdErrTrace("L3CTRLSCHD: Normal picture classification failure, remaining NUMBRES=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
 
@@ -528,7 +530,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         #更新成功完成后的文件信息
         self.updateBatCntWithIniFileSyned(False, -1, 0)
         self.updateCfyCntWithIniFileSyned(self.cfyBat, self.cfyFileNbr, GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT, GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT);
-        self.updateUnclasFileAsClassified(self.cfyBat, self.cfyFileNbr)
+        self.updateUnclasFileAsClassified(self.cfyBat, self.cfyFileNbr,outText)
         self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture classification finished, remaining NUMBRES=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
 
         #选在下一次需要后续处理的新文件号
