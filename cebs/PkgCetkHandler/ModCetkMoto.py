@@ -301,11 +301,11 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
             mbuf['spsOpen'] = -1
         else:
             mbuf['spsOpen'] = 1
-            if (self.funcMotoMoveX1Pules(1) == 1):
+            if (self.funcMotoMoveOneStep(5, "RIGHT", 30) == 1):
                 mbuf['motoX'] = 1
             else:
                 mbuf['motoX'] = -1
-            if (self.funcMotoMoveY1Pules(1) == 1):
+            if (self.funcMotoMoveOneStep(5, "UP", 30) == 1):
                 mbuf['motoY'] = 1
             else:
                 mbuf['motoY'] = -1
@@ -499,13 +499,15 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
             self.medErrorLog("L2MOTO: Error get feedback from funcMotoMove2AxisPos")
             return -2;
     
-    #试图在X轴上移动1个PULES，测试X轴是否可用
-    def funcMotoMoveX1Pules(self, dir):
-        return 1
-    
-    #试图在Y轴上移动1个PULES，测试X轴是否可用
-    def funcMotoMoveY1Pules(self, dir):
-        return 1
+    #===========================================================================
+    # #试图在X轴上移动1个PULES，测试X轴是否可用
+    # def funcMotoMoveX1Pules(self, dir):
+    #     return 1
+    # 
+    # #试图在Y轴上移动1个PULES，测试X轴是否可用
+    # def funcMotoMoveY1Pules(self, dir):
+    #     return 1
+    #===========================================================================
 
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy, maxTry):
         self.tup_dbg_print(str("L2MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy)))

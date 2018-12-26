@@ -142,7 +142,8 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
     #STEST查询校准工作状态
     def fsm_msg_stest_inq_rcv_handler(self, msgContent):
         mbuf={}
-        if (GLPLT_PAR_OFC.HB_POS_IN_UM[0] != 0) and (GLPLT_PAR_OFC.HB_POS_IN_UM[1] !=0) and (GLPLT_PAR_OFC.HB_POS_IN_UM[2] != 0) and (GLPLT_PAR_OFC.HB_POS_IN_UM[3] !=0):
+        #LC:right/up always be 0
+        if (GLPLT_PAR_OFC.HB_POS_IN_UM[0] != 0) and (GLPLT_PAR_OFC.HB_POS_IN_UM[1] !=0) and (GLPLT_PAR_OFC.HB_POS_IN_UM[2] == 0) and (GLPLT_PAR_OFC.HB_POS_IN_UM[3] ==0):
             mbuf['calibStatus'] = 1
         else:
             mbuf['calibStatus'] = -1
