@@ -34,7 +34,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     
     #密码验证并控制是否继续干活
     timerMdcPswdChk = ''
-    TIMER_DUR_MDC_PSWD_CHK = 60*5
+    TIMER_DUR_MDC_PSWD_CHK = 10*5
 
 
     def __init__(self, glPar):
@@ -119,6 +119,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_mdc_pswd_chk_resp_rcv_handler(self, msgContent):
         res = msgContent['res']
         pswd = msgContent['pswd']
+        
         #start timer
         if (res < 0) or (self.func_pswd_check(pswd) != True):
             self.timerStartWorkDirAfterMvZero = self.tup_timer_start(self.TIMER_DUR_START_WK_AFTER_ZERO, self.func_timer_start_after_check_pswd_failure)        
@@ -147,12 +148,16 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     
     #检查PSWD
     def func_pswd_check(self, input):
+        #print("point test 1")
+        #print("input=",input)
         res = 0;
         for i in range(0, 16):
-            mask = 1<<(2*i)
+            mask = 1<<(2*i+1)
             tmp = input & mask;
-            tmp = tmp>>i
+            tmp = tmp>>(i+1)
             res += tmp;
+        #print("res",hex(res))
+        #print("res",res)
         if (res == 0xAB56):
             return True;
         else:

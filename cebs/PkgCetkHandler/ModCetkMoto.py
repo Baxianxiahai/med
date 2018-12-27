@@ -318,16 +318,19 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     #检查PSWD
     def fsm_msg_ctrs_chk_pswd_rcv_handler(self, msgContent):
         mbuf={}
-        mbuf['res'] = -1;
+        mbuf['res'] = 1;
         mbuf['pswd'] = -1;
         if (self.IsSerialOpenOk == False) or (self.serialFd == ''):
+            mbuf['res'] = -1;
             self.msg_send(TUP_MSGID_CRTS_MDC_CHK_PSWD_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         #Get pswd
         pswd = self.funcMdcReadPswd()
+        #print("pass:",pswd)
         try:
             mbuf['pswd'] = int(pswd)
         except Exception:
-            mbuf['pswd'] = -1;
+            mbuf['pswd'] = -1;        
+        #print(mbuf['pswd'])
         self.msg_send(TUP_MSGID_CRTS_MDC_CHK_PSWD_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         return TUP_SUCCESS;
     
@@ -530,7 +533,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     
     #跟下位机握手，取得PSWD
     def funcMdcReadPswd(self):
-        res = self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_CHECK_PSWD_CMID, 0, 0, 0, 0)
+        res = self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_CHECK_PSWD_CMID, random.randint(0,256), 0, 0, 0)
         return res;
 
     def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy, maxTry):
