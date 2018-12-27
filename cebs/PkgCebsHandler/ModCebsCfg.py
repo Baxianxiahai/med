@@ -635,7 +635,7 @@ class clsL1_ConfigOpr():
         return res
                 
     #UPDATE CATEGORY PICTURE INFORMATION
-    def updateUnclasFileAsClassified(self, batch, fileNbr):
+    def updateUnclasFileAsClassified(self, batch, fileNbr,outText):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
         batchStr = "batch#" + str(batch)
@@ -643,10 +643,11 @@ class clsL1_ConfigOpr():
         fileClas = str("batchFileClas#" + str(fileNbr))
         self.CReader.set(batchStr, fileName, self.combineFileNameWithDir(batch, fileNbr))
         self.CReader.set(batchStr, fileClas, 'yes')
+        self.CReader.set(batchStr,fileName+"num",outText)
         fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
         self.CReader.write(fd)
         fd.close()
-            
+
     #下面三个函数暂时没有使用起来
     def updateNormalUnclasFileAsClassified(self, batch, fileNbr):
         return self.updEleUncFileAsClf(batch, fileNbr, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL)

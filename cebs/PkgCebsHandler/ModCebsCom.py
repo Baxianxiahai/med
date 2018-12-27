@@ -493,17 +493,17 @@ class clsL0_MedSpsPar():
     SPS_MENGPAR_CMD_LEN = 18
     
     MOTOR_STEPS_PER_ROUND = 12800   #NF0
-    MOTOR_MAX_SPD = 8  #NF1 rad/s
-    MOTOR_MAX_ACC = 4  #NF1 rad/s2
-    MOTOR_MAX_DEACC = 4  #NF1 rad/s2
-    MOTOR_ZERO_SPD = 8 #NF1 rad/s
-    MOTOR_ZERO_ACC = 4 #NF1 rad/s2
+    MOTOR_MAX_SPD = 10  #NF1 rad/s
+    MOTOR_MAX_ACC = 10  #NF1 rad/s2
+    MOTOR_MAX_DEACC = 10  #NF1 rad/s2
+    MOTOR_ZERO_SPD = 10 #NF1 rad/s
+    MOTOR_ZERO_ACC = 10 #NF1 rad/s2
     MOTOR_DIS_MM_PER_ROUND = 3.1415926*20*1.05
     MOTOR_STEPS_PER_DISTANCE_MM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND
     MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND / 1000    
 
     #马达归零最大循环次数
-    MOTOR_MAX_RETRY_TIMES = 3 #正常需要放置30次数，确保归零的时间预算
+    MOTOR_MAX_RETRY_TIMES = 30 #正常需要放置30次数，确保归零的时间预算
 
     #ROUNDS of auto-pilot run
     PILOT_WOKING_ROUNDS_MAX = 5;
