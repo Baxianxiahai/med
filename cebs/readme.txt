@@ -38,6 +38,8 @@ https://blog.csdn.net/zyc121561/article/details/82941056
     这样将TUP发展成为一个应用程序系列，而并不是简单的底层服务
   FAWS有可能架构在TUP体系之上
 = 所以将cebsMain改为tupMain函数，统一化程序运行  
+= 换成L1-L4的程序体系
+= 将Saht框架弄出来
 
 
 //=ZJL, 2018/12/27, CURRENT_SW_DELIVERY R1.49 =>CEBS

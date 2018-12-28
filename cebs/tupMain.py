@@ -10,7 +10,19 @@ Created on 2018/4/29
 import sys
 import time
 from multiprocessing import freeze_support
-from PkgCebsHandler import ModCebsPrjEntry
+from PkgL3cebsHandler import ModCebsPrjEntry
+
+
+
+'''
+####程序包体系
+- tupMain: 主入口
+- PkgL1vmHandler：VM层的公共服务
+- PkgL2svrHandler：公共服务接口和模块
+- PkgL3cebsHandler：Cebs项目的任务模块
+- PkgL4ceuiHandler：Cebs项目的界面
+'''
+
 
 ####################################################
 # 项目设置与选择
