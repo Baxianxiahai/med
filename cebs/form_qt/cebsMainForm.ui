@@ -76,7 +76,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>101</width>
+      <width>161</width>
       <height>71</height>
      </rect>
     </property>
@@ -100,30 +100,14 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="pushButton_ctrl_stop">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>200</x>
       <y>20</y>
-      <width>101</width>
+      <width>161</width>
       <height>71</height>
      </rect>
     </property>
     <property name="text">
      <string>停止拍摄</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_runpg_test">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>980</x>
-      <y>450</y>
-      <width>71</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TEST</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_runpg_clear">
@@ -170,7 +154,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>200</y>
-      <width>101</width>
+      <width>161</width>
       <height>71</height>
      </rect>
     </property>
@@ -181,9 +165,9 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="pushButton_ctrl_vclas_stop">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>200</x>
       <y>200</y>
-      <width>101</width>
+      <width>161</width>
       <height>71</height>
      </rect>
     </property>
@@ -202,32 +186,6 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>参数设定</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_ctrl_start_flu">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>20</y>
-      <width>101</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>启动荧光拍摄</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_ctrl_vclas_start_flu">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>200</y>
-      <width>101</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>荧光图像识别</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_meng_sel">
@@ -278,6 +236,7 @@ p, li { white-space: pre-wrap; }
      <string>工参</string>
     </property>
     <addaction name="actionMenuGparSet"/>
+    <addaction name="actionMenuGparFcc"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -320,7 +279,7 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>板孔</string>
     </property>
-    <addaction name="actionMenuBrowseSelect"/>
+    <addaction name="actionMenuSahtSelect"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -407,7 +366,7 @@ p, li { white-space: pre-wrap; }
     <string>停止识别</string>
    </property>
   </action>
-  <action name="actionMenuBrowseSelect">
+  <action name="actionMenuSahtSelect">
    <property name="text">
     <string>活孔选择</string>
    </property>
@@ -415,6 +374,21 @@ p, li { white-space: pre-wrap; }
   <action name="actionMenuStestRndCmd">
    <property name="text">
     <string>研发测试</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>分层荧光</string>
+   </property>
+  </action>
+  <action name="actionMenuFccnt">
+   <property name="text">
+    <string>细胞计数</string>
+   </property>
+  </action>
+  <action name="actionMenuGparFcc">
+   <property name="text">
+    <string>细胞计数</string>
    </property>
   </action>
  </widget>
@@ -433,22 +407,6 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>938</x>
      <y>367</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_runpg_test</sender>
-   <signal>clicked()</signal>
-   <receiver>cebsMainWindow</receiver>
-   <slot>slot_runpg_test()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1005</x>
-     <y>513</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>939</x>
-     <y>415</y>
     </hint>
    </hints>
   </connection>
@@ -561,38 +519,6 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>348</x>
      <y>394</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_ctrl_start_flu</sender>
-   <signal>clicked()</signal>
-   <receiver>cebsMainWindow</receiver>
-   <slot>slot_ctrl_start_flu()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>187</x>
-     <y>90</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>191</x>
-     <y>124</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_ctrl_vclas_start_flu</sender>
-   <signal>clicked()</signal>
-   <receiver>cebsMainWindow</receiver>
-   <slot>slot_ctrl_vclas_start_flu()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>215</x>
-     <y>282</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>250</x>
-     <y>303</y>
     </hint>
    </hints>
   </connection>

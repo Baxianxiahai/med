@@ -42,13 +42,13 @@ import PkgL4ceuiHandler.ModCeuiSaht
 Main Windows
 
 主菜单分解：
+    #拍照 - Main - Pic
+    #识别 - Main - Cfy
     #自测 - Stest
     #工参 - Gpar
     #马达 - Meng
-    #板孔 - Browse
+    #板孔 - Saht
     #校准 - Calib
-    #拍照 - Main - Pic
-    #识别 - Main - Cfy
     #设置 - Sset
 '''
 class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigOpr):
@@ -101,7 +101,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         self.actionMenuMengMode.triggered.connect(self.slot_meng_sel)
         self.actionMenuMengZero.triggered.connect(self.slot_ctrl_zero)
         #板孔
-        self.actionMenuBrowseSelect.triggered.connect(self.slot_saht_sel)
+        self.actionMenuSahtSelect.triggered.connect(self.slot_saht_sel)
         #校准
         self.actionMenuCalibMode.triggered.connect(self.slot_ctrl_calib)
         #拍照

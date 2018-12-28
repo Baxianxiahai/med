@@ -3,10 +3,13 @@
 1. 荧光识别算法：待定
 2. VISION中图像识别参数控制，通用参数来调控
 3. 全局参数表，更新到本地化
+4. 将图像识别后的结果，放到ini文件中去，去掉cebsVsClas.log记录文件。这是为了后续H5UI界面的开发。
+
 
 【BUG LIST】
 1. Timer.cancel()没有真正起到作用，未来考虑使用terminate过程来强行终止线程的方法
 2. def func_vision_worm_binvalue_proc(self, img):  new = np.zeros(img.shape, np.uint8)
+3. 处于子菜单时，密码检查失败后的退出程序，没有真的起作用
 
 【将QT工具生成的ui文件转化为py文件】
   cd form_qt, 
@@ -29,7 +32,8 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
-
+//=ZJL, 2018/12/28, CURRENT_SW_DELIVERY R1.51 =>CEBS
+= 搭建荧光细胞识别的方案
 
 
 //=ZJL, 2018/12/28, CURRENT_SW_DELIVERY R1.50 =>CEBS
