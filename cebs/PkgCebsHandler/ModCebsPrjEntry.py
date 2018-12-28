@@ -13,21 +13,21 @@ from PkgCebsHandler.ModCebsCom import *
 from PkgCebsHandler.ModCebsCfg import *
 from PkgVmHandler.ModVmConsole import *
 
-from PkgCetkHandler import ModCetkCalib
-from PkgCetkHandler import ModCetkCtrlSchd
-from PkgCetkHandler import ModCetkGpar
-from PkgCetkHandler import ModCetkMeng
-from PkgCetkHandler import ModCetkStest
-from PkgCetkHandler import ModCetkMoto
-from PkgCetkHandler import ModCetkVision
-from PkgCetkHandler import ModCetkUiMain
-from PkgCetkHandler import ModCetkUiCalib
-from PkgCetkHandler import ModCetkUiGpar
-from PkgCetkHandler import ModCetkUiMeng
-from PkgCetkHandler import ModCetkUiStest
+from PkgCebsHandler import ModCebsCalib
+from PkgCebsHandler import ModCebsCtrlSchd
+from PkgCebsHandler import ModCebsGpar
+from PkgCebsHandler import ModCebsMeng
+from PkgCebsHandler import ModCebsStest
+from PkgCebsHandler import ModCebsMoto
+from PkgCebsHandler import ModCebsVision
+from PkgCebsHandler import ModCebsUiMain
+from PkgCebsHandler import ModCebsUiCalib
+from PkgCebsHandler import ModCebsUiGpar
+from PkgCebsHandler import ModCebsUiMeng
+from PkgCebsHandler import ModCebsUiStest
 
-import cebsTkL4Ui
-
+#import cebsTkL4Ui
+import PkgCeuiHandler.ModCeuiEntry
 
 
 '''
@@ -46,7 +46,7 @@ def prj_cebs_main_entry():
     TUP_GL_CFG = tupGlbCfg()
     
     #START APP and UI：展示启动页面
-    app, splash = cebsTkL4Ui.cetk_start_app()
+    app, splash = PkgCeuiHandler.ModCeuiEntry.cetk_start_app()
         
     '''
     #
@@ -86,73 +86,73 @@ def prj_cebs_main_entry():
     VmConslTaskInst.tup_dbg_print("Create VM task success!")
     
     #UI_MAIN
-    MainUiTaskInst = ModCetkUiMain.tupTaskUiMain(TUP_GL_CFG);
+    MainUiTaskInst = ModCebsUiMain.tupTaskUiMain(TUP_GL_CFG);
     initMsg['dst'] = TUP_TASK_ID_UI_MAIN
     MainUiTaskInst.msg_send_in(initMsg)            
     MainUiTaskInst.tup_dbg_print("Create MAIN UI task success!")
 
     #UI_CALIB
-    CalibUiTaskInst = ModCetkUiCalib.tupTaskUiCalib(TUP_GL_CFG);
+    CalibUiTaskInst = ModCebsUiCalib.tupTaskUiCalib(TUP_GL_CFG);
     initMsg['dst'] = TUP_TASK_ID_UI_CALIB
     CalibUiTaskInst.msg_send_in(initMsg)            
     CalibUiTaskInst.tup_dbg_print("Create CALIB UI task success!")
 
     #UI_GPAR
-    GparUiTaskInst = ModCetkUiGpar.tupTaskUiGpar(TUP_GL_CFG);
+    GparUiTaskInst = ModCebsUiGpar.tupTaskUiGpar(TUP_GL_CFG);
     initMsg['dst'] = TUP_TASK_ID_UI_GPAR
     GparUiTaskInst.msg_send_in(initMsg)            
     GparUiTaskInst.tup_dbg_print("Create GPAR UI task success!")
 
     #UI_MENG
-    MengUiTaskInst = ModCetkUiMeng.tupTaskUiMeng(TUP_GL_CFG);
+    MengUiTaskInst = ModCebsUiMeng.tupTaskUiMeng(TUP_GL_CFG);
     initMsg['dst'] = TUP_TASK_ID_UI_MENG
     MengUiTaskInst.msg_send_in(initMsg)            
     MengUiTaskInst.tup_dbg_print("Create MENG UI task success!")
 
     #UI_STEST
-    StestUiTaskInst = ModCetkUiStest.tupTaskUiStest(TUP_GL_CFG);
+    StestUiTaskInst = ModCebsUiStest.tupTaskUiStest(TUP_GL_CFG);
     initMsg['dst'] = TUP_TASK_ID_UI_STEST
     StestUiTaskInst.msg_send_in(initMsg)            
     StestUiTaskInst.tup_dbg_print("Create STEST UI task success!")
         
     #Calib Task
-    CalibTaskInst = ModCetkCalib.tupTaskCalib(TUP_GL_CFG);
+    CalibTaskInst = ModCebsCalib.tupTaskCalib(TUP_GL_CFG);
     initMsg['dst'] = TUP_TASK_ID_CALIB
     CalibTaskInst.msg_send_in(initMsg)
     CalibTaskInst.tup_dbg_print("Create CALIB task success!")
     
     #CtrlSchd Task
-    CtrlSchdTaskInst = ModCetkCtrlSchd.tupTaskCtrlSchd(TUP_GL_CFG);
+    CtrlSchdTaskInst = ModCebsCtrlSchd.tupTaskCtrlSchd(TUP_GL_CFG);
     initMsg['dst'] = TUP_TASK_ID_CTRL_SCHD
     CtrlSchdTaskInst.msg_send_in(initMsg)    
     CtrlSchdTaskInst.tup_dbg_print("Create CTRL SCHD task success!")
     
     #Gpar Task
-    GparTaskInst = ModCetkGpar.tupTaskGpar(TUP_GL_CFG);
+    GparTaskInst = ModCebsGpar.tupTaskGpar(TUP_GL_CFG);
     initMsg['dst'] = TUP_TASK_ID_GPAR
     GparTaskInst.msg_send_in(initMsg)
     GparTaskInst.tup_dbg_print("Create GPAR task success!")
 
     #Meng Task
-    MengTaskInst = ModCetkMeng.tupTaskMeng(TUP_GL_CFG);
+    MengTaskInst = ModCebsMeng.tupTaskMeng(TUP_GL_CFG);
     initMsg['dst'] = TUP_TASK_ID_MENG
     MengTaskInst.msg_send_in(initMsg)    
     MengTaskInst.tup_dbg_print("Create MENG task success!")
 
     #Stest Task
-    StestTaskInst = ModCetkStest.tupTaskStest(TUP_GL_CFG);
+    StestTaskInst = ModCebsStest.tupTaskStest(TUP_GL_CFG);
     initMsg['dst'] = TUP_TASK_ID_STEST
     StestTaskInst.msg_send_in(initMsg)    
     StestTaskInst.tup_dbg_print("Create STEST task success!")
     
     #Moto Task
-    MotoTaskInst = ModCetkMoto.tupTaskMoto(TUP_GL_CFG);
+    MotoTaskInst = ModCebsMoto.tupTaskMoto(TUP_GL_CFG);
     initMsg['dst'] = TUP_TASK_ID_MOTO
     MotoTaskInst.msg_send_in(initMsg)
     MotoTaskInst.tup_dbg_print("Create MOTO task success!")
 
     #Vision Task
-    VisionTaskInst = ModCetkVision.tupTaskVision(TUP_GL_CFG);
+    VisionTaskInst = ModCebsVision.tupTaskVision(TUP_GL_CFG);
     initMsg['dst'] = TUP_TASK_ID_VISION
     VisionTaskInst.msg_send_in(initMsg)
     VisionTaskInst.tup_dbg_print("Create VISION task success!")
@@ -163,7 +163,7 @@ def prj_cebs_main_entry():
     #
     '''
     #FINAL QT UI：真正启动界面APP
-    cebsTkL4Ui.cetk_show_app(app, splash, MainUiTaskInst, CalibUiTaskInst, GparUiTaskInst, MengUiTaskInst, StestUiTaskInst, 0)
+    PkgCeuiHandler.ModCeuiEntry.cetk_show_app(app, splash, MainUiTaskInst, CalibUiTaskInst, GparUiTaskInst, MengUiTaskInst, StestUiTaskInst, 0)
 
 
 
@@ -173,7 +173,7 @@ def prj_cebs_main_entry():
     #
     '''    
     #CLOSE ALL TASK: total 12 tasks
-    print("Project CETK terminate all existing tasks Start!")
+    print("Project CEBS terminate all existing tasks Start!")
     VmConslTaskInst.task_stop()
     MainUiTaskInst.task_stop()
     CalibUiTaskInst.task_stop()
@@ -187,7 +187,7 @@ def prj_cebs_main_entry():
     StestTaskInst.task_stop()
     MotoTaskInst.task_stop()
     VisionTaskInst.task_stop()
-    print("Project CETK terminate all existing tasks Accomplish!")
+    print("Project CEBS terminate all existing tasks Accomplish!")
     
     '''
     #

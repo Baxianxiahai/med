@@ -26,15 +26,19 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_ZERO_EXEC = 8
     _STM_DEACT = 9
     
+    #TIMER1
     #启动后是否自动干活的定时器，因为要等待归零，所以必须等待一会儿
     timerStartWorkDirAfterMvZero = ''
     TIMER_DUR_START_WK_AFTER_ZERO = 15
+
+    #TIMER2
     #启动第二个定时器：定时自动拍照
     timerStartWorkDirAfterFixTti = ''
     
+    #TIMER3
     #密码验证并控制是否继续干活
     timerMdcPswdChk = ''
-    TIMER_DUR_MDC_PSWD_CHK = 10*5
+    TIMER_DUR_MDC_PSWD_CHK = 60*5
 
 
     def __init__(self, glPar):
@@ -48,6 +52,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TEST, self.fsm_com_msg_test_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_inc_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CRTS_MDC_CHK_PSWD_RESP, self.fsm_msg_mdc_pswd_chk_resp_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_HW_REL, self.fsm_msg_ctrl_schd_hw_release_rcv_handler) #有可能启动定时器，需要退出
         
         #控制业务逻辑
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CTRL_SCHD_SWITCH_ON, self.fsm_msg_switch_on_rcv_handler)
@@ -101,7 +106,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
 
         #启动定时器，准备自动干活
         if (GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET == True):
-            self.timerMdcPswdChk = self.tup_timer_start(self.TIMER_DUR_MDC_PSWD_CHK, self.func_timer_start_work_after_mv_zero)
+            self.timerStartWorkDirAfterMvZero = self.tup_timer_start(self.TIMER_DUR_START_WK_AFTER_ZERO, self.func_timer_start_work_after_mv_zero)
         
         #查询PSWD
         time.sleep(1)
@@ -122,8 +127,19 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         
         #start timer
         if (res < 0) or (self.func_pswd_check(pswd) != True):
-            self.timerStartWorkDirAfterMvZero = self.tup_timer_start(self.TIMER_DUR_START_WK_AFTER_ZERO, self.func_timer_start_after_check_pswd_failure)        
+            self.timerMdcPswdChk = self.tup_timer_start(self.TIMER_DUR_MDC_PSWD_CHK, self.func_timer_start_after_check_pswd_failure)        
         return TUP_SUCCESS;
+    
+    #停止定时器的操作
+    def fsm_msg_ctrl_schd_hw_release_rcv_handler(self, msgContent):
+        try:
+            self.tup_timer_stop(self.timerMdcPswdChk)
+            self.tup_timer_stop(self.timerStartWorkDirAfterMvZero)
+            self.tup_timer_stop(self.timerStartWorkDirAfterFixTti)
+        except Exception:
+            return TUP_FAILURE;
+        return TUP_SUCCESS;    
+    
     
     def funcCtrlSchdLogTrace(self, myString):
         self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)
@@ -686,6 +702,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.timerStartWorkDirAfterFixTti = self.tup_timer_start(GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN*60, self.func_timer_start_work_after_fix_tti)
         #触发任务
         self.msg_send(TUP_MSGID_CTRL_SCHD_CAPPIC_START, TUP_TASK_ID_CTRL_SCHD, "")
+        return
 
     #STEST查询过程
     def fsm_msg_stest_inq_rcv_handler(self, msgContent):

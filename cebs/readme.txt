@@ -5,6 +5,7 @@
 3. 全局参数表，更新到本地化
 
 【BUG LIST】
+1. Timer.cancel()没有真正起到作用，未来考虑使用terminate过程来强行终止线程的方法
 2. def func_vision_worm_binvalue_proc(self, img):  new = np.zeros(img.shape, np.uint8)
 
 【将QT工具生成的ui文件转化为py文件】
@@ -27,6 +28,16 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
+
+
+
+
+//=ZJL, 2018/12/28, CURRENT_SW_DELIVERY R1.50 =>CEBS
+= 准备将界面工程纳入到单独的Package中去，以便准备将TUP改造为多任务体系
+= 预期TUP将支持更多的项目类型，目前有CEBS、基于工控机的CebsMk2等，未来还有可能在其上叠加MQTT组件、RESTFUL组件等
+    这样将TUP发展成为一个应用程序系列，而并不是简单的底层服务
+  FAWS有可能架构在TUP体系之上
+= 所以将cebsMain改为tupMain函数，统一化程序运行  
 
 
 //=ZJL, 2018/12/27, CURRENT_SW_DELIVERY R1.49 =>CEBS

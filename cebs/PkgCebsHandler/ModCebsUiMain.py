@@ -20,7 +20,6 @@ from PkgCebsHandler.ModCebsCom import *
 from PkgCebsHandler.ModCebsCfg import *
 from PkgVmHandler.ModVmConsole import *
 
-from cebsTkL4Ui import *
 
 class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_ACTIVE = 3
@@ -147,10 +146,6 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         #转移状态
         self.fsm_set(self._STM_DEACT)
     
-    #TBD
-    def func_ui_click_pilot_stop(self):
-        print("I am func_ui_click_pilot_stop!")    
-    
     #切换界面
     def func_ui_click_meng_start(self):
         print("I am func_ui_click_meng_start!")    
@@ -187,6 +182,7 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         print("I am func_ui_click_main_prog_exit!")
         self.msg_send(TUP_MSGID_HW_REL, TUP_TASK_ID_MOTO, "")
         self.msg_send(TUP_MSGID_HW_REL, TUP_TASK_ID_VISION, "")
+        self.msg_send(TUP_MSGID_HW_REL, TUP_TASK_ID_CTRL_SCHD, "")
         self.fsm_set(self._STM_ACTIVE)
     
 
