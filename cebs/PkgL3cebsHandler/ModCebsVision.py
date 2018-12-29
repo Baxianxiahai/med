@@ -124,11 +124,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
        cv::CAP_PROP_FRAME_COUNT =7, 
        cv::CAP_PROP_FORMAT =8, 
        cv::CAP_PROP_MODE =9, 
-       cv::CAP_PROP_BRIGHTNESS =10, 
-       cv::CAP_PROP_CONTRAST =11, 
-       cv::CAP_PROP_SATURATION =12, 
-       cv::CAP_PROP_HUE =13, 
-       cv::CAP_PROP_GAIN =14, 
+       cv::CAP_PROP_BRIGHTNESS =10,     //亮度
+       cv::CAP_PROP_CONTRAST =11,       //对比度
+       cv::CAP_PROP_SATURATION =12,     //饱和度
+       cv::CAP_PROP_HUE =13,            //色调
+       cv::CAP_PROP_GAIN =14,     
        cv::CAP_PROP_EXPOSURE =15, 
        cv::CAP_PROP_CONVERT_RGB =16, 
        cv::CAP_PROP_WHITE_BALANCE_BLUE_U =17, 
@@ -172,14 +172,36 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         #正确的情况
         try:
             self.capInit = cv.VideoCapture(self.camera_nbr) #CHECK WITH ls /dev/video*　RESULT
-            self.capInit.set(3, GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
-            self.capInit.set(4, GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
+            self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
+            self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
             print("CAP_PROP_BRIGHTNESS = ", self.capInit.get(cv.CAP_PROP_BRIGHTNESS))
             print("CAP_PROP_EXPOSURE = ", self.capInit.get(cv.CAP_PROP_EXPOSURE))
             print("CAP_PROP_ZOOM = ", self.capInit.get(cv.CAP_PROP_ZOOM))
             print("CAP_PROP_FOCUS = ", self.capInit.get(cv.CAP_PROP_FOCUS))
             print("CAP_PROP_GAIN = ", self.capInit.get(cv.CAP_PROP_GAIN))
             print("CAP_PROP_WHITE_BALANCE_BLUE_U = ", self.capInit.get(cv.CAP_PROP_WHITE_BALANCE_BLUE_U))
+            print("CAP_PROP_CONTRAST = ", self.capInit.get(cv.CAP_PROP_CONTRAST))
+            print("CAP_PROP_SATURATION = ", self.capInit.get(cv.CAP_PROP_SATURATION))
+            print("CAP_PROP_HUE = ", self.capInit.get(cv.CAP_PROP_HUE))
+            print("CAP_PROP_ISO_SPEED = ", self.capInit.get(cv.CAP_PROP_ISO_SPEED))
+            print("CAP_PROP_IRIS = ", self.capInit.get(cv.CAP_PROP_IRIS))
+            
+            self.capInit.set(cv.CAP_PROP_BRIGHTNESS, 1)
+            print("CAP_PROP_BRIGHTNESS = ", self.capInit.get(cv.CAP_PROP_BRIGHTNESS))
+            self.capInit.set(cv.CAP_PROP_CONTRAST, 40)
+            print("CAP_PROP_CONTRAST = ", self.capInit.get(cv.CAP_PROP_CONTRAST))
+            self.capInit.set(cv.CAP_PROP_SATURATION, 50)
+            print("CAP_PROP_SATURATION = ", self.capInit.get(cv.CAP_PROP_SATURATION))
+            self.capInit.set(cv.CAP_PROP_HUE, 50)
+            print("CAP_PROP_HUE = ", self.capInit.get(cv.CAP_PROP_HUE))
+            self.capInit.set(cv.CAP_PROP_AUTO_EXPOSURE, 0.25)
+            print("CAP_PROP_AUTO_EXPOSURE = ", self.capInit.get(cv.CAP_PROP_AUTO_EXPOSURE))
+            self.capInit.set(cv.CAP_PROP_EXPOSURE, -1)
+            print("CAP_PROP_EXPOSURE = ", self.capInit.get(cv.CAP_PROP_EXPOSURE))
+
+
+
+            
             if not self.capInit.isOpened():
                 self.capInit.release()
         except Exception:
