@@ -35,6 +35,7 @@ from PkgL1vmHandler.ModVmLayer import *
 from PkgL3cebsHandler.ModCebsCom import *
 from PkgL3cebsHandler.ModCebsCfg import *
 from PkgL1vmHandler.ModVmConsole import *
+from _overlapped import NULL
 
 #from cebsTkL4Ui import *
 
@@ -748,7 +749,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             errStr = "L2VISCFY: File %s not exist!" % (fileName)
             self.medErrorLog(errStr);
             print("L2VISCFY: File %s not exist!" % (fileName))
-            return -1;
+            return -1,fileName,str(NULL);
         try:
             inputImg = cv.imread(fileName)
         except Exception as err:
