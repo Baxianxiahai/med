@@ -44,7 +44,6 @@ if __name__ == '__main__':
         ModCebsPrjEntry.prj_cebs_main_entry();
     else:
         print("[NOBODY] ", time.asctime(), ", System starting and existing!\n" );
-        pass
 
 
 

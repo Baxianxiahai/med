@@ -32,9 +32,19 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
+
+
+
+
+
+
+
+//=ZJL, 2019/1/1, CURRENT_SW_DELIVERY R1.52 =>CEBS
+= 将捕获模式分辨率设为最大，但预览模式设置为1/4
+
+
 //=ZJL, 2018/12/28, CURRENT_SW_DELIVERY R1.51 =>CEBS
 = 搭建荧光细胞识别的方案
-
 
 //=ZJL, 2018/12/28, CURRENT_SW_DELIVERY R1.50 =>CEBS
 = 准备将界面工程纳入到单独的Package中去，以便准备将TUP改造为多任务体系

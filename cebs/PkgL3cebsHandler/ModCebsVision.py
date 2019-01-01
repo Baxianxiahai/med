@@ -157,6 +157,21 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
      } 
     #
     #
+    #曝光时间的说明
+     -1 640 ms
+     -2 320 ms
+     -3 160 ms
+     -4 80 ms
+     -5 40 ms
+     -6 20 ms
+     -7 10 ms
+     -8 5 ms
+     -9 2.5 ms
+     -10 1.25 ms
+     -11 650 µs
+     -12 312 µs
+     -13 150 µs    
+    
     '''    
     def fsm_msg_init_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
@@ -175,18 +190,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             self.capInit = cv.VideoCapture(self.camera_nbr) #CHECK WITH ls /dev/video*　RESULT
             self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
             self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
-            print("CAP_PROP_BRIGHTNESS = ", self.capInit.get(cv.CAP_PROP_BRIGHTNESS))
-            print("CAP_PROP_EXPOSURE = ", self.capInit.get(cv.CAP_PROP_EXPOSURE))
-            print("CAP_PROP_ZOOM = ", self.capInit.get(cv.CAP_PROP_ZOOM))
-            print("CAP_PROP_FOCUS = ", self.capInit.get(cv.CAP_PROP_FOCUS))
-            print("CAP_PROP_GAIN = ", self.capInit.get(cv.CAP_PROP_GAIN))
-            print("CAP_PROP_WHITE_BALANCE_BLUE_U = ", self.capInit.get(cv.CAP_PROP_WHITE_BALANCE_BLUE_U))
-            print("CAP_PROP_CONTRAST = ", self.capInit.get(cv.CAP_PROP_CONTRAST))
-            print("CAP_PROP_SATURATION = ", self.capInit.get(cv.CAP_PROP_SATURATION))
-            print("CAP_PROP_HUE = ", self.capInit.get(cv.CAP_PROP_HUE))
-            print("CAP_PROP_ISO_SPEED = ", self.capInit.get(cv.CAP_PROP_ISO_SPEED))
-            print("CAP_PROP_IRIS = ", self.capInit.get(cv.CAP_PROP_IRIS))
-            
+            #试验型拍照设计方法
             self.capInit.set(cv.CAP_PROP_BRIGHTNESS, 1)
             print("CAP_PROP_BRIGHTNESS = ", self.capInit.get(cv.CAP_PROP_BRIGHTNESS))
             self.capInit.set(cv.CAP_PROP_CONTRAST, 40)
@@ -195,14 +199,19 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             print("CAP_PROP_SATURATION = ", self.capInit.get(cv.CAP_PROP_SATURATION))
             self.capInit.set(cv.CAP_PROP_HUE, 50)
             print("CAP_PROP_HUE = ", self.capInit.get(cv.CAP_PROP_HUE))
-            self.capInit.set(cv.CAP_PROP_AUTO_EXPOSURE, 0.25)
-            print("CAP_PROP_AUTO_EXPOSURE = ", self.capInit.get(cv.CAP_PROP_AUTO_EXPOSURE))
-            self.capInit.set(cv.CAP_PROP_EXPOSURE, -1)
+            self.capInit.set(cv.CAP_PROP_EXPOSURE, -4)
             print("CAP_PROP_EXPOSURE = ", self.capInit.get(cv.CAP_PROP_EXPOSURE))
-
-
-
-            
+            #自动曝光设置，没找到成功设置的方法
+            #self.capInit.set(cv.CAP_PROP_AUTO_EXPOSURE, -1)
+            print("CAP_PROP_AUTO_EXPOSURE = ", self.capInit.get(cv.CAP_PROP_AUTO_EXPOSURE))
+            print("CAP_PROP_ZOOM = ", self.capInit.get(cv.CAP_PROP_ZOOM))
+            print("CAP_PROP_FOCUS = ", self.capInit.get(cv.CAP_PROP_FOCUS))
+            print("CAP_PROP_GAIN = ", self.capInit.get(cv.CAP_PROP_GAIN))
+            print("CAP_PROP_WHITE_BALANCE_BLUE_U = ", self.capInit.get(cv.CAP_PROP_WHITE_BALANCE_BLUE_U))
+            print("CAP_PROP_ISO_SPEED = ", self.capInit.get(cv.CAP_PROP_ISO_SPEED))
+            print("CAP_PROP_IRIS = ", self.capInit.get(cv.CAP_PROP_IRIS))
+            #WINDOWS POP-UP控件，可让人工干预，对参数进行调整
+            #self.capInit.set(cv.CAP_PROP_SETTINGS, 1)
             if not self.capInit.isOpened():
                 self.capInit.release()
         except Exception:
@@ -291,6 +300,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         #PRINT to local
         self.tup_err_print(str(myString))
         return
+
+
     
     '''
     #
@@ -307,6 +318,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     #其它的COM数据主要还是一些简单的共享参数信息
     #
     '''
+    #以1/4的分辨率进行视频预览
     def fsm_msg_calib_video_display_req_rcv_handler(self, msgContent):
         mbuf={}
         if self.capInit == '':
@@ -314,7 +326,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
             return TUP_FAILURE;
         #CAPTURE PICTURE
-        ret, outFrame = self.func_cap_qt_frame()        
+        ret, outFrame = self.func_cap_qt_vd_frame_in_calib_mode()        
         if (ret <0):
             mbuf['res'] = -2
             self.msg_send(TUP_MSGID_CALIB_VDISP_RESP, TUP_TASK_ID_CALIB, mbuf)
@@ -326,6 +338,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;      
 
     #传递文件回去给显示界面
+    #以100%的分辨率进行抓取
     def fsm_msg_calib_pic_cap_holen_rcv_handler(self, msgContent):
         holeNbr = msgContent['holeNbr']
         fileName = msgContent['fileName']
@@ -333,7 +346,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             self.funcVisionErrTrace("VISION: capture error as not init camera!")
             return TUP_FAILURE;
         #CAPTURE PICTURE
-        ret, outFrame = self.func_cap_one_frame()
+        ret, outFrame = self.func_cap_one_hole_frame_in_calib_mode()
         if (ret <0):
             self.funcVisionErrTrace("VISION: capture picture error!")
             return TUP_FAILURE;
@@ -342,6 +355,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         return TUP_SUCCESS;
     
     #主界面模式下拍照
+    #以100%的分辨率进行抓取
     def fsm_msg_main_ctrs_pic_cap_req_rcv_handler(self, msgContent):
         fnPic = msgContent['fnPic']
         fnScale = msgContent['fnScale']
@@ -349,13 +363,14 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         vdCtrl = msgContent['vdCtrl']
         sclCtrl = msgContent['sclCtrl']
         vdDur = msgContent['vdDur']
-        res = self.func_pic_vid_cap_and_save_file(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
+        res = self.func_pic_vid_cap_and_save_file_in_running_mode(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
         mbuf={}
         mbuf['res'] = res
         self.msg_send(TUP_MSGID_CTRS_PIC_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         return TUP_SUCCESS;
     
     #FLU图像拍摄的功能还未完善，暂时使用了白光拍摄的手法
+    #以100%的分辨率进行抓取
     def fsm_msg_main_ctrs_flu_cap_req_rcv_handler(self, msgContent):
         fnPic = msgContent['fnPic']
         fnScale = msgContent['fnScale']
@@ -363,7 +378,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         vdCtrl = msgContent['vdCtrl']
         sclCtrl = msgContent['sclCtrl']
         vdDur = msgContent['vdDur']
-        res = self.func_pic_vid_cap_and_save_file(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
+        res = self.func_pic_vid_cap_and_save_file_in_running_mode(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
         mbuf={}
         mbuf['res'] = res
         self.msg_send(TUP_MSGID_CTRS_FLU_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
@@ -449,8 +464,36 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     #SERVICE PART: 业务部分的函数，功能处理函数
     #获取图像的函数
     '''
+    #输出QT格式
+    def func_cap_qt_vd_frame_in_calib_mode(self):
+        try:
+            self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH//4)
+            self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT//4)
+        except Exception:
+            pass
+        try:
+            ret, frame = self.capInit.read()
+        except Exception:
+            pass
+        if (ret != True):
+            return -1,_;
+        
+        height, width = frame.shape[:2]
+        if frame.ndim == 3:
+            rgb = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+        elif frame.ndim == 2:
+            rgb = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
+        temp_image = QtGui.QImage(rgb.flatten(), width, height, QtGui.QImage.Format_RGB888)
+        temp_pixmap = QtGui.QPixmap.fromImage(temp_image)
+        return 1, temp_pixmap
+    
     #输出OpenCV可以识别的格式 => 为了本地存储只用
-    def func_cap_one_frame(self):
+    def func_cap_one_hole_frame_in_calib_mode(self):
+        try:
+            self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
+            self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
+        except Exception:
+            pass
         try:
             ret, frame = self.capInit.read()
         except Exception:
@@ -472,26 +515,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         R = R * kr
         outputFrame = cv.merge([B, G, R])
         return 1, outputFrame
-    
-    #输出QT格式
-    def func_cap_qt_frame(self):
-        try:
-            ret, frame = self.capInit.read()
-        except Exception:
-            pass
-        if (ret != True):
-            return -1,_;
-        
-        height, width = frame.shape[:2]
-        if frame.ndim == 3:
-            rgb = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-        elif frame.ndim == 2:
-            rgb = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
-        temp_image = QtGui.QImage(rgb.flatten(), width, height, QtGui.QImage.Format_RGB888)
-        temp_pixmap = QtGui.QPixmap.fromImage(temp_image)
-        return 1, temp_pixmap
-
-
 
 
 
@@ -506,7 +529,12 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     # vdCtrl: 控制是否需要拍摄视频
     #
     '''
-    def func_pic_vid_cap_and_save_file(self, fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur):
+    def func_pic_vid_cap_and_save_file_in_running_mode(self, fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur):
+        try:
+            self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
+            self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
+        except Exception:
+            pass
         try:
             if not self.capInit.isOpened():
                 self.funcVisionErrTrace("L2VISCAP: Cannot open webcam!")
