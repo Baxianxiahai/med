@@ -253,6 +253,7 @@ class clsL1_ConfigOpr():
         #回写                    
         fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
         self.CReader.write(fd)
+        fd.flush()
         fd.close()
     
 
@@ -298,6 +299,7 @@ class clsL1_ConfigOpr():
             self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
         fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
         self.CReader.write(fd)
+        fd.flush()
         fd.close()
     
     '''
@@ -341,6 +343,7 @@ class clsL1_ConfigOpr():
             self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
         fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
         self.CReader.write(fd)
+        fd.flush()
         fd.close()
 
     '''
@@ -367,6 +370,7 @@ class clsL1_ConfigOpr():
         self.CReader.set(batchStr, "work time", str(time.asctime()))
         fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
         self.CReader.write(fd)
+        fd.flush()
         fd.close()
 
     #增加普通文件 => 写到ini文件中去
@@ -418,6 +422,7 @@ class clsL1_ConfigOpr():
             return -2;
         finally:
             self.CReader.write(fd)
+            fd.flush()
             fd.close()
     
     #更新文件的视频属性
@@ -436,6 +441,7 @@ class clsL1_ConfigOpr():
             return -1;
         finally:
             self.CReader.write(fd)
+            fd.flush()
             fd.close()
 
     '''
@@ -674,6 +680,7 @@ class clsL1_ConfigOpr():
         self.CReader.set(batchStr, cfyResWormNbr, str(cfyWormNbr))
         fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
         self.CReader.write(fd)
+        fd.flush()
         fd.close()
 
     '''

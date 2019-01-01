@@ -37,8 +37,15 @@ from PkgL3cebsHandler.ModCebsCfg import *
 from PkgL1vmHandler.ModVmConsole import *
 from _overlapped import NULL
 
-#from cebsTkL4Ui import *
 
+#全局所能支持摄像头的类型
+#为了简化COM模块的设计，所支持的摄像头描述符并不放在COM模块中，而是直接放在这个模块中
+_TUP_VISION_DESC_LIST = [{'name':'OBVIOUS_UCMOS10000KPA', 'desc':'VID_0547&PID_6010'},\
+                         #{'name':'OBVIOUS_MK2', 'desc':'ABCDEFG'},\
+                         ]
+
+
+#业务CLASS
 class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_ACTIVE = 3
     #主界面，干活拍照
@@ -1079,20 +1086,22 @@ class clsCamDevHdl():
         wmi = win32com.client.GetObject("winmgmts:")
         camId = -2
         for usb in wmi.InstancesOf ("win32_usbcontrollerdevice"):
-            if "VID_0547&PID_6010" in usb.Dependent:
-                searchText = "VID_0547&PID_6010"
-                indexStart = usb.Dependent.find(searchText)
-                textLen = len(searchText)
-                textContent = usb.Dependent[indexStart+textLen:]
-                result={}
-                step=0;
-                for item in textContent.split('&'):
-                    result[step] = item
-                    step+=1
-                try:
-                    camId = int(result[2])
-                except Exception:
-                    camId = -1
+            for dev in _TUP_VISION_DESC_LIST:
+                #print(dev['desc'])
+                if dev['desc'] in usb.Dependent:
+                    #searchText = "VID_0547&PID_6010"
+                    indexStart = usb.Dependent.find(dev['desc'])
+                    textLen = len(dev['desc'])
+                    textContent = usb.Dependent[indexStart+textLen:]
+                    result={}
+                    step=0;
+                    for item in textContent.split('&'):
+                        result[step] = item
+                        step+=1
+                    try:
+                        camId = int(result[2])
+                    except Exception:
+                        camId = -1
         #存入临时文件
         f = open("tempCamId.txt", "w+")
         a = ("%d" % (camId))

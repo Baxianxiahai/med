@@ -200,7 +200,7 @@ class tupTaskTemplate():
     
     def tup_trace(self, string):
         if (TUP_PRINT_FLAG_SET_TRC == True):
-            print(time.asctime(), ", [TRC] [", self.taskName, "]: ", str(string))
+            print(time.asctime(), " [", str(time.time()), "] [TRC] [", self.taskName, "]: ", str(string))
 
     def tup_dbg_print(self, string):
         if (TUP_PRINT_FLAG_SET_DBG == True):

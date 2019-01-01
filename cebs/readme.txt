@@ -1,9 +1,7 @@
 ﻿====CEBS=====
 【待完成FEATURE LIST】
 1. 荧光识别算法：待定
-2. VISION中图像识别参数控制，通用参数来调控
-3. 全局参数表，更新到本地化
-4. 将图像识别后的结果，放到ini文件中去，去掉cebsVsClas.log记录文件。这是为了后续H5UI界面的开发。
+3. 定时器无法自动及时结束
 
 
 【BUG LIST】
@@ -42,6 +40,11 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 //=ZJL, 2019/1/1, CURRENT_SW_DELIVERY R1.52 =>CEBS
 = 将捕获模式分辨率设为最大，但预览模式设置为1/4
 = 去掉 GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET / cebsVsClas.log识别结果的存储过程
+4. 将图像识别后的结果，放到ini文件中去，去掉cebsVsClas.log记录文件。这是为了后续H5UI界面的开发。
+= 为VM的TRACE打印，增加time.time()时间戳
+= ini文件的FLUSH
+2. 自动识别摄像头 => 按照模板，将摄像头的描述符增加到VISION模块中去，就可以实现更多摄像头的支持
+
 
 //=ZJL, 2018/12/28, CURRENT_SW_DELIVERY R1.51 =>CEBS
 = 搭建荧光细胞识别的方案
