@@ -406,9 +406,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         fileNukeName = msgContent['fileNukeName']
         ctrl = msgContent['ctrl']
         addupSet = msgContent['addupSet']
-        res = self.func_vision_worm_clasification(fileName, fileNukeName, ctrl, addupSet);
+        res, outputFn, outText = self.func_vision_worm_clasification(fileName, fileNukeName, ctrl, addupSet);
         mbuf={}
         mbuf['res'] = res
+        mbuf['outputFn'] = outputFn
+        mbuf['outText'] = outText
         self.msg_send(TUP_MSGID_CRTS_FLU_CLFY_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         return TUP_SUCCESS;
     
@@ -795,11 +797,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         cv.imwrite(outputFn, outputImg)
             
         #Save log record: 存储干活的log记录
-        f = open(GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET, "a+")
-        a = '[%s], vision worm classification ones, save result as [%s] with output [%s].\n' % (time.asctime(), outputFn, str(outText))
-        f.write(a)
-        f.flush()
-        f.close()
+#         f = open(GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET, "a+")
+#         a = '[%s], vision worm classification ones, save result as [%s] with output [%s].\n' % (time.asctime(), outputFn, str(outText))
+#         f.write(a)
+#         f.flush()
+#         f.close()
         #Show result or not: 根据指令，是否显示文件
         cv.destroyAllWindows()
         return 1,outputFn,str(outText)
@@ -1033,11 +1035,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         cv.imwrite(outputFn, outputImg)
 
         #Save log record: 存储干活的log记录
-        f = open(GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET, "a+")
-        a = '[%s], Flu cell counting, save result as [%s] with output [%s].\n' % (time.asctime(), outputFn, str(outputText))
-        f.write(a)
-        f.flush()
-        f.close()
+#         f = open(GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET, "a+")
+#         a = '[%s], Flu cell counting, save result as [%s] with output [%s].\n' % (time.asctime(), outputFn, str(outputText))
+#         f.write(a)
+#         f.flush()
+#         f.close()
         
         #CLEAN SITES ENV.
         cv.destroyAllWindows()

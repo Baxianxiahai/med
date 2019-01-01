@@ -547,7 +547,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         #更新成功完成后的文件信息
         self.updateBatCntWithIniFileSyned(False, -1, 0)
         self.updateCfyCntWithIniFileSyned(self.cfyBat, self.cfyFileNbr, GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT, GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT);
-        self.updateUnclasFileAsClassified(self.cfyBat, self.cfyFileNbr,outText)
+        self.updateUnclasFileAsClassified(self.cfyBat, self.cfyFileNbr, outText)
         self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture classification finished, remaining NUMBRES=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
 
         #选在下一次需要后续处理的新文件号
@@ -633,6 +633,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     #图像识别后的结果    
     def fsm_msg_classify_flu_accomplish_rcv_handler(self, msgContent):
         res = msgContent['res']
+        outText = msgContent['outText']
         if (res < 0):
             self.funcCtrlSchdErrTrace("L3CTRLSCHD: Flu picture classification failure, remaining NUMBRES=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
             self.fsm_set(self._STM_ACTIVE)
@@ -641,7 +642,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         #更新成功完成后的文件信息
         self.updateBatCntWithIniFileSyned(False, 0, -1)
         self.updateCfyCntWithIniFileSyned(self.cfyBat, self.cfyFileNbr, GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT, GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT);
-        self.updateUnclasFileAsClassified(self.cfyBat, self.cfyFileNbr)
+        self.updateUnclasFileAsClassified(self.cfyBat, self.cfyFileNbr, outText)
         self.funcCtrlSchdLogTrace("L3CTRLSCHD: Flu picture classification finished, remaining NUMBRES=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
 
         #选在下一次需要后续处理的新文件号

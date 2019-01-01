@@ -377,8 +377,23 @@ class clsL1_ConfigOpr():
     def addFluBatchFile(self, batch, fileNbr):
         return self.addBatchFileInElement(batch, fileNbr, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN)
     
+    '''
     #基础函数过程
-    #同一个图像在反复存储的情况下，这个函数是否不出错？
+    #同一个图像在反复存储的情况下，这个函数是否不出错
+    #
+    # batch - 批次号
+    # fileNbr - 文件序号
+    # eleTag - 指明是normal还是flu的文件属性
+    #
+    #
+    # fileName - 文件名字
+    # fileClas - 文件是否已经被识别
+    # fileAtt - 文件属性， 对应上面eleTag
+    # fileVideoClag - 视频属性
+    # cfyResWormNbr - 识别后线虫的统计数量，以字符串的形式展现
+    #
+    #
+    '''
     def addBatchFileInElement(self, batch, fileNbr, eleTag):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
@@ -390,10 +405,12 @@ class clsL1_ConfigOpr():
         fileClas = str("batchFileClas#" + str(fileNbr))
         fileAtt = str("batchFileAtt#" + str(fileNbr))
         fileVideoClag = str("batchFileVidFlag#" + str(fileNbr))
+        cfyResWormNbr = str("cfyResWormNbr#" + str(fileNbr))
         self.CReader.set(batchStr, fileName, self.combineFileNameWithDir(batch, fileNbr))
         self.CReader.set(batchStr, fileClas, 'no')
         self.CReader.set(batchStr, fileAtt, eleTag)
         self.CReader.set(batchStr, fileVideoClag, 'no')
+        self.CReader.set(batchStr, cfyResWormNbr, '')
         try:
             fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
         except Exception as err:  
@@ -633,41 +650,60 @@ class clsL1_ConfigOpr():
             if (totalNbr > 0):
                 res += totalNbr
         return res
-                
+    
+    '''            
+    #
     #UPDATE CATEGORY PICTURE INFORMATION
-    def updateUnclasFileAsClassified(self, batch, fileNbr,outText):
+    #
+    #
+    # batch - 批次号
+    # fileNbr - 文件编号
+    # cfyWormNbr - 线虫识别数量，字符串系列
+    # cfyCellCnt - 荧光细胞数量结果
+    #
+    '''
+    def updateUnclasFileAsClassified(self, batch, fileNbr, cfyWormNbr):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
         batchStr = "batch#" + str(batch)
         fileName = self.combineFileName(batch, fileNbr)
         fileClas = str("batchFileClas#" + str(fileNbr))
+        cfyResWormNbr = str("cfyResWormNbr#" + str(fileNbr))
         self.CReader.set(batchStr, fileName, self.combineFileNameWithDir(batch, fileNbr))
         self.CReader.set(batchStr, fileClas, 'yes')
-        self.CReader.set(batchStr,fileName+"num",outText)
+        self.CReader.set(batchStr, cfyResWormNbr, str(cfyWormNbr))
         fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
         self.CReader.write(fd)
         fd.close()
 
+    '''
+    #
     #下面三个函数暂时没有使用起来
-    def updateNormalUnclasFileAsClassified(self, batch, fileNbr):
-        return self.updEleUncFileAsClf(batch, fileNbr, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL)
+    #
+    # 已经明确，normal属性是在创建文件时，就存入到该文件的熟悉中
+    #
+    '''
+#     def updateNormalUnclasFileAsClassified(self, batch, fileNbr):
+#         return self.updEleUncFileAsClf(batch, fileNbr, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL)
+# 
+#     def updateFluUnclasFileAsClassified(self, batch, fileNbr):
+#         return self.updEleUncFileAsClf(batch, fileNbr, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN)
+#     
+#     def updEleUncFileAsClf(self, batch, fileNbr, eleTag):
+#         self.CReader=configparser.ConfigParser()
+#         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
+#         batchStr = "batch#" + str(batch)
+#         fileName = self.combineFileName(batch, fileNbr)
+#         fileClas = str("batchfileclas#" + str(fileNbr))
+#         fileAttr = str("batchfileatt#" + str(fileNbr))
+#         self.CReader.set(batchStr, fileName, self.combineFileNameWithDir(batch, fileNbr))
+#         self.CReader.set(batchStr, fileClas, 'yes')
+#         self.CReader.set(batchStr, fileAttr, eleTag)
+#         fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
+#         self.CReader.write(fd)
+#         fd.close()
 
-    def updateFluUnclasFileAsClassified(self, batch, fileNbr):
-        return self.updEleUncFileAsClf(batch, fileNbr, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN)
-    
-    def updEleUncFileAsClf(self, batch, fileNbr, eleTag):
-        self.CReader=configparser.ConfigParser()
-        self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
-        batchStr = "batch#" + str(batch)
-        fileName = self.combineFileName(batch, fileNbr)
-        fileClas = str("batchfileclas#" + str(fileNbr))
-        fileAttr = str("batchfileatt#" + str(fileNbr))
-        self.CReader.set(batchStr, fileName, self.combineFileNameWithDir(batch, fileNbr))
-        self.CReader.set(batchStr, fileClas, 'yes')
-        self.CReader.set(batchStr, fileAttr, eleTag)
-        fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
-        self.CReader.write(fd)
-        fd.close()
+
 
     '''
     * STEP6:
@@ -703,7 +739,7 @@ class clsL1_ConfigOpr():
         else:
             config.add_section("RowAndColumn")
             config.write(open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME,'w'))
-        tag,configerture=self.GetMachineTagandConfigure()
+        tag, configerture=self.GetMachineTagandConfigure()
         url="http://127.0.0.1/"+tag+".txt"
         http=urllib3.PoolManager()
         response=http.request("GET",url)

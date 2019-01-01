@@ -41,7 +41,7 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 //=ZJL, 2019/1/1, CURRENT_SW_DELIVERY R1.52 =>CEBS
 = 将捕获模式分辨率设为最大，但预览模式设置为1/4
-
+= 去掉 GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET / cebsVsClas.log识别结果的存储过程
 
 //=ZJL, 2018/12/28, CURRENT_SW_DELIVERY R1.51 =>CEBS
 = 搭建荧光细胞识别的方案

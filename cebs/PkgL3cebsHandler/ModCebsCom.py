@@ -31,7 +31,7 @@ PART0: 全局定义的变量，不需要封装
 
 #STATIC CONFIGURATION AND CAN NOT MODIFY BY HAND
 GL_CEBS_ERR_LOG_FILE_NAME_SET = r"cebsErrLog.txt"
-GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET = r"cebsVsClas.log";
+#GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET = r"cebsVsClas.log";
 GL_CEBS_CMD_LOG_FILE_NAME_SET = r"cebsCmdLog.txt"
 
 
@@ -504,7 +504,7 @@ class clsL0_MedSpsPar():
     MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND / 1000    
 
     #马达归零最大循环次数
-    MOTOR_MAX_RETRY_TIMES = 30 #正常需要放置30次数，确保归零的时间预算
+    MOTOR_MAX_RETRY_TIMES = 3 #正常需要放置30次数，确保归零的时间预算
 
     #ROUNDS of auto-pilot run
     PILOT_WOKING_ROUNDS_MAX = 5;
