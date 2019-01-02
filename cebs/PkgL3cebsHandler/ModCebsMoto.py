@@ -25,6 +25,9 @@ from PkgL3cebsHandler.ModCebsCfg import *
 from PkgL1vmHandler.ModVmConsole import *
 
 
+#采样间隔
+_TUP_MOTO_SAMPING_CYCLE = 0.2
+
 #主任务入口
 class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     IsSerialOpenOk = ''
@@ -41,8 +44,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_MENG_UI_EXEC = 9
     #自测模式
     _STM_STEST_UI_ACT = 10
-
-
+    
     def __init__(self, glPar):
         tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_MOTO, taskName="TASK_MOTO", glTabEntry=glPar)
         #ModVmLayer.TUP_GL_CFG.save_task_by_id(TUP_TASK_ID_MOTO, self)
@@ -736,7 +738,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         while (1):
             if (self.funcInqueryRunningStatus() == True):
                 return 1
-            time.sleep(1)
+            time.sleep(_TUP_MOTO_SAMPING_CYCLE)
             cnt -= 1
             self.tup_dbg_print(str("L2MOTO: Wait back zero progress, Counter = " + str(cnt)))
             if cnt <=0:
@@ -753,7 +755,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         while (1):
             if (self.funcInqueryRunningStatus() == True):
                 return 1
-            time.sleep(1)
+            time.sleep(_TUP_MOTO_SAMPING_CYCLE)
             cnt -= 1
             self.tup_dbg_print(str("L2MOTO: Wait move speed progress, Counter = ", cnt))
             if cnt <=0:
@@ -770,7 +772,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         while (1):
             if (self.funcInqueryRunningStatus() == True):
                 return 1
-            time.sleep(1)
+            time.sleep(_TUP_MOTO_SAMPING_CYCLE)
             cnt -= 1
             self.tup_dbg_print(str("L2MOTO: Wait move distance progress, Counter = " + str(cnt)))
             if cnt <=0:
