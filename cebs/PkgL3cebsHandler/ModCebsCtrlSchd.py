@@ -95,6 +95,14 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.fsm_set(TUP_STM_INIT)
         self.task_run()
 
+    def __del__(self):
+        try:
+            self.tup_timer_stop(self.timerMdcPswdChk)
+            self.tup_timer_stop(self.timerStartWorkDirAfterMvZero)
+            self.tup_timer_stop(self.timerStartWorkDirAfterFixTti)
+        except Exception:
+            pass
+
     def fsm_msg_init_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
         #控制图像工作的序号
@@ -133,13 +141,21 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     #停止定时器的操作
     def fsm_msg_ctrl_schd_hw_release_rcv_handler(self, msgContent):
         try:
-            self.tup_timer_stop(self.timerMdcPswdChk)
-            self.tup_timer_stop(self.timerStartWorkDirAfterMvZero)
-            self.tup_timer_stop(self.timerStartWorkDirAfterFixTti)
+            if (self.timerMdcPswdChk != ''):
+                self.tup_timer_stop(self.timerMdcPswdChk)
         except Exception:
-            return TUP_FAILURE;
-        return TUP_SUCCESS;    
-    
+            pass
+        try:
+            if (self.timerStartWorkDirAfterMvZero != ''):
+                self.tup_timer_stop(self.timerStartWorkDirAfterMvZero)
+        except Exception:
+            pass
+        try:
+            if (self.timerStartWorkDirAfterFixTti != ''):
+                self.tup_timer_stop(self.timerStartWorkDirAfterFixTti)
+        except Exception:
+            pass
+        return TUP_SUCCESS;
     
     def funcCtrlSchdLogTrace(self, myString):
         self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)

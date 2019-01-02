@@ -38,10 +38,32 @@ from PkgL1vmHandler.ModVmConsole import *
 from _overlapped import NULL
 
 
+'''
+#
 #全局所能支持摄像头的类型
 #为了简化COM模块的设计，所支持的摄像头描述符并不放在COM模块中，而是直接放在这个模块中
+#
+# OBVIOUS_UCMOS10000KPA - 白光拍摄
+# OBVIOUS_E3ISPM05000KPA - 高端荧光拍摄
+#
+# :
+###########################DEFAULT device as following########################################################################
+    \\ZJLPC\root\cimv2:Win32_PnPEntity.DeviceID="IUSB3\\ROOT_HUB30\\4&127B4E9D&0"
+    \\ZJLPC\root\cimv2:Win32_PnPEntity.DeviceID="USB\\VID_03F0&PID_034A\\5&3566C2AE&0&11"
+    \\ZJLPC\root\cimv2:Win32_PnPEntity.DeviceID="USB\\VID_03F0&PID_034A&MI_00\\6&17EA4430&0&0000"
+    \\ZJLPC\root\cimv2:Win32_PnPEntity.DeviceID="HID\\VID_03F0&PID_034A&MI_00\\7&1E807635&0&0000"
+    \\ZJLPC\root\cimv2:Win32_PnPEntity.DeviceID="USB\\VID_03F0&PID_034A&MI_01\\6&17EA4430&0&0001"
+    \\ZJLPC\root\cimv2:Win32_PnPEntity.DeviceID="HID\\VID_03F0&PID_034A&MI_01&COL01\\7&556C78D&0&0000"
+    \\ZJLPC\root\cimv2:Win32_PnPEntity.DeviceID="HID\\VID_03F0&PID_034A&MI_01&COL02\\7&556C78D&0&0001"
+    \\ZJLPC\root\cimv2:Win32_PnPEntity.DeviceID="USB\\VID_15D9&PID_0A4F\\5&3566C2AE&0&12"
+    \\ZJLPC\root\cimv2:Win32_PnPEntity.DeviceID="HID\\VID_15D9&PID_0A4F\\6&37A0AA42&0&0000"
+    \\ZJLPC\root\cimv2:Win32_PnPEntity.DeviceID="USB\\VID_0547&PID_114C\\5&3566C2AE&0&17"
+############################################################################################################################### 
+#  We just extract last time as our defined target normally.
+# 
+'''
 _TUP_VISION_DESC_LIST = [{'name':'OBVIOUS_UCMOS10000KPA', 'desc':'VID_0547&PID_6010'},\
-                         #{'name':'OBVIOUS_MK2', 'desc':'ABCDEFG'},\
+                         {'name':'OBVIOUS_E3ISPM05000KPA', 'desc':'VID_0547&PID_114C'},\
                          ]
 
 
@@ -1086,10 +1108,10 @@ class clsCamDevHdl():
         wmi = win32com.client.GetObject("winmgmts:")
         camId = -2
         for usb in wmi.InstancesOf ("win32_usbcontrollerdevice"):
+            print(usb.Dependent)
             for dev in _TUP_VISION_DESC_LIST:
                 #print(dev['desc'])
                 if dev['desc'] in usb.Dependent:
-                    #searchText = "VID_0547&PID_6010"
                     indexStart = usb.Dependent.find(dev['desc'])
                     textLen = len(dev['desc'])
                     textContent = usb.Dependent[indexStart+textLen:]

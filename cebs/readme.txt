@@ -32,10 +32,8 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
-
-
-
-
+//=ZJL, 2019/1/2, CURRENT_SW_DELIVERY R1.52 =>CEBS
+= 高端摄像头Obvious 5000KPA集成到我们的设备中来
 
 //=ZJL, 2019/1/1, CURRENT_SW_DELIVERY R1.52 =>CEBS
 = 将捕获模式分辨率设为最大，但预览模式设置为1/4
