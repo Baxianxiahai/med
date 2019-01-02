@@ -62,9 +62,14 @@ from _overlapped import NULL
 #  We just extract last time as our defined target normally.
 # 
 '''
-_TUP_VISION_DESC_LIST = [{'name':'OBVIOUS_UCMOS10000KPA', 'desc':'VID_0547&PID_6010'},\
-                         {'name':'OBVIOUS_E3ISPM05000KPA', 'desc':'VID_0547&PID_114C'},\
+_TUP_VISION_DESC_LIST = [{'name':'OBVIOUS_UCMOS10000KPA', 'desc':'VID_0547&PID_6010', 'width':3584, 'height':2748},\
+                         {'name':'OBVIOUS_E3ISPM05000KPA', 'desc':'VID_0547&PID_114C', 'width':2448, 'height':2048},\
                          ]
+#分辨率必须根据设备型号，重新选择
+_TUP_VISION_CAMBER_RES_WIDTH = 3584
+_TUP_VISION_CAMBER_RES_HEIGHT = 2748
+
+
 
 
 #业务CLASS
@@ -217,8 +222,9 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         #正确的情况
         try:
             self.capInit = cv.VideoCapture(self.camera_nbr) #CHECK WITH ls /dev/video*　RESULT
-            self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
-            self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
+            #print("Global width = %d, height = %d" % (_TUP_VISION_CAMBER_RES_WIDTH, _TUP_VISION_CAMBER_RES_HEIGHT))
+            self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, _TUP_VISION_CAMBER_RES_WIDTH)
+            self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, _TUP_VISION_CAMBER_RES_HEIGHT)
             #试验型拍照设计方法
             self.capInit.set(cv.CAP_PROP_BRIGHTNESS, 1)
             print("CAP_PROP_BRIGHTNESS = ", self.capInit.get(cv.CAP_PROP_BRIGHTNESS))
@@ -228,10 +234,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
             print("CAP_PROP_SATURATION = ", self.capInit.get(cv.CAP_PROP_SATURATION))
             self.capInit.set(cv.CAP_PROP_HUE, 50)
             print("CAP_PROP_HUE = ", self.capInit.get(cv.CAP_PROP_HUE))
-            self.capInit.set(cv.CAP_PROP_EXPOSURE, -4)
+            self.capInit.set(cv.CAP_PROP_EXPOSURE, -3)
             print("CAP_PROP_EXPOSURE = ", self.capInit.get(cv.CAP_PROP_EXPOSURE))
             #自动曝光设置，没找到成功设置的方法
             #self.capInit.set(cv.CAP_PROP_AUTO_EXPOSURE, -1)
+            #打印本地参数
             print("CAP_PROP_AUTO_EXPOSURE = ", self.capInit.get(cv.CAP_PROP_AUTO_EXPOSURE))
             print("CAP_PROP_ZOOM = ", self.capInit.get(cv.CAP_PROP_ZOOM))
             print("CAP_PROP_FOCUS = ", self.capInit.get(cv.CAP_PROP_FOCUS))
@@ -497,11 +504,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     '''
     #输出QT格式
     def func_cap_qt_vd_frame_in_calib_mode(self):
-        try:
-            self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH//4)
-            self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT//4)
-        except Exception:
-            pass
+#         try:
+#             self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, _TUP_VISION_CAMBER_RES_WIDTH//4)
+#             self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, _TUP_VISION_CAMBER_RES_HEIGHT//4)
+#         except Exception:
+#             pass
         try:
             ret, frame = self.capInit.read()
         except Exception:
@@ -520,11 +527,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     
     #输出OpenCV可以识别的格式 => 为了本地存储只用
     def func_cap_one_hole_frame_in_calib_mode(self):
-        try:
-            self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
-            self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
-        except Exception:
-            pass
+#         try:
+#             self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, _TUP_VISION_CAMBER_RES_WIDTH)
+#             self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, _TUP_VISION_CAMBER_RES_HEIGHT)
+#         except Exception:
+#             pass
         try:
             ret, frame = self.capInit.read()
         except Exception:
@@ -561,11 +568,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     #
     '''
     def func_pic_vid_cap_and_save_file_in_running_mode(self, fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur):
-        try:
-            self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, GLVIS_PAR_OFC.VISION_CAMBER_RES_WITDH)
-            self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, GLVIS_PAR_OFC.VISION_CAMBER_RES_HEIGHT)
-        except Exception:
-            pass
+#         try:
+#             self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, _TUP_VISION_CAMBER_RES_WIDTH)
+#             self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, _TUP_VISION_CAMBER_RES_HEIGHT)
+#         except Exception:
+#             pass
         try:
             if not self.capInit.isOpened():
                 self.funcVisionErrTrace("L2VISCAP: Cannot open webcam!")
@@ -1108,7 +1115,7 @@ class clsCamDevHdl():
         wmi = win32com.client.GetObject("winmgmts:")
         camId = -2
         for usb in wmi.InstancesOf ("win32_usbcontrollerdevice"):
-            print(usb.Dependent)
+            #print(usb.Dependent)    #方便查看全新设备的标识符
             for dev in _TUP_VISION_DESC_LIST:
                 #print(dev['desc'])
                 if dev['desc'] in usb.Dependent:
@@ -1124,6 +1131,10 @@ class clsCamDevHdl():
                         camId = int(result[2])
                     except Exception:
                         camId = -1
+                    #将分辨率赋给全局变量
+                    _TUP_VISION_CAMBER_RES_WIDTH = dev['width']
+                    _TUP_VISION_CAMBER_RES_HEIGHT = dev['height']
+                    
         #存入临时文件
         f = open("tempCamId.txt", "w+")
         a = ("%d" % (camId))

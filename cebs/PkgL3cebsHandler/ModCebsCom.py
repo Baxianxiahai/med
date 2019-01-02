@@ -338,12 +338,6 @@ class clsL0_MedComPicPar():
     #
     # 固定配置参数部分
     #
-    #896*684 is basic resolution! 896*684 / 1792*1374 / 3584*2748
-    VISION_CAMBER_RES_WITDH = 3584; #1792;
-    VISION_CAMBER_RES_HEIGHT = 2748; #1374;
-    #MAX search window of camera
-    VISION_MAX_CAMERA_SEARCH = 15;
-
 
     #
     # 可配置参数部分
@@ -503,7 +497,7 @@ class clsL0_MedSpsPar():
     MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND / 1000    
 
     #马达归零最大循环次数
-    MOTOR_MAX_RETRY_TIMES = 3 #正常需要放置30次数，确保归零的时间预算
+    MOTOR_MAX_RETRY_TIMES = 30 #正常需要放置30次数，确保归零的时间预算
 
     #ROUNDS of auto-pilot run
     PILOT_WOKING_ROUNDS_MAX = 5;
