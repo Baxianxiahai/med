@@ -29,8 +29,8 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
-
-
+//=ZJL, 2019/1/4, CURRENT_SW_DELIVERY R1.54 =>CEBS
+= 将去噪声处理、灰度处理等过程，做成标准函数库
 
 //=ZJL, 2019/1/3, CURRENT_SW_DELIVERY R1.53 =>CEBS
 = 增加TUP_PICPROC图像处理模块

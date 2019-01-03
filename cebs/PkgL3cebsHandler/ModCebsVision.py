@@ -481,7 +481,15 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             mbuf['res'] = -1
             self.msg_send(TUP_MSGID_GPAR_PIC_FCC_RESP, TUP_TASK_ID_GPAR, mbuf)
             return TUP_SUCCESS;
-        totalCnt = self.func_vision_flu_cell_count(picOrgFile, 'tempPic.jpg', self.FLU_CELL_COUNT_genr_par1, self.WORM_CLASSIFY_base, self.WORM_CLASSIFY_big2top, self.FLU_CELL_COUNT_genr_par2, self.WORM_CLASSIFY_addupSet)
+        fileName = picOrgFile
+        fileNukeName = 'tempPic.jpg'
+        dilateBlkSize = self.FLU_CELL_COUNT_genr_par1
+        erodeBlkSize = self.FLU_CELL_COUNT_genr_par2
+        cAreaMin = self.WORM_CLASSIFY_base
+        cAreaMax = self.WORM_CLASSIFY_big2top
+        ceMin = self.FLU_CELL_COUNT_genr_par3 #In NF2
+        addupSet = self.WORM_CLASSIFY_addupSet
+        totalCnt = self.func_vision_flu_cell_count(fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet)
         if (os.path.exists('tempPic.jpg') == False):
             mbuf['res'] = -2
             self.msg_send(TUP_MSGID_GPAR_PIC_FCC_RESP, TUP_TASK_ID_GPAR, mbuf)
@@ -986,7 +994,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     #--------------------------------
     # fileName - 带目录的完整文件名字
     # fileNukeName - 不带目录的文件名字
-    # tarBlkSize, =41, 必须是奇数，指示高斯自适应二值化的分块大小，通常跟目标的尺寸大小差不多
+    # dilateBlkSize, =41, 必须是奇数，指示高斯自适应二值化的分块大小，通常跟目标的尺寸大小差不多
     # cAreaMin, =100, 最小面积，通过这个方式去掉噪点
     # cAreaMax, =500, 最大面积，通过这个方式去掉不可靠的垃圾
     # ceMin, =20(NF2定标), 圆形门限
@@ -995,12 +1003,70 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     #
     # Output:  数值，计数结果
     #
+
+    #去噪声
+#         new = np.zeros(inputImg.shape, np.uint8)
+#         #Gray transaction: 灰度化
+#         for i in range(new.shape[0]):  #Axis-y/height/Rows
+#             for j in range(new.shape[1]):
+#                 (b,g,r) = inputImg[i,j]
+#                 #加权平均法
+#                 new[i,j] = int(0.3*float(b) + 0.59*float(g) + 0.11*float(r))&0xFF
+#         #Middle value filter: 中值滤波
+#         blur= cv.medianBlur(new, 5)
+#         midGray = cv.cvtColor(blur, cv.COLOR_BGR2GRAY)
+#         #Adaptive bin-translation: 自适应二值化
+#         binGray = cv.adaptiveThreshold(midGray, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, dilateBlkSize, 0)   # ADAPTIVE_THRESH_MEAN_C ADAPTIVE_THRESH_GAUSSIAN_C
+#         binRes= cv.GaussianBlur(binGray, (5,5), 1.5) #medianBlur
+    
+        #Fix bin-value: 固定二值化
+#         ret, binImg = cv.threshold(midFilter, 130, 255, cv.THRESH_BINARY)
+#         #Searching out-form shape: 找到轮廓
+#         _, contours, hierarchy = cv.findContours(binImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
+#         #Output graphic: 输出图形
+#         outputImg = cv.cvtColor(binImg, cv.COLOR_GRAY2BGR)
+#         mask = np.zeros((inputImg.shape[0]+2, inputImg.shape[1]+2), np.uint8)
+#         mask[:] = 1
+#         #Analysis one by one: 分别分析
+#         for c in contours:
+#             outputText['totalNbr'] +=1
+#             M = cv.moments(c)
+#             cX = int(M["m10"] / (M["m00"]+0.01))
+#             cY = int(M["m01"] / (M["m00"]+0.01))
+#             cArea = cv.contourArea(c)
+#             rect = cv.minAreaRect(c)
+#             #width / height: 长宽,总有 width>=height  
+#             width, height = rect[1]
+#             if (width > height):
+#                 cE = height / (width+0.001)
+#             else:
+#                 cE = width / (height+0.001)
+#             cE = round(cE, 2)
+#   
+#             #分类
+#             if (cArea < cAreaMin) or (cE < ceMin) or (cArea > cAreaMax):
+#                 pass
+#             else:
+#                 outputText['validNbr'] +=1
+#                 cv.drawContours(outputImg, c, -1, (0,0,255), 2)
+#                 cv.putText(outputImg, str(cArea), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+
+        #Save log record: 存储干活的log记录
+#         f = open(GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET, "a+")
+#         a = '[%s], Flu cell counting, save result as [%s] with output [%s].\n' % (time.asctime(), outputFn, str(outputText))
+#         f.write(a)
+#         f.flush()
+#         f.close()
+        
+
     '''
     #细胞识别函数
-    def func_vision_flu_cell_count(self, fileName, fileNukeName, tarBlkSize, cAreaMin, cAreaMax, ceMin, addupSet):
-        #处理参数，确保奇数性质的参数
-        if ((tarBlkSize//2)*2) == tarBlkSize:
-            tarBlkSize +=1
+    def func_vision_flu_cell_count(self, fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet):
+        #第0步: 处理参数，确保奇数性质的参数
+        if dilateBlkSize == 0:
+            dilateBlkSize = 3
+        if ((dilateBlkSize//2)*2) == dilateBlkSize:
+            dilateBlkSize +=1
         ceMin = ceMin/100
         #使用LOCAL方式进行叠加，不再使用全局属性，简化处理
         outputText = {'totalNbr':0, 'validNbr':0}
@@ -1016,79 +1082,24 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         except Exception as err:
             print("L2VISCFY: Read file error, errinfo = ", str(err))
             return -2;
-        #正常干活过程
-        #第一步：灰度图像
-        new = np.zeros(inputImg.shape, np.uint8)
-        #Gray transaction: 灰度化
-        for i in range(new.shape[0]):  #Axis-y/height/Rows
-            for j in range(new.shape[1]):
-                (b,g,r) = inputImg[i,j]
-                #加权平均法
-                new[i,j] = int(0.3*float(b) + 0.59*float(g) + 0.11*float(r))&0xFF
-        #Middle value filter: 中值滤波
-        blur= cv.medianBlur(new, 5)
-        midGray = cv.cvtColor(blur, cv.COLOR_BGR2GRAY)
-        #Adaptive bin-translation: 自适应二值化
-        binGray = cv.adaptiveThreshold(midGray, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, tarBlkSize, 0)   # ADAPTIVE_THRESH_MEAN_C ADAPTIVE_THRESH_GAUSSIAN_C
-        binRes= cv.GaussianBlur(binGray, (5,5), 1.5) #medianBlur
-        
-        #第二步，去噪声
-        kerne1 = np.ones((7, 7), np.uint8)  
-        img_erosin = cv.erode(binRes, kerne1, iterations=1)
-        #2nd time mid-value filter: 再次中值滤波
-        midFilter= cv.medianBlur(img_erosin, 5)
-        #Fix bin-value: 固定二值化
-        ret, binImg = cv.threshold(midFilter, 130, 255, cv.THRESH_BINARY)
-        
-        #第三步，寻找外框
-        #Searching out-form shape: 找到轮廓
-        _, contours, hierarchy = cv.findContours(binImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
-        
-        #Output graphic: 输出图形
-        outputImg = cv.cvtColor(binImg, cv.COLOR_GRAY2BGR)
-        mask = np.zeros((inputImg.shape[0]+2, inputImg.shape[1]+2), np.uint8)
-        mask[:] = 1
-        #Analysis one by one: 分别分析
-        for c in contours:
-            outputText['totalNbr'] +=1
-            M = cv.moments(c)
-            cX = int(M["m10"] / (M["m00"]+0.01))
-            cY = int(M["m01"] / (M["m00"]+0.01))
-            cArea = cv.contourArea(c)
-            rect = cv.minAreaRect(c)
-            #width / height: 长宽,总有 width>=height  
-            width, height = rect[1]
-            if (width > height):
-                cE = height / (width+0.001)
-            else:
-                cE = width / (height+0.001)
-            cE = round(cE, 2)
 
-            #分类
-            if (cArea < cAreaMin) or (cE < ceMin) or (cArea > cAreaMax):
-                pass
-            else:
-                outputText['validNbr'] +=1
-                cv.drawContours(outputImg, c, -1, (0,0,255), 2)
-                cv.putText(outputImg, str(cArea), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+        #第1步：灰度图像
+        grayImg = self.tup_color2gray_adaptive(inputImg, dilateBlkSize)
         
-        #整体叠加输出
+        #第2步，去噪声
+        nfImg = self.tup_erode(grayImg, erodeBlkSize)
+        
+        #第3步，寻找外框
+        outputImg, rect, totalCnt, findCnt = self.tup_find_contours(nfImg, cAreaMin, cAreaMax, ceMin, 1, True, False)
+        outputText['totalNbr'] = totalCnt
+        outputText['validNbr'] = findCnt
         if (addupSet == True):
             font = cv.FONT_HERSHEY_SIMPLEX
             cv.putText(outputImg, str("XHT: " + str(outputText)), (10, 30), font, 0.7, (0, 0, 255), 2, cv.LINE_AA)
         
-        #最后一步，反馈结果
+        #第4步，反馈结果
         outputFn = fileNukeName
         cv.imwrite(outputFn, outputImg)
-
-        #Save log record: 存储干活的log记录
-#         f = open(GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET, "a+")
-#         a = '[%s], Flu cell counting, save result as [%s] with output [%s].\n' % (time.asctime(), outputFn, str(outputText))
-#         f.write(a)
-#         f.flush()
-#         f.close()
-        
-        #CLEAN SITES ENV.
         cv.destroyAllWindows()
         return outputText['validNbr']
 
@@ -1109,7 +1120,10 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         grayImg = cv.cvtColor(inputImg, cv.COLOR_BGR2GRAY)
         delImg = grayImg - b
         diImg = self.tup_dilate(delImg, 8)
-        ctImg, rect = self.tup_max_contours(diImg, 1000, 3000, 0.01, 0.2, False, False)
+        ctImg, rect, totalCnt, findCnt = self.tup_find_contours(diImg, 1000, 3000, 0.01, 0.2, False, False)
+        if (findCnt<=0):
+            return TUP_FAILURE;
+        
         cv.imshow("contours", ctImg)
         x, y = rect[0]
         #cv.circle(img, (int(x), int(y)), 3, (0, 255, 0), 5)
