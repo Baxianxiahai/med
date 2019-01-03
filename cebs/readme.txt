@@ -32,6 +32,9 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
+//=ZJL, 2019/1/3, CURRENT_SW_DELIVERY R1.53 =>CEBS
+= 增加TUP_PICPROC图像处理模块
+
 //=ZJL, 2019/1/2, CURRENT_SW_DELIVERY R1.52 =>CEBS
 = 高端摄像头Obvious 5000KPA集成到我们的设备中来
 = 去掉每一帧都设置分辨率的设置：相机反应不过来，无法每帧都设置，恢复到校准预览与拍摄的分辨率都相同的程度

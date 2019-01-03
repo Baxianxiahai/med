@@ -28,14 +28,16 @@ from win32com.client import GetObject
 #from   cv2 import waitKey
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import pyqtSlot
-
 from multiprocessing import Queue, Process
+from _overlapped import NULL
+
 from PkgL1vmHandler.ModVmCfg import *
 from PkgL1vmHandler.ModVmLayer import *
+from PkgL1vmHandler.ModVmConsole import *
+from PkgL2svrHandler.ModPicProc import *
 from PkgL3cebsHandler.ModCebsCom import *
 from PkgL3cebsHandler.ModCebsCfg import *
-from PkgL1vmHandler.ModVmConsole import *
-from _overlapped import NULL
+
 
 
 '''
@@ -73,7 +75,7 @@ _TUP_VISION_CAMBER_RES_HEIGHT = 2748
 
 
 #业务CLASS
-class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
+class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     _STM_ACTIVE = 3
     #主界面，干活拍照
     _STM_MAIN_UI_ACT = 4
@@ -135,10 +137,12 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(self._STM_GPAR_UI_ACT, TUP_MSGID_GPAR_PIC_TRAIN_REQ, self.fsm_msg_pic_train_req_rcv_handler)
         self.add_stm_combine(self._STM_GPAR_UI_ACT, TUP_MSGID_GPAR_PIC_FCC_REQ, self.fsm_msg_pic_flu_cell_count_req_rcv_handler)
         
-        #STEST模式
+        #STEST自测模式
         self.add_stm_combine(self._STM_STEST_UI_ACT, TUP_MSGID_STEST_CAM_INQ, self.fsm_msg_stest_cam_inq_rcv_handler)
         
-        
+        #测试消息
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TEST, self.fsm_msg_test_rcv_handler)
+               
         #切换状态机
         self.fsm_set(TUP_STM_INIT)
         #START TASK
@@ -825,7 +829,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         #Processing procedure: 处理过程
         binImg = self.proc_vision_worm_binvalue(inputImg)
         nfImg = self.proc_vision_worm_remove_noise(binImg)
-        outputImg, outText = self.func_vision_worm_find_contours(nfImg, inputImg, addupSet)
+        outputImg, outText = self.proc_vision_worm_find_contours(nfImg, inputImg, addupSet)
         if (outCtrlFlag == True):
             outputFn = fileNukeName
         else:
@@ -881,7 +885,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     #http://blog.csdn.net/app_12062011/article/details/51953030
     #E = sqrt(1-I^2)
     #I = (u20+u02-sqrt(4u11*u11(u20-u02)*(u20-u02))/(u20+u02+sqrt(4u11*u11(u20-u02)*(u20-u02))
-    def func_vision_worm_find_contours(self, nfImg, orgImg, addupSet):
+    def proc_vision_worm_find_contours(self, nfImg, orgImg, addupSet):
         #Init output figure
         outText = {'totalNbr':0, 'bigAlive':0, 'bigDead':0, 'middleAlive':0, 'middleDead':0, 'smallAlive':0, 'smallDead':0, 'totalAlive':0, 'totalDead':0}
         outText['totalNbr'] = 0
@@ -978,11 +982,18 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
     #
     #操控算法的核心参数有这么些，需要通过训练得到理想的结果
     #
-    #tarBlkSize, =41, 必须是奇数，指示高斯自适应二值化的分块大小，通常跟目标的尺寸大小差不多
-    #cAreaMin, =100, 最小面积，通过这个方式去掉噪点
-    #cAreaMax, =500, 最大面积，通过这个方式去掉不可靠的垃圾
-    #ceMin, =20(NF2定标), 圆形门限
-    #叠加面积属性
+    # Input:
+    #--------------------------------
+    # fileName - 带目录的完整文件名字
+    # fileNukeName - 不带目录的文件名字
+    # tarBlkSize, =41, 必须是奇数，指示高斯自适应二值化的分块大小，通常跟目标的尺寸大小差不多
+    # cAreaMin, =100, 最小面积，通过这个方式去掉噪点
+    # cAreaMax, =500, 最大面积，通过这个方式去掉不可靠的垃圾
+    # ceMin, =20(NF2定标), 圆形门限
+    # addupSet - True/False, 叠加面积属性
+    #---------------------------------------
+    #
+    # Output:  数值，计数结果
     #
     '''
     #细胞识别函数
@@ -1081,9 +1092,62 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr):
         cv.destroyAllWindows()
         return outputText['validNbr']
 
-
-
-
+    
+    '''
+    #
+    #测试功能，未来将去掉
+    #荧光fcc图像的通道分离
+    #zero = np.zeros((inputImg.shape[0],inputImg.shape[1]), dtype=inputImg.dtype)
+    #delta = grayImg - cv.cvtColor(cv.merge([r, b, zero]), cv.COLOR_BGR2GRAY)
+    #
+    #
+    '''
+    def fsm_msg_test_rcv_handler(self, msgContent):
+        fileName = msgContent['fileName']
+        inputImg = cv.imread(fileName)
+        b, g, r = cv.split(inputImg)
+        grayImg = cv.cvtColor(inputImg, cv.COLOR_BGR2GRAY)
+        delImg = grayImg - b
+        diImg = self.tup_dilate(delImg, 8)
+        ctImg, rect = self.tup_max_contours(diImg, 1000, 3000, 0.01, 0.2, False, False)
+        cv.imshow("contours", ctImg)
+        x, y = rect[0]
+        #cv.circle(img, (int(x), int(y)), 3, (0, 255, 0), 5)
+        # 长宽,总有 width>=height
+        width, height = rect[1]
+        # 角度:[-90,0)
+        angle = rect[2]
+           
+#         new = np.zeros(inputImg.shape, np.uint8)
+#         for i in range(new.shape[0]):  #Axis-y/height/Rows
+#             for j in range(new.shape[1]):
+#                 (b,g,r) = inputImg[i,j]
+#                 new[i,j] = int(0.3*float(b) + 0.59*float(g) + 0.11*float(r))&0xFF
+        #Middle value filter: 中值滤波
+        #blur= cv.medianBlur(inputImg, 3)
+        #midGray = cv.cvtColor(g, cv.COLOR_BGR2GRAY)
+        binGray = cv.adaptiveThreshold(g, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 61, 0)   # ADAPTIVE_THRESH_MEAN_C ADAPTIVE_THRESH_GAUSSIAN_C
+        binRes= cv.GaussianBlur(binGray, (11, 11), 1.5)
+        kerne1 = np.ones((5, 5), np.uint8)  
+        img_erosin = cv.erode(binRes, kerne1, iterations=1)
+        midFilter= cv.medianBlur(img_erosin, 3)
+        ret, binImg = cv.threshold(midFilter, 100, 255, cv.THRESH_BINARY)
+        
+        cv.imshow("TEST", binRes)
+        
+#         #通道分离
+#         #b, g, r = cv.split(inputImg)
+#         b = cv.split(inputImg)[0]  # B通道  
+#         g = cv.split(inputImg)[1]  # G通道  
+#         r = cv.split(inputImg)[2]  # R通道  
+#         cv.imshow("RED", r)
+#         cv.imshow("BLUE", b)
+#         cv.imshow("GREEN", g)
+        cv.waitKey()
+        cv.destroyAllWindows()
+        
+        return TUP_SUCCESS;    
+    
 
 
 

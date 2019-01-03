@@ -149,7 +149,7 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf={}
         mbuf['fileName'] = fileName 
         self.msg_send(TUP_MSGID_GPAR_PIC_FCC_REQ, TUP_TASK_ID_GPAR, mbuf)
-        
+        #self.msg_send(TUP_MSGID_TEST, TUP_TASK_ID_VISION, mbuf)
         
         
         
