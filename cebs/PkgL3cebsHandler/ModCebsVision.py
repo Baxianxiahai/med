@@ -66,6 +66,7 @@ from PkgL3cebsHandler.ModCebsCfg import *
 '''
 _TUP_VISION_DESC_LIST = [{'name':'OBVIOUS_UCMOS10000KPA', 'desc':'VID_0547&PID_6010', 'width':3584, 'height':2748},\
                          {'name':'OBVIOUS_E3ISPM05000KPA', 'desc':'VID_0547&PID_114C', 'width':2448, 'height':2048},\
+                         {'name':'TOUPCAM_E3ISPM06300KPB', 'desc':'VID_0547&PID_1217', 'width':3072, 'height':2048},\
                          ]
 #分辨率必须根据设备型号，重新选择
 _TUP_VISION_CAMBER_RES_WIDTH = 3584
@@ -517,8 +518,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     #输出QT格式
     def func_cap_qt_vd_frame_in_calib_mode(self):
 #         try:
-#             self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, _TUP_VISION_CAMBER_RES_WIDTH//4)
-#             self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, _TUP_VISION_CAMBER_RES_HEIGHT//4)
+#             self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, _TUP_VISION_CAMBER_RES_WIDTH//2)
+#             self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, _TUP_VISION_CAMBER_RES_HEIGHT//2)
 #         except Exception:
 #             pass
         try:
@@ -526,7 +527,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         except Exception:
             pass
         if (ret != True):
-            return -1,_;
+            print("VISION: Error open camera!")
+            return -1, -1;
         
         height, width = frame.shape[:2]
         if frame.ndim == 3:
@@ -995,6 +997,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     # fileName - 带目录的完整文件名字
     # fileNukeName - 不带目录的文件名字
     # dilateBlkSize, =41, 必须是奇数，指示高斯自适应二值化的分块大小，通常跟目标的尺寸大小差不多
+    # erodeBlkSize - 7, 图像腐蚀参数
     # cAreaMin, =100, 最小面积，通过这个方式去掉噪点
     # cAreaMax, =500, 最大面积，通过这个方式去掉不可靠的垃圾
     # ceMin, =20(NF2定标), 圆形门限
@@ -1193,7 +1196,7 @@ class clsCamDevHdl():
         wmi = win32com.client.GetObject("winmgmts:")
         camId = -2
         for usb in wmi.InstancesOf ("win32_usbcontrollerdevice"):
-            #print(usb.Dependent)    #方便查看全新设备的标识符
+            print(usb.Dependent)    #方便查看全新设备的标识符
             for dev in _TUP_VISION_DESC_LIST:
                 #print(dev['desc'])
                 if dev['desc'] in usb.Dependent:
