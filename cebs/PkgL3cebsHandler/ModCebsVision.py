@@ -1117,49 +1117,42 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     #
     '''
     def fsm_msg_test_rcv_handler(self, msgContent):
+        #寻找标定线
         fileName = msgContent['fileName']
         inputImg = cv.imread(fileName)
         b, g, r = cv.split(inputImg)
         grayImg = cv.cvtColor(inputImg, cv.COLOR_BGR2GRAY)
         delImg = grayImg - b
         diImg = self.tup_dilate(delImg, 8)
-        ctImg, rect, totalCnt, findCnt = self.tup_find_contours(diImg, 1000, 3000, 0.01, 0.2, False, False)
+        ctImg, rect, totalCnt, findCnt = self.tup_find_contours(diImg, 1000, 4000, 0.001, 0.5, False, False)
         if (findCnt<=0):
             return TUP_FAILURE;
-        
-        cv.imshow("contours", ctImg)
-        x, y = rect[0]
-        #cv.circle(img, (int(x), int(y)), 3, (0, 255, 0), 5)
-        # 长宽,总有 width>=height
-        width, height = rect[1]
-        # 角度:[-90,0)
+        #cv.imshow("contours", ctImg)
+        radCent = rect[0]
         angle = rect[2]
-           
-#         new = np.zeros(inputImg.shape, np.uint8)
-#         for i in range(new.shape[0]):  #Axis-y/height/Rows
-#             for j in range(new.shape[1]):
-#                 (b,g,r) = inputImg[i,j]
-#                 new[i,j] = int(0.3*float(b) + 0.59*float(g) + 0.11*float(r))&0xFF
-        #Middle value filter: 中值滤波
-        #blur= cv.medianBlur(inputImg, 3)
-        #midGray = cv.cvtColor(g, cv.COLOR_BGR2GRAY)
-        binGray = cv.adaptiveThreshold(g, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 61, 0)   # ADAPTIVE_THRESH_MEAN_C ADAPTIVE_THRESH_GAUSSIAN_C
-        binRes= cv.GaussianBlur(binGray, (11, 11), 1.5)
-        kerne1 = np.ones((5, 5), np.uint8)  
-        img_erosin = cv.erode(binRes, kerne1, iterations=1)
-        midFilter= cv.medianBlur(img_erosin, 3)
-        ret, binImg = cv.threshold(midFilter, 100, 255, cv.THRESH_BINARY)
+        #取得图像的尺度
+        sp = inputImg.shape
+        resLine = self.tup_cal_xy_line(radCent, angle, (sp[0], sp[1]))
+        cv.line(ctImg, resLine[0], resLine[1], (0, 255, 0), 1)
         
-        cv.imshow("TEST", binRes)
+        #寻找右下半部分
+        imgRight = self.tup_cut_left_img(inputImg, radCent, angle)
+        cv.imshow("imgRight", imgRight)
         
-#         #通道分离
-#         #b, g, r = cv.split(inputImg)
-#         b = cv.split(inputImg)[0]  # B通道  
-#         g = cv.split(inputImg)[1]  # G通道  
-#         r = cv.split(inputImg)[2]  # R通道  
-#         cv.imshow("RED", r)
-#         cv.imshow("BLUE", b)
-#         cv.imshow("GREEN", g)
+        #第1步：灰度图像
+        grayImg = self.tup_color2gray_adaptive(imgRight, 41)
+        
+        #第2步，去噪声
+        nfImg = self.tup_erode(grayImg, 7)
+        
+        #第3步，寻找外框
+        outputImg, rect, totalCnt, findCnt = self.tup_find_contours(nfImg, 100, 400, 0.01, 1, True, False)
+        outputText = {}
+        outputText['totalNbr'] = totalCnt
+        outputText['validNbr'] = findCnt
+        
+        #
+        cv.imshow("Output", outputImg)
         cv.waitKey()
         cv.destroyAllWindows()
         

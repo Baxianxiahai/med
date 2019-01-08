@@ -130,6 +130,9 @@ class TupClsPicProc(object):
         #Analysis one by one: 分别分析
         totalCnt=0
         findCnt=0
+        outC=''
+        outBox=''
+        outRect=''
         for c in contours:
             totalCnt += 1
             M = cv.moments(c)
@@ -137,6 +140,8 @@ class TupClsPicProc(object):
             cY = int(M["m01"] / (M["m00"]+0.01))
             cArea = cv.contourArea(c)
             rect = cv.minAreaRect(c)
+            box = cv.boxPoints(rect)
+            box =np.int0(box)  #将其转化为整数
             #width / height: 长宽,总有 width>=height  
             width, height = rect[1]
             if (width > height):
@@ -149,18 +154,82 @@ class TupClsPicProc(object):
             if (cArea < areaMin) or (cArea > areaMax) or (cE < ceMin) or (cE > ceMax):
                 pass
             else:
+                outC = c
+                outBox = box
+                outRect = rect
                 findCnt += 1
                 cv.drawContours(outputImg, c, -1, (0,0,255), 2)
+                #cv.drawContours(outputImg, [box], 0, (0,0,255), 2)
                 if (areaTextFlag == True):
                     cv.putText(outputImg, str(cArea), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
                 if (ceTextFlag == True):
                     cv.putText(outputImg, str(cE), (cX + 20, cY + 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
         if findCnt>0:
-            return outputImg, rect, totalCnt, findCnt
+            #print("Internal Rect = ", outRect)
+            #print("Internal Box = ", outBox)
+            return outputImg, outRect, totalCnt, findCnt
         else:
             return -1, -1, 0, 0
-        
-
+    
+    #通过圆形寻找边界
+    def tup_cal_xy_line(self, radCent, angle, outRect):
+        x0 = radCent[0]
+        y0 = radCent[1]
+        (height, width) = outRect
+        #竖线
+        if (angle == 90) or (angle == -90):
+            x1, y1 = x0, 0
+            x2, y2 = x0, height
+            return ((int(x1), int(y1)), (int(x2), int(y2)))
+        #横线
+        k = math.tan(angle/180.0*math.pi)
+        if k==0:
+            x1, y1 = 0, y0
+            x2, y2 = width, y0
+            return ((int(x1), int(y1)), (int(x2), int(y2)))
+        #y = y0+k*(x-x0)
+        x1 = 0
+        y1 = y0+k*(x1-x0)
+        if (y1 < 0):
+            y1 = 0
+            x1 = x0+(y1-y0)/k
+        if (y1 > height):
+            y1 = height
+            x1 = x0+(y1-y0)/k
+        x2=width
+        y2 = y0+k*(x2-x0)
+        if (y2 < 0):
+            y2 = 0
+            x2 = x0+(y2-y0)/k
+        if (y2 > height):
+            y2 = height
+            x2 = x0+(y2-y0)/k
+        return ((int(x1), int(y1)), (int(x2), int(y2)))
+    
+    #切掉右边图像
+    def tup_cut_left_img(self, imgIn, radCent, angle):
+        imgRight = imgIn
+        sp = imgIn.shape
+        #竖线
+        if (angle == 90) or (angle == -90):
+            for j in range(0, sp[1]):
+                x = radCent[0]
+                for i in range(0, int(x)):
+                    imgRight[j, i] = (0, 0, 0)
+            return imgRight
+        k = math.tan(angle/180.0*math.pi)
+        #横线
+        if (k==0):
+            return imgRight
+        #正常线
+        for j in range(0, sp[1]):
+            x = radCent[0] + (j-radCent[1])/k
+            right = int(x)+11
+            if (right > sp[1]):
+                right = sp[1]
+            for i in range(0, right):
+                imgRight[j, i] = (0, 0, 0)
+        return imgRight
 
 
 
