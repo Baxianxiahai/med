@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1313</width>
+    <width>1382</width>
     <height>946</height>
    </rect>
   </property>
@@ -726,7 +726,7 @@ p, li { white-space: pre-wrap; }
     <string>图像文件</string>
    </property>
   </widget>
-  <widget class="QGroupBox" name="groupBox_eng_2">
+  <widget class="QGroupBox" name="groupBox_fcc">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -738,20 +738,20 @@ p, li { white-space: pre-wrap; }
    <property name="title">
     <string>荧光细胞图像训练</string>
    </property>
-   <widget class="QPushButton" name="pushButton_eng_clear_2">
+   <widget class="QPushButton" name="pushButton_cell_fnt">
     <property name="geometry">
      <rect>
       <x>250</x>
       <y>30</y>
       <width>111</width>
-      <height>91</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>荧光细胞计数</string>
+     <string>细胞计数</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_eng_clear_3">
+   <widget class="QPushButton" name="pushButton_fcc_pre">
     <property name="geometry">
      <rect>
       <x>370</x>
@@ -764,7 +764,7 @@ p, li { white-space: pre-wrap; }
      <string>前一张</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_eng_clear_4">
+   <widget class="QPushButton" name="pushButton_fcc_next">
     <property name="geometry">
      <rect>
       <x>370</x>
@@ -775,6 +775,19 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>后一张</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_fcc_stack">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>80</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>分层计数</string>
     </property>
    </widget>
   </widget>
@@ -792,8 +805,8 @@ p, li { white-space: pre-wrap; }
      <y>704</y>
     </hint>
     <hint type="destinationlabel">
-     <x>390</x>
-     <y>768</y>
+     <x>438</x>
+     <y>618</y>
     </hint>
    </hints>
   </connection>
@@ -804,12 +817,12 @@ p, li { white-space: pre-wrap; }
    <slot>slot_gpar_giveup()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>266</x>
-     <y>699</y>
+     <x>339</x>
+     <y>618</y>
     </hint>
     <hint type="destinationlabel">
-     <x>226</x>
-     <y>769</y>
+     <x>253</x>
+     <y>662</y>
     </hint>
    </hints>
   </connection>
@@ -820,12 +833,12 @@ p, li { white-space: pre-wrap; }
    <slot>slot_gpar_pic_train()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>458</x>
-     <y>610</y>
+     <x>249</x>
+     <y>611</y>
     </hint>
     <hint type="destinationlabel">
-     <x>494</x>
-     <y>654</y>
+     <x>378</x>
+     <y>660</y>
     </hint>
    </hints>
   </connection>
@@ -852,28 +865,76 @@ p, li { white-space: pre-wrap; }
    <slot>slot_gpar_clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>220</x>
-     <y>590</y>
+     <x>117</x>
+     <y>608</y>
     </hint>
     <hint type="destinationlabel">
-     <x>95</x>
-     <y>662</y>
+     <x>93</x>
+     <y>658</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_eng_clear_2</sender>
+   <sender>pushButton_cell_fnt</sender>
    <signal>clicked()</signal>
    <receiver>cebsGparForm</receiver>
    <slot>slot_gpar_flu_cell_cnt()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>310</x>
-     <y>621</y>
+     <x>291</x>
+     <y>720</y>
     </hint>
     <hint type="destinationlabel">
-     <x>349</x>
-     <y>742</y>
+     <x>178</x>
+     <y>825</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fcc_stack</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsGparForm</receiver>
+   <slot>slot_gpar_flu_stack_cnt()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>346</x>
+     <y>771</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>239</x>
+     <y>848</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fcc_pre</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsGparForm</receiver>
+   <slot>slot_gpar_pic_file_pre()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>433</x>
+     <y>726</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>277</x>
+     <y>866</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fcc_next</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsGparForm</receiver>
+   <slot>slot_gpar_pic_file_next()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>456</x>
+     <y>776</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>312</x>
+     <y>880</y>
     </hint>
    </hints>
   </connection>
@@ -885,5 +946,8 @@ p, li { white-space: pre-wrap; }
   <slot>slot_gpar_pic_file_load()</slot>
   <slot>slot_gpar_clear()</slot>
   <slot>slot_gpar_flu_cell_cnt()</slot>
+  <slot>slot_gpar_flu_stack_cnt()</slot>
+  <slot>slot_gpar_pic_file_pre()</slot>
+  <slot>slot_gpar_pic_file_next()</slot>
  </slots>
 </ui>

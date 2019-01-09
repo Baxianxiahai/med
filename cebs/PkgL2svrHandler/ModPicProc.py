@@ -121,16 +121,18 @@ class TupClsPicProc(object):
     # rect - 找到的最小外接矩阵
     # totalCnt - 总共数量
     # findCnt - 满足条件数量
+    # outCt - 外部凸点集合，外包络图
+    # outBox - 外接矩形
     #
     '''
     def tup_find_contours(self, grayInputImg, areaMin, areaMax, ceMin, ceMax, areaTextFlag, ceTextFlag):
         ret, binImg = cv.threshold(grayInputImg, 130, 255, cv.THRESH_BINARY)
-        _, contours, hierarchy = cv.findContours(binImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
+        _, contours, hierarchy = cv.findContours(binImg, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
         outputImg = cv.cvtColor(binImg, cv.COLOR_GRAY2BGR)
         #Analysis one by one: 分别分析
         totalCnt=0
         findCnt=0
-        outC=''
+        outCt=''
         outBox=''
         outRect=''
         for c in contours:
@@ -154,7 +156,7 @@ class TupClsPicProc(object):
             if (cArea < areaMin) or (cArea > areaMax) or (cE < ceMin) or (cE > ceMax):
                 pass
             else:
-                outC = c
+                outCt = c
                 outBox = box
                 outRect = rect
                 findCnt += 1
@@ -167,9 +169,120 @@ class TupClsPicProc(object):
         if findCnt>0:
             #print("Internal Rect = ", outRect)
             #print("Internal Box = ", outBox)
-            return outputImg, outRect, totalCnt, findCnt
+            return outputImg, outRect, totalCnt, findCnt, outCt, outBox
         else:
-            return -1, -1, 0, 0
+            return -1, -1, 0, 0, 0, 0
+
+    #用于掩模
+    def tup_find_max_contours(self, grayInputImg, areaMin, areaMax, ceMin, ceMax, areaTextFlag, ceTextFlag):
+        ret, binImg = cv.threshold(grayInputImg, 130, 255, cv.THRESH_BINARY)
+        _, contours, hierarchy = cv.findContours(binImg, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP CHAIN_APPROX_SIMPLE  CHAIN_APPROX_NONE
+        outputImg = cv.cvtColor(binImg, cv.COLOR_GRAY2BGR)
+        #Analysis one by one: 分别分析
+        totalCnt=0
+        findCnt=0
+        outCt=''
+        outBox=''
+        outRect=''
+        maxArea=0
+        for c in contours:
+            totalCnt += 1
+            M = cv.moments(c)
+            cX = int(M["m10"] / (M["m00"]+0.01))
+            cY = int(M["m01"] / (M["m00"]+0.01))
+            cArea = cv.contourArea(c)
+            rect = cv.minAreaRect(c)
+            box = cv.boxPoints(rect)
+            box =np.int0(box)  #将其转化为整数
+            #width / height: 长宽,总有 width>=height  
+            width, height = rect[1]
+            if (width > height):
+                cE = height / (width+0.001)
+            else:
+                cE = width / (height+0.001)
+            cE = round(cE, 2)
+
+            #分类
+            if (cArea < areaMin) or (cArea > areaMax) or (cE < ceMin) or (cE > ceMax) or (cArea <= maxArea):
+                pass
+            else:
+                maxArea = cArea
+                outCt = c
+                outBox = box
+                outRect = rect
+                findCnt = 1
+                cv.drawContours(outputImg, c, -1, (0, 0, 255), 1)
+                #cv.drawContours(outputImg, [box], 0, (0,0,255), 2)
+                if (areaTextFlag == True):
+                    cv.putText(outputImg, str(cArea), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+                if (ceTextFlag == True):
+                    cv.putText(outputImg, str(cE), (cX + 20, cY + 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+        if findCnt>0:
+            #print("Internal Rect = ", outRect)
+            #print("Internal Box = ", outBox)
+            return outputImg, outRect, totalCnt, findCnt, outCt, outBox
+        else:
+            return -1, -1, 0, 0, 0, 0
+        
+    #将图像inImg中的box部分截取出来
+    def tup_copy_box_img(self, inImg, box):
+        Xs = [i[0] for i in box]
+        Ys = [i[1] for i in box]
+        x1 = min(Xs)
+        x2 = max(Xs)
+        y1 = min(Ys)
+        y2 = max(Ys)
+        height = y2 - y1
+        width = x2 - x1
+        print(width, height)
+        outImg = np.zeros(inImg.shape, np.uint8)
+        for j in range(y1, y1+height):
+            for i in range(x1, x1+width):
+                outImg[j, i] = inImg[j, i]
+        return outImg
+    
+    '''
+    #
+    #灰度去燥外框综合算法
+    #
+    # INPUT=================
+    # colImg - 彩色图像
+    # dilateBlkSize - 膨胀系数
+    # erodeBlkSize - 腐蚀系数
+    # areaMin - 最小面积门限
+    # areaMax - 最大面积门限
+    # ceMin - 最小圆形度门限
+    # ceMax - 最大圆形度门限
+    # ceMax - 最大圆形度门限
+    # areaTextFlag - 面积文字叠加标签
+    # ceTextFlag - 圆形度叠加标签
+    #
+    # OUTPUT=================
+    # outputImg - 图像
+    # rect - 找到的最小外接矩阵
+    # totalCnt - 总共数量
+    # findCnt - 满足条件数量
+    # outCt - 外部凸点集合，外包络图
+    # outBox - 外接矩形    #
+    '''
+    def tup_contours_itp(self, colImg, dilateBlkSize, erodeBlkSize, areaMin, areaMax, ceMin, ceMax, areaTextFlag, ceTextFlag):
+        #第1步：灰度图像
+        grayImg = self.tup_color2gray_adaptive(colImg, dilateBlkSize)
+        #第2步，去噪声
+        nfImg = self.tup_erode(grayImg, erodeBlkSize)
+        #第3步，寻找外框
+        outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_contours(nfImg, areaMin, areaMax, ceMin, ceMax, areaTextFlag, ceTextFlag)
+        return outputImg, rect, totalCnt, findCnt, outCt, outBox
+
+    def tup_max_contours_itp(self, colImg, dilateBlkSize, erodeBlkSize, areaMin, areaMax, ceMin, ceMax, areaTextFlag, ceTextFlag):
+        #第1步：灰度图像
+        grayImg = self.tup_color2gray_adaptive(colImg, dilateBlkSize)
+        #第2步，去噪声
+        nfImg = self.tup_erode(grayImg, erodeBlkSize)
+        #第3步，寻找外框
+        outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_max_contours(nfImg, areaMin, areaMax, ceMin, ceMax, areaTextFlag, ceTextFlag)
+        return outputImg, rect, totalCnt, findCnt, outCt, outBox
+    
     
     #通过圆形寻找边界
     def tup_cal_xy_line(self, radCent, angle, outRect):
@@ -207,8 +320,9 @@ class TupClsPicProc(object):
         return ((int(x1), int(y1)), (int(x2), int(y2)))
     
     #切掉右边图像
+    #图像直接拷贝是不合适的，需要使用imgIn.copy()函数才靠谱
     def tup_cut_left_img(self, imgIn, radCent, angle):
-        imgRight = imgIn
+        imgRight = imgIn.copy()
         sp = imgIn.shape
         #竖线
         if (angle == 90) or (angle == -90):
@@ -222,20 +336,18 @@ class TupClsPicProc(object):
         if (k==0):
             return imgRight
         #正常线
-        for j in range(0, sp[1]):
+        for j in range(0, sp[0]):
             x = radCent[0] + (j-radCent[1])/k
-            right = int(x)+11
-            if (right > sp[1]):
+            right = int(x)+1
+            if (right >= sp[1]):
                 right = sp[1]
             for i in range(0, right):
                 imgRight[j, i] = (0, 0, 0)
         return imgRight
 
-
-
-
-
-
+    #使用outCt，将一副图像抽取出来
+    def tup_cut_out_contour_img(self, imgIn, outCt):
+        return imgIn
 
 
 

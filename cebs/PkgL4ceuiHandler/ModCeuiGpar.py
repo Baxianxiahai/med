@@ -106,6 +106,14 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, clsL1_ConfigOpr):
             img=img.scaled(self.rectOrg.width(), self.rectOrg.height())
             self.label_gpar_pic_origin_fill.setPixmap(img)
 
+    def slot_gpar_pic_file_pre(self):
+        pass
+    
+    def slot_gpar_pic_file_next(self):
+        pass
+    
+    
+
     #使用临时参数进行识别
     def slot_gpar_pic_train(self):
         if (self.picOrgFile == ''):
@@ -124,6 +132,14 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, clsL1_ConfigOpr):
             return;
         l1, l2, l3, l4, add, g1, g2, g3, g4 = self.func_read_vis_train_par()
         self.TkGparUi.func_ui_click_gpar_flu_cell_cnt(self.picOrgFile, l1, l2, l3, l4, add, g1, g2, g3, g4);
+
+    #分层细胞图像处理
+    def slot_gpar_flu_stack_cnt(self):
+        if (self.picOrgFile == ''):
+            return;
+        l1, l2, l3, l4, add, g1, g2, g3, g4 = self.func_read_vis_train_par()
+        self.TkGparUi.func_ui_click_gpar_flu_stack_cnt(self.picOrgFile, l1, l2, l3, l4, add, g1, g2, g3, g4);
+
         
     #
     #  SERVICE FUNCTION PART, 业务函数部分

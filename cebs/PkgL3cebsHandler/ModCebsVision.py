@@ -137,12 +137,14 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #GPAR训练图像
         self.add_stm_combine(self._STM_GPAR_UI_ACT, TUP_MSGID_GPAR_PIC_TRAIN_REQ, self.fsm_msg_pic_train_req_rcv_handler)
         self.add_stm_combine(self._STM_GPAR_UI_ACT, TUP_MSGID_GPAR_PIC_FCC_REQ, self.fsm_msg_pic_flu_cell_count_req_rcv_handler)
+        self.add_stm_combine(self._STM_GPAR_UI_ACT, TUP_MSGID_GPAR_PIC_FSC_REQ, self.fsm_msg_pic_flu_stack_count_req_rcv_handler)
         
         #STEST自测模式
         self.add_stm_combine(self._STM_STEST_UI_ACT, TUP_MSGID_STEST_CAM_INQ, self.fsm_msg_stest_cam_inq_rcv_handler)
         
         #测试消息
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TEST, self.fsm_msg_test_rcv_handler)
+        #测试函数，未来可以去掉或者挪做其它任务
+        #self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TEST, self.fsm_msg_test_rcv_handler)
                
         #切换状态机
         self.fsm_set(TUP_STM_INIT)
@@ -503,12 +505,34 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         self.msg_send(TUP_MSGID_GPAR_PIC_FCC_RESP, TUP_TASK_ID_GPAR, mbuf)
         return TUP_SUCCESS;
 
-
-
-
-
-
-
+    #GPAR中的荧光分层细胞计数过程
+    def fsm_msg_pic_flu_stack_count_req_rcv_handler(self, msgContent):
+        picOrgFile = msgContent['fileName']
+        mbuf={}
+        if (os.path.exists(picOrgFile) == False):
+            mbuf['res'] = -1
+            self.msg_send(TUP_MSGID_GPAR_PIC_FSC_RESP, TUP_TASK_ID_GPAR, mbuf)
+            return TUP_SUCCESS;
+        fileName = picOrgFile
+        fileNukeName = 'tempPic.jpg'
+        dilateBlkSize = self.FLU_CELL_COUNT_genr_par1
+        erodeBlkSize = self.FLU_CELL_COUNT_genr_par2
+        cAreaMin = self.WORM_CLASSIFY_base
+        cAreaMax = self.WORM_CLASSIFY_big2top
+        ceMin = self.FLU_CELL_COUNT_genr_par3 #In NF2
+        addupSet = self.WORM_CLASSIFY_addupSet
+        totalCnt = self.func_vision_flu_stack_count(fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet)
+        if (os.path.exists('tempPic.jpg') == False):
+            mbuf['res'] = -2
+            self.msg_send(TUP_MSGID_GPAR_PIC_FSC_RESP, TUP_TASK_ID_GPAR, mbuf)
+            return TUP_SUCCESS;
+        #Final feedback
+        mbuf['res'] = 1
+        mbuf['fileName'] = 'tempPic.jpg'
+        mbuf['nbr'] = totalCnt
+        self.funcVisionLogTrace(str("Final counter = %d" % (totalCnt)));
+        self.msg_send(TUP_MSGID_GPAR_PIC_FSC_RESP, TUP_TASK_ID_GPAR, mbuf)
+        return TUP_SUCCESS;
 
 
     '''
@@ -1006,65 +1030,46 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     #
     # Output:  数值，计数结果
     #
-
-    #去噪声
-#         new = np.zeros(inputImg.shape, np.uint8)
-#         #Gray transaction: 灰度化
-#         for i in range(new.shape[0]):  #Axis-y/height/Rows
-#             for j in range(new.shape[1]):
-#                 (b,g,r) = inputImg[i,j]
-#                 #加权平均法
-#                 new[i,j] = int(0.3*float(b) + 0.59*float(g) + 0.11*float(r))&0xFF
-#         #Middle value filter: 中值滤波
-#         blur= cv.medianBlur(new, 5)
-#         midGray = cv.cvtColor(blur, cv.COLOR_BGR2GRAY)
-#         #Adaptive bin-translation: 自适应二值化
-#         binGray = cv.adaptiveThreshold(midGray, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, dilateBlkSize, 0)   # ADAPTIVE_THRESH_MEAN_C ADAPTIVE_THRESH_GAUSSIAN_C
-#         binRes= cv.GaussianBlur(binGray, (5,5), 1.5) #medianBlur
-    
-        #Fix bin-value: 固定二值化
-#         ret, binImg = cv.threshold(midFilter, 130, 255, cv.THRESH_BINARY)
-#         #Searching out-form shape: 找到轮廓
-#         _, contours, hierarchy = cv.findContours(binImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
-#         #Output graphic: 输出图形
-#         outputImg = cv.cvtColor(binImg, cv.COLOR_GRAY2BGR)
-#         mask = np.zeros((inputImg.shape[0]+2, inputImg.shape[1]+2), np.uint8)
-#         mask[:] = 1
-#         #Analysis one by one: 分别分析
-#         for c in contours:
-#             outputText['totalNbr'] +=1
-#             M = cv.moments(c)
-#             cX = int(M["m10"] / (M["m00"]+0.01))
-#             cY = int(M["m01"] / (M["m00"]+0.01))
-#             cArea = cv.contourArea(c)
-#             rect = cv.minAreaRect(c)
-#             #width / height: 长宽,总有 width>=height  
-#             width, height = rect[1]
-#             if (width > height):
-#                 cE = height / (width+0.001)
-#             else:
-#                 cE = width / (height+0.001)
-#             cE = round(cE, 2)
-#   
-#             #分类
-#             if (cArea < cAreaMin) or (cE < ceMin) or (cArea > cAreaMax):
-#                 pass
-#             else:
-#                 outputText['validNbr'] +=1
-#                 cv.drawContours(outputImg, c, -1, (0,0,255), 2)
-#                 cv.putText(outputImg, str(cArea), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
-
-        #Save log record: 存储干活的log记录
-#         f = open(GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET, "a+")
-#         a = '[%s], Flu cell counting, save result as [%s] with output [%s].\n' % (time.asctime(), outputFn, str(outputText))
-#         f.write(a)
-#         f.flush()
-#         f.close()
-        
-
     '''
     #细胞识别函数
     def func_vision_flu_cell_count(self, fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet):
+        #处理参数，确保奇数性质的参数
+        if dilateBlkSize == 0:
+            dilateBlkSize = 3
+        if ((dilateBlkSize//2)*2) == dilateBlkSize:
+            dilateBlkSize +=1
+        ceMin = ceMin/100
+        #使用LOCAL方式进行叠加，不再使用全局属性，简化处理
+        outputText = {'totalNbr':0, 'validNbr':0}
+        
+        #Reading file: 读取文件
+        if (os.path.exists(fileName) == False):
+            errStr = "L2VISCFY: File %s not exist!" % (fileName)
+            self.medErrorLog(errStr);
+            print("L2VISCFY: File %s not exist!" % (fileName))
+            return -1;
+        try:
+            inputImg = cv.imread(fileName)
+        except Exception as err:
+            print("L2VISCFY: Read file error, errinfo = ", str(err))
+            return -2;
+        
+        #综合处理算法
+        outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_contours_itp(inputImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, False)
+        outputText['totalNbr'] = totalCnt
+        outputText['validNbr'] = findCnt
+        if (addupSet == True):
+            font = cv.FONT_HERSHEY_SIMPLEX
+            cv.putText(outputImg, str("XHT: " + str(outputText)), (10, 30), font, 0.7, (0, 0, 255), 2, cv.LINE_AA)
+        
+        #反馈结果
+        outputFn = fileNukeName
+        cv.imwrite(outputFn, outputImg)
+        cv.destroyAllWindows()
+        return outputText['validNbr']
+
+    #细胞识别函数  #分层细胞计数
+    def func_vision_flu_stack_count(self, fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet):
         #第0步: 处理参数，确保奇数性质的参数
         if dilateBlkSize == 0:
             dilateBlkSize = 3
@@ -1086,26 +1091,49 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             print("L2VISCFY: Read file error, errinfo = ", str(err))
             return -2;
 
-        #第1步：灰度图像
-        grayImg = self.tup_color2gray_adaptive(inputImg, dilateBlkSize)
+        #寻找人工标定  #寻找标定线 寻找右下半部分
+        b, g, r = cv.split(inputImg)
+        grayImg = cv.cvtColor(inputImg, cv.COLOR_BGR2GRAY)
+        delImg = grayImg - b
+        diImg = self.tup_dilate(delImg, 8)
+        ctImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_contours(diImg, 1000, 4000, 0.001, 0.5, False, False)
+        if (findCnt!=1):
+            return -3;
+        imgRight = self.tup_cut_left_img(inputImg, rect[0], rect[2])
         
-        #第2步，去噪声
-        nfImg = self.tup_erode(grayImg, erodeBlkSize)
+        #确定目标区域范围
+        targetImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_max_contours_itp(imgRight, 335, 5, 1000, 200000, 0.001, 1, False, False)
+        testFlag = False
+        if (testFlag == True):
+            outCt2 = cv.convexHull(outCt)
+            tarImg = cv.polylines(inputImg, [outCt2], True, (0, 0, 255), 1)
+            cv.drawContours(inputImg, outCt2, -1, (0, 255, 255), 4)
+            cv.imshow("Target1", tarImg)
+        if (findCnt != 1):
+            return -4;
         
-        #第3步，寻找外框
-        outputImg, rect, totalCnt, findCnt = self.tup_find_contours(nfImg, cAreaMin, cAreaMax, ceMin, 1, True, False)
+        #将最终区域整出来
+        cropImg = self.tup_copy_box_img(inputImg, outBox)
+        #cv.imshow("Target2", cropImg)
+
+        #使用外框，将图像抠出来
+        #dst = cv.bitwise_and(inputImg, inputImg, mask=outCt)
+        #cv.imshow("Target", dst)
+        #cv.waitKey()
+        
+        #综合识别处理过程 (圆的喜欢，憋的不喜欢)
+        outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_contours_itp(cropImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, False)
         outputText['totalNbr'] = totalCnt
         outputText['validNbr'] = findCnt
         if (addupSet == True):
             font = cv.FONT_HERSHEY_SIMPLEX
             cv.putText(outputImg, str("XHT: " + str(outputText)), (10, 30), font, 0.7, (0, 0, 255), 2, cv.LINE_AA)
-        
-        #第4步，反馈结果
+         
+        #反馈结果
         outputFn = fileNukeName
         cv.imwrite(outputFn, outputImg)
         cv.destroyAllWindows()
         return outputText['validNbr']
-
     
     '''
     #
@@ -1116,47 +1144,47 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     #
     #
     '''
-    def fsm_msg_test_rcv_handler(self, msgContent):
-        #寻找标定线
-        fileName = msgContent['fileName']
-        inputImg = cv.imread(fileName)
-        b, g, r = cv.split(inputImg)
-        grayImg = cv.cvtColor(inputImg, cv.COLOR_BGR2GRAY)
-        delImg = grayImg - b
-        diImg = self.tup_dilate(delImg, 8)
-        ctImg, rect, totalCnt, findCnt = self.tup_find_contours(diImg, 1000, 4000, 0.001, 0.5, False, False)
-        if (findCnt<=0):
-            return TUP_FAILURE;
-        #cv.imshow("contours", ctImg)
-        radCent = rect[0]
-        angle = rect[2]
-        #取得图像的尺度
-        sp = inputImg.shape
-        resLine = self.tup_cal_xy_line(radCent, angle, (sp[0], sp[1]))
-        cv.line(ctImg, resLine[0], resLine[1], (0, 255, 0), 1)
-        
-        #寻找右下半部分
-        imgRight = self.tup_cut_left_img(inputImg, radCent, angle)
-        cv.imshow("imgRight", imgRight)
-        
-        #第1步：灰度图像
-        grayImg = self.tup_color2gray_adaptive(imgRight, 41)
-        
-        #第2步，去噪声
-        nfImg = self.tup_erode(grayImg, 7)
-        
-        #第3步，寻找外框
-        outputImg, rect, totalCnt, findCnt = self.tup_find_contours(nfImg, 100, 400, 0.01, 1, True, False)
-        outputText = {}
-        outputText['totalNbr'] = totalCnt
-        outputText['validNbr'] = findCnt
-        
-        #
-        cv.imshow("Output", outputImg)
-        cv.waitKey()
-        cv.destroyAllWindows()
-        
-        return TUP_SUCCESS;    
+#     def fsm_msg_test_rcv_handler(self, msgContent):
+#         #寻找标定线
+#         fileName = msgContent['fileName']
+#         inputImg = cv.imread(fileName)
+#         b, g, r = cv.split(inputImg)
+#         grayImg = cv.cvtColor(inputImg, cv.COLOR_BGR2GRAY)
+#         delImg = grayImg - b
+#         diImg = self.tup_dilate(delImg, 8)
+#         ctImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_contours(diImg, 1000, 4000, 0.001, 0.5, False, False)
+#         if (findCnt<=0):
+#             return TUP_FAILURE;
+#         #cv.imshow("contours", ctImg)
+#         radCent = rect[0]
+#         angle = rect[2]
+#         #取得图像的尺度
+#         sp = inputImg.shape
+#         resLine = self.tup_cal_xy_line(radCent, angle, (sp[0], sp[1]))
+#         cv.line(ctImg, resLine[0], resLine[1], (0, 255, 0), 1)
+#         
+#         #寻找右下半部分
+#         imgRight = self.tup_cut_left_img(inputImg, radCent, angle)
+#         cv.imshow("imgRight", imgRight)
+#         
+#         #第1步：灰度图像
+#         grayImg = self.tup_color2gray_adaptive(imgRight, 41)
+#         
+#         #第2步，去噪声
+#         nfImg = self.tup_erode(grayImg, 7)
+#         
+#         #第3步，寻找外框
+#         outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_contours(nfImg, 100, 400, 0.01, 1, True, False)
+#         outputText = {}
+#         outputText['totalNbr'] = totalCnt
+#         outputText['validNbr'] = findCnt
+#         
+#         #
+#         cv.imshow("Output", outputImg)
+#         cv.waitKey()
+#         cv.destroyAllWindows()
+#         
+#         return TUP_SUCCESS;    
     
 
 

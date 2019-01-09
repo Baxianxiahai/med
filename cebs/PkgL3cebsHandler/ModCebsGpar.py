@@ -55,6 +55,10 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         #FLU CELL COUNT
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GPAR_PIC_FCC_REQ, self.fsm_msg_pic_flu_cell_count_req_rcv_handler)
         self.add_stm_combine(self._STM_FCC, TUP_MSGID_GPAR_PIC_FCC_RESP, self.fsm_msg_pic_flu_cell_count_resp_rcv_handler)
+
+        #FLU STACK COUNT
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GPAR_PIC_FSC_REQ, self.fsm_msg_pic_flu_stack_count_req_rcv_handler)
+        self.add_stm_combine(self._STM_FCC, TUP_MSGID_GPAR_PIC_FSC_RESP, self.fsm_msg_pic_flu_stack_count_resp_rcv_handler)
         
         #START TASK
         self.fsm_set(TUP_STM_INIT)
@@ -136,6 +140,20 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         self.msg_send(TUP_MSGID_GPAR_PIC_FCC_RESP, TUP_TASK_ID_UI_GPAR, msgContent)
         self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS
+
+    def fsm_msg_pic_flu_stack_count_req_rcv_handler(self, msgContent):
+        self.funcGparLogTrace("Flu Stack counting starting!")
+        self.msg_send(TUP_MSGID_GPAR_PIC_FSC_REQ, TUP_TASK_ID_VISION, msgContent)
+        self.fsm_set(self._STM_FCC)
+        return TUP_SUCCESS
+
+    def fsm_msg_pic_flu_stack_count_resp_rcv_handler(self, msgContent):
+        self.funcGparLogTrace("Flu Stack counting accomplish!")
+        self.msg_send(TUP_MSGID_GPAR_PIC_FSC_RESP, TUP_TASK_ID_UI_GPAR, msgContent)
+        self.fsm_set(self._STM_ACTIVE)
+        return TUP_SUCCESS
+
+
     
     def func_timer_train_process(self):
         self.timerTrainCnt += 1
