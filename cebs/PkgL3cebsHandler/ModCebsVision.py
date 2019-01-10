@@ -1054,8 +1054,23 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             print("L2VISCFY: Read file error, errinfo = ", str(err))
             return -2;
         
-        #综合处理算法
-        outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_contours_itp(inputImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, False)
+        #暂时采用霍夫变换算法。如果需要，将采用图像形态学算法
+        algoSelction = 1
+        #霍夫变换找圆形算法
+        #cAreaMin/cAreaMax - 圆形范围
+        #ceMin - 圆形距离
+        if (algoSelction == 1):
+            outputImg, findCnt, circles = self.tup_itp_hough_transform(inputImg, cAreaMin, cAreaMax, ceMin)
+            totalCnt = findCnt
+            testFlag = False
+            if (testFlag == True):
+                cv.imshow("Hough Transform Img", outputImg)
+                cv.waitKey()
+        #图像形态学算法
+        elif (algoSelction == 2):
+            outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_itp_morphology_transform(inputImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, False)
+        
+        #统一处理    
         outputText['totalNbr'] = totalCnt
         outputText['validNbr'] = findCnt
         if (addupSet == True):
@@ -1097,13 +1112,15 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             print("L2VISCFY: Read file error, errinfo = ", str(err))
             return -2;
 
-        #寻找人工标定  #寻找标定线 寻找右下半部分  #寻找黄色标定线
+        #寻找人工标定  #寻找标定线 寻找右下半部分  #寻找黄色标定线： 人工标定的方式，在参数选择上需要固定一种特征，而且保持一定的稳定性，不然无法兑付
+        #图像解析度需要保持稳定
         #两种直线寻找方案都验证了，都好使！
         b, g, r = cv.split(inputImg)
         grayImg = cv.cvtColor(inputImg, cv.COLOR_BGR2GRAY)
         delImg = grayImg - b
         diImg = self.tup_dilate(delImg, 8)
-        ctImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_max_contours(diImg, 1000, 5000, 0.001, 0.5, False, False)
+        #cv.imshow("Yellow Pic", delImg)
+        ctImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_max_contours(delImg, 1000, 50000, 0.001, 0.5, False, False)
         if (findCnt!=1):
             return -3;
         testFlag = False
@@ -1146,11 +1163,27 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         
         #将最终区域扣出来
         cropImg = self.tup_copy_contour_img(inputImg, outCt)
-        #cv.imshow("Target Cut image", cropImg)
-        #cv.waitKey()
+        testFlag = False
+        if (testFlag == True):
+            cv.imshow("Target Cut image", cropImg)
+            cv.waitKey()
+ 
+        algoSelction = 1
+        #霍夫变换找圆形算法
+        #cAreaMin/cAreaMax - 圆形范围
+        #ceMin - 圆形距离
+        if (algoSelction == 1):
+            outputImg, findCnt, circles = self.tup_itp_hough_transform(cropImg, cAreaMin, cAreaMax, ceMin)
+            totalCnt = findCnt
+            testFlag = False
+            if (testFlag == True):
+                cv.imshow("Hough Transform Img", outputImg)
+                cv.waitKey()
+        #图像形态学算法
+        elif (algoSelction == 2):
+            outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_itp_morphology_transform(cropImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, False)
         
-        #综合识别处理过程 (圆的喜欢，憋的不喜欢)
-        outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_contours_itp(cropImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, False)
+        #最后的处理过程
         outputText['totalNbr'] = totalCnt
         outputText['validNbr'] = findCnt
         if (addupSet == True):

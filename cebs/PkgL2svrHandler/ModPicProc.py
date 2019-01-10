@@ -220,7 +220,6 @@ class TupClsPicProc(object):
             else:
                 cE = width / (height+0.001)
             cE = round(cE, 2)
-
             #分类
             if (cArea < areaMin) or (cArea > areaMax) or (cE < ceMin) or (cE > ceMax) or (cArea <= maxArea):
                 pass
@@ -280,6 +279,7 @@ class TupClsPicProc(object):
     
     '''
     #
+    #图像形态学处理综合算法
     #灰度去燥外框综合算法
     #
     # INPUT=================
@@ -302,7 +302,7 @@ class TupClsPicProc(object):
     # outCt - 外部凸点集合，外包络图
     # outBox - 外接矩形    #
     '''
-    def tup_contours_itp(self, colImg, dilateBlkSize, erodeBlkSize, areaMin, areaMax, ceMin, ceMax, areaTextFlag, ceTextFlag):
+    def tup_itp_morphology_transform(self, colImg, dilateBlkSize, erodeBlkSize, areaMin, areaMax, ceMin, ceMax, areaTextFlag, ceTextFlag):
         #第1步：灰度图像
         grayImg = self.tup_color2gray_adaptive(colImg, dilateBlkSize)
         #第2步，去噪声
@@ -320,9 +320,11 @@ class TupClsPicProc(object):
         outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_max_contours(nfImg, areaMin, areaMax, ceMin, ceMax, areaTextFlag, ceTextFlag)
         return outputImg, rect, totalCnt, findCnt, outCt, outBox
     
-    
+
     '''
-    #通过圆形寻找边界
+    #通过外接最小长方形，寻找过中心点的长轴直线，该直线需要顶到图像的两端，将图像一分为二
+    #通过这个方式，可以将图像的左手或者右手部分切分出来
+    #
     #radCent - 中心坐标
     #angle - 角度
     #imgHgWd - 图像尺寸
@@ -361,10 +363,13 @@ class TupClsPicProc(object):
             x2 = x0+(y2-y0)/k
         return ((int(x1), int(y1)), (int(x2), int(y2)))
     
+    
     '''
     #
     #
-    #通过拟合函数，得到一个图像或者轮廓的直线
+    #通过拟合函数，得到一个图像或者轮廓的长轴直线，该直线顶到图像的边界
+    #该函数的目标也是为了下一步将图像进行切分
+    #
     #inImg - 彩色图像
     #contour - 轮廓
     #输出：起点和重点坐标
@@ -398,6 +403,7 @@ class TupClsPicProc(object):
             y2 = height
             x2 = x0+(y2-y0)/k
         return ((int(x1), int(y1)), (int(x2), int(y2)))
+    
     
     '''
     #
@@ -523,9 +529,69 @@ class TupClsPicProc(object):
             tpList[2] = [int(rightPx), int(rightPy)]
             tpList[3] = [int(r4Px), int(r4Py)]
             tpList[4] = [int(r5Px), int(r5Py)]
-        
         return tpList
     
+
+    #霍夫变换求圆形算法
+    #圆形切割，寻找圆形图像
+    #imgIn - 输入图像，彩色
+    #minRad - 最小半径
+    #maxRad - 最大半径
+    #minDist - 圆形之间的距离
+    #OUTOUT-圆形数值
+    def tup_find_circle_area(self, imgIn, minRad, maxRad, minDist):
+        grayImg = cv.cvtColor(imgIn, cv.COLOR_BGR2GRAY)
+        blurImg = cv.medianBlur(grayImg, 3)
+        #bgrImg = cv.cvtColor(blurImg, cv.COLOR_GRAY2BGR)  #变换回去，这里不需要
+        circles = cv.HoughCircles(blurImg, cv.HOUGH_GRADIENT, 1.5, minDist, param1=100, param2=10, minRadius=minRad, maxRadius=maxRad)
+        findCnt = 0
+        try:
+            circles = np.uint16(np.around(circles))
+            for i in circles[0, :]:
+                findCnt+=1
+                #cv.circle(imgIn,(i[0], i[1]), i[2], self._COL_D_RED, 2)
+        except Exception:
+            pass
+        return findCnt, circles
+
+    #霍夫变换方法集成使用
+    def tup_itp_hough_transform(self, imgIn, minRad, maxRad, minDist):
+        findCnt, circles = self.tup_find_circle_area(imgIn, minRad, maxRad, minDist)
+        if (findCnt == 0):
+            return -1, -1
+        outImg = imgIn.copy()
+        for i in circles[0, :]:
+            cv.circle(outImg,(i[0], i[1]), i[2], self._COL_D_RED, 1)
+        return outImg, findCnt, circles
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     
         

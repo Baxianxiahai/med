@@ -29,6 +29,9 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
+//=ZJL, 2019/1/11, CURRENT_SW_DELIVERY R1.56 =>CEBS
+= 实现第二种荧光识别算法：霍夫变换匹配圆形算法
+
 //=ZJL, 2019/1/8, CURRENT_SW_DELIVERY R1.55 =>CEBS
 = 完善荧光图像处理算法
 = 基本完成
