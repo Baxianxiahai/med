@@ -29,6 +29,25 @@ class TupClsPicProc(object):
     '''
     classdocs
     '''
+    #RGB颜色数组定义
+    _COL_A_RED = [255, 0, 0]
+    _COL_A_GREEN = [0, 255, 0]
+    _COL_A_BLUE = [0, 0, 255]
+    _COL_A_BLACK = [0, 0, 0]
+    _COL_A_WITHE = [255, 255, 255]
+    _COL_A_CHING = [0, 255, 255]
+    _COL_A_YELLOW = [255, 255, 0]
+    _COL_A_DEEPRED = [255, 0, 255]
+    
+    #BGR颜色字典定义
+    _COL_D_RED = (0, 0, 255)
+    _COL_D_GREEN = (0, 255, 0)
+    _COL_D_BLUE = (255, 0, 0)
+    _COL_D_BLACK = (0, 0, 0)
+    _COL_D_WHITE = (255, 255, 255)
+    _COL_D_CHING = (255, 255, 0)
+    _COL_D_YELLOW = (0, 255, 255)
+    _COL_D_DEEPRED = (255, 0, 255)
 
     def __init__(self, params):
         '''
@@ -160,12 +179,12 @@ class TupClsPicProc(object):
                 outBox = box
                 outRect = rect
                 findCnt += 1
-                cv.drawContours(outputImg, c, -1, (0,0,255), 2)
-                #cv.drawContours(outputImg, [box], 0, (0,0,255), 2)
+                cv.drawContours(outputImg, c, -1, self._COL_D_RED, 2)
+                #cv.drawContours(outputImg, [box], 0, self._COL_D_RED, 2)
                 if (areaTextFlag == True):
-                    cv.putText(outputImg, str(cArea), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+                    cv.putText(outputImg, str(cArea), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, self._COL_D_GREEN, 1)
                 if (ceTextFlag == True):
-                    cv.putText(outputImg, str(cE), (cX + 20, cY + 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+                    cv.putText(outputImg, str(cE), (cX + 20, cY + 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, self._COL_D_BLUE, 1)
         if findCnt>0:
             #print("Internal Rect = ", outRect)
             #print("Internal Box = ", outBox)
@@ -211,12 +230,12 @@ class TupClsPicProc(object):
                 outBox = box
                 outRect = rect
                 findCnt = 1
-                cv.drawContours(outputImg, c, -1, (0, 0, 255), 1)
-                #cv.drawContours(outputImg, [box], 0, (0,0,255), 2)
+                cv.drawContours(outputImg, c, -1, self._COL_D_RED, 1)
+                #cv.drawContours(outputImg, [box], 0, self._COL_D_RED, 2)
                 if (areaTextFlag == True):
-                    cv.putText(outputImg, str(cArea), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+                    cv.putText(outputImg, str(cArea), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, self._COL_D_GREEN, 1)
                 if (ceTextFlag == True):
-                    cv.putText(outputImg, str(cE), (cX + 20, cY + 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+                    cv.putText(outputImg, str(cE), (cX + 20, cY + 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, self._COL_D_BLUE, 1)
         if findCnt>0:
             #print("Internal Rect = ", outRect)
             #print("Internal Box = ", outBox)
@@ -234,12 +253,30 @@ class TupClsPicProc(object):
         y2 = max(Ys)
         height = y2 - y1
         width = x2 - x1
-        print(width, height)
         outImg = np.zeros(inImg.shape, np.uint8)
         for j in range(y1, y1+height):
             for i in range(x1, x1+width):
                 outImg[j, i] = inImg[j, i]
         return outImg
+    
+    #将图像inImg中的box部分截取出来
+    #fillPoly使用了255系数，这个对应到RED的颜色ARRAY，实际上在颜色上是BLUE。在对照时，又需要改回到RED进行判定
+    #BLUE是缺省的抠图颜色体系，这是本函数规定的，人眼最不敏感的，故而是惯例吧吧
+    def tup_copy_contour_img(self, inImg, contour):
+        outCt2 = cv.convexHull(contour)
+        tmpImg = inImg.copy()
+        outImg = inImg.copy()
+        cv.fillPoly(tmpImg, [outCt2], 255)
+        sp = inImg.shape
+        height, width = sp[0], sp[1]
+        for j in range(0, height):
+            for i in range(0, width):
+                if (tmpImg[j, i][0] == self._COL_A_RED[0]) and (tmpImg[j, i][1] == self._COL_A_RED[1]) and (tmpImg[j, i][2] == self._COL_A_RED[2]):
+                    outImg[j, i] = inImg[j, i]
+                else:
+                    outImg[j, i] = [0, 0, 0]
+        return outImg
+    
     
     '''
     #
@@ -284,11 +321,16 @@ class TupClsPicProc(object):
         return outputImg, rect, totalCnt, findCnt, outCt, outBox
     
     
+    '''
     #通过圆形寻找边界
-    def tup_cal_xy_line(self, radCent, angle, outRect):
-        x0 = radCent[0]
-        y0 = radCent[1]
-        (height, width) = outRect
+    #radCent - 中心坐标
+    #angle - 角度
+    #imgHgWd - 图像尺寸
+    #输出：起点和重点坐标
+    '''
+    def tup_cal_rect_line(self, radCent, angle, imgHgWd):
+        x0, y0 = radCent[0], radCent[1]
+        (height, width) = imgHgWd
         #竖线
         if (angle == 90) or (angle == -90):
             x1, y1 = x0, 0
@@ -319,35 +361,174 @@ class TupClsPicProc(object):
             x2 = x0+(y2-y0)/k
         return ((int(x1), int(y1)), (int(x2), int(y2)))
     
-    #切掉右边图像
+    '''
+    #
+    #
+    #通过拟合函数，得到一个图像或者轮廓的直线
+    #inImg - 彩色图像
+    #contour - 轮廓
+    #输出：起点和重点坐标
+    #
+    #这个方式在应用上，更加泛化一些
+    #
+    '''
+    def tup_siml_line_by_contour(self, inImg, contour):
+        height, width = inImg.shape[:2]
+        [vx, vy, x, y] = cv.fitLine(contour, cv.DIST_L2, 0, 0.01, 0.01)
+        if vx == 0:
+            k = vy / 0.001
+        else:
+            k = vy/vx
+        x0, y0 = x, y
+        #y = y0+k*(x-x0)
+        x1 = 0
+        y1 = y0+k*(x1-x0)
+        if (y1 < 0):
+            y1 = 0
+            x1 = x0+(y1-y0)/k
+        if (y1 > height):
+            y1 = height
+            x1 = x0+(y1-y0)/k
+        x2=width
+        y2 = y0+k*(x2-x0)
+        if (y2 < 0):
+            y2 = 0
+            x2 = x0+(y2-y0)/k
+        if (y2 > height):
+            y2 = height
+            x2 = x0+(y2-y0)/k
+        return ((int(x1), int(y1)), (int(x2), int(y2)))
+    
+    '''
+    #
+    #保留右边或者左边的图像：需要根据角度进行合理判定
+    #这个函数，左右手系的选择，这里已经做了
+    #如果在实际应用的时候，角度不同时均为右手系，则不用分双边判定
+    #
     #图像直接拷贝是不合适的，需要使用imgIn.copy()函数才靠谱
-    def tup_cut_left_img(self, imgIn, radCent, angle):
+    #
+    '''
+    def tup_cut_line_out_img(self, imgIn, radCent, angle):
+        imgLeft = imgIn.copy()
         imgRight = imgIn.copy()
         sp = imgIn.shape
-        #竖线
+        #特殊竖线
         if (angle == 90) or (angle == -90):
-            for j in range(0, sp[1]):
+            for i in range(0, sp[0]):
                 x = radCent[0]
-                for i in range(0, int(x)):
-                    imgRight[j, i] = (0, 0, 0)
-            return imgRight
+                right = int(x)+1
+                if (right >= sp[1]):
+                    right = sp[1]
+                for j in range(right, sp[1]):
+                    imgLeft[i, j] = self._COL_D_BLACK
+            for i in range(0, sp[0]):
+                x = radCent[0]
+                right = int(x)+1
+                if (right >= sp[1]):
+                    right = sp[1]
+                for j in range(0, right):
+                    imgRight[i, j] = self._COL_D_BLACK
+            if (angle > 0):
+                imgRem = imgLeft
+            else:
+                imgRem = imgRight
+            return imgRem
+        #正常处理
         k = math.tan(angle/180.0*math.pi)
         #横线
         if (k==0):
-            return imgRight
+            return imgLeft, imgRight
         #正常线
-        for j in range(0, sp[0]):
-            x = radCent[0] + (j-radCent[1])/k
+        for i in range(0, sp[0]):
+            x = radCent[0] + (i-radCent[1])/k
             right = int(x)+1
             if (right >= sp[1]):
                 right = sp[1]
-            for i in range(0, right):
-                imgRight[j, i] = (0, 0, 0)
-        return imgRight
+            for j in range(right, sp[1]):
+                imgLeft[i, j] = self._COL_D_BLACK
+        for i in range(0, sp[0]):
+            x = radCent[0] + (i-radCent[1])/k
+            right = int(x)+1
+            if (right >= sp[1]):
+                right = sp[1]
+            for j in range(0, right):
+                imgRight[i, j] = self._COL_D_BLACK
+        if (angle > 0):
+            imgRem = imgLeft
+        else:
+            imgRem = imgRight
+        return imgRem
 
-    #使用outCt，将一副图像抽取出来
-    def tup_cut_out_contour_img(self, imgIn, outCt):
-        return imgIn
+    #基于一个最小外接长方形，求左手系和右手系的正方形定点
+    #同上，需要分左右手系
+    def tup_find_retg_area(self, imgIn, minRectIn):
+        angle = minRectIn[2]
+        tpList = np.array([[0,0],[0,0],[0,0],[0,0],[0,0]], np.int32)
+        sin = math.sin(angle/180.0*math.pi)
+        cos = math.cos(angle/180.0*math.pi)
+        sp = imgIn.shape
+        (imgH, imgW) = (sp[0], sp[1])
+        (mrW, mrH) = minRectIn[1]
+        (x0, y0) = minRectIn[0]
+        leftPx = x0 - cos*mrW/2
+        leftPy = y0 - sin*mrW/2
+        rightPx = x0 + cos*mrW/2
+        rightPy = y0 + sin*mrW/2
+        if (leftPx<0): leftPx=0;
+        if (leftPx>=imgW): leftPx=imgW-1;
+        if (leftPy<0): leftPy=0;
+        if (leftPy>=imgH): leftPy=imgH-1;
+        if (rightPx<0): rightPx=0;
+        if (rightPx>=imgW): rightPx=imgW-1;
+        if (rightPy<0): rightPy=0;
+        if (rightPy>=imgH): rightPy=imgH-1;
+        #4nd point
+        if (minRectIn[2] > 0):
+            angle -= 90
+        else:
+            angle += 90
+        sin = math.sin(angle/180.0*math.pi)
+        cos = math.cos(angle/180.0*math.pi)
+        (x0, y0) = (rightPx, rightPy)
+        r4Px = x0 + cos*mrW
+        r4Py = y0 + sin*mrW
+        if (r4Px<0): r4Px=0;
+        if (r4Px>=imgW): r4Px=imgW-1;
+        if (r4Py<0): r4Py=0;
+        if (r4Py>=imgH): r4Py=imgH-1;
+        #5nd point
+        if (minRectIn[2] > 0):
+            angle -= 90
+        else:
+            angle += 90
+        sin = math.sin(angle/180.0*math.pi)
+        cos = math.cos(angle/180.0*math.pi)
+        (x0, y0) = (r4Px, r4Py)
+        r5Px = x0 + cos*mrW
+        r5Py = y0 + sin*mrW
+        if (r5Px<0): r5Px=0;
+        if (r5Px>=imgW): r5Px=imgW-1;
+        if (r5Py<0): r5Py=0;
+        if (r5Py>=imgH): r5Py=imgH-1;
+        #Return
+        if (minRectIn[2] > 0):
+            tpList[1] = [int(rightPx), int(rightPy)]
+            tpList[1] = [int(minRectIn[0][0]), int(minRectIn[0][1])]
+            tpList[2] = [int(leftPx), int(leftPy)]
+            tpList[3] = [int(r4Px), int(r4Py)]
+            tpList[4] = [int(r5Px), int(r5Py)]
+        else:
+            tpList[0] = [int(leftPx), int(leftPy)]
+            tpList[1] = [int(minRectIn[0][0]), int(minRectIn[0][1])]
+            tpList[2] = [int(rightPx), int(rightPy)]
+            tpList[3] = [int(r4Px), int(r4Py)]
+            tpList[4] = [int(r5Px), int(r5Py)]
+        
+        return tpList
+    
+    
+    
+        
 
 
 

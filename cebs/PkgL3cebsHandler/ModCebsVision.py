@@ -731,19 +731,19 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         '''
         if (flagIndex == 1):
             print("Result = resImgLU")
-            #cv.line(resImgLU, start, end, (0, 0, 255))
+            #cv.line(resImgLU, start, end, self._COL_D_RED)
             cv.imshow("resImgLU", resImgLU)
         if (flagIndex == 2):
             print("Result = resImgRU")
-            #cv.line(resImgRU, start, end, (0, 0, 255))
+            #cv.line(resImgRU, start, end, self._COL_D_RED)
             cv.imshow("resImgRU", resImgRU)
         if (flagIndex == 3):
             print("Result = resImgLB")
-            #cv.line(resImgLB, start, end, (0, 0, 255))
+            #cv.line(resImgLB, start, end, self._COL_D_RED)
             cv.imshow("resImgLB", resImgLB)
         if (flagIndex == 4):
             print("Result = resImgRB")
-            #cv.line(resImgRB, start, end, (0, 0, 255))
+            #cv.line(resImgRB, start, end, self._COL_D_RED)
             cv.imshow("resImgRB", resImgRB)
         '''
         #1mm = 1000um的标尺
@@ -752,8 +752,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         start = (sp[1]-100, sp[0]-20)
         end = (start[0] + ptLen, start[1])
         #原始图像
-        cv.line(inputImg, start, end, (0, 0, 255))
-        cv.putText(inputImg, '500um', (start[0], start[1]-10), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+        cv.line(inputImg, start, end, self._COL_D_RED)
+        cv.putText(inputImg, '500um', (start[0], start[1]-10), cv.FONT_HERSHEY_SIMPLEX, 0.5, self._COL_D_RED, 1)
         #cv.imshow("inputImg", inputImg)
         cv.imwrite(newFileFn, inputImg)
 
@@ -818,13 +818,13 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             height = tmp
         cE = width / (height+0.001)
         cE = round(cE, 2)
-        cv.drawContours(outputImg, maxC, -1, (0, 0, 255), 2)                    
-        cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+        cv.drawContours(outputImg, maxC, -1, self._COL_D_RED, 2)                    
+        cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, self._COL_D_RED, 2)
         
         #画最小外接框
         box = cv.boxPoints(rect)
         box = np.int0(box)
-        cv.drawContours(outputImg, [box], -1, (0, 0, 255), 1)
+        cv.drawContours(outputImg, [box], -1, self._COL_D_RED, 1)
         
         #cv.imshow("result", outputImg)  
         newRadians = (height * height / (4 * width) + width)/2
@@ -972,41 +972,41 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
                 pass
             elif cArea < self.WORM_CLASSIFY_small2mid:
                 outText['totalNbr'] +=1
-                #cv.floodFill(outputImg, mask, seed_point,(0,0,255))
-                cv.drawContours(outputImg, c, -1, (0,0,255), 2)  
+                #cv.floodFill(outputImg, mask, seed_point,self.__COL_D_RED)
+                cv.drawContours(outputImg, c, -1, self.__COL_D_RED, 2)  
                 if (cE < 0.5):
                     outText['smallDead'] +=1
                     outText['totalDead'] +=1
                 else:
                     outText['smallAlive'] +=1
                     outText['totalAlive'] +=1               
-                cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+                cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, self._COL_D_RED, 2)
             elif cArea < self.WORM_CLASSIFY_mid2big:
                 outText['totalNbr'] +=1
-                #cv.floodFill(outputImg, mask, seed_point,(0,255,0))  
-                cv.drawContours(outputImg, c, -1, (0,255,0), 2)
+                #cv.floodFill(outputImg, mask, seed_point,self.__COL_D_GREEN)  
+                cv.drawContours(outputImg, c, -1, self.__COL_D_GREEN, 2)
                 if (cE < 0.5):
                     outText['middleDead'] +=1
                     outText['totalDead'] +=1
                 else:
                     outText['middleAlive'] +=1
                     outText['totalAlive'] +=1            
-                cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, self._COL_D_GREEN, 2)
             elif cArea < self.WORM_CLASSIFY_big2top:
                 outText['totalNbr'] +=1
-                #cv.floodFill(outputImg, mask, seed_point,(255,0,0))  
-                cv.drawContours(outputImg, c, -1, (255,0,0), 2)
+                #cv.floodFill(outputImg, mask, seed_point,self._COL_D_BLUE)  
+                cv.drawContours(outputImg, c, -1, self._COL_D_BLUE, 2)
                 if (cE < 0.5):
                     outText['bigDead'] +=1
                     outText['totalDead'] +=1
                 else:
                     outText['bigAlive'] +=1
                     outText['totalAlive'] +=1                        
-                cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+                cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, self._COL_D_BLUE, 2)
         #叠加统计结果
         if (addupSet == True):
             font = cv.FONT_HERSHEY_SIMPLEX
-            cv.putText(outputImg, str("XHT: " + str(outText)), (10, 30), font, 0.7, (0, 0, 255), 2, cv.LINE_AA)
+            cv.putText(outputImg, str("XHT: " + str(outText)), (10, 30), font, 0.7, self._COL_D_RED, 2, cv.LINE_AA)
         return outputImg, outText;
 
 
@@ -1060,7 +1060,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         outputText['validNbr'] = findCnt
         if (addupSet == True):
             font = cv.FONT_HERSHEY_SIMPLEX
-            cv.putText(outputImg, str("XHT: " + str(outputText)), (10, 30), font, 0.7, (0, 0, 255), 2, cv.LINE_AA)
+            cv.putText(outputImg, str("XHT: " + str(outputText)), (10, 30), font, 0.7, self._COL_D_RED, 2, cv.LINE_AA)
         
         #反馈结果
         outputFn = fileNukeName
@@ -1068,9 +1068,15 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         cv.destroyAllWindows()
         return outputText['validNbr']
 
-    #细胞识别函数  #分层细胞计数
+
+    
+    '''
+    #
+    # 细胞识别函数  #分层细胞计数
+    #
+    '''
     def func_vision_flu_stack_count(self, fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet):
-        #第0步: 处理参数，确保奇数性质的参数
+        #处理参数，确保奇数性质的参数
         if dilateBlkSize == 0:
             dilateBlkSize = 3
         if ((dilateBlkSize//2)*2) == dilateBlkSize:
@@ -1091,34 +1097,56 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             print("L2VISCFY: Read file error, errinfo = ", str(err))
             return -2;
 
-        #寻找人工标定  #寻找标定线 寻找右下半部分
+        #寻找人工标定  #寻找标定线 寻找右下半部分  #寻找黄色标定线
+        #两种直线寻找方案都验证了，都好使！
         b, g, r = cv.split(inputImg)
         grayImg = cv.cvtColor(inputImg, cv.COLOR_BGR2GRAY)
         delImg = grayImg - b
         diImg = self.tup_dilate(delImg, 8)
-        ctImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_contours(diImg, 1000, 4000, 0.001, 0.5, False, False)
+        ctImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_max_contours(diImg, 1000, 5000, 0.001, 0.5, False, False)
         if (findCnt!=1):
             return -3;
-        imgRight = self.tup_cut_left_img(inputImg, rect[0], rect[2])
+        testFlag = False
+        if (testFlag == True):
+            cv.drawContours(ctImg, outCt, -1, self._COL_D_YELLOW, 2)
+            cv.imshow("Finding Yellow Line", ctImg)
+            sp = ctImg.shape
+            #(startPoint, endPoint) = self.tup_cal_rect_line(rect[0], rect[2], (sp[0], sp[1]))
+            (startPoint, endPoint) = self.tup_siml_line_by_contour(ctImg, outCt)
+            cv.line(inputImg, startPoint, endPoint, self._COL_D_RED, 2)
+            cv.imshow("Line Cut Image", inputImg)
+            cv.waitKey()
+        lineOutImg = self.tup_cut_line_out_img(inputImg, rect[0], rect[2])
+        
+        #使用黄色线，将正方形区域框定下来，然后再寻找外接框
+        #可以考虑使用，使用下面的技巧（多边形技巧），将这个定点多边形搞出来，然后取出限定正方形内的多边形图像
+        tpList = self.tup_find_retg_area(lineOutImg, rect)
+        rtgImg = self.tup_copy_contour_img(inputImg, tpList)
+        testFlag = False
+        if (testFlag == True):
+            cv.drawContours(inputImg, [tpList], -1, self._COL_D_BLUE, 2)
+            #tarImg = cv.polylines(inputImg, [tpList], True, self._COL_D_RED, 2)
+            cv.imshow("tpList show", inputImg)
+            cv.imshow("reTangle show", rtgImg)
+            cv.waitKey()
         
         #确定目标区域范围
-        targetImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_max_contours_itp(imgRight, 335, 5, 1000, 200000, 0.001, 1, False, False)
+        targetImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_max_contours_itp(rtgImg, 223, 5, 2000, 200000, 0.001, 1, False, False)
         testFlag = False
         if (testFlag == True):
             outCt2 = cv.convexHull(outCt)
-            tarImg = cv.polylines(inputImg, [outCt2], True, (0, 0, 255), 1)
-            cv.drawContours(inputImg, outCt2, -1, (0, 255, 255), 4)
-            cv.imshow("Target1", tarImg)
+            tar2Img = inputImg.copy()
+            cv.drawContours(tar2Img, outCt2, -1, self._COL_D_YELLOW, 2)
+            tarImg = cv.polylines(tar2Img, [outCt2], True, self._COL_D_RED, 1)
+            cv.fillPoly(tar2Img, [outCt2], 255)
+            cv.imshow("Target contour with flood filling", tarImg)
+            cv.waitKey()
         if (findCnt != 1):
             return -4;
         
-        #将最终区域整出来
-        cropImg = self.tup_copy_box_img(inputImg, outBox)
-        #cv.imshow("Target2", cropImg)
-
-        #使用外框，将图像抠出来
-        #dst = cv.bitwise_and(inputImg, inputImg, mask=outCt)
-        #cv.imshow("Target", dst)
+        #将最终区域扣出来
+        cropImg = self.tup_copy_contour_img(inputImg, outCt)
+        #cv.imshow("Target Cut image", cropImg)
         #cv.waitKey()
         
         #综合识别处理过程 (圆的喜欢，憋的不喜欢)
@@ -1127,13 +1155,18 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         outputText['validNbr'] = findCnt
         if (addupSet == True):
             font = cv.FONT_HERSHEY_SIMPLEX
-            cv.putText(outputImg, str("XHT: " + str(outputText)), (10, 30), font, 0.7, (0, 0, 255), 2, cv.LINE_AA)
+            cv.putText(outputImg, str("XHT: " + str(outputText)), (10, 30), font, 0.7, self._COL_D_RED, 2, cv.LINE_AA)
          
         #反馈结果
         outputFn = fileNukeName
         cv.imwrite(outputFn, outputImg)
         cv.destroyAllWindows()
         return outputText['validNbr']
+
+
+
+
+
     
     '''
     #
@@ -1160,11 +1193,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
 #         angle = rect[2]
 #         #取得图像的尺度
 #         sp = inputImg.shape
-#         resLine = self.tup_cal_xy_line(radCent, angle, (sp[0], sp[1]))
-#         cv.line(ctImg, resLine[0], resLine[1], (0, 255, 0), 1)
+#         resLine = self.tup_cal_rect_line(radCent, angle, (sp[0], sp[1]))
+#         cv.line(ctImg, resLine[0], resLine[1], self._COL_D_GREEN, 1)
 #         
 #         #寻找右下半部分
-#         imgRight = self.tup_cut_left_img(inputImg, radCent, angle)
+#         imgRight = self.tup_cut_line_out_img(inputImg, radCent, angle)
 #         cv.imshow("imgRight", imgRight)
 #         
 #         #第1步：灰度图像

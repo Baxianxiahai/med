@@ -32,6 +32,7 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 //=ZJL, 2019/1/8, CURRENT_SW_DELIVERY R1.55 =>CEBS
 = 完善荧光图像处理算法
 = 基本完成
+= 优化荧光分层图像识别功能
 
 //=ZJL, 2019/1/4, CURRENT_SW_DELIVERY R1.54 =>CEBS
 = 将去噪声处理、灰度处理等过程，做成标准函数库
