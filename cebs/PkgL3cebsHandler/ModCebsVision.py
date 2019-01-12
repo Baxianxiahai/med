@@ -22,6 +22,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 from   ctypes import c_uint8
+from ctypes import *
 import win32com.client  #pip install pyWin32
 from win32com.client import GetObject
 #import usb.core
@@ -228,20 +229,82 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             return TUP_FAILURE;
         #正确的情况
         try:
+                        #toupcam
+#             strDllPath = "D:\IHUSRC\med\cebs\\" + "toupcam.dll"
+#             print(strDllPath)
+#             objDll = ctypes.windll.LoadLibrary(strDllPath)
+#             openvalue = objDll.Toupcam_Open
+#             openvalue.restypes = c_void_p
+#             callres = openvalue(NULL)
+#             print("callres",callres)
+#             ret1 = objDll.Toupcam_Close(callres)
+#             print("ret1",ret1)
+#             openvalue1 = objDll.Toupcam_Open
+#             openvalue1.restypes = c_void_p
+#             callres1 = openvalue1(NULL)
+#             print("callres1",callres1)
+#             api = objDll.Toupcam_put_AutoExpoEnable
+#             api.argtypes = [c_void_p,c_uint]
+#             res = api(callres1,True)
+#             print("res=",res)
+#             time =objDll.Toupcam_put_ExpoTime
+#             time.argtypes = [c_void_p,c_uint]   
+#             ret = time(callres1,20000)
+#             print("ret",ret)
+        
+            ###############################################
+            #nncam 
+            strDllPath = "D:\IHUSRC\med\cebs\\" + "nncam.dll"
+            print(strDllPath)           
+            objDll = ctypes.windll.LoadLibrary(strDllPath)
+            openvalue = objDll.Nncam_Open
+            openvalue.restypes = c_void_p
+            callres = openvalue(NULL)
+            #print("callres",callres)
+            ret1 = objDll.Nncam_Close(callres)
+            #print("ret1",ret1)
+            openvalue1 = objDll.Nncam_Open
+            openvalue1.restypes = c_void_p
+            callres1 = openvalue1(NULL)
+            #print("callres1",callres1)
+            
+#             get = objDll.Nncam_get_Option
+#             get.argtypes =[c_void_p,c_uint,c_void_p]
+#             getmode = get(callres1,0,NULL)
+#             print("getmode",getmode)
+            #pull mode & push mode
+            change_mode = objDll.Nncam_StartPullModeWithWndMsg(callres1)
+            print("change_mode",change_mode)
+            temp = objDll.Nncam_get_Option(callres1,13)
+            print("temp",temp)
+            mode = objDll.Nncam_put_Option(callres1,11,1)
+            #mode.argtypes[c_void_p,c_uint,c_uint]
+            #retmode = mode(callres1,1,1)
+            print("mode",mode)
+            api = objDll.Nncam_put_AutoExpoEnable(callres1,0)
+            #api.argtypes = [c_void_p,c_uint]
+            #res = api(callres1,1)
+            print("api=",api)
+            time =objDll.Nncam_put_ExpoTime(callres1,20000)
+            #time.argtypes = [c_void_p,c_uint]   
+            #ret = time(callres1,20000)
+            print("time",time)
             self.capInit = cv.VideoCapture(self.camera_nbr) #CHECK WITH ls /dev/video*　RESULT
             #print("Global width = %d, height = %d" % (_TUP_VISION_CAMBER_RES_WIDTH, _TUP_VISION_CAMBER_RES_HEIGHT))
             self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, _TUP_VISION_CAMBER_RES_WIDTH)
             self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, _TUP_VISION_CAMBER_RES_HEIGHT)
             #试验型拍照设计方法
-            self.capInit.set(cv.CAP_PROP_BRIGHTNESS, 1)
+            self.capInit.set(cv.CAP_PROP_BRIGHTNESS, 0)
             print("CAP_PROP_BRIGHTNESS = ", self.capInit.get(cv.CAP_PROP_BRIGHTNESS))
-            self.capInit.set(cv.CAP_PROP_CONTRAST, 40)
+            self.capInit.set(cv.CAP_PROP_CONTRAST, 0)
             print("CAP_PROP_CONTRAST = ", self.capInit.get(cv.CAP_PROP_CONTRAST))
-            self.capInit.set(cv.CAP_PROP_SATURATION, 50)
+            self.capInit.set(cv.CAP_PROP_SATURATION, 128)
             print("CAP_PROP_SATURATION = ", self.capInit.get(cv.CAP_PROP_SATURATION))
-            self.capInit.set(cv.CAP_PROP_HUE, 50)
+            self.capInit.set(cv.CAP_PROP_HUE, 0)
             print("CAP_PROP_HUE = ", self.capInit.get(cv.CAP_PROP_HUE))
-            self.capInit.set(cv.CAP_PROP_EXPOSURE, -3)
+            #self.capInit.set(cv.CAP_PROP_AUTO_EXPOSURE, 0.25)
+            #self.capInit.set(cv.CAP_PROP_EXPOSURE, -4)
+            self.funcVisionLogTrace(self.capInit.get(cv.CAP_PROP_EXPOSURE))
             print("CAP_PROP_EXPOSURE = ", self.capInit.get(cv.CAP_PROP_EXPOSURE))
             #自动曝光设置，没找到成功设置的方法
             #self.capInit.set(cv.CAP_PROP_AUTO_EXPOSURE, -1)
