@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['cebsMain.py'],
+a = Analysis(['tupMain.py'],
              pathex=['D:\\ihusrc\\med\\cebs'],
              binaries=[],
              datas=[],
@@ -23,7 +23,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='cebsMain',
+          name='tupMain',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,

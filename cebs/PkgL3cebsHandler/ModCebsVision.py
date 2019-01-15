@@ -68,6 +68,7 @@ from PkgL3cebsHandler.ModCebsCfg import *
 _TUP_VISION_DESC_LIST = [{'name':'OBVIOUS_UCMOS10000KPA', 'desc':'VID_0547&PID_6010', 'width':3584, 'height':2748},\
                          {'name':'OBVIOUS_E3ISPM05000KPA', 'desc':'VID_0547&PID_114C', 'width':2448, 'height':2048},\
                          {'name':'TOUPCAM_E3ISPM06300KPB', 'desc':'VID_0547&PID_1217', 'width':3072, 'height':2048},\
+                         {'name':'TOUPCAM_UCMOS05100KPA', 'desc':'VID_0547&PID_6510','width':2592,'height':1944},\
                          ]
 #分辨率必须根据设备型号，重新选择
 _TUP_VISION_CAMBER_RES_WIDTH = 3584
@@ -230,7 +231,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #正确的情况
         try:
                         #toupcam
-#             strDllPath = "D:\IHUSRC\med\cebs\\" + "toupcam.dll"
+#             strDllPath = sys.path[0] + str(os.sep) + "toupcam.dll"
 #             print(strDllPath)
 #             objDll = ctypes.windll.LoadLibrary(strDllPath)
 #             openvalue = objDll.Toupcam_Open
@@ -254,41 +255,42 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         
             ###############################################
             #nncam 
-            strDllPath = "D:\IHUSRC\med\cebs\\" + "nncam.dll"
-            print(strDllPath)           
-            objDll = ctypes.windll.LoadLibrary(strDllPath)
-            openvalue = objDll.Nncam_Open
-            openvalue.restypes = c_void_p
-            callres = openvalue(NULL)
-            #print("callres",callres)
-            ret1 = objDll.Nncam_Close(callres)
-            #print("ret1",ret1)
-            openvalue1 = objDll.Nncam_Open
-            openvalue1.restypes = c_void_p
-            callres1 = openvalue1(NULL)
-            #print("callres1",callres1)
-            
-#             get = objDll.Nncam_get_Option
-#             get.argtypes =[c_void_p,c_uint,c_void_p]
-#             getmode = get(callres1,0,NULL)
-#             print("getmode",getmode)
-            #pull mode & push mode
-            change_mode = objDll.Nncam_StartPullModeWithWndMsg(callres1)
-            print("change_mode",change_mode)
-            temp = objDll.Nncam_get_Option(callres1,13)
-            print("temp",temp)
-            mode = objDll.Nncam_put_Option(callres1,11,1)
-            #mode.argtypes[c_void_p,c_uint,c_uint]
-            #retmode = mode(callres1,1,1)
-            print("mode",mode)
-            api = objDll.Nncam_put_AutoExpoEnable(callres1,0)
-            #api.argtypes = [c_void_p,c_uint]
-            #res = api(callres1,1)
-            print("api=",api)
-            time =objDll.Nncam_put_ExpoTime(callres1,20000)
-            #time.argtypes = [c_void_p,c_uint]   
-            #ret = time(callres1,20000)
-            print("time",time)
+#             strDllPath = sys.path[0] + str(os.sep) + "nncam.dll"
+#             print(strDllPath)           
+#             objDll = ctypes.windll.LoadLibrary(strDllPath)
+#             print("objDll",objDll)
+#             openvalue = objDll.Nncam_Open
+#             openvalue.restypes = c_void_p
+#             callres = openvalue(NULL)
+#             #print("callres",callres)
+#             ret1 = objDll.Nncam_Close(callres)
+#             #print("ret1",ret1)
+#             openvalue1 = objDll.Nncam_Open
+#             openvalue1.restypes = c_void_p
+#             callres1 = openvalue1(NULL)
+#             #print("callres1",callres1)
+#             
+# #             get = objDll.Nncam_get_Option
+# #             get.argtypes =[c_void_p,c_uint,c_void_p]
+# #             getmode = get(callres1,0,NULL)
+# #             print("getmode",getmode)
+#             #pull mode & push mode
+#             change_mode = objDll.Nncam_StartPullModeWithWndMsg(callres1)
+#             print("change_mode",change_mode)
+#             temp = objDll.Nncam_get_Option(callres1,13)
+#             print("temp",temp)
+#             mode = objDll.Nncam_put_Option(callres1,11,1)
+#             #mode.argtypes[c_void_p,c_uint,c_uint]
+#             #retmode = mode(callres1,1,1)
+#             print("mode",mode)
+#             api = objDll.Nncam_put_AutoExpoEnable(callres1,1)
+#             #api.argtypes = [c_void_p,c_uint]
+#             #res = api(callres1,1)
+#             print("api=",api)
+#             time =objDll.Nncam_put_ExpoTime(callres1,20000)
+#             #time.argtypes = [c_void_p,c_uint]   
+#             #ret = time(callres1,20000)
+#             print("time",time)
             self.capInit = cv.VideoCapture(self.camera_nbr) #CHECK WITH ls /dev/video*　RESULT
             #print("Global width = %d, height = %d" % (_TUP_VISION_CAMBER_RES_WIDTH, _TUP_VISION_CAMBER_RES_HEIGHT))
             self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, _TUP_VISION_CAMBER_RES_WIDTH)
@@ -303,7 +305,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             self.capInit.set(cv.CAP_PROP_HUE, 0)
             print("CAP_PROP_HUE = ", self.capInit.get(cv.CAP_PROP_HUE))
             #self.capInit.set(cv.CAP_PROP_AUTO_EXPOSURE, 0.25)
-            #self.capInit.set(cv.CAP_PROP_EXPOSURE, -4)
+            self.capInit.set(cv.CAP_PROP_EXPOSURE, -3)
             self.funcVisionLogTrace(self.capInit.get(cv.CAP_PROP_EXPOSURE))
             print("CAP_PROP_EXPOSURE = ", self.capInit.get(cv.CAP_PROP_EXPOSURE))
             #自动曝光设置，没找到成功设置的方法
