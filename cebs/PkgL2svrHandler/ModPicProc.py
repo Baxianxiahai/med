@@ -555,7 +555,16 @@ class TupClsPicProc(object):
         return findCnt, circles
 
     #霍夫变换方法集成使用
+    #参数取值范围保护
     def tup_itp_hough_transform(self, imgIn, minRad, maxRad, minDist):
+        if (minDist<=0):
+            minDist=1
+        if (minRad<=0):
+            minRad=1
+        if (maxRad<=1):
+            maxRad=2
+        if (maxRad < minRad):
+            maxRad = minRad
         findCnt, circles = self.tup_find_circle_area(imgIn, minRad, maxRad, minDist)
         if (findCnt == 0):
             return -1, -1
@@ -563,9 +572,24 @@ class TupClsPicProc(object):
         for i in circles[0, :]:
             cv.circle(outImg,(i[0], i[1]), i[2], self._COL_D_RED, 1)
         return outImg, findCnt, circles
-
-
-
+    
+    #通用显示照片方法
+    def tup_img_show(self, imgIn, title):
+        winapi = ctypes.windll.user32
+        height = winapi.GetSystemMetrics(1)
+        width = winapi.GetSystemMetrics(0)
+        print("Width/Height=", width, height)
+        sp = imgIn.shape
+        coef1 = math.ceil(height/sp[0])
+        coef2 = math.ceil(width/sp[1])
+        if (coef1>coef2):
+            coef = coef1
+        else:
+            coef = coef2
+        cv.namedWindow(title, cv.WINDOW_NORMAL)
+        cv.resizeWindow(title, sp[0]//coef, sp[1]//coef)
+        cv.imshow(title, imgIn)
+        cv.waitKey()
 
 
 

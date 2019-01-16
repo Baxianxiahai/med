@@ -498,7 +498,7 @@ class clsL0_MedSpsPar():
 
     #马达归零最大循环次数
     #确保归零的时间预算 = 30秒 = 次数 x 采样间隔（0.2s)
-    MOTOR_MAX_RETRY_TIMES = 150 #正常需要放置30次数，
+    MOTOR_MAX_RETRY_TIMES = 15 #正常需要放置30次数，
 
     #ROUNDS of auto-pilot run
     PILOT_WOKING_ROUNDS_MAX = 5;

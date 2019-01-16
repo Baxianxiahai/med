@@ -65,10 +65,10 @@ from PkgL3cebsHandler.ModCebsCfg import *
 #  We just extract last time as our defined target normally.
 # 
 '''
-_TUP_VISION_DESC_LIST = [{'name':'OBVIOUS_UCMOS10000KPA', 'desc':'VID_0547&PID_6010', 'width':3584, 'height':2748},\
-                         {'name':'OBVIOUS_E3ISPM05000KPA', 'desc':'VID_0547&PID_114C', 'width':2448, 'height':2048},\
-                         {'name':'TOUPCAM_E3ISPM06300KPB', 'desc':'VID_0547&PID_1217', 'width':3072, 'height':2048},\
-                         {'name':'TOUPCAM_UCMOS05100KPA', 'desc':'VID_0547&PID_6510','width':2592,'height':1944},\
+_TUP_VISION_DESC_LIST = [{'name':'OBVIOUS_UCMOS10000KPA', 'desc':'VID_0547&PID_6010', 'width':3584, 'height':2748, 'usage':'通用白光场景型号'},\
+                         {'name':'OBVIOUS_E3ISPM05000KPA', 'desc':'VID_0547&PID_114C', 'width':2448, 'height':2048, 'usage':'荧光尝试1，放弃'},\
+                         {'name':'TOUPCAM_E3ISPM06300KPB', 'desc':'VID_0547&PID_1217', 'width':3072, 'height':2048, 'usage':'荧光目标型号'},\
+                         {'name':'TOUPCAM_UCMOS05100KPA', 'desc':'VID_0547&PID_6510','width':2592,'height':1944, 'usage':'新华医院独有白光型号'},\
                          ]
 #分辨率必须根据设备型号，重新选择
 _TUP_VISION_CAMBER_RES_WIDTH = 3584
@@ -747,7 +747,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             print("L2VISCFY: File %s not exist!" % (dirFn))
             return;
         try:
-            inputImg = cv.imread(dirFn)
+            #inputImg = cv.imread(dirFn)
+            inputImg = cv.imdecode(np.fromfile(dirFn, dtype=np.uint8), cv.IMREAD_COLOR)
         except Exception as err:
             print("L2VISCFY: Read file error, errinfo = ", str(err))
             return;
@@ -920,7 +921,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             print("L2VISCFY: File %s not exist!" % (fileName))
             return -1,fileName,str(NULL);
         try:
-            inputImg = cv.imread(fileName)
+            #inputImg = cv.imread(fileName)
+            inputImg = cv.imdecode(np.fromfile(fileName, dtype=np.uint8), cv.IMREAD_COLOR)
         except Exception as err:
             print("L2VISCFY: Read file error, errinfo = ", str(err))
             return -2;
@@ -1037,8 +1039,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
                 pass
             elif cArea < self.WORM_CLASSIFY_small2mid:
                 outText['totalNbr'] +=1
-                #cv.floodFill(outputImg, mask, seed_point,self.__COL_D_RED)
-                cv.drawContours(outputImg, c, -1, self.__COL_D_RED, 2)  
+                #cv.floodFill(outputImg, mask, seed_point,self._COL_D_RED)
+                cv.drawContours(outputImg, c, -1, self._COL_D_RED, 2)  
                 if (cE < 0.5):
                     outText['smallDead'] +=1
                     outText['totalDead'] +=1
@@ -1048,8 +1050,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
                 cv.putText(outputImg, str(cE), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, self._COL_D_RED, 2)
             elif cArea < self.WORM_CLASSIFY_mid2big:
                 outText['totalNbr'] +=1
-                #cv.floodFill(outputImg, mask, seed_point,self.__COL_D_GREEN)  
-                cv.drawContours(outputImg, c, -1, self.__COL_D_GREEN, 2)
+                #cv.floodFill(outputImg, mask, seed_point,self._COL_D_GREEN)  
+                cv.drawContours(outputImg, c, -1, self._COL_D_GREEN, 2)
                 if (cE < 0.5):
                     outText['middleDead'] +=1
                     outText['totalDead'] +=1
@@ -1107,7 +1109,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #使用LOCAL方式进行叠加，不再使用全局属性，简化处理
         outputText = {'totalNbr':0, 'validNbr':0}
         
-        #Reading file: 读取文件
+        #Reading file: 读取文件，并归一化到彩色图像
         if (os.path.exists(fileName) == False):
             errStr = "L2VISCFY: File %s not exist!" % (fileName)
             self.medErrorLog(errStr);
@@ -1115,10 +1117,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             return -1;
         try:
             inputImg = cv.imread(fileName)
+            inputImg = cv.imdecode(np.fromfile(fileName, dtype=np.uint8), cv.IMREAD_COLOR)
         except Exception as err:
             print("L2VISCFY: Read file error, errinfo = ", str(err))
             return -2;
-        
+                
         #暂时采用霍夫变换算法。如果需要，将采用图像形态学算法
         algoSelction = 1
         #霍夫变换找圆形算法
@@ -1172,7 +1175,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             print("L2VISCFY: File %s not exist!" % (fileName))
             return -1;
         try:
-            inputImg = cv.imread(fileName)
+            #inputImg = cv.imread(fileName)
+            inputImg = cv.imdecode(np.fromfile(fileName, dtype=np.uint8), cv.IMREAD_COLOR)
         except Exception as err:
             print("L2VISCFY: Read file error, errinfo = ", str(err))
             return -2;
@@ -1184,8 +1188,9 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         grayImg = cv.cvtColor(inputImg, cv.COLOR_BGR2GRAY)
         delImg = grayImg - b
         diImg = self.tup_dilate(delImg, 8)
-        #cv.imshow("Yellow Pic", delImg)
-        ctImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_max_contours(delImg, 1000, 50000, 0.001, 0.5, False, False)
+        ctImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_max_contours(diImg, 10000, 100000, 0.001, 0.5, True, True)
+        cv.imwrite("findYellowLineRes.jpg", ctImg)
+        #print("totalCnt and findCnt = %d/%d" % (totalCnt, findCnt))
         if (findCnt!=1):
             return -3;
         testFlag = False
@@ -1208,21 +1213,27 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         if (testFlag == True):
             cv.drawContours(inputImg, [tpList], -1, self._COL_D_BLUE, 2)
             #tarImg = cv.polylines(inputImg, [tpList], True, self._COL_D_RED, 2)
+            cv.resizeWindow((inputImg.shape)[0]//2, (inputImg.shape)[1]//1)
             cv.imshow("tpList show", inputImg)
+            cv.resizeWindow((rtgImg.shape)[0]//2, (rtgImg.shape)[1]//1)
             cv.imshow("reTangle show", rtgImg)
             cv.waitKey()
         
         #确定目标区域范围
         targetImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_max_contours_itp(rtgImg, 223, 5, 2000, 200000, 0.001, 1, False, False)
-        testFlag = False
+        testFlag = True
         if (testFlag == True):
             outCt2 = cv.convexHull(outCt)
             tar2Img = inputImg.copy()
             cv.drawContours(tar2Img, outCt2, -1, self._COL_D_YELLOW, 2)
             tarImg = cv.polylines(tar2Img, [outCt2], True, self._COL_D_RED, 1)
             cv.fillPoly(tar2Img, [outCt2], 255)
-            cv.imshow("Target contour with flood filling", tarImg)
-            cv.waitKey()
+#             sp = tarImg.shape
+#             cv.namedWindow("Target contour with flood filling", cv.WINDOW_NORMAL)
+#             cv.resizeWindow("Target contour with flood filling", sp[0]//2, sp[1]//2)
+#             cv.imshow("Target contour with flood filling", tarImg)
+#             cv.waitKey()
+        self.tup_img_show(tar2Img, "Target contour with flood filling")
         if (findCnt != 1):
             return -4;
         
