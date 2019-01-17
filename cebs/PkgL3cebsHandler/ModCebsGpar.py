@@ -157,7 +157,7 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
     
     def func_timer_train_process(self):
         self.timerTrainCnt += 1
-        if (self.timerTrainCnt >= 100):
+        if (self.timerTrainCnt >= 150):
             self.timerTrainCnt = 0;
             self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_GPAR, "Time out to wait training, failure!")
             mbuf = {}

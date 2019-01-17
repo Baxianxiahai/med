@@ -323,10 +323,11 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.picSeqCnt += 1
         if (self.picSeqCnt > GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH):
             self.funcCtrlSchdLogTrace("L3SCHD: Normal picture capture accomplish successful!")
+            self.msg_send(TUP_MSGID_CTRL_SCHD_MV_ZERO, TUP_TASK_ID_CTRL_SCHD, "")
             self.fsm_set(self._STM_ACTIVE)
             #是否触发拍照完成后自动识别
             if (GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET == True):
-                self.msg_send(TUP_MSGID_CTRL_SCHD_CAPPIC_START, TUP_TASK_ID_CTRL_SCHD, "")
+                self.msg_send(TUP_MSGID_CTRL_SCHD_CFYPIC_START, TUP_TASK_ID_CTRL_SCHD, "")
             return TUP_SUCCESS;
 
         #生成文件名字
@@ -408,6 +409,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.picSeqCnt += 1
         if (self.picSeqCnt > GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH):
             self.funcCtrlSchdLogTrace("L3SCHD: Flu picture capture accomplish successful!")
+            self.msg_send(TUP_MSGID_CTRL_SCHD_MV_ZERO, TUP_TASK_ID_CTRL_SCHD, "")
             self.fsm_set(self._STM_ACTIVE)
             return TUP_SUCCESS;
 
@@ -476,7 +478,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         if (GLPLT_PAR_OFC.HB_TARGET_TYPE == GLPLT_PAR_OFC.HB_TARGET_12_STANDARD):
             return self._MOD_CTRL_SCHD_HB12[index];
         if (GLPLT_PAR_OFC.HB_TARGET_TYPE == GLPLT_PAR_OFC.HB_TARGET_6_STANDARD):
-            return self._MOD_CTRL_SCHD_HB66[index];     
+            return self._MOD_CTRL_SCHD_HB6[index];     
         else:
             return index;
 
@@ -530,8 +532,8 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         #CREATE FILE NAME
         fileName = self.getStoredFileName(batch, fileNbr);
         fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
-        print("file name",fileName)
-        print("fileNukeName",fileNukeName)
+        #print("file name",fileName)
+        #print("fileNukeName",fileNukeName)
         if (fileName == None) or (fileNukeName == None):
             self.updateBatCntWithIniFileSyned(False, GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT*(-1), 0)
             self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification finished: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
