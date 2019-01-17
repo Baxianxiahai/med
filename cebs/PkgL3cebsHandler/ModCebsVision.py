@@ -21,6 +21,7 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import multiprocessing
 from   ctypes import c_uint8
 from ctypes import *
 import win32com.client  #pip install pyWin32
@@ -31,6 +32,8 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import pyqtSlot
 from multiprocessing import Queue, Process
 from _overlapped import NULL
+
+
 
 from PkgL1vmHandler.ModVmCfg import *
 from PkgL1vmHandler.ModVmLayer import *
@@ -71,8 +74,9 @@ _TUP_VISION_DESC_LIST = [{'name':'OBVIOUS_UCMOS10000KPA', 'desc':'VID_0547&PID_6
                          {'name':'TOUPCAM_UCMOS05100KPA', 'desc':'VID_0547&PID_6510','width':2592,'height':1944, 'usage':'新华医院独有白光型号'},\
                          ]
 #分辨率必须根据设备型号，重新选择
-_TUP_VISION_CAMBER_RES_WIDTH = 3584
-_TUP_VISION_CAMBER_RES_HEIGHT = 2748
+
+_TUP_VISION_CAMBER_RES_WIDTH = 2592
+_TUP_VISION_CAMBER_RES_HEIGHT = 1944
 
 
 
@@ -291,10 +295,13 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
 #             #time.argtypes = [c_void_p,c_uint]   
 #             #ret = time(callres1,20000)
 #             print("time",time)
+            
             self.capInit = cv.VideoCapture(self.camera_nbr) #CHECK WITH ls /dev/video*　RESULT
-            #print("Global width = %d, height = %d" % (_TUP_VISION_CAMBER_RES_WIDTH, _TUP_VISION_CAMBER_RES_HEIGHT))
+            print("Global width = %d, height = %d" % (_TUP_VISION_CAMBER_RES_WIDTH, _TUP_VISION_CAMBER_RES_HEIGHT))
             self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, _TUP_VISION_CAMBER_RES_WIDTH)
             self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, _TUP_VISION_CAMBER_RES_HEIGHT)
+            print("WIDTH",_TUP_VISION_CAMBER_RES_WIDTH)
+            print("HEIGHT",_TUP_VISION_CAMBER_RES_HEIGHT)
             #试验型拍照设计方法
             self.capInit.set(cv.CAP_PROP_BRIGHTNESS, 0)
             print("CAP_PROP_BRIGHTNESS = ", self.capInit.get(cv.CAP_PROP_BRIGHTNESS))
@@ -1378,7 +1385,8 @@ class clsCamDevHdl():
                     #将分辨率赋给全局变量
                     _TUP_VISION_CAMBER_RES_WIDTH = dev['width']
                     _TUP_VISION_CAMBER_RES_HEIGHT = dev['height']
-                    
+                    print("temp value w",_TUP_VISION_CAMBER_RES_WIDTH)
+                    print("temp value h",_TUP_VISION_CAMBER_RES_HEIGHT)
         #存入临时文件
         f = open("tempCamId.txt", "w+")
         a = ("%d" % (camId))

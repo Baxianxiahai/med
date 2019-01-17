@@ -467,86 +467,25 @@ class clsL1_ConfigOpr():
         return res;
 
     def combineFileName(self, batch, fileNbr):
-        if (0<fileNbr<13):
-            return str("batch#" + str(batch) + "FileName#" + "A"+ str(fileNbr))
-        if (12<fileNbr<25):
-            return str("batch#" + str(batch) + "FileName#" + "B"+ str(fileNbr-12))
-        if (24<fileNbr<37):
-            return str("batch#" + str(batch) + "FileName#" + "C"+ str(fileNbr-24))
-        if (36<fileNbr<49):
-            return str("batch#" + str(batch) + "FileName#" + "D"+ str(fileNbr-36))
-        if (48<fileNbr<61):
-            return str("batch#" + str(batch) + "FileName#" + "E"+ str(fileNbr-48))
-        if (60<fileNbr<73):
-            return str("batch#" + str(batch) + "FileName#" + "F"+ str(fileNbr-60))
-        if (72<fileNbr<85):
-            return str("batch#" + str(batch) + "FileName#" + "G"+ str(fileNbr-72))
-        if (84<fileNbr<97):
-            return str("batch#" + str(batch) + "FileName#" + "H"+ str(fileNbr-84))
+        return str("batch#" + str(batch) + "FileName#" + self.func_cvt_indexfilehole(fileNbr))
 
     def combineScaleFileName(self, batch, fileNbr):
-        return str("scale_batch#" + str(batch) + "FileName#" + str(fileNbr))
+        return str("scale_batch#" + str(batch) + "FileName#" + self.func_cvt_indexfilehole(fileNbr))
 
     def combineVideoName(self, batch, fileNbr):
-        return str("batch#" + str(batch) + "VideoName#" + str(fileNbr))
+        return str("batch#" + str(batch) + "VideoName#" + self.func_cvt_indexfilehole(fileNbr))
 
-    def combineFileNameWithDir(self, batch, fileNbr):
-        if (0<fileNbr<13):
-            fileName = str("batch#" + str(batch) + "FileName#" + "A"+ str(fileNbr))
-        if (12<fileNbr<25):
-            fileName = str("batch#" + str(batch) + "FileName#" + "B"+ str(fileNbr-12))
-        if (24<fileNbr<37):
-            fileName = str("batch#" + str(batch) + "FileName#" + "C"+ str(fileNbr-24))
-        if (36<fileNbr<49):
-            fileName = str("batch#" + str(batch) + "FileName#" + "D"+ str(fileNbr-36))
-        if (48<fileNbr<61):
-            fileName = str("batch#" + str(batch) + "FileName#" + "E"+ str(fileNbr-48))
-        if (60<fileNbr<73):
-            fileName = str("batch#" + str(batch) + "FileName#" + "F"+ str(fileNbr-60))
-        if (72<fileNbr<85):
-            fileName = str("batch#" + str(batch) + "FileName#" + "G"+ str(fileNbr-72))
-        if (84<fileNbr<97):
-            fileName = str("batch#" + str(batch) + "FileName#" + "H"+ str(fileNbr-84))
+    def combineFileNameWithDir(self, batch, fileNbr):  
+        fileName = str("batch#" + str(batch) + "FileName#" + self.func_cvt_indexfilehole(fileNbr))
         return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
 
     def combineScaleFileNameWithDir(self, batch, fileNbr):
-        if (0<fileNbr<13):
-            fileName = str("batch#" + str(batch) + "FileName#" + "A"+ str(fileNbr))
-        if (12<fileNbr<25):
-            fileName = str("batch#" + str(batch) + "FileName#" + "B"+ str(fileNbr-12))
-        if (24<fileNbr<37):
-            fileName = str("batch#" + str(batch) + "FileName#" + "C"+ str(fileNbr-24))
-        if (36<fileNbr<49):
-            fileName = str("batch#" + str(batch) + "FileName#" + "D"+ str(fileNbr-36))
-        if (48<fileNbr<61):
-            fileName = str("batch#" + str(batch) + "FileName#" + "E"+ str(fileNbr-48))
-        if (60<fileNbr<73):
-            fileName = str("batch#" + str(batch) + "FileName#" + "F"+ str(fileNbr-60))
-        if (72<fileNbr<85):
-            fileName = str("batch#" + str(batch) + "FileName#" + "G"+ str(fileNbr-72))
-        if (84<fileNbr<97):
-            fileName = str("batch#" + str(batch) + "FileName#" + "H"+ str(fileNbr-84))
-        #fileName = str("scale_batch#" + str(batch) + "FileName#" + str(fileNbr))
+        fileName = str("scale_batch#" + str(batch) + "FileName#" + self.func_cvt_indexfilehole(fileNbr))
         return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
     
     def combineFileNameVideoWithDir(self, batch, fileNbr):
-        if (0<fileNbr<13):
-            fileName = str("batch#" + str(batch) + "FileName#" + "A"+ str(fileNbr))
-        if (12<fileNbr<25):
-            fileName = str("batch#" + str(batch) + "FileName#" + "B"+ str(fileNbr-12))
-        if (24<fileNbr<37):
-            fileName = str("batch#" + str(batch) + "FileName#" + "C"+ str(fileNbr-24))
-        if (36<fileNbr<49):
-            fileName = str("batch#" + str(batch) + "FileName#" + "D"+ str(fileNbr-36))
-        if (48<fileNbr<61):
-            fileName = str("batch#" + str(batch) + "FileName#" + "E"+ str(fileNbr-48))
-        if (60<fileNbr<73):
-            fileName = str("batch#" + str(batch) + "FileName#" + "F"+ str(fileNbr-60))
-        if (72<fileNbr<85):
-            fileName = str("batch#" + str(batch) + "FileName#" + "G"+ str(fileNbr-72))
-        if (84<fileNbr<97):
-            fileName = str("batch#" + str(batch) + "FileName#" + "H"+ str(fileNbr-84))
-        #fileName = str("batch#" + str(batch) + "FileName#" + str(fileNbr))
+
+        fileName = str("batch#" + str(batch) + "FileName#" + self.func_cvt_indexfilehole(fileNbr))
         return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.mp4'  #.mp4, .avi
 
 
@@ -778,7 +717,47 @@ class clsL1_ConfigOpr():
 #     name,config=a.GetMachineTagandConfigure()
 #     print(name)
 #     print(config)
-
-
-
+    _MOD_CEBS_CFG_HB96 = ['A0', 'A1', 'A2', 'A3', 'A4','A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12',\
+                           'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11', 'B12',\
+                           'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12',\
+                           'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12',\
+                           'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 'E10', 'E11', 'E12',\
+                           'F1', 'F2', 'F3','F4', 'F5', 'F6', 'F7', 'F8' ,'F9', 'F10', 'F11', 'F12',\
+                           'G1', 'G2', 'G3', 'G4','G5','G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12',\
+                           'H1', 'H2', 'H3','H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'H10', 'H11', 'H12',\
+                           ];
+                           
+    _MOD_CEBS_CFG_HB48 = ['A0', 'A1', 'A2', 'A3', 'A4','A5', 'A6', 'A7', 'A8',\
+                           'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8',\
+                           'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8',\
+                           'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8',\
+                           'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8',\
+                           'F1', 'F2', 'F3','F4', 'F5', 'F6', 'F7', 'F8',\
+                           ];
+                           
+    _MOD_CEBS_CFG_HB24 = ['A0', 'A1', 'A2', 'A3', 'A4','A5', 'A6',\
+                           'B1', 'B2', 'B3', 'B4', 'B5', 'B6',\
+                           'C1', 'C2', 'C3', 'C4', 'C5', 'C6',\
+                           'D1', 'D2', 'D3', 'D4', 'D5', 'D6',\
+                           ];
+    _MOD_CEBS_CFG_HB12 = ['A0', 'A1', 'A2', 'A3', 'A4',\
+                           'B1', 'B2', 'B3', 'B4',\
+                           'C1', 'C2', 'C3', 'C4',\
+                           ];
+    _MOD_CEBS_CFG_HB6 = ['A0', 'A1', 'A2', 'A3',\
+                         'B1', 'B2', 'B3',\
+                          ];
+    def func_cvt_indexfilehole(self,index):
+        if (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_STANDARD):
+            return self._MOD_CEBS_CFG_HB96[index];
+        if (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_STANDARD):
+            return self._MOD_CEBS_CFG_HB48[index];
+        if (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_24_STANDARD):
+            return self._MOD_CEBS_CFG_HB24[index];
+        if (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_12_STANDARD):
+            return self._MOD_CEBS_CFG_HB12[index];
+        if (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_6_STANDARD):
+            return self._MOD_CEBS_CFG_HB6[index];     
+        else:
+            return index;
 

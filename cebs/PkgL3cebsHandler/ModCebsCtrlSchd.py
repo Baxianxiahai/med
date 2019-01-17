@@ -476,7 +476,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         if (GLPLT_PAR_OFC.HB_TARGET_TYPE == GLPLT_PAR_OFC.HB_TARGET_12_STANDARD):
             return self._MOD_CTRL_SCHD_HB12[index];
         if (GLPLT_PAR_OFC.HB_TARGET_TYPE == GLPLT_PAR_OFC.HB_TARGET_6_STANDARD):
-            return self._MOD_CTRL_SCHD_HB66[index];     
+            return self._MOD_CTRL_SCHD_HB6[index];     
         else:
             return index;
 
