@@ -54,6 +54,26 @@ class TupClsPicProc(object):
         Constructor
         '''
 
+    #通用显示照片方法
+    def tup_img_show(self, imgIn, title):
+        winapi = ctypes.windll.user32
+        height = winapi.GetSystemMetrics(1)
+        width = winapi.GetSystemMetrics(0)
+        #print("Width/Height=", width, height)
+        sp = imgIn.shape
+        coef1 = math.ceil(sp[0]/height)
+        coef2 = math.ceil(sp[1]/width)
+        #print(coef1, coef2)
+        if (coef1>coef2):
+            coef = coef1
+        else:
+            coef = coef2
+        #imgShow = cv.resize(imgIn, None, fx=coef, fy=coef, interpolation=cv.INTER_AREA)
+        cv.namedWindow(title, cv.WINDOW_NORMAL)
+        cv.resizeWindow(title, sp[0]//coef, sp[1]//coef)
+        cv.imshow(title, imgIn)
+        cv.waitKey()
+
     #黑白图像腐蚀 #cv.imshow("erode",dst)
     def tup_erode(self, grayImg, size):
         #gray=cv.cvtColor(img, cv.COLOR_RGB2GRAY)
@@ -109,6 +129,9 @@ class TupClsPicProc(object):
 
     #Gray transaction: 灰度化
     def tup_color2gray_adaptive(self, colorImg, size):
+        size = int(size)
+        if (size//2*2 == size):
+            size += 1
         new = np.zeros(colorImg.shape, np.uint8)
         for i in range(new.shape[0]):  #Axis-y/height/Rows
             for j in range(new.shape[1]):
@@ -544,12 +567,9 @@ class TupClsPicProc(object):
         blurImg = cv.medianBlur(grayImg, 3)
         #bgrImg = cv.cvtColor(blurImg, cv.COLOR_GRAY2BGR)  #变换回去，这里不需要
         circles = cv.HoughCircles(blurImg, cv.HOUGH_GRADIENT, 1.5, minDist, param1=100, param2=10, minRadius=minRad, maxRadius=maxRad)
-        findCnt = 0
+        findCnt=0
         try:
-            circles = np.uint16(np.around(circles))
-            for i in circles[0, :]:
-                findCnt+=1
-                #cv.circle(imgIn,(i[0], i[1]), i[2], self._COL_D_RED, 2)
+            findCnt = len(circles[0])
         except Exception:
             pass
         return findCnt, circles
@@ -569,29 +589,47 @@ class TupClsPicProc(object):
         if (findCnt == 0):
             return -1, -1
         outImg = imgIn.copy()
-        for i in circles[0, :]:
-            cv.circle(outImg,(i[0], i[1]), i[2], self._COL_D_RED, 1)
+        #(element[0], element[1])为圆形，element[2]为半径
+        for element in circles[0]:
+            cv.circle(outImg, (element[0], element[1]), element[2], self._COL_D_RED, 1)
         return outImg, findCnt, circles
     
-    #通用显示照片方法
-    def tup_img_show(self, imgIn, title):
-        winapi = ctypes.windll.user32
-        height = winapi.GetSystemMetrics(1)
-        width = winapi.GetSystemMetrics(0)
-        print("Width/Height=", width, height)
-        sp = imgIn.shape
-        coef1 = math.ceil(height/sp[0])
-        coef2 = math.ceil(width/sp[1])
-        if (coef1>coef2):
-            coef = coef1
-        else:
-            coef = coef2
-        cv.namedWindow(title, cv.WINDOW_NORMAL)
-        cv.resizeWindow(title, sp[0]//coef, sp[1]//coef)
-        cv.imshow(title, imgIn)
-        cv.waitKey()
-
-
+    #去掉不在目标区域的圆形
+    #对于嵌套LIST的高级应用技巧
+    def tup_remove_ex_contour_circle(self, contour, circleIn):
+        goodCircle = [[]]
+        badCircle = [[]]
+        for element in circleIn[0]:
+            if (cv.pointPolygonTest(contour, (element[0], element[1]), True) > 0):
+                goodCircle[0].append(element)
+            else:
+                badCircle[0].append(element)
+        return goodCircle, badCircle
+    
+    #校验图像
+    def tup_itp_circle_img_filter_out(self, imgIn, goodCircles, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, ceMax, areaTextFlag, ceTextFlag):
+        ckCircle = [[]]
+        cnt=0;
+        for element in goodCircles[0]:
+            cnt+=1
+            print("Progress cnt...", cnt)
+            originImg = imgIn.copy()
+            circleImg = imgIn.copy()
+            cv.circle(circleImg, (element[0], element[1]), element[2], self._COL_D_BLUE, -1)
+            maskedImg = originImg - circleImg
+            #self.tup_img_show(maskedImg, "S7: Individual circle 2")
+            s7Img, rect, totalCnt, findCnt, outCt, outBox = self.tup_itp_morphology_transform(maskedImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, ceMax, areaTextFlag, ceTextFlag)
+            #self.tup_img_show(s7Img, "S7: Individual circle 3")
+            if findCnt == 1:
+                ckCircle[0].append(element)
+        #Output
+        totalCnt = len(ckCircle[0])
+        print("totalCnt after check = ", totalCnt)
+        findCnt = totalCnt
+        outputImg = imgIn.copy()
+        for element in goodCircles[0]:
+            cv.circle(outputImg, (element[0], element[1]), element[2], self._COL_D_RED, 1)
+        return outputImg, totalCnt, findCnt, ckCircle
 
 
 

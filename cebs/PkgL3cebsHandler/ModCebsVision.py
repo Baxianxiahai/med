@@ -70,10 +70,9 @@ _TUP_VISION_DESC_LIST = [{'name':'OBVIOUS_UCMOS10000KPA', 'desc':'VID_0547&PID_6
                          {'name':'TOUPCAM_E3ISPM06300KPB', 'desc':'VID_0547&PID_1217', 'width':3072, 'height':2048, 'usage':'荧光目标型号'},\
                          {'name':'TOUPCAM_UCMOS05100KPA', 'desc':'VID_0547&PID_6510','width':2592,'height':1944, 'usage':'新华医院独有白光型号'},\
                          ]
-#分辨率必须根据设备型号，重新选择
+#分辨率必须根据设备型号，重新选择 #DEFAULT SELCTION
 _TUP_VISION_CAMBER_RES_WIDTH = 3584
 _TUP_VISION_CAMBER_RES_HEIGHT = 2748
-
 
 
 
@@ -94,6 +93,25 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     capInit = ''    #视频对象句柄
 
 
+    '''
+    #
+    # 1）全局重要参量，由界面通过独立过程更新过来
+    # 
+    # 2）为啥不是每次都通过作用消息带过来？因为这部分参数数量比较多，通过固定的[MID_GPAR_REFRESH_PAR]将参数更新到VISION模块，可以简化设计
+    # 另外还考虑到有些任务是在持续运行的，参数固定刷新，将有助于这些背景任务运行的稳定性
+    #
+    # 3）为了简化，这些全局参数不再通过全局级函数在全局传递了
+    # 
+    # WORM_CLASSIFY_base - 生物面积尺寸，最小
+    # WORM_CLASSIFY_small2mid -  - 生物面积尺寸，最大
+    # WORM_CLASSIFY_mid2big - 生物尺寸，最小
+    # WORM_CLASSIFY_big2top - 生物尺寸，最大
+    # FLU_CELL_COUNT_genr_par1 - 膨胀系数
+    # FLU_CELL_COUNT_genr_par2 - 腐蚀系数
+    # FLU_CELL_COUNT_genr_par3 - 圆形度NF2（低限）
+    # FLU_CELL_COUNT_genr_par4 - 圆形距离
+    #
+    '''
     def __init__(self, glPar):
         tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_VISION, taskName="TASK_VISION", glTabEntry=glPar)
         #ModVmLayer.TUP_GL_CFG.save_task_by_id(TUP_TASK_ID_VISION, self)
@@ -503,9 +521,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         mbuf['res'] = res
         mbuf['outputFn'] = outputFn
         mbuf['outText'] = outText
-        print(mbuf['res'])
-        print(mbuf['outputFn'])
-        print(mbuf['outText'])
         self.msg_send(TUP_MSGID_CRTS_PIC_CLFY_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         return TUP_SUCCESS;
 
@@ -540,7 +555,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         mbuf['fileName'] = 'tempPic.jpg'
         self.msg_send(TUP_MSGID_GPAR_PIC_TRAIN_RESP, TUP_TASK_ID_GPAR, mbuf)
         return TUP_SUCCESS;
-
+    
     #GPAR中的荧光细胞计数过程
     def fsm_msg_pic_flu_cell_count_req_rcv_handler(self, msgContent):
         picOrgFile = msgContent['fileName']
@@ -554,10 +569,13 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         dilateBlkSize = self.FLU_CELL_COUNT_genr_par1
         erodeBlkSize = self.FLU_CELL_COUNT_genr_par2
         cAreaMin = self.WORM_CLASSIFY_base
-        cAreaMax = self.WORM_CLASSIFY_big2top
+        cAreaMax = self.WORM_CLASSIFY_small2mid
+        cirRadMin = self.WORM_CLASSIFY_mid2big
+        cirRadMax = self.WORM_CLASSIFY_big2top
         ceMin = self.FLU_CELL_COUNT_genr_par3 #In NF2
         addupSet = self.WORM_CLASSIFY_addupSet
-        totalCnt = self.func_vision_flu_cell_count(fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet)
+        ceDist = self.FLU_CELL_COUNT_genr_par4
+        totalCnt = self.func_vision_flu_cell_count(fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet, cirRadMin, cirRadMax, ceDist)
         if (os.path.exists('tempPic.jpg') == False):
             mbuf['res'] = -2
             self.msg_send(TUP_MSGID_GPAR_PIC_FCC_RESP, TUP_TASK_ID_GPAR, mbuf)
@@ -583,10 +601,13 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         dilateBlkSize = self.FLU_CELL_COUNT_genr_par1
         erodeBlkSize = self.FLU_CELL_COUNT_genr_par2
         cAreaMin = self.WORM_CLASSIFY_base
-        cAreaMax = self.WORM_CLASSIFY_big2top
+        cAreaMax = self.WORM_CLASSIFY_small2mid
+        cirRadMin = self.WORM_CLASSIFY_mid2big
+        cirRadMax = self.WORM_CLASSIFY_big2top
         ceMin = self.FLU_CELL_COUNT_genr_par3 #In NF2
         addupSet = self.WORM_CLASSIFY_addupSet
-        totalCnt = self.func_vision_flu_stack_count(fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet)
+        ceDist = self.FLU_CELL_COUNT_genr_par4
+        totalCnt = self.func_vision_flu_stack_count(fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet, cirRadMin, cirRadMax, ceDist)
         if (os.path.exists('tempPic.jpg') == False):
             mbuf['res'] = -2
             self.msg_send(TUP_MSGID_GPAR_PIC_FSC_RESP, TUP_TASK_ID_GPAR, mbuf)
@@ -600,17 +621,22 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         return TUP_SUCCESS;
 
 
+
+
+
+
+
+
+
+
+
+
     '''
     #SERVICE PART: 业务部分的函数，功能处理函数
     #获取图像的函数
     '''
     #输出QT格式
     def func_cap_qt_vd_frame_in_calib_mode(self):
-#         try:
-#             self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, _TUP_VISION_CAMBER_RES_WIDTH//2)
-#             self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, _TUP_VISION_CAMBER_RES_HEIGHT//2)
-#         except Exception:
-#             pass
         try:
             ret, frame = self.capInit.read()
         except Exception:
@@ -630,11 +656,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     
     #输出OpenCV可以识别的格式 => 为了本地存储只用
     def func_cap_one_hole_frame_in_calib_mode(self):
-#         try:
-#             self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, _TUP_VISION_CAMBER_RES_WIDTH)
-#             self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, _TUP_VISION_CAMBER_RES_HEIGHT)
-#         except Exception:
-#             pass
         try:
             ret, frame = self.capInit.read()
         except Exception:
@@ -660,6 +681,10 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
 
 
 
+
+
+
+
     '''
     #
     #NEW截获图像
@@ -671,11 +696,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     #
     '''
     def func_pic_vid_cap_and_save_file_in_running_mode(self, fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur):
-#         try:
-#             self.capInit.set(cv.CAP_PROP_FRAME_WIDTH, _TUP_VISION_CAMBER_RES_WIDTH)
-#             self.capInit.set(cv.CAP_PROP_FRAME_HEIGHT, _TUP_VISION_CAMBER_RES_HEIGHT)
-#         except Exception:
-#             pass
         try:
             if not self.capInit.isOpened():
                 self.funcVisionErrTrace("L2VISCAP: Cannot open webcam!")
@@ -735,10 +755,15 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             return 2;
         return 1;
     
-
+    
+    '''
     #计算弧度的方式
     #INPUT: refRadInUm, 孔半径长度，um单位
     #OUTPUT: 对应比例关系
+    #
+    # 这个函数将通过霍夫变换，重新更新
+    #
+    '''
     def proc_algo_vis_get_radians(self, refRadInUm, dirFn, newFileFn):
         #Reading file: 读取文件
         if (os.path.exists(dirFn) == False):
@@ -760,7 +785,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         imgLeftBot = inputImg[orgH*2//3:orgH, 0:orgW//3]
         imgRightBot = inputImg[orgH*2//3:orgH, orgW*2//3:orgW]
         arcLenMax = math.sqrt((orgH//3) * (orgH//3) + (orgW//3) * (orgW//3))*2
-        #print("Max Arc length = ", arcLenMax)
         #比较
         flagIndex = 0
         arcSave = 0
@@ -822,6 +846,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         cv.putText(inputImg, '500um', (start[0], start[1]-10), cv.FONT_HERSHEY_SIMPLEX, 0.5, self._COL_D_RED, 1)
         #cv.imshow("inputImg", inputImg)
         cv.imwrite(newFileFn, inputImg)
+
 
 
     '''
@@ -936,14 +961,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         else:
             outputFn = GLCFG_PAR_OFC.PIC_MIDDLE_PATH + '/' + "result_" + fileNukeName
         cv.imwrite(outputFn, outputImg)
-            
-        #Save log record: 存储干活的log记录
-#         f = open(GL_CEBS_VISION_CLAS_RESULT_FILE_NAME_SET, "a+")
-#         a = '[%s], vision worm classification ones, save result as [%s] with output [%s].\n' % (time.asctime(), outputFn, str(outText))
-#         f.write(a)
-#         f.flush()
-#         f.close()
-        #Show result or not: 根据指令，是否显示文件
         cv.destroyAllWindows()
         return 1,outputFn,str(outText)
 
@@ -1099,12 +1116,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     #
     '''
     #细胞识别函数
-    def func_vision_flu_cell_count(self, fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet):
-        #处理参数，确保奇数性质的参数
-        if dilateBlkSize == 0:
-            dilateBlkSize = 3
-        if ((dilateBlkSize//2)*2) == dilateBlkSize:
-            dilateBlkSize +=1
+    def func_vision_flu_cell_count(self, fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet, cirRadMin, cirRadMax, ceDist):
+        #处理参数
         ceMin = ceMin/100
         #使用LOCAL方式进行叠加，不再使用全局属性，简化处理
         outputText = {'totalNbr':0, 'validNbr':0}
@@ -1128,7 +1141,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #cAreaMin/cAreaMax - 圆形范围
         #ceMin - 圆形距离
         if (algoSelction == 1):
-            outputImg, findCnt, circles = self.tup_itp_hough_transform(inputImg, cAreaMin, cAreaMax, ceMin)
+            outputImg, findCnt, circles = self.tup_itp_hough_transform(inputImg, cirRadMin, cirRadMax, ceDist)
             totalCnt = findCnt
             testFlag = False
             if (testFlag == True):
@@ -1158,12 +1171,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     # 细胞识别函数  #分层细胞计数
     #
     '''
-    def func_vision_flu_stack_count(self, fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet):
-        #处理参数，确保奇数性质的参数
-        if dilateBlkSize == 0:
-            dilateBlkSize = 3
-        if ((dilateBlkSize//2)*2) == dilateBlkSize:
-            dilateBlkSize +=1
+    def func_vision_flu_stack_count(self, fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet, cirRadMin, cirRadMax, ceDist):
+        #处理参数
         ceMin = ceMin/100
         #使用LOCAL方式进行叠加，不再使用全局属性，简化处理
         outputText = {'totalNbr':0, 'validNbr':0}
@@ -1184,6 +1193,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #寻找人工标定  #寻找标定线 寻找右下半部分  #寻找黄色标定线： 人工标定的方式，在参数选择上需要固定一种特征，而且保持一定的稳定性，不然无法兑付
         #图像解析度需要保持稳定
         #两种直线寻找方案都验证了，都好使！
+        self.funcVisionLogTrace("VISION: stack Stage1, Finding yellow marked line!")
         b, g, r = cv.split(inputImg)
         grayImg = cv.cvtColor(inputImg, cv.COLOR_BGR2GRAY)
         delImg = grayImg - b
@@ -1196,70 +1206,112 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         testFlag = False
         if (testFlag == True):
             cv.drawContours(ctImg, outCt, -1, self._COL_D_YELLOW, 2)
-            cv.imshow("Finding Yellow Line", ctImg)
+            self.tup_img_show(ctImg, "S1: Finding Yellow Line")
             sp = ctImg.shape
             #(startPoint, endPoint) = self.tup_cal_rect_line(rect[0], rect[2], (sp[0], sp[1]))
             (startPoint, endPoint) = self.tup_siml_line_by_contour(ctImg, outCt)
             cv.line(inputImg, startPoint, endPoint, self._COL_D_RED, 2)
-            cv.imshow("Line Cut Image", inputImg)
-            cv.waitKey()
+            self.tup_img_show(inputImg, "S1: Line Cut Image result")
         lineOutImg = self.tup_cut_line_out_img(inputImg, rect[0], rect[2])
         
         #使用黄色线，将正方形区域框定下来，然后再寻找外接框
         #可以考虑使用，使用下面的技巧（多边形技巧），将这个定点多边形搞出来，然后取出限定正方形内的多边形图像
+        self.funcVisionLogTrace("VISION: stack Stage2, Finding retangle area!")
         tpList = self.tup_find_retg_area(lineOutImg, rect)
         rtgImg = self.tup_copy_contour_img(inputImg, tpList)
         testFlag = False
         if (testFlag == True):
             cv.drawContours(inputImg, [tpList], -1, self._COL_D_BLUE, 2)
+            #这里尝试使用polylines方式画框，效果跟drawContours是一致的，所以注释掉，以备下次使用
             #tarImg = cv.polylines(inputImg, [tpList], True, self._COL_D_RED, 2)
-            cv.resizeWindow((inputImg.shape)[0]//2, (inputImg.shape)[1]//1)
-            cv.imshow("tpList show", inputImg)
-            cv.resizeWindow((rtgImg.shape)[0]//2, (rtgImg.shape)[1]//1)
-            cv.imshow("reTangle show", rtgImg)
-            cv.waitKey()
+            self.tup_img_show(inputImg, "S2: tpList show")
+            self.tup_img_show(rtgImg, "S2: reTangle show")
         
         #确定目标区域范围
-        targetImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_max_contours_itp(rtgImg, 223, 5, 2000, 200000, 0.001, 1, False, False)
-        testFlag = True
+        self.funcVisionLogTrace("VISION: stack Stage3, fix working contour area!")
+        targetImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_max_contours_itp(rtgImg, 850, 3, 2000, 1000000, 0.001, 1, False, False)
+        outCtPoly = cv.convexHull(outCt)
+        testFlag = False
         if (testFlag == True):
-            outCt2 = cv.convexHull(outCt)
+            #外轮廓
+            self.tup_img_show(rtgImg, "S3: Input image")
+            self.tup_img_show(targetImg, "S3: Input contour image")
+            tar1Img = inputImg.copy()
+            cv.drawContours(tar1Img, outCt, -1, self._COL_D_BLUE, 2)
+            self.tup_img_show(tar1Img, "S3: contour direct area")
+            #多边形
+            #outCt2 = cv.convexHull(outCt)
             tar2Img = inputImg.copy()
-            cv.drawContours(tar2Img, outCt2, -1, self._COL_D_YELLOW, 2)
-            tarImg = cv.polylines(tar2Img, [outCt2], True, self._COL_D_RED, 1)
-            cv.fillPoly(tar2Img, [outCt2], 255)
-#             sp = tarImg.shape
-#             cv.namedWindow("Target contour with flood filling", cv.WINDOW_NORMAL)
-#             cv.resizeWindow("Target contour with flood filling", sp[0]//2, sp[1]//2)
-#             cv.imshow("Target contour with flood filling", tarImg)
-#             cv.waitKey()
-        self.tup_img_show(tar2Img, "Target contour with flood filling")
+            cv.drawContours(tar2Img, outCtPoly, -1, self._COL_D_YELLOW, 2)
+            self.tup_img_show(tar2Img, "S3: polyline contour area")
+            #多边形填充
+            tarImg3 = cv.polylines(tar2Img, [outCtPoly], True, self._COL_D_RED, 1)
+            cv.fillPoly(tar2Img, [outCtPoly], 255)
+            self.tup_img_show(tarImg3, "S3: Target contour with flood filling")
         if (findCnt != 1):
             return -4;
         
         #将最终区域扣出来
+        self.funcVisionLogTrace("VISION: stack Stage4, Extract working area and start processing!")
         cropImg = self.tup_copy_contour_img(inputImg, outCt)
         testFlag = False
         if (testFlag == True):
-            cv.imshow("Target Cut image", cropImg)
-            cv.waitKey()
+            self.tup_img_show(cropImg, "S4: Target Cut image")
  
         algoSelction = 1
         #霍夫变换找圆形算法
-        #cAreaMin/cAreaMax - 圆形范围
+        #cirRadMin/cirRadMax - 圆形范围
         #ceMin - 圆形距离
+        self.funcVisionLogTrace("VISION: stack Stage5, Hough transform to find potential candidates!")
         if (algoSelction == 1):
-            outputImg, findCnt, circles = self.tup_itp_hough_transform(cropImg, cAreaMin, cAreaMax, ceMin)
+            outputImg, findCnt, circles = self.tup_itp_hough_transform(cropImg, cirRadMin, cirRadMax, ceDist)
             totalCnt = findCnt
             testFlag = False
             if (testFlag == True):
-                cv.imshow("Hough Transform Img", outputImg)
-                cv.waitKey()
+                self.tup_img_show(outputImg, "S5: hough transform image")
         #图像形态学算法
         elif (algoSelction == 2):
             outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_itp_morphology_transform(cropImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, False)
         
+        #将圆心不在目标区域内的圆形去掉
+        self.funcVisionLogTrace("VISION: stack Stage6, Removing outer wrong findings!")
+        goodCircles, badCircles = self.tup_remove_ex_contour_circle(outCt, circles)
+        testFlag = False
+        if (testFlag == True):
+            judgeCircleImg = cropImg.copy()
+            for element in goodCircles[0]:
+                cv.circle(judgeCircleImg, (element[0], element[1]), element[2], self._COL_D_RED, 1)
+            for element in badCircles[0]:
+                cv.circle(judgeCircleImg, (element[0], element[1]), element[2], self._COL_D_BLUE, 1)
+            cv.drawContours(judgeCircleImg, outCt, -1, self._COL_D_YELLOW, 1)
+            self.tup_img_show(judgeCircleImg, "S6: Remove out scope circle")
+
+        #复核选定区域的圆形度是否满足要求
+        #下面的bitwise还未搞定
+        #maskedImg = cv.add(originImg, np.zeros(np.shape(originImg), dtype=np.uint8), mask=circleImg)
+        self.funcVisionLogTrace("VISION: stack Stage7, Re-check findings is really rational!")
+#         ckCircle = [[]]
+#         for element in goodCircles[0]:
+#             originImg = cropImg.copy()
+#             circleImg = cropImg.copy()
+#             cv.circle(circleImg, (element[0], element[1]), element[2], self._COL_D_BLUE, -1)
+#             maskedImg = originImg - circleImg
+#             #self.tup_img_show(maskedImg, "S7: Individual circle 2")
+#             s7Img, rect, totalCnt, findCnt, outCt, outBox = self.tup_itp_morphology_transform(maskedImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, False)
+#             self.tup_img_show(s7Img, "S7: Individual circle 3")
+#             if findCnt == 1:
+#                 ckCircle[0].append(element)
+#         #Output
+#         totalCnt = len(ckCircle[0])
+#         findCnt = totalCnt
+#         outputImg = cropImg.copy()
+#         for element in goodCircles[0]:
+#             cv.circle(outputImg, (element[0], element[1]), element[2], self._COL_D_RED, 1)
+        outputImg, totalCnt, findCnt, ckCircle = self.tup_itp_circle_img_filter_out(cropImg, goodCircles, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, True)
+            
+            
         #最后的处理过程
+        self.funcVisionLogTrace("VISION: stack Stage n, Final output!")
         outputText['totalNbr'] = totalCnt
         outputText['validNbr'] = findCnt
         if (addupSet == True):
@@ -1271,63 +1323,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         cv.imwrite(outputFn, outputImg)
         cv.destroyAllWindows()
         return outputText['validNbr']
-
-
-
-
-
-    
-    '''
-    #
-    #测试功能，未来将去掉
-    #荧光fcc图像的通道分离
-    #zero = np.zeros((inputImg.shape[0],inputImg.shape[1]), dtype=inputImg.dtype)
-    #delta = grayImg - cv.cvtColor(cv.merge([r, b, zero]), cv.COLOR_BGR2GRAY)
-    #
-    #
-    '''
-#     def fsm_msg_test_rcv_handler(self, msgContent):
-#         #寻找标定线
-#         fileName = msgContent['fileName']
-#         inputImg = cv.imread(fileName)
-#         b, g, r = cv.split(inputImg)
-#         grayImg = cv.cvtColor(inputImg, cv.COLOR_BGR2GRAY)
-#         delImg = grayImg - b
-#         diImg = self.tup_dilate(delImg, 8)
-#         ctImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_contours(diImg, 1000, 4000, 0.001, 0.5, False, False)
-#         if (findCnt<=0):
-#             return TUP_FAILURE;
-#         #cv.imshow("contours", ctImg)
-#         radCent = rect[0]
-#         angle = rect[2]
-#         #取得图像的尺度
-#         sp = inputImg.shape
-#         resLine = self.tup_cal_rect_line(radCent, angle, (sp[0], sp[1]))
-#         cv.line(ctImg, resLine[0], resLine[1], self._COL_D_GREEN, 1)
-#         
-#         #寻找右下半部分
-#         imgRight = self.tup_cut_line_out_img(inputImg, radCent, angle)
-#         cv.imshow("imgRight", imgRight)
-#         
-#         #第1步：灰度图像
-#         grayImg = self.tup_color2gray_adaptive(imgRight, 41)
-#         
-#         #第2步，去噪声
-#         nfImg = self.tup_erode(grayImg, 7)
-#         
-#         #第3步，寻找外框
-#         outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_contours(nfImg, 100, 400, 0.01, 1, True, False)
-#         outputText = {}
-#         outputText['totalNbr'] = totalCnt
-#         outputText['validNbr'] = findCnt
-#         
-#         #
-#         cv.imshow("Output", outputImg)
-#         cv.waitKey()
-#         cv.destroyAllWindows()
-#         
-#         return TUP_SUCCESS;    
-    
 
 
 
@@ -1359,7 +1354,7 @@ class clsCamDevHdl():
         wmi = win32com.client.GetObject("winmgmts:")
         camId = -2
         for usb in wmi.InstancesOf ("win32_usbcontrollerdevice"):
-            print(usb.Dependent)    #方便查看全新设备的标识符
+            #print(usb.Dependent)    #方便查看全新设备的标识符
             for dev in _TUP_VISION_DESC_LIST:
                 #print(dev['desc'])
                 if dev['desc'] in usb.Dependent:
