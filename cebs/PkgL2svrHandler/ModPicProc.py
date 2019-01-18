@@ -208,6 +208,7 @@ class TupClsPicProc(object):
                     cv.putText(outputImg, str(cArea), (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, self._COL_D_GREEN, 1)
                 if (ceTextFlag == True):
                     cv.putText(outputImg, str(cE), (cX + 20, cY + 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, self._COL_D_BLUE, 1)
+                #print("Area=", cArea, "cE=", cE)
         if findCnt>0:
             #print("Internal Rect = ", outRect)
             #print("Internal Box = ", outBox)
@@ -499,10 +500,15 @@ class TupClsPicProc(object):
         (imgH, imgW) = (sp[0], sp[1])
         (mrW, mrH) = minRectIn[1]
         (x0, y0) = minRectIn[0]
-        leftPx = x0 - cos*mrW/2
-        leftPy = y0 - sin*mrW/2
-        rightPx = x0 + cos*mrW/2
-        rightPy = y0 + sin*mrW/2
+        #leftPx = x0 - cos*mrW/2
+        #leftPy = y0 - sin*mrW/2
+        #rightPx = x0 + cos*mrW/2
+        #rightPy = y0 + sin*mrW/2
+        #故意加倍
+        leftPx = x0 - cos*mrW
+        leftPy = y0 - sin*mrW
+        rightPx = x0 + cos*mrW
+        rightPy = y0 + sin*mrW
         if (leftPx<0): leftPx=0;
         if (leftPx>=imgW): leftPx=imgW-1;
         if (leftPy<0): leftPy=0;
@@ -519,8 +525,8 @@ class TupClsPicProc(object):
         sin = math.sin(angle/180.0*math.pi)
         cos = math.cos(angle/180.0*math.pi)
         (x0, y0) = (rightPx, rightPy)
-        r4Px = x0 + cos*mrW
-        r4Py = y0 + sin*mrW
+        r4Px = x0 + cos*mrW*2
+        r4Py = y0 + sin*mrW*2
         if (r4Px<0): r4Px=0;
         if (r4Px>=imgW): r4Px=imgW-1;
         if (r4Py<0): r4Py=0;
@@ -533,8 +539,8 @@ class TupClsPicProc(object):
         sin = math.sin(angle/180.0*math.pi)
         cos = math.cos(angle/180.0*math.pi)
         (x0, y0) = (r4Px, r4Py)
-        r5Px = x0 + cos*mrW
-        r5Py = y0 + sin*mrW
+        r5Px = x0 + cos*mrW*2
+        r5Py = y0 + sin*mrW*2
         if (r5Px<0): r5Px=0;
         if (r5Px>=imgW): r5Px=imgW-1;
         if (r5Py<0): r5Py=0;
@@ -608,33 +614,85 @@ class TupClsPicProc(object):
     
     #校验图像
     def tup_itp_circle_img_filter_out(self, imgIn, goodCircles, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, ceMax, areaTextFlag, ceTextFlag):
+        #第1步：灰度图像
+        grayImg = self.tup_color2gray_adaptive(imgIn, dilateBlkSize)
+        #第2步，去噪声
+        nfImg = self.tup_erode(grayImg, erodeBlkSize)
+        #第3步，二值化
+        ret, binImg = cv.threshold(nfImg, 130, 255, cv.THRESH_BINARY)
+        #self.tup_img_show(nfImg, "S7: Individual circle 3")
+        #第4步
+        sp = binImg.shape
         ckCircle = [[]]
         cnt=0;
+        detectImg = imgIn.copy()
         for element in goodCircles[0]:
             cnt+=1
-            print("Progress cnt...", cnt)
-            originImg = imgIn.copy()
-            circleImg = imgIn.copy()
+            originImg = binImg.copy()
+            circleImg = binImg.copy()
             cv.circle(circleImg, (element[0], element[1]), element[2], self._COL_D_BLUE, -1)
             maskedImg = originImg - circleImg
-            #self.tup_img_show(maskedImg, "S7: Individual circle 2")
-            s7Img, rect, totalCnt, findCnt, outCt, outBox = self.tup_itp_morphology_transform(maskedImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, ceMax, areaTextFlag, ceTextFlag)
-            #self.tup_img_show(s7Img, "S7: Individual circle 3")
-            if findCnt == 1:
+            #求目标区域
+            xLeft = element[0] - element[2]
+            yLeft = element[1] - element[2]
+            xRight = element[0] + element[2]
+            yRight = element[1] + element[2]
+            if xLeft <0:
+                xLeft = 0
+            if yLeft <0:
+                yLeft =0
+            if xRight >= sp[1]:
+                xRight = sp[1]-1
+            if yRight >= sp[0]:
+                yRight = sp[0]-1
+            xLeft = int(xLeft)
+            yLeft = int(yLeft)
+            xRight = int(xRight)
+            yRight = int(yRight)
+            #注意：取出的图像，是Y先，然后才X。这意味着HEIGHT先，然后X
+            newImg = maskedImg[yLeft:yRight, xLeft:xRight]
+            sum=0
+            #print(newImg.shape)
+            #print("Left = ", xLeft, yLeft, "Right=", xRight, yRight, "Raduis = ", element[2])
+            for j in range(0, yRight-yLeft):
+                for i in range(0, xRight-xLeft):
+                    if (newImg[j, i] == 0):  #数白点
+                        sum+=1
+            cv.circle(detectImg, (element[0], element[1]), element[2], self._COL_D_RED, 1)
+            cv.putText(detectImg, str(sum), (int(element[0]), int(element[1])), cv.FONT_HERSHEY_SIMPLEX, 0.3, self._COL_D_GREEN, 1)
+            if (sum>=cAreaMin) and (sum<=cAreaMax):
                 ckCircle[0].append(element)
+        cv.imwrite("tmp_s7alg2.jpg", detectImg)
+            
         #Output
         totalCnt = len(ckCircle[0])
         print("totalCnt after check = ", totalCnt)
         findCnt = totalCnt
         outputImg = imgIn.copy()
-        for element in goodCircles[0]:
+        for element in ckCircle[0]:
             cv.circle(outputImg, (element[0], element[1]), element[2], self._COL_D_RED, 1)
         return outputImg, totalCnt, findCnt, ckCircle
-
-
-
-
-
+    
+    #通过分块图像大小，简单的方式来判定图像是否满足要求
+    #本函数暂时未使用
+    def tup_simple_judge_area(self, imgIn, cAreaMin, cAreaMax):
+        #第1步：灰度图像
+        grayImg = self.tup_color2gray_adaptive(imgIn, 41)
+        #第2步，去噪声
+        nfImg = self.tup_erode(grayImg, 5)
+        #第3步，寻找外框
+        ret, binImg = cv.threshold(nfImg, 130, 255, cv.THRESH_BINARY)
+        sp = binImg.shape
+        sum=0
+        for i in range(0, sp[0]):
+            for j in range(0, sp[1]):
+                sum += binImg[j, i]
+        print("Sum = ", sum)
+        if (sum < cAreaMin) or (sum > cAreaMax):
+            return False
+        else:
+            return True
+            
 
 
 

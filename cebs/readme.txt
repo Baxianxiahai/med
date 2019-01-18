@@ -29,6 +29,10 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
+
+//=ZJL, 2019/1/19, CURRENT_SW_DELIVERY R1.58 =>CEBS
+= 荧光识别算法改进：依然达不到理想的要求
+
 //=ZJL, 2019/1/15, CURRENT_SW_DELIVERY R1.57 =>CEBS
 = 解决文件中包含中文命名和中文目录的问题
 = __COL_D_RED字符串找不到BUG

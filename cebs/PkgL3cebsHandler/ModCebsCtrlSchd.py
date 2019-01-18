@@ -38,7 +38,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     #TIMER3
     #密码验证并控制是否继续干活
     timerMdcPswdChk = ''
-    TIMER_DUR_MDC_PSWD_CHK = 60*5
+    TIMER_DUR_MDC_PSWD_CHK = 60*60  #保留一个小时
 
 
     def __init__(self, glPar):

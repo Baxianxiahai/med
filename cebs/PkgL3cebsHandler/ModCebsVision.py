@@ -74,17 +74,9 @@ _TUP_VISION_DESC_LIST = [{'name':'OBVIOUS_UCMOS10000KPA', 'desc':'VID_0547&PID_6
                          {'name':'TOUPCAM_E3ISPM06300KPB', 'desc':'VID_0547&PID_1217', 'width':3072, 'height':2048, 'usage':'荧光目标型号'},\
                          {'name':'TOUPCAM_UCMOS05100KPA', 'desc':'VID_0547&PID_6510','width':2592,'height':1944, 'usage':'新华医院独有白光型号'},\
                          ]
-<<<<<<< HEAD
 #分辨率必须根据设备型号，重新选择 #DEFAULT SELCTION
-_TUP_VISION_CAMBER_RES_WIDTH = 3584
-_TUP_VISION_CAMBER_RES_HEIGHT = 2748
-=======
-#分辨率必须根据设备型号，重新选择
-
 _TUP_VISION_CAMBER_RES_WIDTH = 2592
 _TUP_VISION_CAMBER_RES_HEIGHT = 1944
->>>>>>> e7ea9196900a29156a3e703b2589b3e43c2fe2d3
-
 
 
 #业务CLASS
@@ -1216,10 +1208,9 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         b, g, r = cv.split(inputImg)
         grayImg = cv.cvtColor(inputImg, cv.COLOR_BGR2GRAY)
         delImg = grayImg - b
-        diImg = self.tup_dilate(delImg, 8)
+        diImg = self.tup_dilate(delImg, 12)
         ctImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_max_contours(diImg, 10000, 100000, 0.001, 0.5, True, True)
-        cv.imwrite("findYellowLineRes.jpg", ctImg)
-        #print("totalCnt and findCnt = %d/%d" % (totalCnt, findCnt))
+        cv.imwrite("tmp_s1FindYellowLine.jpg", ctImg)
         if (findCnt!=1):
             return -3;
         testFlag = False
@@ -1248,7 +1239,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         
         #确定目标区域范围
         self.funcVisionLogTrace("VISION: stack Stage3, fix working contour area!")
-        targetImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_max_contours_itp(rtgImg, 850, 3, 2000, 1000000, 0.001, 1, False, False)
+        targetImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_max_contours_itp(rtgImg, 1200, 5, 2000, 1000000, 0.001, 1, False, False)
         outCtPoly = cv.convexHull(outCt)
         testFlag = False
         if (testFlag == True):
@@ -1309,26 +1300,16 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #下面的bitwise还未搞定
         #maskedImg = cv.add(originImg, np.zeros(np.shape(originImg), dtype=np.uint8), mask=circleImg)
         self.funcVisionLogTrace("VISION: stack Stage7, Re-check findings is really rational!")
-#         ckCircle = [[]]
-#         for element in goodCircles[0]:
-#             originImg = cropImg.copy()
-#             circleImg = cropImg.copy()
-#             cv.circle(circleImg, (element[0], element[1]), element[2], self._COL_D_BLUE, -1)
-#             maskedImg = originImg - circleImg
-#             #self.tup_img_show(maskedImg, "S7: Individual circle 2")
-#             s7Img, rect, totalCnt, findCnt, outCt, outBox = self.tup_itp_morphology_transform(maskedImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, False)
-#             self.tup_img_show(s7Img, "S7: Individual circle 3")
-#             if findCnt == 1:
-#                 ckCircle[0].append(element)
-#         #Output
-#         totalCnt = len(ckCircle[0])
-#         findCnt = totalCnt
-#         outputImg = cropImg.copy()
-#         for element in goodCircles[0]:
-#             cv.circle(outputImg, (element[0], element[1]), element[2], self._COL_D_RED, 1)
+        
+        #使用传统方式测试一下
+        testFlag = True
+        if (testFlag == True):
+            outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_itp_morphology_transform(cropImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, True)
+            cv.imwrite("tmp_s7alg1.jpg", outputImg)
+            #self.tup_img_show(outputImg, "S7: Individual area by polymethod")
+        #正统方式
         outputImg, totalCnt, findCnt, ckCircle = self.tup_itp_circle_img_filter_out(cropImg, goodCircles, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, True)
-            
-            
+        
         #最后的处理过程
         self.funcVisionLogTrace("VISION: stack Stage n, Final output!")
         outputText['totalNbr'] = totalCnt
