@@ -323,10 +323,11 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.picSeqCnt += 1
         if (self.picSeqCnt > GLPLT_PAR_OFC.HB_PIC_ONE_WHOLE_BATCH):
             self.funcCtrlSchdLogTrace("L3SCHD: Normal picture capture accomplish successful!")
+            self.msg_send(TUP_MSGID_CTRL_SCHD_MV_ZERO, TUP_TASK_ID_CTRL_SCHD, "")
             self.fsm_set(self._STM_ACTIVE)
             #是否触发拍照完成后自动识别
             if (GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET == True):
-                self.msg_send(TUP_MSGID_CTRL_SCHD_CAPPIC_START, TUP_TASK_ID_CTRL_SCHD, "")
+                self.msg_send(TUP_MSGID_CTRL_SCHD_CFYPIC_START, TUP_TASK_ID_CTRL_SCHD, "")
             return TUP_SUCCESS;
 
         #生成文件名字

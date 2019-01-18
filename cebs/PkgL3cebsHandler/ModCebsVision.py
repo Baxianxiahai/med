@@ -41,6 +41,7 @@ from PkgL1vmHandler.ModVmConsole import *
 from PkgL2svrHandler.ModPicProc import *
 from PkgL3cebsHandler.ModCebsCom import *
 from PkgL3cebsHandler.ModCebsCfg import *
+from PkgL1vmHandler import ModVmLayer
 
 
 
@@ -150,7 +151,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         
         #测试消息
         #测试函数，未来可以去掉或者挪做其它任务
-        #self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TEST, self.fsm_msg_test_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_REF_RESOLUTION , self.fsm_msg_ref_resolution_rcv_handler)
                
         #切换状态机
         self.fsm_set(TUP_STM_INIT)
@@ -377,7 +378,10 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         self.FLU_CELL_COUNT_genr_par3 = msgContent['genrPar3'];
         self.FLU_CELL_COUNT_genr_par4 = msgContent['genrPar4'];
         return TUP_SUCCESS;
-
+    def fsm_msg_ref_resolution_rcv_handler(self,msgContent):
+        _TUP_VISION_CAMBER_RES_WIDTH = msgContent['width']
+        _TUP_VISION_CAMBER_RES_HEIGHT = msgContent['height']
+        return TUP_SUCCESS;
     #STEST业务
     def fsm_msg_stest_cam_inq_rcv_handler(self, msgContent):
         mbuf={}
@@ -693,6 +697,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #正确的情况
         width = int(self.capInit.get(cv.CAP_PROP_FRAME_WIDTH) + 0.5)
         height = int(self.capInit.get(cv.CAP_PROP_FRAME_HEIGHT) + 0.5)
+        print("run width",width)
+        print("run height",height)
         fps = 20
         #ret, frame = self.capInit.read()
         ret = self.capInit.grab()
@@ -1383,10 +1389,14 @@ class clsCamDevHdl():
                     except Exception:
                         camId = -1
                     #将分辨率赋给全局变量
+#                     mbuf = {}
+#                     mbuf['width'] = dev['width']
+#                     mbuf['height'] = dev['height']
                     _TUP_VISION_CAMBER_RES_WIDTH = dev['width']
-                    _TUP_VISION_CAMBER_RES_HEIGHT = dev['height']
-                    print("temp value w",_TUP_VISION_CAMBER_RES_WIDTH)
-                    print("temp value h",_TUP_VISION_CAMBER_RES_HEIGHT)
+                    _TUP_VISION_CAMBER_RES_HEIGHT = dev['height']        
+                    print("temp value w",dev['width'])
+                    print("temp value h",dev['height'])
+#                     self.msg_send(TUP_MSGID_REF_RESOLUTION, TUP_TASK_ID_VISION, mbuf)
         #存入临时文件
         f = open("tempCamId.txt", "w+")
         a = ("%d" % (camId))

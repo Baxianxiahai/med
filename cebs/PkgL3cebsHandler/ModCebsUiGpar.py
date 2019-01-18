@@ -159,7 +159,7 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['fileName'] = fileName 
         self.msg_send(TUP_MSGID_GPAR_PIC_FCC_REQ, TUP_TASK_ID_GPAR, mbuf)
         
-     #荧光分层细胞计数-批量处理模式
+    #荧光分层细胞计数-批量处理模式
     def func_ui_click_gpar_flu_stack_cnt(self, fileName, liPar1, liPar2, liPar3, liPar4, addupSet, gePar1, gePar2, gePar3, gePar4):
         print("I am func_ui_click_gpar_flu_stack_cnt!")
         mbuf={}
