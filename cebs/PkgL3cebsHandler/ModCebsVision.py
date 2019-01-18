@@ -1394,8 +1394,8 @@ class clsCamDevHdl():
 #                     mbuf['height'] = dev['height']
                     _TUP_VISION_CAMBER_RES_WIDTH = dev['width']
                     _TUP_VISION_CAMBER_RES_HEIGHT = dev['height']        
-                    print("temp value w",dev['width'])
-                    print("temp value h",dev['height'])
+                    #print("temp value w",dev['width'])
+                    #print("temp value h",dev['height'])
 #                     self.msg_send(TUP_MSGID_REF_RESOLUTION, TUP_TASK_ID_VISION, mbuf)
         #存入临时文件
         f = open("tempCamId.txt", "w+")
