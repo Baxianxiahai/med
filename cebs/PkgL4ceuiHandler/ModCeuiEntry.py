@@ -50,26 +50,28 @@ def cebs_show_startup_pic():
 def cebs_hide_startup_pic(splash):
     splash.hide()
 
-def cebs_show_app(app, splash, TkMainUi, TkCalibUi, TkGparUi, TkMengUi, tkStestUi, TkSahtUi):
+# def cebs_show_app(app, splash, TkMainUi, TkCalibUi, TkGparUi, TkMengUi, tkStestUi, TkSahtUi):
+def cebs_show_app(app, splash, uiApp):
     QtWidgets.qApp.processEvents()
-    mainWindow = SEUI_L4_MainWindow(TkMainUi, TkCalibUi, TkGparUi, TkMengUi, tkStestUi, TkSahtUi)
+    mainWindow = SEUI_L4_MainWindow(uiApp)
     mainWindow.show()
     cebs_hide_startup_pic(splash)
     #换用新机制，不然整个应用程序退出不成功
     app.exec_()
-    return    
+    return
+
 
 #THE MAIN ENTRY: 第0主入口，MAIN函数部分
 #这个是聚合部分，放在一起进行显示和启动
-def cebs_l4ui_main_form_entry(TkMainUi, TkCalibUi, TkGparUi, TkMenUi):
-    app = QtWidgets.QApplication(sys.argv)
-    splash = cebs_show_startup_pic()
-    QtWidgets.qApp.processEvents()
-    mainWindow = SEUI_L4_MainWindow(TkMainUi,TkCalibUi, TkGparUi, TkMenUi)
-    mainWindow.show()
-    cebs_hide_startup_pic(splash)
-    sys.exit(app.exec_())
-    return
+# def cebs_l4ui_main_form_entry(TkMainUi, TkCalibUi, TkGparUi, TkMenUi):
+#     app = QtWidgets.QApplication(sys.argv)
+#     splash = cebs_show_startup_pic()
+#     QtWidgets.qApp.processEvents()
+#     mainWindow = SEUI_L4_MainWindow(TkMainUi,TkCalibUi, TkGparUi, TkMenUi)
+#     mainWindow.show()
+#     cebs_hide_startup_pic(splash)
+#     sys.exit(app.exec_())
+#     return
 
 
 

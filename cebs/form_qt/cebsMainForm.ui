@@ -266,6 +266,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionMenuCfyNorStart"/>
     <addaction name="actionMenuCfyFluStart"/>
     <addaction name="actionMenuCfyStop"/>
+    <addaction name="actionMenuFspc"/>
    </widget>
    <widget class="QMenu" name="menu_7">
     <property name="title">
@@ -389,6 +390,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionMenuGparFcc">
    <property name="text">
     <string>细胞计数</string>
+   </property>
+  </action>
+  <action name="actionMenuFspc">
+   <property name="text">
+    <string>荧光堆叠</string>
    </property>
   </action>
  </widget>

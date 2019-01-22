@@ -32,6 +32,7 @@ import PkgL4ceuiHandler.ModCeuiGpar
 import PkgL4ceuiHandler.ModCeuiMeng
 import PkgL4ceuiHandler.ModCeuiStest
 import PkgL4ceuiHandler.ModCeuiSaht
+import PkgL4ceuiHandler.ModCeuiFspc
 
 
 
@@ -50,12 +51,22 @@ Main Windows
     #板孔 - Saht
     #校准 - Calib
     #设置 - Sset
+
+@Input:
+TaskInstMainUi - 主界面
+TaskInstCalibUi - 校准
+TaskInstGparUi - 工参训练
+TaskInstMengUi - 马达工程模式
+TaskInstStestUi - 自测模式
+TaskInstSahtUi - 板孔离线分析
+TaskInstFspcUi - 荧光堆叠图像识别
+    
 '''
 class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigOpr):
     sgL4MainWinUnvisible = pyqtSignal()
     sgL4MainWinVisible = pyqtSignal()
 
-    def __init__(self, TaskInstMainUi, TaskInstCalibUi, TaskInstGparUi, TaskInstMengUi, TaskInstStestUi, TaskInstSahtUi):    
+    def __init__(self, uiApp):    
         super(SEUI_L4_MainWindow, self).__init__()
         #CASE1:
         #SYSTEM LEVEL UI INIT, 系统级别的界面初始化
@@ -65,12 +76,13 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
 
         #CASE2
         #存储任务对象指针，以便双向通信
-        self.TkMainUi = TaskInstMainUi
-        self.TkCalibUi = TaskInstCalibUi
-        self.TkGparUi = TaskInstGparUi
-        self.TkMengUi = TaskInstMengUi
-        self.TkStestUi = TaskInstStestUi
-        self.TkSahtUi = TaskInstSahtUi
+        self.TkMainUi = uiApp[0]
+        self.TkCalibUi = uiApp[1]
+        self.TkGparUi = uiApp[2]
+        self.TkMengUi = uiApp[3]
+        self.TkStestUi = uiApp[4]
+        self.TkSahtUi = uiApp[5]
+        self.TkFspcUi = uiApp[6]
 
         #CASE3: HARDWARE LEVEL INIT, 硬件初始化
         self.initParameter()
@@ -115,7 +127,8 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         #设置
         self.actionMenuSsetExit.triggered.connect(self.quit)
         self.actionMenuSsetAbout.triggered.connect(self.about)
-        
+        #荧光堆叠图像识别
+        self.actionMenuFspc.triggered.connect(self.slot_fspc_sel)
         
 
     #MUST Load global parameters, to initialize different UI and update the stored parameters.
@@ -126,6 +139,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         self.instL4MengForm = PkgL4ceuiHandler.ModCeuiMeng.SEUI_L4_MengForm(self.TkMengUi)
         self.instL4StestForm = PkgL4ceuiHandler.ModCeuiStest.SEUI_L4_StestForm(self.TkStestUi)
         self.instL4SahtForm = PkgL4ceuiHandler.ModCeuiSaht.SEUI_L4_SahtForm(self.TkSahtUi)
+        self.instL4FspcForm = PkgL4ceuiHandler.ModCeuiFspc.SEUI_L4_FspcForm(self.TkFspcUi)
         
         #SIGNAL SLOT, 连接信号槽
         self.sgL4MainWinUnvisible.connect(self.funcMainWinUnvisible);
@@ -135,6 +149,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         self.instL4MengForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.instL4StestForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.instL4SahtForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
+        self.instL4FspcForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         
         #STEP3: 使用传递指针的方式
         self.TkMainUi.funcSaveFatherInst(self)
@@ -236,6 +251,16 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
             self.instL4SahtForm.show()
             #指示SAHT界面进入事件
             self.instL4SahtForm.switchOn()
+
+    #Enter Flu Stack Picture Classification
+    def slot_fspc_sel(self):
+        self.cetk_debug_print("L4MAIN: FSPC start......")
+        if not self.instL4FspcForm.isVisible():
+            self.sgL4MainWinUnvisible.emit()
+            self.instL4FspcForm.show()
+            #指示FSPC界面进入事件
+            self.instL4FspcForm.switchOn()
+
 
     #Clean log window
     def slot_runpg_clear(self):

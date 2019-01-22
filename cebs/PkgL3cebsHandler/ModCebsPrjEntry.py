@@ -19,6 +19,7 @@ from PkgL3cebsHandler import ModCebsCtrlSchd
 from PkgL3cebsHandler import ModCebsGpar
 from PkgL3cebsHandler import ModCebsMeng
 from PkgL3cebsHandler import ModCebsStest
+from PkgL3cebsHandler import ModCebsFspc
 from PkgL3cebsHandler import ModCebsMoto
 from PkgL3cebsHandler import ModCebsVision
 from PkgL3cebsHandler import ModCebsUiMain
@@ -27,6 +28,7 @@ from PkgL3cebsHandler import ModCebsUiGpar
 from PkgL3cebsHandler import ModCebsUiMeng
 from PkgL3cebsHandler import ModCebsUiStest
 from PkgL3cebsHandler import ModCebsUiSaht
+from PkgL3cebsHandler import ModCebsUiFspc
 
 #import ModCeuiEntry
 from PkgL4ceuiHandler.ModCeuiEntry import *
@@ -121,6 +123,12 @@ def prj_cebs_main_entry():
     initMsg['dst'] = TUP_TASK_ID_UI_SAHT
     SahtUiTaskInst.msg_send_in(initMsg)         
     SahtUiTaskInst.tup_dbg_print("Create SAHT UI task success!")
+
+    #UI_FSPC
+    FspcUiTaskInst = ModCebsUiFspc.tupTaskUiFspc(TUP_GL_CFG);
+    initMsg['dst'] = TUP_TASK_ID_UI_FSPC
+    FspcUiTaskInst.msg_send_in(initMsg)         
+    FspcUiTaskInst.tup_dbg_print("Create FSPC UI task success!")
         
     #Calib Task
     CalibTaskInst = ModCebsCalib.tupTaskCalib(TUP_GL_CFG);
@@ -151,7 +159,13 @@ def prj_cebs_main_entry():
     initMsg['dst'] = TUP_TASK_ID_STEST
     StestTaskInst.msg_send_in(initMsg)    
     StestTaskInst.tup_dbg_print("Create STEST task success!")
-    
+
+    #Fspc Task
+    FspcTaskInst = ModCebsFspc.tupTaskFspc(TUP_GL_CFG);
+    initMsg['dst'] = TUP_TASK_ID_FSPC
+    FspcTaskInst.msg_send_in(initMsg)    
+    FspcTaskInst.tup_dbg_print("Create FSPC task success!")
+        
     #Moto Task
     MotoTaskInst = ModCebsMoto.tupTaskMoto(TUP_GL_CFG);
     initMsg['dst'] = TUP_TASK_ID_MOTO
@@ -170,8 +184,9 @@ def prj_cebs_main_entry():
     #
     '''
     #FINAL QT UI：真正启动界面APP
-    cebs_show_app(app, splash, MainUiTaskInst, CalibUiTaskInst, GparUiTaskInst, MengUiTaskInst, StestUiTaskInst, SahtUiTaskInst)
-
+    #cebs_show_app(app, splash, MainUiTaskInst, CalibUiTaskInst, GparUiTaskInst, MengUiTaskInst, StestUiTaskInst, SahtUiTaskInst)
+    uiApp = (MainUiTaskInst, CalibUiTaskInst, GparUiTaskInst, MengUiTaskInst, StestUiTaskInst, SahtUiTaskInst, FspcUiTaskInst)
+    cebs_show_app(app, splash, uiApp)
 
 
     '''
@@ -188,11 +203,13 @@ def prj_cebs_main_entry():
     MengUiTaskInst.task_stop()
     StestUiTaskInst.task_stop()
     SahtUiTaskInst.task_stop()
+    FspcUiTaskInst.task_stop()
     CalibTaskInst.task_stop()
     CtrlSchdTaskInst.task_stop()
     GparTaskInst.task_stop()
     MengTaskInst.task_stop()
     StestTaskInst.task_stop()
+    FspcTaskInst.task_stop()
     MotoTaskInst.task_stop()
     VisionTaskInst.task_stop()
     print("Project CEBS terminate all existing tasks Accomplish!")

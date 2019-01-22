@@ -129,6 +129,8 @@ class Ui_cebsMainWindow(object):
         self.actionMenuFccnt.setObjectName("actionMenuFccnt")
         self.actionMenuGparFcc = QtWidgets.QAction(cebsMainWindow)
         self.actionMenuGparFcc.setObjectName("actionMenuGparFcc")
+        self.actionMenuFspc = QtWidgets.QAction(cebsMainWindow)
+        self.actionMenuFspc.setObjectName("actionMenuFspc")
         self.menu.addAction(self.actionMenuStestProc)
         self.menu.addAction(self.actionMenuStestRndCmd)
         self.menu_2.addAction(self.actionMenuGparSet)
@@ -142,6 +144,7 @@ class Ui_cebsMainWindow(object):
         self.menu_6.addAction(self.actionMenuCfyNorStart)
         self.menu_6.addAction(self.actionMenuCfyFluStart)
         self.menu_6.addAction(self.actionMenuCfyStop)
+        self.menu_6.addAction(self.actionMenuFspc)
         self.menu_7.addAction(self.actionMenuSsetAbout)
         self.menu_7.addSeparator()
         self.menu_7.addAction(self.actionMenuSsetExit)
@@ -216,4 +219,5 @@ class Ui_cebsMainWindow(object):
         self.action.setText(_translate("cebsMainWindow", "分层荧光"))
         self.actionMenuFccnt.setText(_translate("cebsMainWindow", "细胞计数"))
         self.actionMenuGparFcc.setText(_translate("cebsMainWindow", "细胞计数"))
+        self.actionMenuFspc.setText(_translate("cebsMainWindow", "荧光堆叠"))
 

@@ -17,6 +17,8 @@
   pyuic5 -o  cebsmengform.py cebsMengform.ui  //Moto Engineering Command
   pyuic5 -o  cebssahtform.py cebsSahtform.ui  //Set Active Hole Target
   pyuic5 -o  cebsstestform.py cebsStestform.ui
+  pyuic5 -o  cebsfspcform.py cebsFspcform.ui
+
   d:, cd \IHUSRC\med\cebs
   pyinstaller -F -w --icon=.\icon_res\cebs.ico cebsMain.py
 
