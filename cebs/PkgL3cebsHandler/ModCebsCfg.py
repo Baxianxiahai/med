@@ -50,6 +50,7 @@ class clsL1_ConfigOpr():
         flagExist = os.path.exists(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME)
         flagEvn = self.CReader.has_section("Env")
         flagCounter = self.CReader.has_section("Counter")
+        flagFspc = self.CReader.has_section("Fspc")
         if (flagExist == False) or (flagEvn == False):
             self.CReader.add_section("Env")
             self.CReader.set("Env","workdir", str(os.getcwd()+ self.osDifferentStr()))
@@ -82,7 +83,23 @@ class clsL1_ConfigOpr():
             self.CReader.set("Counter","PicRemainCnt", "0")
             self.CReader.set("Counter","PicBatFluClas", "0")
             self.CReader.set("Counter","PicRemFluCnt", "0")
-        if (flagExist == False) or (flagEvn == False) or (flagCounter == False):   
+        if (flagExist == False) or (flagFspc == False):
+            self.CReader.add_section("Fspc")
+            self.CReader.set("Fspc","mark_line", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE))
+            self.CReader.set("Fspc","area_square_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN))
+            self.CReader.set("Fspc","area_squre_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX))
+            self.CReader.set("Fspc","area_dilate", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE))
+            self.CReader.set("Fspc","area_erode", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_ERODE))
+            self.CReader.set("Fspc","cell_square_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MIN))
+            self.CReader.set("Fspc","cell_square_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MAX))
+            self.CReader.set("Fspc","cell_raduis_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MIN))
+            self.CReader.set("Fspc","cell_raduis_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MAX))
+            self.CReader.set("Fspc","cell_dilate", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DILATE))
+            self.CReader.set("Fspc","cell_erode", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE))
+            self.CReader.set("Fspc","cell_ce", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE))
+            self.CReader.set("Fspc","cell_distance", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST))
+            self.CReader.set("Fspc","addup_set", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET))
+        if (flagExist == False) or (flagEvn == False) or (flagCounter == False) or (flagFspc == False):   
             self.CReader.write(open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, "w"))
             
         #REWRITE FILE TO AVOID INI FILE ERROR
@@ -97,12 +114,14 @@ class clsL1_ConfigOpr():
     def func_read_global_par_from_cfg_file(self):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
+        ##########COUNTER PART######################
         #config par
         ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX = int(self.CReader['Counter']['PicBatchCnt']);
         ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX = int(self.CReader['Counter']['PicBatchClas']);
         ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = int(self.CReader['Counter']['PicRemainCnt']);
         ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX = int(self.CReader['Counter']['PicBatFluClas']);
         ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT = int(self.CReader['Counter']['PicRemFluCnt']);
+        ##########ENV PART######################
         #Platform par
         ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = self.CReader['Env']['holeboard_type'];
         ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0] = int(self.CReader['Env']['holeboard, left_bot X-axis']);
@@ -158,7 +177,26 @@ class clsL1_ConfigOpr():
             ModCebsCom.GLVIS_PAR_OFC.saveGenrPar4(int(self.CReader['Env']['classification general par4']));
         except Exception:
             ModCebsCom.GLVIS_PAR_OFC.saveGenrPar4(1)
-        
+        ##########FSPC PART######################
+        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE = int(self.CReader['Fspc']['mark_line']);
+        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN = int(self.CReader['Fspc']['area_square_min']);
+        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX = int(self.CReader['Fspc']['area_squre_max']);
+        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE = int(self.CReader['Fspc']['area_dilate']);
+        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_ERODE = int(self.CReader['Fspc']['area_erode']);
+        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MIN = int(self.CReader['Fspc']['cell_square_min']);
+        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MAX = int(self.CReader['Fspc']['cell_square_max']);
+        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MIN = int(self.CReader['Fspc']['cell_raduis_min']);
+        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MAX = int(self.CReader['Fspc']['cell_raduis_max']);
+        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DILATE = int(self.CReader['Fspc']['cell_dilate']);
+        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE = int(self.CReader['Fspc']['cell_erode']);
+        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE = int(self.CReader['Fspc']['cell_ce']);
+        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST = int(self.CReader['Fspc']['cell_distance']);
+        tmp = self.CReader['Fspc']['addup_set']
+        if (tmp == 'True'):
+            ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET = True
+        else:
+            ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET = False
+        ##########RE-CHECK PART######################
         #In case of store error, re-caculate remaining unclas-pictures
         #为了防止统计错误，重新根据
         res = self.recheckRemaingUnclasBatchFile(ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL)
@@ -250,6 +288,49 @@ class clsL1_ConfigOpr():
             self.CReader.set("Env","classification general par2", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR2))
             self.CReader.set("Env","classification general par3", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR3))
             self.CReader.set("Env","classification general par4", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR4))
+        #回写                    
+        fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
+        self.CReader.write(fd)
+        fd.flush()
+        fd.close()
+
+    #更新荧光堆叠控制参数
+    def updateFpscSectionCtrlPar(self):
+        self.CReader=configparser.ConfigParser()
+        self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')        
+        if (self.CReader.has_section("Fspc") == False):
+            self.CReader.add_section("Fspc")
+            self.CReader.set("Fspc","mark_line", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE))
+            self.CReader.set("Fspc","area_square_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN))
+            self.CReader.set("Fspc","area_squre_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX))
+            self.CReader.set("Fspc","area_dilate", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE))
+            self.CReader.set("Fspc","area_erode", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_ERODE))
+            self.CReader.set("Fspc","cell_square_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MIN))
+            self.CReader.set("Fspc","cell_square_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MAX))
+            self.CReader.set("Fspc","cell_raduis_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MIN))
+            self.CReader.set("Fspc","cell_raduis_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MAX))
+            self.CReader.set("Fspc","cell_dilate", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DILATE))
+            self.CReader.set("Fspc","cell_erode", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE))
+            self.CReader.set("Fspc","cell_ce", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE))
+            self.CReader.set("Fspc","cell_distance", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST))
+            self.CReader.set("Fspc","addup_set", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET))
+        else:
+            self.CReader.remove_section("Fspc")
+            self.CReader.add_section("Fspc")        
+            self.CReader.set("Fspc","mark_line", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE))
+            self.CReader.set("Fspc","area_square_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN))
+            self.CReader.set("Fspc","area_squre_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX))
+            self.CReader.set("Fspc","area_dilate", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE))
+            self.CReader.set("Fspc","area_erode", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_ERODE))
+            self.CReader.set("Fspc","cell_square_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MIN))
+            self.CReader.set("Fspc","cell_square_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MAX))
+            self.CReader.set("Fspc","cell_raduis_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MIN))
+            self.CReader.set("Fspc","cell_raduis_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MAX))
+            self.CReader.set("Fspc","cell_dilate", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DILATE))
+            self.CReader.set("Fspc","cell_erode", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE))
+            self.CReader.set("Fspc","cell_ce", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE))
+            self.CReader.set("Fspc","cell_distance", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST))
+            self.CReader.set("Fspc","addup_set", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET))
         #回写                    
         fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
         self.CReader.write(fd)

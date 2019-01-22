@@ -51,13 +51,13 @@
    <property name="title">
     <string>图像显示</string>
    </property>
-   <widget class="QLabel" name="label_gpar_pic_fspc_fill">
+   <widget class="QLabel" name="label_pic_fspc_fill">
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>10</y>
+      <y>20</y>
       <width>731</width>
-      <height>711</height>
+      <height>701</height>
      </rect>
     </property>
     <property name="text">
@@ -101,7 +101,7 @@
     </rect>
    </property>
    <property name="title">
-    <string>堆叠荧光图像识别参数设置</string>
+    <string>参数设置</string>
    </property>
    <widget class="QLineEdit" name="lineEdit_fspc_coef_cell_min">
     <property name="geometry">
@@ -113,7 +113,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>200</string>
+     <string>920</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_fspc_coef_cell_min">
@@ -139,7 +139,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>500</string>
+     <string>1500</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_fspc_coef_cell_max">
@@ -165,7 +165,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>2000</string>
+     <string>19</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_fspc_coef_raduis_min">
@@ -178,7 +178,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>细胞圆形下限</string>
+     <string>细胞半径下限</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_fspc_coef_raduis_max">
@@ -191,7 +191,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>5000</string>
+     <string>23</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_fspc_coef_raduis_max">
@@ -204,7 +204,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>细胞圆形上限</string>
+     <string>细胞半径上限</string>
     </property>
    </widget>
    <widget class="QCheckBox" name="checkBox_fspc_output_addup">
@@ -236,7 +236,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>5</string>
+     <string>12</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_fspc_coef_area_dilate">
@@ -291,7 +291,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>细胞圆形度</string>
+     <string>细胞圆度下限</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_fspc_coef_cell_ce">
@@ -307,7 +307,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>5</string>
+     <string>50</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_fspc_coef_cell_raduis_dist">
@@ -323,7 +323,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>5</string>
+     <string>30</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_fspc_coef_cell_raduis_dist">
@@ -375,7 +375,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>500</string>
+     <string>100000</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_fspc_mark_line">
@@ -388,7 +388,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>1.5</string>
+     <string>150</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_fspc_coef_cell_erode">
@@ -433,7 +433,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>5</string>
+     <string>61</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_fspc_coef_cell_dilate">
@@ -459,7 +459,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>500</string>
+     <string>10000</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_fspc_coef_area_min">
@@ -665,5 +665,212 @@ p, li { white-space: pre-wrap; }
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton_fspc_clear</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsFspcForm</receiver>
+   <slot>slot_clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>233</x>
+     <y>546</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>208</x>
+     <y>601</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fspc_giveup</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsFspcForm</receiver>
+   <slot>slot_giveup()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>336</x>
+     <y>550</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>296</x>
+     <y>604</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fspc_compl</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsFspcForm</receiver>
+   <slot>slot_cmpl()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>449</x>
+     <y>553</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>402</x>
+     <y>606</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fspc_pic_file_load</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsFspcForm</receiver>
+   <slot>slot_file_load()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1208</x>
+     <y>39</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1146</x>
+     <y>14</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fspc_cmd_s1</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsFspcForm</receiver>
+   <slot>slot_cmd_s1()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>87</x>
+     <y>645</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>13</x>
+     <y>665</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fspc_cmd_s2</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsFspcForm</receiver>
+   <slot>slot_cmd_s2()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>200</x>
+     <y>638</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>136</x>
+     <y>669</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fspc_cmd_s3</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsFspcForm</receiver>
+   <slot>slot_cmd_s3()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>324</x>
+     <y>642</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>257</x>
+     <y>669</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fspc_cmd_s4</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsFspcForm</receiver>
+   <slot>slot_cmd_s4()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>64</x>
+     <y>700</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>7</x>
+     <y>711</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fspc_cmd_s5</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsFspcForm</receiver>
+   <slot>slot_cmd_s5()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>201</x>
+     <y>695</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>135</x>
+     <y>716</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fspc_cmd_s6</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsFspcForm</receiver>
+   <slot>slot_cmd_s6()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>332</x>
+     <y>690</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>253</x>
+     <y>717</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fspc_cmd_s7</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsFspcForm</receiver>
+   <slot>slot_cmd_s7()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>68</x>
+     <y>741</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>7</x>
+     <y>770</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fspc_cmd_sum</sender>
+   <signal>clicked()</signal>
+   <receiver>cebsFspcForm</receiver>
+   <slot>slot_cmd_sum()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>446</x>
+     <y>681</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>397</x>
+     <y>728</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>slot_clear()</slot>
+  <slot>slot_giveup()</slot>
+  <slot>slot_cmpl()</slot>
+  <slot>slot_file_load()</slot>
+  <slot>slot_cmd_s1()</slot>
+  <slot>slot_cmd_s2()</slot>
+  <slot>slot_cmd_s3()</slot>
+  <slot>slot_cmd_s4()</slot>
+  <slot>slot_cmd_s5()</slot>
+  <slot>slot_cmd_s6()</slot>
+  <slot>slot_cmd_s7()</slot>
+  <slot>slot_cmd_sum()</slot>
+ </slots>
 </ui>

@@ -521,45 +521,51 @@ class clsL0_MedSpsPar():
 #定义全局变量以及操作函数
 GLSPS_PAR_OFC = clsL0_MedSpsPar()
 
-# '''
-# PART5: 全局静态handler传递存储地点
-# 
-# #封装
-#         方便对参数进行维护，包括增删，
-# => 结果证明这种方式不能正常工作
-# '''
-# 
-# class clsL0_MedHandlerPar():
-#     
-#     #Class Handler Instance
-#     CHS_L4_FORM_MAINWIN = ''
-#     CHS_L4_FORM_CALIB = ''
-#     CHS_L4_FORM_GPAR = ''
-#     CHS_L4_FORM_MENG = ''
-#     CHS_L4_FORM_BROW = ''
-#     CHS_L3_CTRL_SCHD_THD = ''
-#     CHS_L3_CALIB_PROC = ''
-#     CHS_L3_GPAR_PROC = ''
-#     CHS_L3_MENG_PROC = ''
-#     CHS_L2_MOTO_PROC = ''
-#     CHS_L2_CALIB_PILOT_THD = ''
-#     CHS_L2_CALIB_CAM_DISP_THD = ''
-#     CHS_L2_VS_CAP_PROC = ''
-#     CHS_L2_VS_CFY_PROC = ''
-#     CHS_L1_MDC_THD = ''
-#     CHS_L1_MOT_DRV_API = ''  #第一代板子支持部分
-#     CHS_L1_CFG_OPR = ''
-#     
-#     #串口全局锁
-#     CHS_MOTO_MUTEX = threading.Lock()
-#     CHS_CAM_MUTEX = threading.Lock()
-#     
-#     def __init__(self):    
-#         super(clsL0_MedHandlerPar, self).__init__()  
-#         pass
-#                 
-# #定义全局变量以及操作函数
-# GLHLR_PAR_OFC = clsL0_MedHandlerPar()
+
+
+'''
+PART5: 荧光堆叠控制参数
+
+#封装
+方便对参数进行维护，包括增删
+'''
+class clsL0_MedFspcPar():
+    #
+    # 固定配置参数部分
+    #
+    
+    #
+    # 可配置参数部分
+    #
+    FSPC_COEF_MARK_LINE = 150; #NF2
+    FSPC_COEF_AREA_MIN = 10000
+    FSPC_COEF_AREA_MAX = 100000
+    FSPC_COEF_AREA_DILATE = 12
+    FSPC_COEF_AREA_ERODE = 5
+    FSPC_COEF_CELL_MIN = 920
+    FSPC_COEF_CELL_MAX = 1500
+    FSPC_COEF_RADUIS_MIN = 19
+    FSPC_COEF_RADUIS_MAX = 23
+    FSPC_COEF_CELL_DILATE = 61
+    FSPC_COEF_CELL_ERODE = 5
+    FSPC_COEF_CELL_CE = 50
+    FSPC_COEF_CELL_DIST = 30
+    FSPC_ADDUP_SET = True
+    
+    
+    #
+    # 临时参量部分
+    #
+    
+    def __init__(self):    
+        super(clsL0_MedFspcPar, self).__init__()  
+        pass
+    
+    def funcTest(self, par):
+        pass
+                
+#定义全局变量以及操作函数
+GLFSPC_PAR_OFC = clsL0_MedFspcPar()
 
 
 

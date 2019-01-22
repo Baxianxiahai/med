@@ -180,9 +180,16 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, clsL1_ConfigOpr):
     #读取界面上的参数并写入到INI配置文件
     def func_update_par_and_write_ini(self):
         #SAVE INTO COM VAR
-        GLVIS_PAR_OFC.SMALL_LOW_LIMIT, GLVIS_PAR_OFC.SMALL_MID_LIMIT, GLVIS_PAR_OFC.MID_BIG_LIMIT, GLVIS_PAR_OFC.BIG_UPPER_LIMIT, \
-            GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET, GLVIS_PAR_OFC.CFY_THD_GENR_PAR1, GLVIS_PAR_OFC.CFY_THD_GENR_PAR2, GLVIS_PAR_OFC.CFY_THD_GENR_PAR3,\
-            GLVIS_PAR_OFC.CFY_THD_GENR_PAR4 = self.func_read_vis_train_par();
+        GLVIS_PAR_OFC.SMALL_LOW_LIMIT, \
+        GLVIS_PAR_OFC.SMALL_MID_LIMIT, \
+        GLVIS_PAR_OFC.MID_BIG_LIMIT, \
+        GLVIS_PAR_OFC.BIG_UPPER_LIMIT, \
+        GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET, \
+        GLVIS_PAR_OFC.CFY_THD_GENR_PAR1, \
+        GLVIS_PAR_OFC.CFY_THD_GENR_PAR2, \
+        GLVIS_PAR_OFC.CFY_THD_GENR_PAR3,\
+        GLVIS_PAR_OFC.CFY_THD_GENR_PAR4 \
+            = self.func_read_vis_train_par();
         #其它静态部分参数
         GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET = self.checkBox_gpar_autoIdf.isChecked();
         GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET = self.checkBox_gpar_autoPic.isChecked();
