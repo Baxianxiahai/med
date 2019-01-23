@@ -69,11 +69,12 @@ from PkgL1vmHandler import ModVmLayer
 #  We just extract last time as our defined target normally.
 # 
 '''
-_TUP_VISION_DESC_LIST = [{'name':'OBVIOUS_UCMOS10000KPA', 'desc':'VID_0547&PID_6010', 'width':3584, 'height':2748, 'usage':'通用白光场景型号'},\
-                         {'name':'OBVIOUS_E3ISPM05000KPA', 'desc':'VID_0547&PID_114C', 'width':2448, 'height':2048, 'usage':'荧光尝试1，放弃'},\
-                         {'name':'TOUPCAM_E3ISPM06300KPB', 'desc':'VID_0547&PID_1217', 'width':3072, 'height':2048, 'usage':'荧光目标型号'},\
-                         {'name':'TOUPCAM_UCMOS05100KPA', 'desc':'VID_0547&PID_6510','width':2592,'height':1944, 'usage':'新华医院独有白光型号'},\
-                         ]
+_TUP_VISION_DESC_LIST = [\
+    {'name':'OBVIOUS_UCMOS10000KPA', 'desc':'VID_0547&PID_6010', 'width':3584, 'height':2748, 'usage':'通用白光场景型号'},\
+    {'name':'OBVIOUS_E3ISPM05000KPA', 'desc':'VID_0547&PID_114C', 'width':2448, 'height':2048, 'usage':'荧光尝试1，放弃'},\
+    {'name':'TOUPCAM_E3ISPM06300KPB', 'desc':'VID_0547&PID_1217', 'width':3072, 'height':2048, 'usage':'荧光目标型号'},\
+    {'name':'TOUPCAM_UCMOS05100KPA', 'desc':'VID_0547&PID_6510','width':2592,'height':1944, 'usage':'新华医院独有白光型号'},\
+    ]
 #分辨率必须根据设备型号，重新选择 #DEFAULT SELCTION
 _TUP_VISION_CAMBER_RES_WIDTH = 2592
 _TUP_VISION_CAMBER_RES_HEIGHT = 1944

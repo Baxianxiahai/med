@@ -20,26 +20,175 @@ import json
 '''
 配置模块
 '''
+_TUP_CEBS_CFG_SEC_ENV = 0
+_TUP_CEBS_CFG_SEC_COUNTER = 1
+_TUP_CEBS_CFG_SEC_FSPC = 2
+_TUP_CEBS_CFG_SEC_SET = ('Env', 'Counter', 'Fspc')
+#以下引用的全局变量，其实并没有起到很好的作用，还需要人工去刷新。幸好可以批处理，不然还是很难搞。
+#Python并不支持变量索引，所以这里虽然申明了这个变量，但并没有起到啥作用，没法保持一致
+#另外一个好处是：sectionName只有在这里申明一次，后面一直引用，方便统一修改
+_TUP_CEBS_CFG_SEC_LIST = [\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'workdir', 'valType':'string', 'valDefault':'', 'comVariable':ModCebsCom.GLCFG_PAR_OFC.PIC_WORK_DIR, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic_origin', 'valType':'string', 'valDefault':'', 'comVariable':ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic_middle', 'valType':'string', 'valDefault':'', 'comVariable':ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'holeboard_type', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'holeboard, left_bot X-axis', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0], 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'holeboard, left_bot Y-axis', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1], 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'holeboard, right_up X-Axis', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2], 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'holeboard, right_up Y-Axis', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3], 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic taking fix point set', 'valType':'bool', 'valDefault':False, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic classification set', 'valType':'bool', 'valDefault':False, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic auto-work after start set', 'valType':'bool', 'valDefault':False, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic auto-work tti', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'vision small-low limit', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'vision small-mid limit', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'vision mid-big limit', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'vision big-upper limit', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'vision res addup set', 'valType':'bool', 'valDefault':False, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'video capture enable set', 'valType':'bool', 'valDefault':False, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'video capture dur in sec', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'classification general par1', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR1, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'classification general par2', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR2, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'classification general par3', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR3, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'classification general par4', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR4, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER], 'sctName':'PicBatchCnt', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER], 'sctName':'PicBatchClas', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER], 'sctName':'PicRemainCnt', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER], 'sctName':'PicBatFluClas', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER], 'sctName':'PicRemFluCnt', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'mark_line', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'area_square_min', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'area_squre_max', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'area_dilate', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'area_erode', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_ERODE, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'cell_square_min', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MIN, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'cell_square_max', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MAX, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'cell_raduis_min', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MIN, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'cell_raduis_max', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MAX, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'cell_dilate', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DILATE, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'cell_erode', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'cell_ce', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'cell_distance', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'addup_set', 'valType':'bool', 'valDefault':False, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET, 'usage':''},\
+    ]
+
+#正式服务CLASS
 class clsL1_ConfigOpr():
     def __init__(self):
         pass
-        #self.loadInitFileAndInitGlComPar()
-
+    
+    #往变量_TUP_CEBS_CFG_SEC_LIST中去刷新，不然这个变量的数值还是老旧的
+    #这个过程，只有在存入ini文件时，需要干这件事。这是程序运行中很容易干的事情。
+    def tup_sec_par_refresh_com2list(self):
+        index = -1;
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLCFG_PAR_OFC.PIC_WORK_DIR
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0]
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1]
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2]
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3]
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR1
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR2
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR3
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR4
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_ERODE
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MIN
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MAX
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MIN
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MAX
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DILATE
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET
+    
+    #从全局变量读取到变量_TUP_CEBS_CFG_SEC_LIST中。读取INI文件的结果是在TUP变量中，所以必须重新刷新到全局变量中，不然全局变量并没有更新
+    #这个只有在系统初始化的时候，干一次。平时运行，都使用的是内存变量来操控的。
+    def tup_sec_par_refresh_list2com(self):
+        index = -1;
+        index +=1;  ModCebsCom.GLCFG_PAR_OFC.PIC_WORK_DIR                     = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH              = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH              = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE                   = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0]                  = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1]                  = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2]                  = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3]                  = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET         = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET    = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN      = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT                  = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT                  = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT                    = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT                  = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET               = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE                   = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC               = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR1                = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR2                = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR3                = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR4                = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX             = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX              = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT              = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX               = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT               = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE             = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN              = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX              = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE           = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_ERODE            = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MIN              = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MAX              = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MIN            = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MAX            = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DILATE           = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE            = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE               = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST             = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET                  = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        
+            
     '''
     * STEP0:
     *    读取ini文件，如果发现不存在还需要重新创建。如果发现某些部分不合法或者错误，则需要重新创建并补充完整
+    *    本函数完全改造为泛化，跟具体某个SECTION无关的方式，简化后期SECTION增加减少的维护！
     *
     '''   
     #INIT ALL STORAGE AREA
     def loadInitFileAndInitGlComPar(self):
+        ModCebsCom.GLCFG_PAR_OFC.PIC_WORK_DIR = os.getcwd()+ self.osDifferentStr()
         #JUDGE WORKING DIR
-        ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH = os.getcwd()+ self.osDifferentStr() + ModCebsCom.GLCFG_PAR_OFC.PIC_ORIGIN_PATH
+        ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH = ModCebsCom.GLCFG_PAR_OFC.PIC_WORK_DIR + ModCebsCom.GLCFG_PAR_OFC.PIC_ORIGIN_PATH
         flag = os.path.exists(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH)
         if (flag == False):
             os.mkdir(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH)
         ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH += self.osDifferentStr()
         #JUDGE MID PIC WOKRING DIR
-        ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH = os.getcwd()+ self.osDifferentStr() + ModCebsCom.GLCFG_PAR_OFC.PIC_MIDDLE_PATH
+        ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH = ModCebsCom.GLCFG_PAR_OFC.PIC_WORK_DIR + ModCebsCom.GLCFG_PAR_OFC.PIC_MIDDLE_PATH
         flag = os.path.exists(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH)
         if (flag == False):
             os.mkdir(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH)
@@ -47,64 +196,36 @@ class clsL1_ConfigOpr():
         #JUDGE CREATE INIT FILE OR NOT
         self.CReader=configparser.ConfigParser()
         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
+        #处理文件不存在的过程
         flagExist = os.path.exists(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME)
-        flagEvn = self.CReader.has_section("Env")
-        flagCounter = self.CReader.has_section("Counter")
-        flagFspc = self.CReader.has_section("Fspc")
-        if (flagExist == False) or (flagEvn == False):
-            self.CReader.add_section("Env")
-            self.CReader.set("Env","workdir", str(os.getcwd()+ self.osDifferentStr()))
-            self.CReader.set("Env","pic_origin", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH))
-            self.CReader.set("Env","pic_middle", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH))
-            self.CReader.set("Env","holeboard_type", str(ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE))
-            self.CReader.set("Env","holeboard, left_bot X-axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0]))
-            self.CReader.set("Env","holeboard, left_bot Y-axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1]))
-            self.CReader.set("Env","holeboard, right_up X-Axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2]))
-            self.CReader.set("Env","holeboard, right_up Y-Axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3]))
-            self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET))
-            self.CReader.set("Env","pic classification set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET))
-            self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET))
-            self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN))
-            self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
-            self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
-            self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))
-            self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT))
-            self.CReader.set("Env","vision res addup set", str(ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET))
-            self.CReader.set("Env","video capture enable set", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE))
-            self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC))
-            self.CReader.set("Env","classification general par1", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR1))
-            self.CReader.set("Env","classification general par2", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR2))
-            self.CReader.set("Env","classification general par3", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR3))
-            self.CReader.set("Env","classification general par4", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR4))
-        if (flagExist == False) or (flagCounter == False):
-            self.CReader.add_section("Counter")
-            self.CReader.set("Counter","PicBatchCnt", "0")
-            self.CReader.set("Counter","PicBatchClas", "0")
-            self.CReader.set("Counter","PicRemainCnt", "0")
-            self.CReader.set("Counter","PicBatFluClas", "0")
-            self.CReader.set("Counter","PicRemFluCnt", "0")
-        if (flagExist == False) or (flagFspc == False):
-            self.CReader.add_section("Fspc")
-            self.CReader.set("Fspc","mark_line", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE))
-            self.CReader.set("Fspc","area_square_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN))
-            self.CReader.set("Fspc","area_squre_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX))
-            self.CReader.set("Fspc","area_dilate", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE))
-            self.CReader.set("Fspc","area_erode", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_ERODE))
-            self.CReader.set("Fspc","cell_square_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MIN))
-            self.CReader.set("Fspc","cell_square_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MAX))
-            self.CReader.set("Fspc","cell_raduis_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MIN))
-            self.CReader.set("Fspc","cell_raduis_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MAX))
-            self.CReader.set("Fspc","cell_dilate", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DILATE))
-            self.CReader.set("Fspc","cell_erode", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE))
-            self.CReader.set("Fspc","cell_ce", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE))
-            self.CReader.set("Fspc","cell_distance", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST))
-            self.CReader.set("Fspc","addup_set", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET))
-        if (flagExist == False) or (flagEvn == False) or (flagCounter == False) or (flagFspc == False):   
+        flagItemSum = True
+        self.tup_sec_par_refresh_com2list()
+        if (flagExist == False):
+            for i in range(0, len(_TUP_CEBS_CFG_SEC_SET)):
+                self.CReader.add_section(_TUP_CEBS_CFG_SEC_SET[i])
+                for element in _TUP_CEBS_CFG_SEC_LIST:
+                    if (element['domain'] == _TUP_CEBS_CFG_SEC_SET[i]):
+                        self.CReader.set(_TUP_CEBS_CFG_SEC_SET[i], element['sctName'], str(element['comVariable']))
+        #再处理部分存在的情况
+        else:
+            for i in range(0, len(_TUP_CEBS_CFG_SEC_SET)):
+                flagItem = self.CReader.has_section(_TUP_CEBS_CFG_SEC_SET[i])
+                if (flagItem == False):
+                    flagItemSum = False
+                    self.CReader.add_section(_TUP_CEBS_CFG_SEC_SET[i])
+                    for element in self._TUP_CEBS_CFG_SEC_LIST:
+                        if (element['domain'] == _TUP_CEBS_CFG_SEC_SET[i]):
+                            self.CReader.set(_TUP_CEBS_CFG_SEC_SET[i], element['sctName'], str(element['comVariable']))
+        #满足条件，则重新更新文件
+        if (flagExist == False) or (flagItemSum == False):
             self.CReader.write(open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, "w"))
-            
+        #存在，但程序更换了工作目录，所以需要重新写入并更新INI文件
         #REWRITE FILE TO AVOID INI FILE ERROR
         if (self.CReader['Env']['workdir'] != str(os.getcwd()+ self.osDifferentStr())):
             self.updateStaticSectionEnvPar()
+
+    
+    
     '''
     * STEP1:
     *    控制参数读取及更新过程
@@ -114,88 +235,118 @@ class clsL1_ConfigOpr():
     def func_read_global_par_from_cfg_file(self):
         self.CReader=configparser.ConfigParser()
         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
-        ##########COUNTER PART######################
-        #config par
-        ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX = int(self.CReader['Counter']['PicBatchCnt']);
-        ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX = int(self.CReader['Counter']['PicBatchClas']);
-        ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = int(self.CReader['Counter']['PicRemainCnt']);
-        ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX = int(self.CReader['Counter']['PicBatFluClas']);
-        ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT = int(self.CReader['Counter']['PicRemFluCnt']);
-        ##########ENV PART######################
-        #Platform par
-        ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = self.CReader['Env']['holeboard_type'];
-        ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0] = int(self.CReader['Env']['holeboard, left_bot X-axis']);
-        ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1] = int(self.CReader['Env']['holeboard, left_bot Y-axis']);
-        ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2] = int(self.CReader['Env']['holeboard, right_up X-axis']);
-        ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3] = int(self.CReader['Env']['holeboard, right_up Y-axis']);
-        tmp = self.CReader['Env']['pic taking fix point set']
-        if (tmp == 'True'):
-            ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET = True
-        else:
-            ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET = False
-        tmp = self.CReader['Env']['pic classification set']
-        if (tmp == 'True'):
-            ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET = True
-        else:
-            ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET = False
-        tmp = self.CReader['Env']['pic auto-work after start set']
-        if (tmp == 'True'):
-            ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET = True
-        else:
-            ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET = False
-        ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN = int(self.CReader['Env']['pic auto-work tti']);
-        #New def
-        ModCebsCom.GLVIS_PAR_OFC.saveLowLimit(int(self.CReader['Env']['vision small-low limit']));
-        ModCebsCom.GLVIS_PAR_OFC.saveMidLimit(int(self.CReader['Env']['vision small-mid limit']));
-        ModCebsCom.GLVIS_PAR_OFC.saveBigLimit(int(self.CReader['Env']['vision mid-big limit']));
-        ModCebsCom.GLVIS_PAR_OFC.saveUpperLimit(int(self.CReader['Env']['vision big-upper limit']));
-        tmp = self.CReader['Env']['vision res addup set']
-        if (tmp == 'True'):
-            ModCebsCom.GLVIS_PAR_OFC.saveAddupSet(True)
-        else:
-            ModCebsCom.GLVIS_PAR_OFC.saveAddupSet(False)
-        tmp = self.CReader['Env']['video capture enable set']
-        if (tmp == 'True'):
-            ModCebsCom.GLVIS_PAR_OFC.saveCapEnable(True)
-        else:
-            ModCebsCom.GLVIS_PAR_OFC.saveCapEnable(False)
-        ModCebsCom.GLVIS_PAR_OFC.saveCapDur(int(self.CReader['Env']['video capture dur in sec']))
-        #通用参数部分
-        try:
-            ModCebsCom.GLVIS_PAR_OFC.saveGenrPar1(int(self.CReader['Env']['classification general par1']));
-        except Exception:
-            ModCebsCom.GLVIS_PAR_OFC.saveGenrPar1(1)
-        try:
-            ModCebsCom.GLVIS_PAR_OFC.saveGenrPar2(int(self.CReader['Env']['classification general par2']));
-        except Exception:
-            ModCebsCom.GLVIS_PAR_OFC.saveGenrPar2(1)
-        try:
-            ModCebsCom.GLVIS_PAR_OFC.saveGenrPar3(int(self.CReader['Env']['classification general par3']));
-        except Exception:
-            ModCebsCom.GLVIS_PAR_OFC.saveGenrPar3(1)
-        try:
-            ModCebsCom.GLVIS_PAR_OFC.saveGenrPar4(int(self.CReader['Env']['classification general par4']));
-        except Exception:
-            ModCebsCom.GLVIS_PAR_OFC.saveGenrPar4(1)
-        ##########FSPC PART######################
-        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE = int(self.CReader['Fspc']['mark_line']);
-        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN = int(self.CReader['Fspc']['area_square_min']);
-        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX = int(self.CReader['Fspc']['area_squre_max']);
-        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE = int(self.CReader['Fspc']['area_dilate']);
-        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_ERODE = int(self.CReader['Fspc']['area_erode']);
-        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MIN = int(self.CReader['Fspc']['cell_square_min']);
-        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MAX = int(self.CReader['Fspc']['cell_square_max']);
-        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MIN = int(self.CReader['Fspc']['cell_raduis_min']);
-        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MAX = int(self.CReader['Fspc']['cell_raduis_max']);
-        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DILATE = int(self.CReader['Fspc']['cell_dilate']);
-        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE = int(self.CReader['Fspc']['cell_erode']);
-        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE = int(self.CReader['Fspc']['cell_ce']);
-        ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST = int(self.CReader['Fspc']['cell_distance']);
-        tmp = self.CReader['Fspc']['addup_set']
-        if (tmp == 'True'):
-            ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET = True
-        else:
-            ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET = False
+        self.tup_sec_par_refresh_com2list()
+        for i in range(0, len(_TUP_CEBS_CFG_SEC_SET)):        
+            for element in _TUP_CEBS_CFG_SEC_LIST:
+                #分类别进行处理
+                if (element['domain'] == _TUP_CEBS_CFG_SEC_SET[i]):
+                    if (element['valType'] == 'int'):
+                        try:
+                            tmp = int(self.CReader[_TUP_CEBS_CFG_SEC_SET[i]][element['sctName']])
+                        except Exception:
+                            tmp = element['valDefault']
+                        element['comVariable'] = tmp
+                    elif (element['valType'] == 'bool'):
+                        try:
+                            tmp = self.CReader[_TUP_CEBS_CFG_SEC_SET[i]][element['sctName']]
+                        except Exception:
+                            tmp = element['valDefault']
+                        if (tmp == 'True'):
+                            element['comVariable'] = True
+                        else:
+                            element['comVariable'] = False
+                    elif (element['valType'] == 'string'):
+                        try:
+                            tmp = self.CReader[_TUP_CEBS_CFG_SEC_SET[i]][element['sctName']]
+                        except Exception:
+                            tmp = element['valDefault']
+                        element['comVariable'] = str(tmp)
+                    else:
+                        element['comVariable'] = str(tmp)
+        self.tup_sec_par_refresh_list2com()
+        
+#         ##########ENV PART######################
+#         #Platform par
+#         ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE = self.CReader['Env']['holeboard_type'];
+#         ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0] = int(self.CReader['Env']['holeboard, left_bot X-axis']);
+#         ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1] = int(self.CReader['Env']['holeboard, left_bot Y-axis']);
+#         ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2] = int(self.CReader['Env']['holeboard, right_up X-axis']);
+#         ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3] = int(self.CReader['Env']['holeboard, right_up Y-axis']);
+#         tmp = self.CReader['Env']['pic taking fix point set']
+#         if (tmp == 'True'):
+#             ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET = True
+#         else:
+#             ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET = False
+#         tmp = self.CReader['Env']['pic classification set']
+#         if (tmp == 'True'):
+#             ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET = True
+#         else:
+#             ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET = False
+#         tmp = self.CReader['Env']['pic auto-work after start set']
+#         if (tmp == 'True'):
+#             ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET = True
+#         else:
+#             ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET = False
+#         ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN = int(self.CReader['Env']['pic auto-work tti']);
+#         #New def
+#         ModCebsCom.GLVIS_PAR_OFC.saveLowLimit(int(self.CReader['Env']['vision small-low limit']));
+#         ModCebsCom.GLVIS_PAR_OFC.saveMidLimit(int(self.CReader['Env']['vision small-mid limit']));
+#         ModCebsCom.GLVIS_PAR_OFC.saveBigLimit(int(self.CReader['Env']['vision mid-big limit']));
+#         ModCebsCom.GLVIS_PAR_OFC.saveUpperLimit(int(self.CReader['Env']['vision big-upper limit']));
+#         tmp = self.CReader['Env']['vision res addup set']
+#         if (tmp == 'True'):
+#             ModCebsCom.GLVIS_PAR_OFC.saveAddupSet(True)
+#         else:
+#             ModCebsCom.GLVIS_PAR_OFC.saveAddupSet(False)
+#         tmp = self.CReader['Env']['video capture enable set']
+#         if (tmp == 'True'):
+#             ModCebsCom.GLVIS_PAR_OFC.saveCapEnable(True)
+#         else:
+#             ModCebsCom.GLVIS_PAR_OFC.saveCapEnable(False)
+#         ModCebsCom.GLVIS_PAR_OFC.saveCapDur(int(self.CReader['Env']['video capture dur in sec']))
+#         #通用参数部分
+#         try:
+#             ModCebsCom.GLVIS_PAR_OFC.saveGenrPar1(int(self.CReader['Env']['classification general par1']));
+#         except Exception:
+#             ModCebsCom.GLVIS_PAR_OFC.saveGenrPar1(1)
+#         try:
+#             ModCebsCom.GLVIS_PAR_OFC.saveGenrPar2(int(self.CReader['Env']['classification general par2']));
+#         except Exception:
+#             ModCebsCom.GLVIS_PAR_OFC.saveGenrPar2(1)
+#         try:
+#             ModCebsCom.GLVIS_PAR_OFC.saveGenrPar3(int(self.CReader['Env']['classification general par3']));
+#         except Exception:
+#             ModCebsCom.GLVIS_PAR_OFC.saveGenrPar3(1)
+#         try:
+#             ModCebsCom.GLVIS_PAR_OFC.saveGenrPar4(int(self.CReader['Env']['classification general par4']));
+#         except Exception:
+#             ModCebsCom.GLVIS_PAR_OFC.saveGenrPar4(1)
+#         ##########COUNTER PART######################
+#         #config par
+#         ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX = int(self.CReader['Counter']['PicBatchCnt']);
+#         ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX = int(self.CReader['Counter']['PicBatchClas']);
+#         ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT = int(self.CReader['Counter']['PicRemainCnt']);
+#         ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX = int(self.CReader['Counter']['PicBatFluClas']);
+#         ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT = int(self.CReader['Counter']['PicRemFluCnt']);
+#         ##########FSPC PART######################
+#         ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE = int(self.CReader['Fspc']['mark_line']);
+#         ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN = int(self.CReader['Fspc']['area_square_min']);
+#         ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX = int(self.CReader['Fspc']['area_squre_max']);
+#         ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE = int(self.CReader['Fspc']['area_dilate']);
+#         ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_ERODE = int(self.CReader['Fspc']['area_erode']);
+#         ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MIN = int(self.CReader['Fspc']['cell_square_min']);
+#         ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MAX = int(self.CReader['Fspc']['cell_square_max']);
+#         ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MIN = int(self.CReader['Fspc']['cell_raduis_min']);
+#         ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MAX = int(self.CReader['Fspc']['cell_raduis_max']);
+#         ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DILATE = int(self.CReader['Fspc']['cell_dilate']);
+#         ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE = int(self.CReader['Fspc']['cell_erode']);
+#         ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE = int(self.CReader['Fspc']['cell_ce']);
+#         ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST = int(self.CReader['Fspc']['cell_distance']);
+#         tmp = self.CReader['Fspc']['addup_set']
+#         if (tmp == 'True'):
+#             ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET = True
+#         else:
+#             ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET = False
         ##########RE-CHECK PART######################
         #In case of store error, re-caculate remaining unclas-pictures
         #为了防止统计错误，重新根据
@@ -236,58 +387,66 @@ class clsL1_ConfigOpr():
     #更新板孔参数配置文件
     def updateStaticSectionEnvPar(self):
         self.CReader=configparser.ConfigParser()
-        self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')        
-        if (self.CReader.has_section("Env") == False):
-            self.CReader.add_section("Env")
-            self.CReader.set("Env","workdir", str(os.getcwd()+ self.osDifferentStr()))
-            self.CReader.set("Env","pic_origin", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH))
-            self.CReader.set("Env","pic_middle", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH))
-            self.CReader.set("Env","holeboard_type", str(ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE))
-            self.CReader.set("Env","holeboard, left_bot X-axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0]))
-            self.CReader.set("Env","holeboard, left_bot Y-axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1]))
-            self.CReader.set("Env","holeboard, right_up X-Axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2]))
-            self.CReader.set("Env","holeboard, right_up Y-Axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3]))
-            self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET))
-            self.CReader.set("Env","pic classification set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET))
-            self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET))
-            self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN))
-            self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
-            self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
-            self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))
-            self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT))
-            self.CReader.set("Env","vision res addup set", str(ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET))
-            self.CReader.set("Env","video capture enable set", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE))
-            self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC))
-            self.CReader.set("Env","classification general par1", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR1))
-            self.CReader.set("Env","classification general par2", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR2))
-            self.CReader.set("Env","classification general par3", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR3))
-            self.CReader.set("Env","classification general par4", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR4))
+        self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
+        self.tup_sec_par_refresh_com2list()
+        if (self.CReader.has_section(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV]) == False):
+            self.CReader.add_section(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV])
+            for element in _TUP_CEBS_CFG_SEC_LIST:
+                if (element['domain'] == _TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV]):
+                    self.CReader.set(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], element['sctName'], str(element['comVariable']))
+#             self.CReader.set("Env","workdir", str(ModCebsCom.GLCFG_PAR_OFC.PIC_WORK_DIR))
+#             self.CReader.set("Env","pic_origin", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH))
+#             self.CReader.set("Env","pic_middle", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH))
+#             self.CReader.set("Env","holeboard_type", str(ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE))
+#             self.CReader.set("Env","holeboard, left_bot X-axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0]))
+#             self.CReader.set("Env","holeboard, left_bot Y-axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1]))
+#             self.CReader.set("Env","holeboard, right_up X-Axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2]))
+#             self.CReader.set("Env","holeboard, right_up Y-Axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3]))
+#             self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET))
+#             self.CReader.set("Env","pic classification set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET))
+#             self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET))
+#             self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN))
+#             self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
+#             self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
+#             self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))
+#             self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT))
+#             self.CReader.set("Env","vision res addup set", str(ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET))
+#             self.CReader.set("Env","video capture enable set", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE))
+#             self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC))
+#             self.CReader.set("Env","classification general par1", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR1))
+#             self.CReader.set("Env","classification general par2", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR2))
+#             self.CReader.set("Env","classification general par3", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR3))
+#             self.CReader.set("Env","classification general par4", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR4))
         else:
-            self.CReader.remove_section("Env")
-            self.CReader.add_section("Env")        
-            self.CReader.set("Env","workdir", str(os.getcwd()+ self.osDifferentStr()))
-            self.CReader.set("Env","pic_origin", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH))
-            self.CReader.set("Env","pic_middle", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH))
-            self.CReader.set("Env","holeboard_type", str(ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE))
-            self.CReader.set("Env","holeboard, left_bot X-axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0]))
-            self.CReader.set("Env","holeboard, left_bot Y-axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1]))
-            self.CReader.set("Env","holeboard, right_up X-Axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2]))
-            self.CReader.set("Env","holeboard, right_up Y-Axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3]))
-            self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET))
-            self.CReader.set("Env","pic classification set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET))
-            self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET))
-            self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN))
-            self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
-            self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
-            self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))
-            self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT))
-            self.CReader.set("Env","vision res addup set", str(ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET))
-            self.CReader.set("Env","video capture enable set", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE))
-            self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC))
-            self.CReader.set("Env","classification general par1", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR1))
-            self.CReader.set("Env","classification general par2", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR2))
-            self.CReader.set("Env","classification general par3", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR3))
-            self.CReader.set("Env","classification general par4", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR4))
+            self.CReader.remove_section(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV])
+            self.CReader.add_section(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV])
+            for element in _TUP_CEBS_CFG_SEC_LIST:
+                if (element['domain'] == _TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV]):
+                    self.CReader.set(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], element['sctName'], str(element['comVariable']))
+#               
+#             self.CReader.set("Env","workdir", str(ModCebsCom.GLCFG_PAR_OFC.PIC_WORK_DIR))
+#             self.CReader.set("Env","pic_origin", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH))
+#             self.CReader.set("Env","pic_middle", str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH))
+#             self.CReader.set("Env","holeboard_type", str(ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE))
+#             self.CReader.set("Env","holeboard, left_bot X-axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0]))
+#             self.CReader.set("Env","holeboard, left_bot Y-axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1]))
+#             self.CReader.set("Env","holeboard, right_up X-Axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2]))
+#             self.CReader.set("Env","holeboard, right_up Y-Axis", str(ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3]))
+#             self.CReader.set("Env","pic taking fix point set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET))
+#             self.CReader.set("Env","pic classification set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET))
+#             self.CReader.set("Env","pic auto-work after start set", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET))
+#             self.CReader.set("Env","pic auto-work tti", str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN))
+#             self.CReader.set("Env","vision small-low limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
+#             self.CReader.set("Env","vision small-mid limit", str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
+#             self.CReader.set("Env","vision mid-big limit", str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))
+#             self.CReader.set("Env","vision big-upper limit", str(ModCebsCom.GLVIS_PAR_OFC.BIG_UPPER_LIMIT))
+#             self.CReader.set("Env","vision res addup set", str(ModCebsCom.GLVIS_PAR_OFC.CLAS_RES_ADDUP_SET))
+#             self.CReader.set("Env","video capture enable set", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_ENABLE))
+#             self.CReader.set("Env","video capture dur in sec", str(ModCebsCom.GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC))
+#             self.CReader.set("Env","classification general par1", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR1))
+#             self.CReader.set("Env","classification general par2", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR2))
+#             self.CReader.set("Env","classification general par3", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR3))
+#             self.CReader.set("Env","classification general par4", str(ModCebsCom.GLVIS_PAR_OFC.CFY_THD_GENR_PAR4))
         #回写                    
         fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
         self.CReader.write(fd)
@@ -297,40 +456,52 @@ class clsL1_ConfigOpr():
     #更新荧光堆叠控制参数
     def updateFpscSectionCtrlPar(self):
         self.CReader=configparser.ConfigParser()
-        self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')        
-        if (self.CReader.has_section("Fspc") == False):
-            self.CReader.add_section("Fspc")
-            self.CReader.set("Fspc","mark_line", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE))
-            self.CReader.set("Fspc","area_square_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN))
-            self.CReader.set("Fspc","area_squre_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX))
-            self.CReader.set("Fspc","area_dilate", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE))
-            self.CReader.set("Fspc","area_erode", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_ERODE))
-            self.CReader.set("Fspc","cell_square_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MIN))
-            self.CReader.set("Fspc","cell_square_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MAX))
-            self.CReader.set("Fspc","cell_raduis_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MIN))
-            self.CReader.set("Fspc","cell_raduis_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MAX))
-            self.CReader.set("Fspc","cell_dilate", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DILATE))
-            self.CReader.set("Fspc","cell_erode", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE))
-            self.CReader.set("Fspc","cell_ce", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE))
-            self.CReader.set("Fspc","cell_distance", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST))
-            self.CReader.set("Fspc","addup_set", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET))
+        self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
+        self.tup_sec_par_refresh_com2list()   
+        if (self.CReader.has_section(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC]) == False):
+            self.CReader.add_section(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC])
+            for element in _TUP_CEBS_CFG_SEC_LIST:
+                if (element['domain'] == _TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC]):
+                    self.CReader.set(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], element['sctName'], str(element['comVariable']))
+# 
+#         if (self.CReader.has_section("Fspc") == False):
+#             self.CReader.add_section("Fspc")
+#             self.CReader.set("Fspc","mark_line", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE))
+#             self.CReader.set("Fspc","area_square_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN))
+#             self.CReader.set("Fspc","area_squre_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX))
+#             self.CReader.set("Fspc","area_dilate", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE))
+#             self.CReader.set("Fspc","area_erode", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_ERODE))
+#             self.CReader.set("Fspc","cell_square_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MIN))
+#             self.CReader.set("Fspc","cell_square_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MAX))
+#             self.CReader.set("Fspc","cell_raduis_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MIN))
+#             self.CReader.set("Fspc","cell_raduis_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MAX))
+#             self.CReader.set("Fspc","cell_dilate", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DILATE))
+#             self.CReader.set("Fspc","cell_erode", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE))
+#             self.CReader.set("Fspc","cell_ce", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE))
+#             self.CReader.set("Fspc","cell_distance", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST))
+#             self.CReader.set("Fspc","addup_set", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET))
         else:
-            self.CReader.remove_section("Fspc")
-            self.CReader.add_section("Fspc")        
-            self.CReader.set("Fspc","mark_line", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE))
-            self.CReader.set("Fspc","area_square_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN))
-            self.CReader.set("Fspc","area_squre_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX))
-            self.CReader.set("Fspc","area_dilate", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE))
-            self.CReader.set("Fspc","area_erode", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_ERODE))
-            self.CReader.set("Fspc","cell_square_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MIN))
-            self.CReader.set("Fspc","cell_square_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MAX))
-            self.CReader.set("Fspc","cell_raduis_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MIN))
-            self.CReader.set("Fspc","cell_raduis_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MAX))
-            self.CReader.set("Fspc","cell_dilate", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DILATE))
-            self.CReader.set("Fspc","cell_erode", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE))
-            self.CReader.set("Fspc","cell_ce", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE))
-            self.CReader.set("Fspc","cell_distance", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST))
-            self.CReader.set("Fspc","addup_set", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET))
+            self.CReader.remove_section(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC])
+            self.CReader.add_section(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC])
+            for element in _TUP_CEBS_CFG_SEC_LIST:
+                if (element['domain'] == _TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC]):
+                    self.CReader.set(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], element['sctName'], str(element['comVariable']))
+#             self.CReader.remove_section("Fspc")
+#             self.CReader.add_section("Fspc")        
+#             self.CReader.set("Fspc","mark_line", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE))
+#             self.CReader.set("Fspc","area_square_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN))
+#             self.CReader.set("Fspc","area_squre_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX))
+#             self.CReader.set("Fspc","area_dilate", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE))
+#             self.CReader.set("Fspc","area_erode", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_ERODE))
+#             self.CReader.set("Fspc","cell_square_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MIN))
+#             self.CReader.set("Fspc","cell_square_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MAX))
+#             self.CReader.set("Fspc","cell_raduis_min", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MIN))
+#             self.CReader.set("Fspc","cell_raduis_max", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MAX))
+#             self.CReader.set("Fspc","cell_dilate", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DILATE))
+#             self.CReader.set("Fspc","cell_erode", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE))
+#             self.CReader.set("Fspc","cell_ce", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE))
+#             self.CReader.set("Fspc","cell_distance", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST))
+#             self.CReader.set("Fspc","addup_set", str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET))
         #回写                    
         fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
         self.CReader.write(fd)
@@ -358,26 +529,34 @@ class clsL1_ConfigOpr():
         #正式更新
         self.CReader=configparser.ConfigParser()
         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
-        if (self.CReader.has_section("Counter") == False):
-            self.CReader.add_section("Counter")
-            self.CReader.set("Counter","PicBatchCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX))
-            #普通图像
-            self.CReader.set("Counter","PicBatchClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX))
-            self.CReader.set("Counter","PicRemainCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
-            #荧光图像控制参数
-            self.CReader.set("Counter","PicBatFluClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX))
-            self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
+        self.tup_sec_par_refresh_com2list()
+        if (self.CReader.has_section(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER]) == False):
+            self.CReader.add_section(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER])
+            for element in _TUP_CEBS_CFG_SEC_LIST:
+                if (element['domain'] == _TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER]):
+                    self.CReader.set(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER], element['sctName'], str(element['comVariable']))
+#             self.CReader.set("Counter","PicBatchCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX))
+#             #普通图像
+#             self.CReader.set("Counter","PicBatchClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX))
+#             self.CReader.set("Counter","PicRemainCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+#             #荧光图像控制参数
+#             self.CReader.set("Counter","PicBatFluClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX))
+#             self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
             
         else:
-            self.CReader.remove_section("Counter")
-            self.CReader.add_section("Counter")
-            self.CReader.set("Counter","PicBatchCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX))
-            #普通图像
-            self.CReader.set("Counter","PicBatchClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX))
-            self.CReader.set("Counter","PicRemainCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
-            #荧光图像控制参数
-            self.CReader.set("Counter","PicBatFluClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX))
-            self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
+            self.CReader.remove_section(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER])
+            self.CReader.add_section(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER])
+            for element in _TUP_CEBS_CFG_SEC_LIST:
+                if (element['domain'] == _TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER]):
+                    self.CReader.set(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER], element['sctName'], str(element['comVariable']))
+
+#             self.CReader.set("Counter","PicBatchCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX))
+#             #普通图像
+#             self.CReader.set("Counter","PicBatchClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX))
+#             self.CReader.set("Counter","PicRemainCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+#             #荧光图像控制参数
+#             self.CReader.set("Counter","PicBatFluClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX))
+#             self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
         fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
         self.CReader.write(fd)
         fd.flush()
@@ -402,26 +581,34 @@ class clsL1_ConfigOpr():
         #正式更新
         self.CReader=configparser.ConfigParser()
         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
-        if (self.CReader.has_section("Counter") == False):
-            self.CReader.add_section("Counter")
-            self.CReader.set("Counter","PicBatchCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX))
-            #普通图像
-            self.CReader.set("Counter","PicBatchClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX))
-            self.CReader.set("Counter","PicRemainCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
-            #荧光图像控制参数
-            self.CReader.set("Counter","PicBatFluClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX))
-            self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
+        self.tup_sec_par_refresh_com2list()
+        if (self.CReader.has_section(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER]) == False):
+            self.CReader.add_section(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER])
+            for element in _TUP_CEBS_CFG_SEC_LIST:
+                if (element['domain'] == _TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER]):
+                    self.CReader.set(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER], element['sctName'], str(element['comVariable']))            
+            
+#             self.CReader.set("Counter","PicBatchCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX))
+#             #普通图像
+#             self.CReader.set("Counter","PicBatchClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX))
+#             self.CReader.set("Counter","PicRemainCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+#             #荧光图像控制参数
+#             self.CReader.set("Counter","PicBatFluClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX))
+#             self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
             
         else:
-            self.CReader.remove_section("Counter")
-            self.CReader.add_section("Counter")
-            self.CReader.set("Counter","PicBatchCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX))
-            #普通图像
-            self.CReader.set("Counter","PicBatchClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX))
-            self.CReader.set("Counter","PicRemainCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
-            #荧光图像控制参数
-            self.CReader.set("Counter","PicBatFluClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX))
-            self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
+            self.CReader.remove_section(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER])
+            self.CReader.add_section(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER])
+            for element in _TUP_CEBS_CFG_SEC_LIST:
+                if (element['domain'] == _TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER]):
+                    self.CReader.set(_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER], element['sctName'], str(element['comVariable']))            
+#             self.CReader.set("Counter","PicBatchCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX))
+#             #普通图像
+#             self.CReader.set("Counter","PicBatchClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_CLAS_INDEX))
+#             self.CReader.set("Counter","PicRemainCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
+#             #荧光图像控制参数
+#             self.CReader.set("Counter","PicBatFluClas", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX))
+#             self.CReader.set("Counter","PicRemFluCnt", str(ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT))
         fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
         self.CReader.write(fd)
         fd.flush()
@@ -703,40 +890,43 @@ class clsL1_ConfigOpr():
         fd.flush()
         fd.close()
 
-    '''
-    #
-    #下面三个函数暂时没有使用起来
-    #
-    # 已经明确，normal属性是在创建文件时，就存入到该文件的熟悉中
-    #
-    '''
-#     def updateNormalUnclasFileAsClassified(self, batch, fileNbr):
-#         return self.updEleUncFileAsClf(batch, fileNbr, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_NORMAL)
-# 
-#     def updateFluUnclasFileAsClassified(self, batch, fileNbr):
-#         return self.updEleUncFileAsClf(batch, fileNbr, ModCebsCom.GLCFG_PAR_OFC.FILE_ATT_FLUORESCEN)
-#     
-#     def updEleUncFileAsClf(self, batch, fileNbr, eleTag):
-#         self.CReader=configparser.ConfigParser()
-#         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
-#         batchStr = "batch#" + str(batch)
-#         fileName = self.combineFileName(batch, fileNbr)
-#         fileClas = str("batchfileclas#" + str(fileNbr))
-#         fileAttr = str("batchfileatt#" + str(fileNbr))
-#         self.CReader.set(batchStr, fileName, self.combineFileNameWithDir(batch, fileNbr))
-#         self.CReader.set(batchStr, fileClas, 'yes')
-#         self.CReader.set(batchStr, fileAttr, eleTag)
-#         fd = open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w')
-#         self.CReader.write(fd)
-#         fd.close()
-
-
 
     '''
     * STEP6:
     *    公共的打印及错误处理过程
     *
-    '''   
+    '''
+    _MOD_CEBS_CFG_HB96 = ['A0', 'A1', 'A2', 'A3', 'A4','A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12',\
+                           'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11', 'B12',\
+                           'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12',\
+                           'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12',\
+                           'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 'E10', 'E11', 'E12',\
+                           'F1', 'F2', 'F3','F4', 'F5', 'F6', 'F7', 'F8' ,'F9', 'F10', 'F11', 'F12',\
+                           'G1', 'G2', 'G3', 'G4','G5','G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12',\
+                           'H1', 'H2', 'H3','H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'H10', 'H11', 'H12',\
+                           ];
+                           
+    _MOD_CEBS_CFG_HB48 = ['A0', 'A1', 'A2', 'A3', 'A4','A5', 'A6', 'A7', 'A8',\
+                           'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8',\
+                           'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8',\
+                           'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8',\
+                           'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8',\
+                           'F1', 'F2', 'F3','F4', 'F5', 'F6', 'F7', 'F8',\
+                           ];
+                           
+    _MOD_CEBS_CFG_HB24 = ['A0', 'A1', 'A2', 'A3', 'A4','A5', 'A6',\
+                           'B1', 'B2', 'B3', 'B4', 'B5', 'B6',\
+                           'C1', 'C2', 'C3', 'C4', 'C5', 'C6',\
+                           'D1', 'D2', 'D3', 'D4', 'D5', 'D6',\
+                           ];
+    _MOD_CEBS_CFG_HB12 = ['A0', 'A1', 'A2', 'A3', 'A4',\
+                           'B1', 'B2', 'B3', 'B4',\
+                           'C1', 'C2', 'C3', 'C4',\
+                           ];
+    _MOD_CEBS_CFG_HB6 = ['A0', 'A1', 'A2', 'A3',\
+                         'B1', 'B2', 'B3',\
+                          ];
+                                  
     #RECORD ERROR LOG FILE SAVING, WITH YMDHMS and basic information!
     def medErrorLog(self, inputStr):
         head = '\r[CEBS] ' + time.strftime("%Y/%m/%d %H:%M:%S") + ' [ERR] '
@@ -754,10 +944,11 @@ class clsL1_ConfigOpr():
     '''获取机器标签和配置'''
     def GetMachineTagandConfigure(self):
         config=configparser.ConfigParser()
-        config.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME,encoding="utf-8")
+        config.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding="utf-8")
         tag=config.get("NAME",'name')
         configure=config.get("Env",'holeboard_type')
         return tag,configure
+    
     def SetDishRowandColumn(self):
         config=configparser.ConfigParser()
         config.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME,encoding='utf-8')
@@ -791,43 +982,8 @@ class clsL1_ConfigOpr():
         config.set("RowAndColumn","Row8",json.dumps(ColumnArray[7]))
         config.set("RowAndColumn","Row9",json.dumps(ColumnArray[8]))
         config.write(open(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, 'w'))
-        # for i in range(len(RowArray)):
-        #     for j in range
-# if __name__=="__main__":
-#     a=clsL1_ConfigOpr()
-#     name,config=a.GetMachineTagandConfigure()
-#     print(name)
-#     print(config)
-    _MOD_CEBS_CFG_HB96 = ['A0', 'A1', 'A2', 'A3', 'A4','A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12',\
-                           'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11', 'B12',\
-                           'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12',\
-                           'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12',\
-                           'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 'E10', 'E11', 'E12',\
-                           'F1', 'F2', 'F3','F4', 'F5', 'F6', 'F7', 'F8' ,'F9', 'F10', 'F11', 'F12',\
-                           'G1', 'G2', 'G3', 'G4','G5','G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12',\
-                           'H1', 'H2', 'H3','H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'H10', 'H11', 'H12',\
-                           ];
-                           
-    _MOD_CEBS_CFG_HB48 = ['A0', 'A1', 'A2', 'A3', 'A4','A5', 'A6', 'A7', 'A8',\
-                           'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8',\
-                           'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8',\
-                           'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8',\
-                           'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8',\
-                           'F1', 'F2', 'F3','F4', 'F5', 'F6', 'F7', 'F8',\
-                           ];
-                           
-    _MOD_CEBS_CFG_HB24 = ['A0', 'A1', 'A2', 'A3', 'A4','A5', 'A6',\
-                           'B1', 'B2', 'B3', 'B4', 'B5', 'B6',\
-                           'C1', 'C2', 'C3', 'C4', 'C5', 'C6',\
-                           'D1', 'D2', 'D3', 'D4', 'D5', 'D6',\
-                           ];
-    _MOD_CEBS_CFG_HB12 = ['A0', 'A1', 'A2', 'A3', 'A4',\
-                           'B1', 'B2', 'B3', 'B4',\
-                           'C1', 'C2', 'C3', 'C4',\
-                           ];
-    _MOD_CEBS_CFG_HB6 = ['A0', 'A1', 'A2', 'A3',\
-                         'B1', 'B2', 'B3',\
-                          ];
+    
+    #将index孔位转化为标签
     def func_cvt_indexfilehole(self,index):
         if (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_STANDARD):
             return self._MOD_CEBS_CFG_HB96[index];
@@ -841,4 +997,18 @@ class clsL1_ConfigOpr():
             return self._MOD_CEBS_CFG_HB6[index];     
         else:
             return index;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

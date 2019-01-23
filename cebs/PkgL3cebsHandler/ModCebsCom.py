@@ -59,7 +59,7 @@ class clsL0_MedComCfgPar():
     #
     # 临时参数部分
     #    
-
+    PIC_WORK_DIR = ''
     
     #FOLLOWING DYNAMIC PARAMETERS SET
     #Global parameter set for PICTURE
