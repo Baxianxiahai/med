@@ -1223,7 +1223,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             (startPoint, endPoint) = self.tup_siml_line_by_contour(ctImg, outCt)
             cv.line(inputImg, startPoint, endPoint, self._COL_D_RED, 2)
             self.tup_img_show(inputImg, "S1: Line Cut Image result")
-        lineOutImg = self.tup_cut_line_out_img(inputImg, rect[0], rect[2])
+        lineOutImg = self.tup_cut_line_out_img(inputImg, rect[0], rect[2], 1)
         
         #使用黄色线，将正方形区域框定下来，然后再寻找外接框
         #可以考虑使用，使用下面的技巧（多边形技巧），将这个定点多边形搞出来，然后取出限定正方形内的多边形图像
@@ -1369,17 +1369,11 @@ class clsCamDevHdl():
                         step+=1
                     try:
                         camId = int(result[2])
+                    #有些摄像头的驱动中并没有完善的CAMID信息，这种情况下，我们只能假设它是CAM#0，不然对付不了这种非标的摄像头
                     except Exception:
-                        camId = -1
-                    #将分辨率赋给全局变量
-#                     mbuf = {}
-#                     mbuf['width'] = dev['width']
-#                     mbuf['height'] = dev['height']
+                        camId = 0
                     _TUP_VISION_CAMBER_RES_WIDTH = dev['width']
                     _TUP_VISION_CAMBER_RES_HEIGHT = dev['height']        
-                    #print("temp value w",dev['width'])
-                    #print("temp value h",dev['height'])
-#                     self.msg_send(TUP_MSGID_REF_RESOLUTION, TUP_TASK_ID_VISION, mbuf)
         #存入临时文件
         f = open("tempCamId.txt", "w+")
         a = ("%d" % (camId))

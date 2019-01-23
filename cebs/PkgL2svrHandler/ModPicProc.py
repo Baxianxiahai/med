@@ -95,6 +95,8 @@ class TupClsPicProc(object):
         #获得结构元素
         #第一个参数：结构元素形状，这里是矩形
         #第二个参数：结构元素大小
+        if size <=0:
+            size = 1
         kernel=cv.getStructuringElement(cv.MORPH_RECT, (size, size))
         #执行膨胀
         dst1=cv.dilate(grayImg, kernel)
@@ -438,7 +440,7 @@ class TupClsPicProc(object):
     #图像直接拷贝是不合适的，需要使用imgIn.copy()函数才靠谱
     #
     '''
-    def tup_cut_line_out_img(self, imgIn, radCent, angle):
+    def tup_cut_line_out_img(self, imgIn, radCent, angle, lineWidth):
         imgLeft = imgIn.copy()
         imgRight = imgIn.copy()
         sp = imgIn.shape
@@ -446,14 +448,14 @@ class TupClsPicProc(object):
         if (angle == 90) or (angle == -90):
             for i in range(0, sp[0]):
                 x = radCent[0]
-                right = int(x)+1
+                right = int(x)+lineWidth
                 if (right >= sp[1]):
                     right = sp[1]
                 for j in range(right, sp[1]):
                     imgLeft[i, j] = self._COL_D_BLACK
             for i in range(0, sp[0]):
                 x = radCent[0]
-                right = int(x)+1
+                right = int(x)+lineWidth
                 if (right >= sp[1]):
                     right = sp[1]
                 for j in range(0, right):
@@ -471,14 +473,14 @@ class TupClsPicProc(object):
         #正常线
         for i in range(0, sp[0]):
             x = radCent[0] + (i-radCent[1])/k
-            right = int(x)+1
+            right = int(x)+lineWidth
             if (right >= sp[1]):
                 right = sp[1]
             for j in range(right, sp[1]):
                 imgLeft[i, j] = self._COL_D_BLACK
         for i in range(0, sp[0]):
             x = radCent[0] + (i-radCent[1])/k
-            right = int(x)+1
+            right = int(x)+lineWidth
             if (right >= sp[1]):
                 right = sp[1]
             for j in range(0, right):

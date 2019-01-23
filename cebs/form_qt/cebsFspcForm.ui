@@ -97,7 +97,7 @@
      <x>20</x>
      <y>20</y>
      <width>481</width>
-     <height>291</height>
+     <height>321</height>
     </rect>
    </property>
    <property name="title">
@@ -107,7 +107,7 @@
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>140</y>
+      <y>120</y>
       <width>41</width>
       <height>20</height>
      </rect>
@@ -120,8 +120,8 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>140</y>
-      <width>111</width>
+      <y>120</y>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -133,7 +133,7 @@
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>170</y>
+      <y>140</y>
       <width>41</width>
       <height>20</height>
      </rect>
@@ -146,8 +146,8 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>170</y>
-      <width>111</width>
+      <y>140</y>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -159,7 +159,7 @@
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>200</y>
+      <y>170</y>
       <width>41</width>
       <height>20</height>
      </rect>
@@ -172,8 +172,8 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>200</y>
-      <width>111</width>
+      <y>170</y>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -185,7 +185,7 @@
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>230</y>
+      <y>190</y>
       <width>41</width>
       <height>20</height>
      </rect>
@@ -198,8 +198,8 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>230</y>
-      <width>111</width>
+      <y>190</y>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -244,7 +244,7 @@
      <rect>
       <x>180</x>
       <y>70</y>
-      <width>71</width>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -259,7 +259,7 @@
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>100</y>
+      <y>90</y>
       <width>41</width>
       <height>20</height>
      </rect>
@@ -272,8 +272,8 @@
     <property name="geometry">
      <rect>
       <x>180</x>
-      <y>100</y>
-      <width>71</width>
+      <y>90</y>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -285,8 +285,8 @@
     <property name="geometry">
      <rect>
       <x>180</x>
-      <y>200</y>
-      <width>71</width>
+      <y>170</y>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -301,7 +301,7 @@
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>200</y>
+      <y>170</y>
       <width>41</width>
       <height>20</height>
      </rect>
@@ -317,7 +317,7 @@
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>230</y>
+      <y>190</y>
       <width>41</width>
       <height>20</height>
      </rect>
@@ -330,8 +330,8 @@
     <property name="geometry">
      <rect>
       <x>180</x>
-      <y>230</y>
-      <width>71</width>
+      <y>190</y>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -343,21 +343,21 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>30</y>
-      <width>111</width>
+      <y>40</y>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>标定线放大系数</string>
+     <string>标定线放长系数</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_fspc_coef_area_max">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>100</y>
-      <width>111</width>
+      <y>90</y>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -369,7 +369,7 @@
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>100</y>
+      <y>90</y>
       <width>41</width>
       <height>20</height>
      </rect>
@@ -382,7 +382,7 @@
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>30</y>
+      <y>40</y>
       <width>41</width>
       <height>20</height>
      </rect>
@@ -395,8 +395,8 @@
     <property name="geometry">
      <rect>
       <x>180</x>
-      <y>170</y>
-      <width>71</width>
+      <y>140</y>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -411,7 +411,7 @@
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>170</y>
+      <y>140</y>
       <width>41</width>
       <height>20</height>
      </rect>
@@ -427,7 +427,7 @@
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>140</y>
+      <y>120</y>
       <width>41</width>
       <height>20</height>
      </rect>
@@ -440,8 +440,8 @@
     <property name="geometry">
      <rect>
       <x>180</x>
-      <y>140</y>
-      <width>71</width>
+      <y>120</y>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
@@ -467,12 +467,90 @@
      <rect>
       <x>20</x>
       <y>70</y>
-      <width>111</width>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
      <string>区域面积下限</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_fspc_mark_width">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>40</y>
+      <width>41</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>10</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_fspc_coef_mark_width">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>40</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>标定线加宽系数</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_fspc_mark_dilate">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>20</y>
+      <width>41</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>12</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_fspc_coef_mark_dilate">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>20</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>标定线膨胀系数</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_fspc_coef_mark_area">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>标定线面积系数</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_fspc_mark_area">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>20</y>
+      <width>41</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>10000</string>
     </property>
    </widget>
   </widget>
@@ -519,9 +597,9 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>340</y>
+     <y>360</y>
      <width>481</width>
-     <height>251</height>
+     <height>241</height>
     </rect>
    </property>
    <property name="title">

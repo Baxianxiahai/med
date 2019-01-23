@@ -78,7 +78,6 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
         self.sgL4MainWinVisible.emit()
         self.close()
 
-
     def slot_clear(self):
         self.textEdit_fspc_cmd_log.clear();
 
@@ -178,6 +177,9 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
     #读取到UI界面上
     def func_read_par_from_com_and_set2ui(self):
         self.lineEdit_fspc_mark_line.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE))
+        self.lineEdit_fspc_mark_width.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_WIDTH))
+        self.lineEdit_fspc_mark_area.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_AREA))
+        self.lineEdit_fspc_mark_dilate.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_DILATE))
         self.lineEdit_fspc_coef_area_min.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN))
         self.lineEdit_fspc_coef_area_max.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX))
         self.lineEdit_fspc_coef_area_dilate.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE))
@@ -197,6 +199,9 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
         #SAVE INTO COM VAR
         parRes = self.func_read_fpsc_par();
         (GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE, \
+        GLFSPC_PAR_OFC.FSPC_COEF_MARK_WIDTH, \
+        GLFSPC_PAR_OFC.FSPC_COEF_MARK_AREA, \
+        GLFSPC_PAR_OFC.FSPC_COEF_MARK_DILATE, \
         GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN, \
         GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX, \
         GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE, \
@@ -219,6 +224,21 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
         parMarkLine=150
         try: 
             parMarkLine = int(self.lineEdit_fspc_mark_line.text())
+        except Exception: 
+            pass
+        parMarkWidth=10
+        try: 
+            parMarkWidth = int(self.lineEdit_fspc_mark_width.text())
+        except Exception: 
+            pass
+        parMarkArea=10000
+        try: 
+            parMarkArea = int(self.lineEdit_fspc_mark_area.text())
+        except Exception: 
+            pass
+        parMarkDilate=12
+        try: 
+            parMarkDilate = int(self.lineEdit_fspc_mark_dilate.text())
         except Exception: 
             pass
         #区域部分
@@ -286,7 +306,7 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
         #标定
         addupSet = self.checkBox_fspc_output_addup.isChecked()
         #RETURN
-        parRes = (parMarkLine, parAreaMin, parAreaMax, parAreaDilate, parAreaErode, parCellMin, parCellMax, parRaduisMin, parRaduisMax, parCellDilate, parCellErode, parCellCe, parCellDist, addupSet)
+        parRes = (parMarkLine, parMarkWidth, parMarkArea, parMarkDilate, parAreaMin, parAreaMax, parAreaDilate, parAreaErode, parCellMin, parCellMax, parRaduisMin, parRaduisMax, parCellDilate, parCellErode, parCellCe, parCellDist, addupSet)
         return parRes
 
         

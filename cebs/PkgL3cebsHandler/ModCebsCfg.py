@@ -57,6 +57,9 @@ _TUP_CEBS_CFG_SEC_LIST = [\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER], 'sctName':'PicBatFluClas', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_COUNTER], 'sctName':'PicRemFluCnt', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'mark_line', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'mark_width', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_WIDTH, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'mark_area', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_AREA, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'mark_dilate', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_DILATE, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'area_square_min', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'area_squre_max', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'area_dilate', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE, 'usage':''},\
@@ -110,6 +113,9 @@ class clsL1_ConfigOpr():
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_WIDTH
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_AREA
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_DILATE
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE
@@ -157,6 +163,9 @@ class clsL1_ConfigOpr():
         index +=1;  ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_CLAS_INDEX               = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT               = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE             = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_WIDTH            = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_AREA             = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_MARK_DILATE           = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN              = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX              = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE           = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']

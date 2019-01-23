@@ -129,34 +129,45 @@ class tupTaskUiFspc(tupTaskTemplate, clsL1_ConfigOpr):
     def proc_cmd_store_into_buffer(self, fileName, parInput):
         mbuf={}
         mbuf['fileName'] = fileName
-        mbuf['markLine'] = parInput[0]; 
-        mbuf['areaMin'] = parInput[1];
-        mbuf['areaMax'] = parInput[2];
-        mbuf['areaDilate'] = parInput[3];
-        mbuf['areaErode'] = parInput[4];
-        mbuf['cellMin'] = parInput[5];
-        mbuf['cellMax'] = parInput[6];
-        mbuf['raduisMin'] = parInput[7];
-        mbuf['raduisMax'] = parInput[8];
-        mbuf['cellDilate'] = parInput[9];
-        mbuf['cellErode'] = parInput[10];
-        mbuf['cellCe'] = parInput[11];
-        mbuf['cellDist'] = parInput[12];
-        mbuf['addupSet'] = parInput[13];
+        index=-1;
+        index+=1; mbuf['markLine'] = parInput[index]; 
+        index+=1; mbuf['markWidth'] = parInput[index]; 
+        index+=1; mbuf['markArea'] = parInput[index]; 
+        index+=1; mbuf['markDilate'] = parInput[index]; 
+        index+=1; mbuf['areaMin'] = parInput[index];
+        index+=1; mbuf['areaMax'] = parInput[index];
+        index+=1; mbuf['areaDilate'] = parInput[index];
+        index+=1; mbuf['areaErode'] = parInput[index];
+        index+=1; mbuf['cellMin'] = parInput[index];
+        index+=1; mbuf['cellMax'] = parInput[index];
+        index+=1; mbuf['raduisMin'] = parInput[index];
+        index+=1; mbuf['raduisMax'] = parInput[index];
+        index+=1; mbuf['cellDilate'] = parInput[index];
+        index+=1; mbuf['cellErode'] = parInput[index];
+        index+=1; mbuf['cellCe'] = parInput[index];
+        index+=1; mbuf['cellDist'] = parInput[index];
+        index+=1; mbuf['addupSet'] = parInput[index];
         return mbuf
 
     #业务态
     def fsm_msg_cmd_s1_resp_rcv_handler(self, msgContent):
         if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Cmd1 exect failure!");
+            self.funcDebugPrint2Qt("Cmd1 exect failure! Error with [%s]" % (msgContent['errInfo']));
         else:
             if (self.fatherUiObj != ''):
-                self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+                if (msgContent['res'] > 0) and (msgContent['totalCnt'] >= 2):
+                    self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName1'])
+                if (msgContent['res'] > 0) and (msgContent['totalCnt'] >= 3):
+                    time.sleep(5)
+                    self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName2'])
+                if (msgContent['res'] > 0) and (msgContent['totalCnt'] >= 1):
+                    time.sleep(5)
+                    self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
         return TUP_SUCCESS;
 
     def fsm_msg_cmd_s2_resp_rcv_handler(self, msgContent):
         if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Cmd2 exect failure!");
+            self.funcDebugPrint2Qt("Cmd2 exect failure! Error with [%s]" % (msgContent['errInfo']));
         else:
             if (self.fatherUiObj != ''):
                 self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
@@ -164,7 +175,7 @@ class tupTaskUiFspc(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_cmd_s3_resp_rcv_handler(self, msgContent):
         if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Cmd3 exect failure!");
+            self.funcDebugPrint2Qt("Cmd3 exect failure! Error with [%s]" % (msgContent['errInfo']));
         else:
             if (self.fatherUiObj != ''):
                 self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
@@ -172,7 +183,7 @@ class tupTaskUiFspc(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_cmd_s4_resp_rcv_handler(self, msgContent):
         if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Cmd4 exect failure!");
+            self.funcDebugPrint2Qt("Cmd4 exect failure! Error with [%s]" % (msgContent['errInfo']));
         else:
             if (self.fatherUiObj != ''):
                 self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
@@ -180,7 +191,7 @@ class tupTaskUiFspc(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_cmd_s5_resp_rcv_handler(self, msgContent):
         if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Cmd5 exect failure!");
+            self.funcDebugPrint2Qt("Cmd5 exect failure! Error with [%s]" % (msgContent['errInfo']));
         else:
             if (self.fatherUiObj != ''):
                 self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
@@ -188,7 +199,7 @@ class tupTaskUiFspc(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_cmd_s6_resp_rcv_handler(self, msgContent):
         if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Cmd6 exect failure!");
+            self.funcDebugPrint2Qt("Cmd6 exect failure! Error with [%s]" % (msgContent['errInfo']));
         else:
             if (self.fatherUiObj != ''):
                 self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
@@ -196,7 +207,7 @@ class tupTaskUiFspc(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_cmd_s7_resp_rcv_handler(self, msgContent):
         if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Cmd7 exect failure!");
+            self.funcDebugPrint2Qt("Cmd7 exect failure! Error with [%s]" % (msgContent['errInfo']));
         else:
             if (self.fatherUiObj != ''):
                 self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
@@ -204,7 +215,7 @@ class tupTaskUiFspc(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_cmd_sum_resp_rcv_handler(self, msgContent):
         if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Cmd Sum exect failure!");
+            self.funcDebugPrint2Qt("CmdSum exect failure! Error with [%s]" % (msgContent['errInfo']));
         else:
             if (self.fatherUiObj != ''):
                 self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
