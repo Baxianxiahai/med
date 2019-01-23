@@ -552,7 +552,6 @@ class clsL0_MedFspcPar():
     FSPC_COEF_CELL_DIST = 30
     FSPC_ADDUP_SET = True
     
-    
     #
     # 临时参量部分
     #
@@ -566,6 +565,20 @@ class clsL0_MedFspcPar():
                 
 #定义全局变量以及操作函数
 GLFSPC_PAR_OFC = clsL0_MedFspcPar()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

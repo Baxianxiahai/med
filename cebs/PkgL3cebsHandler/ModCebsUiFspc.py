@@ -33,7 +33,16 @@ class tupTaskUiFspc(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TEST, self.fsm_com_msg_test_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_inc_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_FSPC_UI_SWITCH, self.fsm_msg_ui_focus_rcv_handler)
+
         #业务态
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_FSPC_CMD_S1_RESP, self.fsm_msg_cmd_s1_resp_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_FSPC_CMD_S2_RESP, self.fsm_msg_cmd_s2_resp_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_FSPC_CMD_S3_RESP, self.fsm_msg_cmd_s3_resp_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_FSPC_CMD_S4_RESP, self.fsm_msg_cmd_s4_resp_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_FSPC_CMD_S5_RESP, self.fsm_msg_cmd_s5_resp_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_FSPC_CMD_S6_RESP, self.fsm_msg_cmd_s6_resp_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_FSPC_CMD_S7_RESP, self.fsm_msg_cmd_s7_resp_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_FSPC_CMD_SUM_RESP, self.fsm_msg_cmd_sum_resp_rcv_handler)
 
         #START TASK
         self.fsm_set(TUP_STM_INIT)
@@ -47,8 +56,6 @@ class tupTaskUiFspc(tupTaskTemplate, clsL1_ConfigOpr):
         self.funcDebugPrint2Qt(msgContent);
         return TUP_SUCCESS;
         
-    #业务状态处理过程
-
     #界面切换进来
     def fsm_msg_ui_focus_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
@@ -63,8 +70,155 @@ class tupTaskUiFspc(tupTaskTemplate, clsL1_ConfigOpr):
             print("FSPC_UI task lose 1 print message due to time sync.")
         else:
             self.fatherUiObj.cetk_debug_print(str(string))
+
+    #界面切走
+    def func_ui_click_fspc_switch_to_main(self):
+        print("I am func_ui_click_fspc_switch_to_main!")
+        self.fsm_set(self._STM_DEACT)       
+
+    #清理各项操作
+    def func_ui_click_fspc_close(self):
+        print("I am func_ui_click_fspc_close!")
+        #暂时没有要做的，所以不发送消息给FSPC模块
+
             
+    #业务状态处理过程
+
     #主界面承接过来的执行函数
+    #parInput = (parMarkLine, parAreaMin, parAreaMax, parAreaDilate, parAreaErode, parCellMin, parCellMax, parRaduisMin, parRaduisMax, parCellDilate, parCellErode, parCellCe, parCellDist, addupSet)
+    def func_ui_click_cmd_s1(self, fileName, parInput):
+        print("I am func_ui_click_cmd_s1!")
+        mbuf = self.proc_cmd_store_into_buffer(fileName, parInput)
+        self.msg_send(TUP_MSGID_FSPC_CMD_S1_REQ, TUP_TASK_ID_FSPC, mbuf)
+
+    def func_ui_click_cmd_s2(self, fileName, parInput):
+        print("I am func_ui_click_cmd_s2!")
+        mbuf = self.proc_cmd_store_into_buffer(fileName, parInput)
+        self.msg_send(TUP_MSGID_FSPC_CMD_S2_REQ, TUP_TASK_ID_FSPC, mbuf)
+
+    def func_ui_click_cmd_s3(self, fileName, parInput):
+        print("I am func_ui_click_cmd_s3!")
+        mbuf = self.proc_cmd_store_into_buffer(fileName, parInput)
+        self.msg_send(TUP_MSGID_FSPC_CMD_S3_REQ, TUP_TASK_ID_FSPC, mbuf)
+
+    def func_ui_click_cmd_s4(self, fileName, parInput):
+        print("I am func_ui_click_cmd_s4!")
+        mbuf = self.proc_cmd_store_into_buffer(fileName, parInput)
+        self.msg_send(TUP_MSGID_FSPC_CMD_S4_REQ, TUP_TASK_ID_FSPC, mbuf)
+
+    def func_ui_click_cmd_s5(self, fileName, parInput):
+        print("I am func_ui_click_cmd_s5!")
+        mbuf = self.proc_cmd_store_into_buffer(fileName, parInput)
+        self.msg_send(TUP_MSGID_FSPC_CMD_S5_REQ, TUP_TASK_ID_FSPC, mbuf)
+
+    def func_ui_click_cmd_s6(self, fileName, parInput):
+        print("I am func_ui_click_cmd_s6!")
+        mbuf = self.proc_cmd_store_into_buffer(fileName, parInput)
+        self.msg_send(TUP_MSGID_FSPC_CMD_S6_REQ, TUP_TASK_ID_FSPC, mbuf)
+
+    def func_ui_click_cmd_s7(self, fileName, parInput):
+        print("I am func_ui_click_cmd_s7!")
+        mbuf = self.proc_cmd_store_into_buffer(fileName, parInput)
+        self.msg_send(TUP_MSGID_FSPC_CMD_S7_REQ, TUP_TASK_ID_FSPC, mbuf)
+
+    def func_ui_click_cmd_sum(self, fileName, parInput):
+        print("I am func_ui_click_cmd_sum!")
+        mbuf = self.proc_cmd_store_into_buffer(fileName, parInput)
+        self.msg_send(TUP_MSGID_FSPC_CMD_SUM_REQ, TUP_TASK_ID_FSPC, mbuf)
+    
+    def proc_cmd_store_into_buffer(self, fileName, parInput):
+        mbuf={}
+        mbuf['fileName'] = fileName
+        mbuf['markLine'] = parInput[0]; 
+        mbuf['areaMin'] = parInput[1];
+        mbuf['areaMax'] = parInput[2];
+        mbuf['areaDilate'] = parInput[3];
+        mbuf['areaErode'] = parInput[4];
+        mbuf['cellMin'] = parInput[5];
+        mbuf['cellMax'] = parInput[6];
+        mbuf['raduisMin'] = parInput[7];
+        mbuf['raduisMax'] = parInput[8];
+        mbuf['cellDilate'] = parInput[9];
+        mbuf['cellErode'] = parInput[10];
+        mbuf['cellCe'] = parInput[11];
+        mbuf['cellDist'] = parInput[12];
+        mbuf['addupSet'] = parInput[13];
+        return mbuf
+
+    #业务态
+    def fsm_msg_cmd_s1_resp_rcv_handler(self, msgContent):
+        if (msgContent['res'] < 0):
+            self.funcDebugPrint2Qt("Cmd1 exect failure!");
+        else:
+            if (self.fatherUiObj != ''):
+                self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+        return TUP_SUCCESS;
+
+    def fsm_msg_cmd_s2_resp_rcv_handler(self, msgContent):
+        if (msgContent['res'] < 0):
+            self.funcDebugPrint2Qt("Cmd2 exect failure!");
+        else:
+            if (self.fatherUiObj != ''):
+                self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+        return TUP_SUCCESS;
+
+    def fsm_msg_cmd_s3_resp_rcv_handler(self, msgContent):
+        if (msgContent['res'] < 0):
+            self.funcDebugPrint2Qt("Cmd3 exect failure!");
+        else:
+            if (self.fatherUiObj != ''):
+                self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+        return TUP_SUCCESS;
+
+    def fsm_msg_cmd_s4_resp_rcv_handler(self, msgContent):
+        if (msgContent['res'] < 0):
+            self.funcDebugPrint2Qt("Cmd4 exect failure!");
+        else:
+            if (self.fatherUiObj != ''):
+                self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+        return TUP_SUCCESS;
+
+    def fsm_msg_cmd_s5_resp_rcv_handler(self, msgContent):
+        if (msgContent['res'] < 0):
+            self.funcDebugPrint2Qt("Cmd5 exect failure!");
+        else:
+            if (self.fatherUiObj != ''):
+                self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+        return TUP_SUCCESS;
+
+    def fsm_msg_cmd_s6_resp_rcv_handler(self, msgContent):
+        if (msgContent['res'] < 0):
+            self.funcDebugPrint2Qt("Cmd6 exect failure!");
+        else:
+            if (self.fatherUiObj != ''):
+                self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+        return TUP_SUCCESS;
+
+    def fsm_msg_cmd_s7_resp_rcv_handler(self, msgContent):
+        if (msgContent['res'] < 0):
+            self.funcDebugPrint2Qt("Cmd7 exect failure!");
+        else:
+            if (self.fatherUiObj != ''):
+                self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+        return TUP_SUCCESS;
+
+    def fsm_msg_cmd_sum_resp_rcv_handler(self, msgContent):
+        if (msgContent['res'] < 0):
+            self.funcDebugPrint2Qt("Cmd Sum exect failure!");
+        else:
+            if (self.fatherUiObj != ''):
+                self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+        return TUP_SUCCESS;
+
+
+
+
+
+
+
+
+
+
 
 
 

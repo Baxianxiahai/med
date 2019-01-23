@@ -145,6 +145,15 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         #执行命令 
         #转移状态
         self.fsm_set(self._STM_DEACT)
+
+    #切换界面
+    def func_ui_click_fspc_start(self):
+        print("I am func_ui_click_fspc_start!")
+        self.msg_send(TUP_MSGID_FSPC_UI_SWITCH, TUP_TASK_ID_UI_FSPC, "")
+        self.msg_send(TUP_MSGID_CTRL_SCHD_SWITCH_OFF, TUP_TASK_ID_CTRL_SCHD, "")     
+        #执行命令 
+        #转移状态
+        self.fsm_set(self._STM_DEACT)
     
     #切换界面
     def func_ui_click_meng_start(self):

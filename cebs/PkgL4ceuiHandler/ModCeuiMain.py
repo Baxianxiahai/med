@@ -256,6 +256,7 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
     def slot_fspc_sel(self):
         self.cetk_debug_print("L4MAIN: FSPC start......")
         if not self.instL4FspcForm.isVisible():
+            self.TkMainUi.func_ui_click_fspc_start();
             self.sgL4MainWinUnvisible.emit()
             self.instL4FspcForm.show()
             #指示FSPC界面进入事件

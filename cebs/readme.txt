@@ -34,7 +34,7 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 //=ZJL, 2019/1/23, CURRENT_SW_DELIVERY R1.59 =>CEBS
 = 改进CFG文件的管控方式，简化新参数增加、减少的难度
-
+= 完成FSPC的基本框架搭建
 
 //=ZJL, 2019/1/19, CURRENT_SW_DELIVERY R1.58 =>CEBS
 = 荧光识别算法改进：依然达不到理想的要求

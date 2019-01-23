@@ -36,15 +36,12 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
     sgL4MainWinVisible = pyqtSignal()
     def __init__(self, TaskInstFspcUi):
         super(SEUI_L4_FspcForm, self).__init__()
-
         #CASE1: UI PART
         self.setupUi(self)
-
         #CASE2: WORKING TASK
         #使用传递指针的方式
         self.TkFspcUi = TaskInstFspcUi
         self.TkFspcUi.funcSaveFatherInst(self)
-
         #CASE3: INTI PARAMETERS
         self.initParameter()
 
@@ -52,7 +49,6 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
     def initParameter(self):
         #初始化参数
         self.func_read_par_from_com_and_set2ui()
-        
         #将参数传递给业务模块
         self.rectPic = self.label_pic_fspc_fill.geometry()
         #self.TkGparUi.funcGparInitBascPar(self.rectPic.width(), self.rectPic.height(), self.rectCfy.width(), self.rectCfy.height())
@@ -71,13 +67,17 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
                 
     #界面的二次进入触发事件
     def switchOn(self):
-        print("I am Fspc and enter again!")
+        self.initParameter()
 
     def closeEvent(self, event):
-        #config = clsL1_ConfigOpr()
-        #config.SetDishRowandColumn()
+        #关闭钩子
+        self.TkFspcUi.func_ui_click_fspc_close()
+        #关闭切换界面钩子
+        self.TkFspcUi.func_ui_click_fspc_switch_to_main()
+        #QT本身的界面切换
         self.sgL4MainWinVisible.emit()
         self.close()
+
 
     def slot_clear(self):
         self.textEdit_fspc_cmd_log.clear();
@@ -109,36 +109,66 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
         if (fileName != ''):
             self.picFile = fileName
             img = QtGui.QPixmap(fileName)
-            #是否保持原始图像？
+            #固定位置显示
             img=img.scaled(self.rectPic.width(), self.rectPic.height())
             self.label_pic_fspc_fill.setPixmap(img)
 
 
     def slot_cmd_s1(self):
-        pass
+        if (self.picFile == ''):
+            return;
+        parRes = self.func_read_fpsc_par()
+        self.TkFspcUi.func_ui_click_cmd_s1(self.picFile, parRes)
         
     def slot_cmd_s2(self):
-        pass
+        if (self.picFile == ''):
+            return;
+        parRes = self.func_read_fpsc_par()
+        self.TkFspcUi.func_ui_click_cmd_s2(self.picFile, parRes)
 
     def slot_cmd_s3(self):
-        pass
+        if (self.picFile == ''):
+            return;
+        parRes = self.func_read_fpsc_par()
+        self.TkFspcUi.func_ui_click_cmd_s3(self.picFile, parRes)
 
     def slot_cmd_s4(self):
-        pass
+        if (self.picFile == ''):
+            return;
+        parRes = self.func_read_fpsc_par()
+        self.TkFspcUi.func_ui_click_cmd_s4(self.picFile, parRes)
 
     def slot_cmd_s5(self):
-        pass
+        if (self.picFile == ''):
+            return;
+        parRes = self.func_read_fpsc_par()
+        self.TkFspcUi.func_ui_click_cmd_s5(self.picFile, parRes)
     
     def slot_cmd_s6(self):
-        pass    
+        if (self.picFile == ''):
+            return;
+        parRes = self.func_read_fpsc_par()
+        self.TkFspcUi.func_ui_click_cmd_s6(self.picFile, parRes)
     
     def slot_cmd_s7(self):
-        pass    
+        if (self.picFile == ''):
+            return;
+        parRes = self.func_read_fpsc_par()
+        self.TkFspcUi.func_ui_click_cmd_s7(self.picFile, parRes)
     
     def slot_cmd_sum(self):
-        pass    
+        if (self.picFile == ''):
+            return;
+        parRes = self.func_read_fpsc_par()
+        self.TkFspcUi.func_ui_click_cmd_sum(self.picFile, parRes)
     
-    
+    #调整参数后的图像显示
+    def fspc_callback_cmd_exec_resp(self, fileName):
+        if (fileName != ''):
+            img = QtGui.QPixmap(fileName)
+            #固定位置显示
+            img=img.scaled(self.rectPic.width(), self.rectPic.height())
+            self.label_pic_fspc_fill.setPixmap(img)    
     
     #
     #  SERVICE FUNCTION PART, 业务函数部分
@@ -154,18 +184,19 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
         self.lineEdit_fspc_coef_area_erode.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_AREA_ERODE))
         self.lineEdit_fspc_coef_cell_min.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MIN))
         self.lineEdit_fspc_coef_cell_max.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_MAX))
-        self.label_fspc_coef_raduis_min.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MIN))
-        self.label_fspc_coef_raduis_max.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MAX))
+        self.lineEdit_fspc_coef_raduis_min.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MIN))
+        self.lineEdit_fspc_coef_raduis_max.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_RADUIS_MAX))
         self.lineEdit_fspc_coef_cell_dilate.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DILATE))
         self.lineEdit_fspc_coef_cell_erode.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE))
         self.lineEdit_fspc_coef_cell_ce.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE))
-        self.label_fspc_coef_cell_raduis_dist.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST))
+        self.lineEdit_fspc_coef_cell_raduis_dist.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST))
         self.checkBox_fspc_output_addup.setChecked(ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET)
     
     #读取界面上的参数并写入到INI配置文件
     def func_update_par_and_write_ini(self):
         #SAVE INTO COM VAR
-        GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE, \
+        parRes = self.func_read_fpsc_par();
+        (GLFSPC_PAR_OFC.FSPC_COEF_MARK_LINE, \
         GLFSPC_PAR_OFC.FSPC_COEF_AREA_MIN, \
         GLFSPC_PAR_OFC.FSPC_COEF_AREA_MAX, \
         GLFSPC_PAR_OFC.FSPC_COEF_AREA_DILATE, \
@@ -178,8 +209,7 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
         GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE, \
         GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE, \
         GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST, \
-        GLFSPC_PAR_OFC.FSPC_ADDUP_SET = \
-            self.func_read_fpsc_par();
+        GLFSPC_PAR_OFC.FSPC_ADDUP_SET) = parRes
         #FINAL UPDATE
         self.updateFpscSectionCtrlPar()
  
@@ -256,10 +286,9 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
         #标定
         addupSet = self.checkBox_fspc_output_addup.isChecked()
         #RETURN
-        return parMarkLine, parAreaMin, parAreaMax, parAreaDilate, parAreaErode, parCellMin, parCellMax, parRaduisMin, parRaduisMax, parCellDilate, parCellErode, parCellCe, parCellDist, addupSet
-    
-    
-            
+        parRes = (parMarkLine, parAreaMin, parAreaMax, parAreaDilate, parAreaErode, parCellMin, parCellMax, parRaduisMin, parRaduisMax, parCellDilate, parCellErode, parCellCe, parCellDist, addupSet)
+        return parRes
+
         
         
             
