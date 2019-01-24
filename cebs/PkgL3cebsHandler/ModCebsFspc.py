@@ -54,8 +54,9 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     fspcMinRect = 0;    #最小外接正方形    rect = cv.minAreaRect(c)
     fspcOutBox = 0;     #外部多边形    OutBox = cv.boxPoints(rect)
     fspcOutCtPoly = 0;  #将外包络转换为多边形 OutCtPoly = cv.convexHull(c)
-    fspcCircles = 0;     #使用霍夫变换，得到的所有圆形列表清单
-    fspcGdCircles = 0;
+    fspcCircles = 0;    #使用霍夫变换，得到的所有圆形列表清单
+    fspcGdCircles = 0;  #搜索到好的圆形
+    fspcCkCircles = 0;  #复核之后的圆形
     fspcValidCnt = 0;   #寻找到的圆形数量
     
     #控制前面的步伐是否做过，而且是否成功，不然后面是不能直接执行的
@@ -278,6 +279,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             return TUP_SUCCESS;
         #Final feedback
         mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 6)
+        mbuf['findCnt'] = self.fspcValidCnt
         self.funcFspcLogTrace(str("Step6 result = %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_FSPC_CMD_S6_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
         self.fspcSucFlagS6 = True
@@ -304,6 +306,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             return TUP_SUCCESS;
         #Final feedback
         mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 7)
+        mbuf['findCnt'] = self.fspcValidCnt
         self.funcFspcLogTrace(str("Step7 result = %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_FSPC_CMD_S7_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
         self.fspcSucFlagS7 = True
@@ -377,6 +380,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     '''
     #命令处理过程
     '''
+   #找黄线
     def func_cmd_s1_proc(self, inputPar):
         #Reading file: 读取文件。这里采用了处理中文文件名字的技巧，不是直接从opencv中读取
         try:
@@ -404,7 +408,8 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         lineOutImg = self.tup_cut_line_out_img(inputImg, self.fspcMinRect[0], self.fspcMinRect[2], inputPar['markWidth'])
         cv.imwrite("fspcPicS1.jpg", lineOutImg)
         return True, 3
-
+    
+    #确定正方形
     def func_cmd_s2_proc(self, inputPar):
         try:
             inputImg = cv.imdecode(np.fromfile('fspcPicS1.jpg', dtype=np.uint8), cv.IMREAD_COLOR)
@@ -421,7 +426,8 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         rtgImg = self.tup_copy_contour_img(inputImg, tpList)
         cv.imwrite("fspcPicS2.jpg", rtgImg)   
         return True, 2
-
+    
+    #抠出区域面积图形
     def func_cmd_s3_proc(self, inputPar):
         try:
             inputImg = cv.imdecode(np.fromfile('fspcPicS2.jpg', dtype=np.uint8), cv.IMREAD_COLOR)
@@ -450,7 +456,8 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         if (findCnt != 1):
             return False, findCnt;
         return True, 5
-
+    
+    #得到聚合细胞圆的分布
     def func_cmd_s4_proc(self, inputPar):
         try:
             inputImg = cv.imdecode(np.fromfile('fspcPicS3.jpg', dtype=np.uint8), cv.IMREAD_COLOR)
@@ -469,14 +476,16 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         elif (algoSelction == 2):
             outputImg, rect, totalCnt, findCnt, outCt, outBox = \
                 self.tup_itp_morphology_transform(inputImg, inputPar['cellDilate'], inputPar['cellErode'], \
-                inputPar['cellMin'], inputPar['cellMax'], inputPar['cellCe'], 1, True, False)
+                inputPar['cellMin'], inputPar['cellMax'], inputPar['cellCe']/100.0, 1, True, True)
         cv.imwrite("fspcPicS4.jpg", outputImg)
-        self.fspcValidCnt = totalCnt
+        self.fspcValidCnt = findCnt
+        self.funcFspcLogTrace("FSPC: stack Stage4, find total %d!" % (self.fspcValidCnt))
         return True, 1
     
+    #去圈外的图像
     def func_cmd_s5_proc(self, inputPar):
         try:
-            inputImg = cv.imdecode(np.fromfile('fspcPicS4.jpg', dtype=np.uint8), cv.IMREAD_COLOR)
+            inputImg = cv.imdecode(np.fromfile('fspcPicS3.jpg', dtype=np.uint8), cv.IMREAD_COLOR)
         except Exception as err:
             print("FSPC: Read file error, errinfo = ", str(err))
             return False, -1        
@@ -489,11 +498,29 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             cv.circle(judgeCircleImg, (element[0], element[1]), element[2], self._COL_D_BLUE, 2)
         cv.drawContours(judgeCircleImg, self.fspcOutCt, -1, self._COL_D_YELLOW, 3)
         cv.imwrite("fspcPicS5.jpg", judgeCircleImg)
-        self.fspcValidCnt = len(self.fspcGdCircles)
+        self.fspcValidCnt = len(self.fspcGdCircles[0])
+        self.funcFspcLogTrace("FSPC: stack Stage5, find total %d!" % (self.fspcValidCnt))
         return True, 1
-
+    
+    #去伪存真
     def func_cmd_s6_proc(self, inputPar):
-        return False, 1
+        try:
+            inputImg = cv.imdecode(np.fromfile('fspcPicS3.jpg', dtype=np.uint8), cv.IMREAD_COLOR)
+        except Exception as err:
+            print("FSPC: Read file error, errinfo = ", str(err))
+            return False, -1
+        #传统方式干活
+        tradImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_itp_morphology_transform(inputImg, inputPar['cellDilate'], inputPar['cellErode'], \
+                inputPar['cellMin'], inputPar['cellMax'], inputPar['cellCe']/100.0, 1, True, True)
+        cv.imwrite("fspcPicS61.jpg", tradImg)
+        #新方法干活
+        outputImg, detectImg, totalCnt, findCnt, self.fspcCkCircles = self.tup_itp_circle_img_filter_out(inputImg, self.fspcGdCircles, \
+            inputPar['cellDilate'], inputPar['cellErode'], inputPar['cellMin'], inputPar['cellMax'], inputPar['cellCe']/100.0, 1, True, True)
+        cv.imwrite("fspcPicS62.jpg", detectImg)
+        cv.imwrite("fspcPicS6.jpg", outputImg)
+        self.fspcValidCnt = findCnt
+        self.funcFspcLogTrace("FSPC: stack Stage6, find total %d!" % (self.fspcValidCnt))
+        return True, 3
 
     def func_cmd_s7_proc(self, inputPar):
         return False, 1

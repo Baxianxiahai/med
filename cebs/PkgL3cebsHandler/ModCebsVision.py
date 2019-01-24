@@ -1309,7 +1309,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             cv.imwrite("tmp_s7alg1.jpg", outputImg)
             self.tup_img_show(outputImg, "S7: Individual area by polymethod")
         #正统方式
-        outputImg, totalCnt, findCnt, ckCircle = self.tup_itp_circle_img_filter_out(cropImg, goodCircles, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, True)
+        outputImg, detectImg, totalCnt, findCnt, ckCircle = self.tup_itp_circle_img_filter_out(cropImg, goodCircles, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, True)
         
         #最后的处理过程
         self.funcVisionLogTrace("VISION: stack Stage n, Final output!")

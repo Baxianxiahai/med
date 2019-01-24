@@ -666,16 +666,13 @@ class TupClsPicProc(object):
             cv.putText(detectImg, str(sum), (int(element[0]), int(element[1])), cv.FONT_HERSHEY_SIMPLEX, 0.3, self._COL_D_GREEN, 1)
             if (sum>=cAreaMin) and (sum<=cAreaMax):
                 ckCircle[0].append(element)
-        cv.imwrite("tmp_s7alg2.jpg", detectImg)
-            
         #Output
         totalCnt = len(ckCircle[0])
-        print("totalCnt after check = ", totalCnt)
         findCnt = totalCnt
         outputImg = imgIn.copy()
         for element in ckCircle[0]:
             cv.circle(outputImg, (element[0], element[1]), element[2], self._COL_D_RED, 1)
-        return outputImg, totalCnt, findCnt, ckCircle
+        return outputImg, detectImg, totalCnt, findCnt, ckCircle
     
     #通过分块图像大小，简单的方式来判定图像是否满足要求
     #本函数暂时未使用

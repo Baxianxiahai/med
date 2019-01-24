@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1256</width>
-    <height>802</height>
+    <width>1546</width>
+    <height>887</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,7 +16,7 @@
   <widget class="QLabel" name="label_fspc_pic_file_load">
    <property name="geometry">
     <rect>
-     <x>520</x>
+     <x>380</x>
      <y>30</y>
      <width>51</width>
      <height>16</height>
@@ -29,7 +29,7 @@
   <widget class="QPushButton" name="pushButton_fspc_pic_file_load">
    <property name="geometry">
     <rect>
-     <x>1160</x>
+     <x>1020</x>
      <y>30</y>
      <width>91</width>
      <height>21</height>
@@ -42,10 +42,10 @@
   <widget class="QGroupBox" name="groupBox_fpsc_pic_show">
    <property name="geometry">
     <rect>
-     <x>520</x>
+     <x>380</x>
      <y>60</y>
-     <width>731</width>
-     <height>721</height>
+     <width>1111</width>
+     <height>811</height>
     </rect>
    </property>
    <property name="title">
@@ -56,8 +56,8 @@
      <rect>
       <x>0</x>
       <y>20</y>
-      <width>731</width>
-      <height>701</height>
+      <width>1111</width>
+      <height>791</height>
      </rect>
     </property>
     <property name="text">
@@ -71,7 +71,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>580</x>
+     <x>440</x>
      <y>30</y>
      <width>571</width>
      <height>20</height>
@@ -83,12 +83,12 @@
     <rect>
      <x>20</x>
      <y>620</y>
-     <width>111</width>
+     <width>71</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>1)标定黄线</string>
+    <string>1)探测黄线</string>
    </property>
   </widget>
   <widget class="QGroupBox" name="groupBox_fspc_set">
@@ -96,7 +96,7 @@
     <rect>
      <x>20</x>
      <y>20</y>
-     <width>481</width>
+     <width>341</width>
      <height>321</height>
     </rect>
    </property>
@@ -596,9 +596,9 @@
   <widget class="QPushButton" name="pushButton_fspc_cmd_s2">
    <property name="geometry">
     <rect>
-     <x>140</x>
+     <x>110</x>
      <y>620</y>
-     <width>111</width>
+     <width>71</width>
      <height>41</height>
     </rect>
    </property>
@@ -609,9 +609,9 @@
   <widget class="QPushButton" name="pushButton_fspc_cmd_s3">
    <property name="geometry">
     <rect>
-     <x>260</x>
+     <x>200</x>
      <y>620</y>
-     <width>111</width>
+     <width>71</width>
      <height>41</height>
     </rect>
    </property>
@@ -624,12 +624,12 @@
     <rect>
      <x>20</x>
      <y>670</y>
-     <width>111</width>
+     <width>71</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>4)细胞匹配</string>
+    <string>4)匹配细胞</string>
    </property>
   </widget>
   <widget class="QGroupBox" name="groupBox_cmd_log">
@@ -637,7 +637,7 @@
     <rect>
      <x>20</x>
      <y>360</y>
-     <width>481</width>
+     <width>341</width>
      <height>241</height>
     </rect>
    </property>
@@ -649,7 +649,7 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>461</width>
+      <width>321</width>
       <height>161</height>
      </rect>
     </property>
@@ -691,7 +691,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="pushButton_fspc_clear">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>50</x>
       <y>190</y>
       <width>81</width>
       <height>41</height>
@@ -704,7 +704,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="pushButton_fspc_giveup">
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>150</x>
       <y>190</y>
       <width>81</width>
       <height>41</height>
@@ -717,7 +717,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="pushButton_fspc_compl">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>250</x>
       <y>190</y>
       <width>81</width>
       <height>41</height>
@@ -731,35 +731,35 @@ p, li { white-space: pre-wrap; }
   <widget class="QPushButton" name="pushButton_fspc_cmd_s5">
    <property name="geometry">
     <rect>
-     <x>140</x>
+     <x>110</x>
      <y>670</y>
-     <width>111</width>
+     <width>71</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>5)去伪存真</string>
+    <string>5)圈外靠边</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_fspc_cmd_s6">
    <property name="geometry">
     <rect>
-     <x>260</x>
+     <x>200</x>
      <y>670</y>
-     <width>111</width>
+     <width>71</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>6)复核校验</string>
+    <string>6)去伪存真</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_fspc_cmd_sum">
    <property name="geometry">
     <rect>
-     <x>390</x>
+     <x>290</x>
      <y>620</y>
-     <width>111</width>
+     <width>71</width>
      <height>91</height>
     </rect>
    </property>
@@ -772,7 +772,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>20</x>
      <y>720</y>
-     <width>111</width>
+     <width>71</width>
      <height>41</height>
     </rect>
    </property>
