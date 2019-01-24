@@ -553,6 +553,7 @@ class clsL0_MedFspcPar():
     FSPC_COEF_CELL_ERODE = 5
     FSPC_COEF_CELL_CE = 50
     FSPC_COEF_CELL_DIST = 30
+    FSPC_PIC_TRAIN_DELAY = 5
     FSPC_ADDUP_SET = True
     
     #

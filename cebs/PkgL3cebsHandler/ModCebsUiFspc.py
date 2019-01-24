@@ -21,6 +21,9 @@ from PkgL1vmHandler.ModVmConsole import *
 class tupTaskUiFspc(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_ACTIVE = 3
     _STM_DEACT  = 4 #界面没激活
+    
+    #全局变量表
+    uiFspcPicTrainDelay = 0
 
     def __init__(self, glPar):
         tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_UI_FSPC, taskName="TASK_UI_FSPC", glTabEntry=glPar)
@@ -146,71 +149,38 @@ class tupTaskUiFspc(tupTaskTemplate, clsL1_ConfigOpr):
         index+=1; mbuf['cellErode'] = parInput[index];
         index+=1; mbuf['cellCe'] = parInput[index];
         index+=1; mbuf['cellDist'] = parInput[index];
+        index+=1; mbuf['trainDelay'] = parInput[index];
         index+=1; mbuf['addupSet'] = parInput[index];
+        self.uiFspcPicTrainDelay = mbuf['trainDelay']
         return mbuf
 
     #业务态
     def fsm_msg_cmd_s1_resp_rcv_handler(self, msgContent):
-        if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Cmd1 exect failure! Error with [%s]" % (msgContent['errInfo']));
-        else:
-            if (self.fatherUiObj != ''):
-                if (msgContent['res'] > 0) and (msgContent['totalCnt'] >= 2):
-                    self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName1'])
-                if (msgContent['res'] > 0) and (msgContent['totalCnt'] >= 3):
-                    time.sleep(5)
-                    self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName2'])
-                if (msgContent['res'] > 0) and (msgContent['totalCnt'] >= 1):
-                    time.sleep(5)
-                    self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+        self.func_cmd_processing(msgContent, "Cmd1");
         return TUP_SUCCESS;
 
     def fsm_msg_cmd_s2_resp_rcv_handler(self, msgContent):
-        if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Cmd2 exect failure! Error with [%s]" % (msgContent['errInfo']));
-        else:
-            if (self.fatherUiObj != ''):
-                self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+        self.func_cmd_processing(msgContent, "Cmd2");
         return TUP_SUCCESS;
 
     def fsm_msg_cmd_s3_resp_rcv_handler(self, msgContent):
-        if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Cmd3 exect failure! Error with [%s]" % (msgContent['errInfo']));
-        else:
-            if (self.fatherUiObj != ''):
-                self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+        self.func_cmd_processing(msgContent, "Cmd3");
         return TUP_SUCCESS;
 
     def fsm_msg_cmd_s4_resp_rcv_handler(self, msgContent):
-        if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Cmd4 exect failure! Error with [%s]" % (msgContent['errInfo']));
-        else:
-            if (self.fatherUiObj != ''):
-                self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+        self.func_cmd_processing(msgContent, "Cmd4");
         return TUP_SUCCESS;
 
     def fsm_msg_cmd_s5_resp_rcv_handler(self, msgContent):
-        if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Cmd5 exect failure! Error with [%s]" % (msgContent['errInfo']));
-        else:
-            if (self.fatherUiObj != ''):
-                self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+        self.func_cmd_processing(msgContent, "Cmd5");
         return TUP_SUCCESS;
 
     def fsm_msg_cmd_s6_resp_rcv_handler(self, msgContent):
-        if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Cmd6 exect failure! Error with [%s]" % (msgContent['errInfo']));
-        else:
-            if (self.fatherUiObj != ''):
-                self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+        self.func_cmd_processing(msgContent, "Cmd6");
         return TUP_SUCCESS;
 
     def fsm_msg_cmd_s7_resp_rcv_handler(self, msgContent):
-        if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Cmd7 exect failure! Error with [%s]" % (msgContent['errInfo']));
-        else:
-            if (self.fatherUiObj != ''):
-                self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+        self.func_cmd_processing(msgContent, "Cmd7");
         return TUP_SUCCESS;
 
     def fsm_msg_cmd_sum_resp_rcv_handler(self, msgContent):
@@ -221,9 +191,26 @@ class tupTaskUiFspc(tupTaskTemplate, clsL1_ConfigOpr):
                 self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
         return TUP_SUCCESS;
 
-
-
-
+    def func_cmd_processing(self, msgContent, ind):
+        if (msgContent['res'] < 0):
+            self.funcDebugPrint2Qt("%s exect failure! Error with [%s]" % (str(ind), msgContent['errInfo']));
+        else:
+            if (self.fatherUiObj != ''):
+                if (msgContent['res'] > 0) and (msgContent['totalCnt'] >= 2):
+                    self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName1'])
+                if (msgContent['res'] > 0) and (msgContent['totalCnt'] >= 3):
+                    time.sleep(self.uiFspcPicTrainDelay)
+                    self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName2'])
+                if (msgContent['res'] > 0) and (msgContent['totalCnt'] >= 4):
+                    time.sleep(self.uiFspcPicTrainDelay)
+                    self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName3'])
+                if (msgContent['res'] > 0) and (msgContent['totalCnt'] >= 5):
+                    time.sleep(self.uiFspcPicTrainDelay)
+                    self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName4'])
+                if (msgContent['res'] > 0) and (msgContent['totalCnt'] >= 1):
+                    time.sleep(self.uiFspcPicTrainDelay)
+                    self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+        
 
 
 

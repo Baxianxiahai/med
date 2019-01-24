@@ -115,55 +115,65 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
 
     def slot_cmd_s1(self):
         if (self.picFile == ''):
+            self.cetk_debug_print('FSPC: File not exist!');
             return;
         parRes = self.func_read_fpsc_par()
         self.TkFspcUi.func_ui_click_cmd_s1(self.picFile, parRes)
         
     def slot_cmd_s2(self):
         if (self.picFile == ''):
+            self.cetk_debug_print('FSPC: File not exist!');
             return;
         parRes = self.func_read_fpsc_par()
         self.TkFspcUi.func_ui_click_cmd_s2(self.picFile, parRes)
 
     def slot_cmd_s3(self):
         if (self.picFile == ''):
+            self.cetk_debug_print('FSPC: File not exist!');
             return;
         parRes = self.func_read_fpsc_par()
         self.TkFspcUi.func_ui_click_cmd_s3(self.picFile, parRes)
 
     def slot_cmd_s4(self):
         if (self.picFile == ''):
+            self.cetk_debug_print('FSPC: File not exist!');
             return;
         parRes = self.func_read_fpsc_par()
         self.TkFspcUi.func_ui_click_cmd_s4(self.picFile, parRes)
 
     def slot_cmd_s5(self):
         if (self.picFile == ''):
+            self.cetk_debug_print('FSPC: File not exist!');
             return;
         parRes = self.func_read_fpsc_par()
         self.TkFspcUi.func_ui_click_cmd_s5(self.picFile, parRes)
     
     def slot_cmd_s6(self):
         if (self.picFile == ''):
+            self.cetk_debug_print('FSPC: File not exist!');
             return;
         parRes = self.func_read_fpsc_par()
         self.TkFspcUi.func_ui_click_cmd_s6(self.picFile, parRes)
     
     def slot_cmd_s7(self):
         if (self.picFile == ''):
+            self.cetk_debug_print('FSPC: File not exist!');
             return;
         parRes = self.func_read_fpsc_par()
         self.TkFspcUi.func_ui_click_cmd_s7(self.picFile, parRes)
     
     def slot_cmd_sum(self):
         if (self.picFile == ''):
+            self.cetk_debug_print('FSPC: File not exist!');
             return;
         parRes = self.func_read_fpsc_par()
         self.TkFspcUi.func_ui_click_cmd_sum(self.picFile, parRes)
     
     #调整参数后的图像显示
     def fspc_callback_cmd_exec_resp(self, fileName):
-        if (fileName != ''):
+        if (fileName == ''):
+            self.cetk_debug_print('FSPC: File not exist!');
+        else:
             img = QtGui.QPixmap(fileName)
             #固定位置显示
             img=img.scaled(self.rectPic.width(), self.rectPic.height())
@@ -192,6 +202,7 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
         self.lineEdit_fspc_coef_cell_erode.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE))
         self.lineEdit_fspc_coef_cell_ce.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE))
         self.lineEdit_fspc_coef_cell_raduis_dist.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST))
+        self.lineEdit_fspc_pic_train_delay.setText(str(ModCebsCom.GLFSPC_PAR_OFC.FSPC_PIC_TRAIN_DELAY))
         self.checkBox_fspc_output_addup.setChecked(ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET)
     
     #读取界面上的参数并写入到INI配置文件
@@ -214,6 +225,7 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
         GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE, \
         GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE, \
         GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST, \
+        GLFSPC_PAR_OFC.FSPC_PIC_TRAIN_DELAY, \
         GLFSPC_PAR_OFC.FSPC_ADDUP_SET) = parRes
         #FINAL UPDATE
         self.updateFpscSectionCtrlPar()
@@ -270,17 +282,17 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
             pass        
         parCellMax=1500
         try: 
-            parCellMax = int(self.label_fspc_coef_cell_max.text())
+            parCellMax = int(self.lineEdit_fspc_coef_cell_max.text())
         except Exception: 
             pass
         parRaduisMin=19
         try: 
-            parRaduisMin = int(self.label_fspc_coef_raduis_min.text())
+            parRaduisMin = int(self.lineEdit_fspc_coef_raduis_min.text())
         except Exception: 
             pass
         parRaduisMax=23
         try: 
-            parRaduisMax = int(self.label_fspc_coef_raduis_max.text())
+            parRaduisMax = int(self.lineEdit_fspc_coef_raduis_max.text())
         except Exception: 
             pass
         parCellDilate=61
@@ -300,13 +312,19 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
             pass
         parCellDist=30
         try: 
-            parCellDist = int(self.label_fspc_coef_cell_raduis_dist.text())
+            parCellDist = int(self.lineEdit_fspc_coef_cell_raduis_dist.text())
         except Exception: 
             pass
         #标定
+        parPicTrainDelay=5
+        try: 
+            parPicTrainDelay = int(self.lineEdit_fspc_pic_train_delay.text())
+        except Exception: 
+            pass
         addupSet = self.checkBox_fspc_output_addup.isChecked()
         #RETURN
-        parRes = (parMarkLine, parMarkWidth, parMarkArea, parMarkDilate, parAreaMin, parAreaMax, parAreaDilate, parAreaErode, parCellMin, parCellMax, parRaduisMin, parRaduisMax, parCellDilate, parCellErode, parCellCe, parCellDist, addupSet)
+        parRes = (parMarkLine, parMarkWidth, parMarkArea, parMarkDilate, parAreaMin, parAreaMax, parAreaDilate, parAreaErode, \
+                parCellMin, parCellMax, parRaduisMin, parRaduisMax, parCellDilate, parCellErode, parCellCe, parCellDist, parPicTrainDelay, addupSet)
         return parRes
 
         

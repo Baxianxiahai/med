@@ -1228,7 +1228,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #使用黄色线，将正方形区域框定下来，然后再寻找外接框
         #可以考虑使用，使用下面的技巧（多边形技巧），将这个定点多边形搞出来，然后取出限定正方形内的多边形图像
         self.funcVisionLogTrace("VISION: stack Stage2, Finding retangle area!")
-        tpList = self.tup_find_retg_area(lineOutImg, rect)
+        tpList = self.tup_find_retg_area(lineOutImg, rect, 2)
         rtgImg = self.tup_copy_contour_img(inputImg, tpList)
         testFlag = False
         if (testFlag == True):
@@ -1303,11 +1303,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         self.funcVisionLogTrace("VISION: stack Stage7, Re-check findings is really rational!")
         
         #使用传统方式测试一下
-        testFlag = True
+        testFlag = False
         if (testFlag == True):
             outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_itp_morphology_transform(cropImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, True)
             cv.imwrite("tmp_s7alg1.jpg", outputImg)
-            #self.tup_img_show(outputImg, "S7: Individual area by polymethod")
+            self.tup_img_show(outputImg, "S7: Individual area by polymethod")
         #正统方式
         outputImg, totalCnt, findCnt, ckCircle = self.tup_itp_circle_img_filter_out(cropImg, goodCircles, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, True)
         

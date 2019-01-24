@@ -471,20 +471,24 @@ class TupClsPicProc(object):
         if (k==0):
             return imgLeft, imgRight
         #正常线
-        for i in range(0, sp[0]):
-            x = radCent[0] + (i-radCent[1])/k
+        for j in range(0, sp[0]):
+            x = radCent[0] + (j-radCent[1])/k
             right = int(x)+lineWidth
-            if (right >= sp[1]):
-                right = sp[1]
-            for j in range(right, sp[1]):
-                imgLeft[i, j] = self._COL_D_BLACK
-        for i in range(0, sp[0]):
-            x = radCent[0] + (i-radCent[1])/k
+            if (right < 0):
+                right = 0
+            if (right > sp[1]):
+                right = sp[1]-1
+            for i in range(right, sp[1]):
+                imgLeft[j, i] = self._COL_D_BLACK
+        for j in range(0, sp[0]):
+            x = radCent[0] + (j-radCent[1])/k
             right = int(x)+lineWidth
-            if (right >= sp[1]):
-                right = sp[1]
-            for j in range(0, right):
-                imgRight[i, j] = self._COL_D_BLACK
+            if (right < 0):
+                right = 0
+            if (right > sp[1]):
+                right = sp[1]-1
+            for i in range(0, right):
+                imgRight[j, i] = self._COL_D_BLACK
         if (angle > 0):
             imgRem = imgLeft
         else:
@@ -493,7 +497,9 @@ class TupClsPicProc(object):
 
     #基于一个最小外接长方形，求左手系和右手系的正方形定点
     #同上，需要分左右手系
-    def tup_find_retg_area(self, imgIn, minRectIn):
+    #minRectIn - 最小外接正方形
+    #coef: 放大系数，浮点，就是多少倍
+    def tup_find_retg_area(self, imgIn, minRectIn, coef):
         angle = minRectIn[2]
         tpList = np.array([[0,0],[0,0],[0,0],[0,0],[0,0]], np.int32)
         sin = math.sin(angle/180.0*math.pi)
@@ -502,15 +508,11 @@ class TupClsPicProc(object):
         (imgH, imgW) = (sp[0], sp[1])
         (mrW, mrH) = minRectIn[1]
         (x0, y0) = minRectIn[0]
-        #leftPx = x0 - cos*mrW/2
-        #leftPy = y0 - sin*mrW/2
-        #rightPx = x0 + cos*mrW/2
-        #rightPy = y0 + sin*mrW/2
-        #故意加倍
-        leftPx = x0 - cos*mrW
-        leftPy = y0 - sin*mrW
-        rightPx = x0 + cos*mrW
-        rightPy = y0 + sin*mrW
+        #同一条直线上的点，目前有三个：中心，左右两个
+        leftPx = x0 - cos*mrW/2*coef
+        leftPy = y0 - sin*mrW/2*coef
+        rightPx = x0 + cos*mrW/2*coef
+        rightPy = y0 + sin*mrW/2*coef
         if (leftPx<0): leftPx=0;
         if (leftPx>=imgW): leftPx=imgW-1;
         if (leftPy<0): leftPy=0;
@@ -527,8 +529,8 @@ class TupClsPicProc(object):
         sin = math.sin(angle/180.0*math.pi)
         cos = math.cos(angle/180.0*math.pi)
         (x0, y0) = (rightPx, rightPy)
-        r4Px = x0 + cos*mrW*2
-        r4Py = y0 + sin*mrW*2
+        r4Px = x0 + cos*mrW*coef
+        r4Py = y0 + sin*mrW*coef
         if (r4Px<0): r4Px=0;
         if (r4Px>=imgW): r4Px=imgW-1;
         if (r4Py<0): r4Py=0;
@@ -541,8 +543,8 @@ class TupClsPicProc(object):
         sin = math.sin(angle/180.0*math.pi)
         cos = math.cos(angle/180.0*math.pi)
         (x0, y0) = (r4Px, r4Py)
-        r5Px = x0 + cos*mrW*2
-        r5Py = y0 + sin*mrW*2
+        r5Px = x0 + cos*mrW*coef
+        r5Py = y0 + sin*mrW*coef
         if (r5Px<0): r5Px=0;
         if (r5Px>=imgW): r5Px=imgW-1;
         if (r5Py<0): r5Py=0;

@@ -50,8 +50,23 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     _STM_ACTIVE = 3
     
     #模块中的局部变量
-    test = 0
-
+    fspcOutCt = 0;      #外部包络        c = cv.findContours
+    fspcMinRect = 0;    #最小外接正方形    rect = cv.minAreaRect(c)
+    fspcOutBox = 0;     #外部多边形    OutBox = cv.boxPoints(rect)
+    fspcOutCtPoly = 0;  #将外包络转换为多边形 OutCtPoly = cv.convexHull(c)
+    fspcCircles = 0;     #使用霍夫变换，得到的所有圆形列表清单
+    fspcGdCircles = 0;
+    fspcValidCnt = 0;   #寻找到的圆形数量
+    
+    #控制前面的步伐是否做过，而且是否成功，不然后面是不能直接执行的
+    fspcSucFlagS1 = False
+    fspcSucFlagS2 = False
+    fspcSucFlagS3 = False
+    fspcSucFlagS4 = False
+    fspcSucFlagS5 = False
+    fspcSucFlagS6 = False
+    fspcSucFlagS7 = False
+    
     def __init__(self, glPar):
         tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_FSPC, taskName="TASK_FSPC", glTabEntry=glPar)
         #ModVmLayer.TUP_GL_CFG.save_task_by_id(ModVmCfg.TUP_TASK_ID_FSPC, self)
@@ -130,22 +145,22 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             self.msg_send(TUP_MSGID_FSPC_CMD_S1_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
             return TUP_SUCCESS;
         #Final feedback
-        mbuf['res'] = 1
-        mbuf['fileName'] = 'fspcPicS1.jpg'
-        mbuf['fileName1'] = 'fspcPicS11.jpg'
-        mbuf['fileName2'] = 'fspcPicS12.jpg'
-        mbuf['totalCnt'] = totalCnt
-        mbuf['errInfo'] = ''
+        mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 1)
         self.funcFspcLogTrace(str("Step1 result = %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_FSPC_CMD_S1_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+        self.fspcSucFlagS1 = True
         return TUP_SUCCESS;
 
     def fsm_msg_cmd_s2_req_rcv_handler(self, msgContent):
-        #parIn = self.proc_decode_rcv_par_list(msgContent)
         mbuf={}
-        if (os.path.exists(msgContent['fileName']) == False):
+        if (os.path.exists('fspcPicS1.jpg') == False):
             mbuf['res'] = -1
             mbuf['errInfo'] = 'File not exist!'
+            self.msg_send(TUP_MSGID_FSPC_CMD_S2_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+            return TUP_SUCCESS;
+        if (self.fspcSucFlagS1 == False):
+            mbuf['res'] = -1
+            mbuf['errInfo'] = 'Previous step not done!'
             self.msg_send(TUP_MSGID_FSPC_CMD_S2_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
             return TUP_SUCCESS;
         ret, totalCnt = self.func_cmd_s2_proc(msgContent)
@@ -156,23 +171,23 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             self.msg_send(TUP_MSGID_FSPC_CMD_S2_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
             return TUP_SUCCESS;
         #Final feedback
-        mbuf['res'] = 1
-        mbuf['fileName'] = 'fspcPicS2.jpg'
-        mbuf['fileName1'] = 'fspcPicS21.jpg'
-        mbuf['fileName2'] = 'fspcPicS22.jpg'
-        mbuf['totalCnt'] = totalCnt
-        mbuf['errInfo'] = ''
+        mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 2)
         self.funcFspcLogTrace(str("Step2 result = %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_FSPC_CMD_S2_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+        self.fspcSucFlagS2 = True
         return TUP_SUCCESS;
 
     def fsm_msg_cmd_s3_req_rcv_handler(self, msgContent):
-        #parIn = self.proc_decode_rcv_par_list(msgContent)
         mbuf={}
-        if (os.path.exists(msgContent['fileName']) == False):
+        if (os.path.exists('fspcPicS2.jpg') == False):
             mbuf['res'] = -1
             mbuf['errInfo'] = 'File not exist!'
             self.msg_send(TUP_MSGID_FSPC_CMD_S1_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+            return TUP_SUCCESS;
+        if (self.fspcSucFlagS2 == False):
+            mbuf['res'] = -1
+            mbuf['errInfo'] = 'Previous step not done!'
+            self.msg_send(TUP_MSGID_FSPC_CMD_S2_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
             return TUP_SUCCESS;
         ret, totalCnt = self.func_cmd_s3_proc(msgContent)
         if (ret == False):
@@ -182,23 +197,23 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             self.msg_send(TUP_MSGID_FSPC_CMD_S3_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
             return TUP_SUCCESS;
         #Final feedback
-        mbuf['res'] = 1
-        mbuf['fileName'] = 'fspcPicS3.jpg'
-        mbuf['fileName1'] = 'fspcPicS31.jpg'
-        mbuf['fileName2'] = 'fspcPicS32.jpg'
-        mbuf['totalCnt'] = totalCnt
-        mbuf['errInfo'] = ''
+        mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 3)
         self.funcFspcLogTrace(str("Step3 result = %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_FSPC_CMD_S3_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+        self.fspcSucFlagS3 = True
         return TUP_SUCCESS;
 
     def fsm_msg_cmd_s4_req_rcv_handler(self, msgContent):
-        #parIn = self.proc_decode_rcv_par_list(msgContent)
         mbuf={}
-        if (os.path.exists(msgContent['fileName']) == False):
+        if (os.path.exists('fspcPicS3.jpg') == False):
             mbuf['res'] = -1
             mbuf['errInfo'] = 'File not exist!'
             self.msg_send(TUP_MSGID_FSPC_CMD_S4_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+            return TUP_SUCCESS;
+        if (self.fspcSucFlagS3 == False):
+            mbuf['res'] = -1
+            mbuf['errInfo'] = 'Previous step not done!'
+            self.msg_send(TUP_MSGID_FSPC_CMD_S2_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
             return TUP_SUCCESS;
         ret, totalCnt = self.func_cmd_s4_proc(msgContent)
         if (ret == False):
@@ -208,23 +223,24 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             self.msg_send(TUP_MSGID_FSPC_CMD_S4_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
             return TUP_SUCCESS;
         #Final feedback
-        mbuf['res'] = 1
-        mbuf['fileName'] = 'fspcPicS4.jpg'
-        mbuf['fileName1'] = 'fspcPicS41.jpg'
-        mbuf['fileName2'] = 'fspcPicS42.jpg'
-        mbuf['totalCnt'] = totalCnt
-        mbuf['errInfo'] = ''
+        mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 4)
+        mbuf['findCnt'] = self.fspcValidCnt
         self.funcFspcLogTrace(str("Step4 result = %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_FSPC_CMD_S4_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+        self.fspcSucFlagS4 = True
         return TUP_SUCCESS;
 
     def fsm_msg_cmd_s5_req_rcv_handler(self, msgContent):
-        #parIn = self.proc_decode_rcv_par_list(msgContent)
         mbuf={}
-        if (os.path.exists(msgContent['fileName']) == False):
+        if (os.path.exists('fspcPicS4.jpg') == False):
             mbuf['res'] = -1
             mbuf['errInfo'] = 'File not exist!'
             self.msg_send(TUP_MSGID_FSPC_CMD_S1_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+            return TUP_SUCCESS;
+        if (self.fspcSucFlagS4 == False):
+            mbuf['res'] = -1
+            mbuf['errInfo'] = 'Previous step not done!'
+            self.msg_send(TUP_MSGID_FSPC_CMD_S2_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
             return TUP_SUCCESS;
         ret, totalCnt = self.func_cmd_s5_proc(msgContent)
         if (ret == False):
@@ -234,23 +250,24 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             self.msg_send(TUP_MSGID_FSPC_CMD_S5_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
             return TUP_SUCCESS;
         #Final feedback
-        mbuf['res'] = 1
-        mbuf['fileName'] = 'fspcPicS5.jpg'
-        mbuf['fileName1'] = 'fspcPicS51.jpg'
-        mbuf['fileName2'] = 'fspcPicS52.jpg'
-        mbuf['totalCnt'] = totalCnt
-        mbuf['errInfo'] = ''
+        mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 5)
+        mbuf['findCnt'] = self.fspcValidCnt
         self.funcFspcLogTrace(str("Step5 result = %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_FSPC_CMD_S5_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+        self.fspcSucFlagS5 = True
         return TUP_SUCCESS;
 
     def fsm_msg_cmd_s6_req_rcv_handler(self, msgContent):
-        #parIn = self.proc_decode_rcv_par_list(msgContent)
         mbuf={}
-        if (os.path.exists(msgContent['fileName']) == False):
+        if (os.path.exists('fspcPicS5.jpg') == False):
             mbuf['res'] = -1
             mbuf['errInfo'] = 'File not exist!'
             self.msg_send(TUP_MSGID_FSPC_CMD_S1_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+            return TUP_SUCCESS;
+        if (self.fspcSucFlagS5 == False):
+            mbuf['res'] = -1
+            mbuf['errInfo'] = 'Previous step not done!'
+            self.msg_send(TUP_MSGID_FSPC_CMD_S2_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
             return TUP_SUCCESS;
         ret, totalCnt = self.func_cmd_s6_proc(msgContent)
         if (ret == False):
@@ -260,23 +277,23 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             self.msg_send(TUP_MSGID_FSPC_CMD_S6_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
             return TUP_SUCCESS;
         #Final feedback
-        mbuf['res'] = 1
-        mbuf['fileName'] = 'fspcPicS6.jpg'
-        mbuf['fileName1'] = 'fspcPicS61.jpg'
-        mbuf['fileName2'] = 'fspcPicS62.jpg'
-        mbuf['totalCnt'] = totalCnt
-        mbuf['errInfo'] = ''
+        mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 6)
         self.funcFspcLogTrace(str("Step6 result = %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_FSPC_CMD_S6_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+        self.fspcSucFlagS6 = True
         return TUP_SUCCESS;
 
     def fsm_msg_cmd_s7_req_rcv_handler(self, msgContent):
-        #parIn = self.proc_decode_rcv_par_list(msgContent)
         mbuf={}
-        if (os.path.exists(msgContent['fileName']) == False):
+        if (os.path.exists('fspcPicS6.jpg') == False):
             mbuf['res'] = -1
             mbuf['errInfo'] = 'File not exist!'
             self.msg_send(TUP_MSGID_FSPC_CMD_S7_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+            return TUP_SUCCESS;
+        if (self.fspcSucFlagS6 == False):
+            mbuf['res'] = -1
+            mbuf['errInfo'] = 'Previous step not done!'
+            self.msg_send(TUP_MSGID_FSPC_CMD_S2_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
             return TUP_SUCCESS;
         ret, totalCnt = self.func_cmd_s7_proc(msgContent)
         if (ret == False):
@@ -286,18 +303,13 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             self.msg_send(TUP_MSGID_FSPC_CMD_S7_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
             return TUP_SUCCESS;
         #Final feedback
-        mbuf['res'] = 1
-        mbuf['fileName'] = 'fspcPicS7.jpg'
-        mbuf['fileName1'] = 'fspcPicS71.jpg'
-        mbuf['fileName2'] = 'fspcPicS72.jpg'
-        mbuf['totalCnt'] = totalCnt
-        mbuf['errInfo'] = ''
+        mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 7)
         self.funcFspcLogTrace(str("Step7 result = %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_FSPC_CMD_S7_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+        self.fspcSucFlagS7 = True
         return TUP_SUCCESS;
 
     def fsm_msg_cmd_sum_req_rcv_handler(self, msgContent):
-        #parIn = self.proc_decode_rcv_par_list(msgContent)
         mbuf={}
         if (os.path.exists(msgContent['fileName']) == False):
             mbuf['res'] = -1
@@ -322,7 +334,22 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
         return TUP_SUCCESS;
     
-    #指出的参数！
+    def proc_mbuf_fix_fill(self, mbuf, totalCnt, index):
+        mbuf['res'] = 1
+        mbuf['fileName1'] = str('fspcPicS%d1.jpg' %(index))
+        mbuf['fileName2'] = str('fspcPicS%d2.jpg' %(index))
+        mbuf['fileName3'] = str('fspcPicS%d3.jpg' %(index))
+        mbuf['fileName4'] = str('fspcPicS%d4.jpg' %(index))
+        mbuf['fileName5'] = str('fspcPicS%d5.jpg' %(index))
+        mbuf['fileName']  = str('fspcPicS%d.jpg' %(index))
+        mbuf['totalCnt'] = totalCnt
+        mbuf['errInfo'] = ''
+        return mbuf
+    
+    '''
+    #所有支持的参数，但这里再次解码，并利用序号控制程序，并不是特别好，还不如直接使用消息中带有含义的字符串直接引用，反而泛化能力更强。
+    #目前这个函数并未启用
+    '''
     def proc_decode_rcv_par_list(self, msgContent):
         fileName = msgContent['fileName'];
         markLine = msgContent['markLine'];
@@ -339,12 +366,11 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         cellErode = msgContent['cellErode'];
         cellCe = msgContent['cellCe'];
         cellDist = msgContent['cellDist'];
+        trainDelay = msgContent['trainDelay'];
         addupSet = msgContent['addupSet'];
-        parRes = (fileName, markLine, markWidth, areaMin, areaMax, areaDilate, areaErode, cellMin, cellMax, raduisMin, raduisMax, cellDilate, cellErode, cellCe, cellDist, addupSet)
+        parRes = (fileName, markLine, markWidth, areaMin, areaMax, areaDilate, areaErode, cellMin, cellMax, raduisMin, \
+                raduisMax, cellDilate, cellErode, cellCe, cellDist, trainDelay, addupSet)
         return parRes
-    
-    
-    
     
     
     
@@ -352,17 +378,12 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     #命令处理过程
     '''
     def func_cmd_s1_proc(self, inputPar):
-        #处理参数
-        #使用LOCAL方式进行叠加，不再使用全局属性，简化处理
-        outputText = {'totalNbr':0, 'validNbr':0}
-        
-        #Reading file: 读取文件
+        #Reading file: 读取文件。这里采用了处理中文文件名字的技巧，不是直接从opencv中读取
         try:
             inputImg = cv.imdecode(np.fromfile(inputPar['fileName'], dtype=np.uint8), cv.IMREAD_COLOR)
         except Exception as err:
             print("FSPC: Read file error, errinfo = ", str(err))
             return False, -1
-
         #寻找人工标定  #寻找标定线 寻找右下半部分  #寻找黄色标定线： 人工标定的方式，在参数选择上需要固定一种特征，而且保持一定的稳定性，不然无法兑付
         #图像解析度需要保持稳定
         #两种直线寻找方案都验证了，都好使！
@@ -372,40 +393,104 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         grayImg = cv.cvtColor(inputImg, cv.COLOR_BGR2GRAY)
         delImg = grayImg - b
         diImg = self.tup_dilate(delImg, inputPar['markDilate'])
-        ctImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_max_contours(diImg, inputPar['markArea'], inputPar['markArea']*10, 0.001, 0.5, True, True)
+        ctImg, self.fspcMinRect, totalCnt, findCnt, self.fspcOutCt, self.fspcOutBox = self.tup_find_max_contours(diImg, inputPar['markArea'], inputPar['markArea']*10, 0.001, 0.5, True, True)
         cv.imwrite("fspcPicS11.jpg", ctImg)
         if (findCnt!=1):
             return False, findCnt
-        testFlag = False
-        if (testFlag == True):
-            cv.drawContours(ctImg, outCt, -1, self._COL_D_YELLOW, 2)
-            self.tup_img_show(ctImg, "S1: Finding Yellow Line")
-            sp = ctImg.shape
-            #(startPoint, endPoint) = self.tup_cal_rect_line(rect[0], rect[2], (sp[0], sp[1]))
-            (startPoint, endPoint) = self.tup_siml_line_by_contour(ctImg, outCt)
-            cv.line(inputImg, startPoint, endPoint, self._COL_D_RED, 2)
-            self.tup_img_show(inputImg, "S1: Line Cut Image result")
         #生成外围图
         yelImg = inputImg.copy()
-        cv.drawContours(yelImg, outCt, -1, self._COL_D_RED, 3)
+        cv.drawContours(yelImg, self.fspcOutCt, -1, self._COL_D_RED, 2)
         cv.imwrite("fspcPicS12.jpg", yelImg)
-        lineOutImg = self.tup_cut_line_out_img(inputImg, rect[0], rect[2], inputPar['markWidth'])
+        lineOutImg = self.tup_cut_line_out_img(inputImg, self.fspcMinRect[0], self.fspcMinRect[2], inputPar['markWidth'])
         cv.imwrite("fspcPicS1.jpg", lineOutImg)
         return True, 3
 
-
-
     def func_cmd_s2_proc(self, inputPar):
-        return False, 1
+        try:
+            inputImg = cv.imdecode(np.fromfile('fspcPicS1.jpg', dtype=np.uint8), cv.IMREAD_COLOR)
+        except Exception as err:
+            print("FSPC: Read file error, errinfo = ", str(err))
+            return False, -1
+        #使用黄色线，将正方形区域框定下来，然后再寻找外接框
+        #可以考虑使用，使用下面的技巧（多边形技巧），将这个定点多边形搞出来，然后取出限定正方形内的多边形图像
+        self.funcFspcLogTrace("FSPC: stack Stage2, Finding retangle area!")
+        tpList = self.tup_find_retg_area(inputImg, self.fspcMinRect, inputPar['markLine']/100)
+        tpListImg = inputImg.copy()
+        cv.drawContours(tpListImg, [tpList], -1, self._COL_D_BLUE, 2)
+        cv.imwrite("fspcPicS21.jpg", tpListImg)
+        rtgImg = self.tup_copy_contour_img(inputImg, tpList)
+        cv.imwrite("fspcPicS2.jpg", rtgImg)   
+        return True, 2
 
     def func_cmd_s3_proc(self, inputPar):
-        return False, 1
+        try:
+            inputImg = cv.imdecode(np.fromfile('fspcPicS2.jpg', dtype=np.uint8), cv.IMREAD_COLOR)
+        except Exception as err:
+            print("FSPC: Read file error, errinfo = ", str(err))
+            return False, -1
+        self.funcFspcLogTrace("FSPC: stack Stage3, fix working contour area!")
+        targetImg, self.fspcMinRect, totalCnt, findCnt, self.fspcOutCt, self.fspcOutBox = \
+            self.tup_max_contours_itp(inputImg, inputPar['areaDilate'], inputPar['areaErode'], inputPar['areaMin'], inputPar['areaMax'], 0.001, 1, True, True)
+        if (findCnt <= 0):
+            return False, findCnt;
+        cv.imwrite("fspcPicS31.jpg", targetImg)
+        tar1Img = inputImg.copy()
+        cv.drawContours(tar1Img, self.fspcOutCt, -1, self._COL_D_RED, 2)
+        cv.imwrite("fspcPicS32.jpg", tar1Img)
+        self.fspcOutCtPoly = cv.convexHull(self.fspcOutCt)
+        tar2Img = inputImg.copy()
+        cv.drawContours(tar2Img, self.fspcOutCt, -1, self._COL_D_BLUE, 2)
+        cv.imwrite("fspcPicS33.jpg", tar1Img)
+        tar3Img = inputImg.copy()
+        tar4Img = cv.polylines(tar3Img, [self.fspcOutCtPoly], True, self._COL_D_RED, 2)
+        cv.fillPoly(tar4Img, [self.fspcOutCtPoly], 255)
+        cv.imwrite("fspcPicS34.jpg", tar4Img)
+        cropImg = self.tup_copy_contour_img(inputImg, self.fspcOutCt)
+        cv.imwrite("fspcPicS3.jpg", cropImg)
+        if (findCnt != 1):
+            return False, findCnt;
+        return True, 5
 
     def func_cmd_s4_proc(self, inputPar):
-        return False, 1
-
+        try:
+            inputImg = cv.imdecode(np.fromfile('fspcPicS3.jpg', dtype=np.uint8), cv.IMREAD_COLOR)
+        except Exception as err:
+            print("FSPC: Read file error, errinfo = ", str(err))
+            return False, -1
+        #霍夫变换找圆形算法
+        #cirRadMin/cirRadMax - 圆形范围
+        #ceMin - 圆形距离
+        algoSelction = 1
+        self.funcFspcLogTrace("FSPC: stack Stage4, Hough transform to find potential candidates!")
+        if (algoSelction == 1):
+            outputImg, findCnt, self.fspcCircles = self.tup_itp_hough_transform(inputImg, inputPar['raduisMin'], inputPar['raduisMax'], inputPar['cellDist'])
+            totalCnt = findCnt
+        #图像形态学算法
+        elif (algoSelction == 2):
+            outputImg, rect, totalCnt, findCnt, outCt, outBox = \
+                self.tup_itp_morphology_transform(inputImg, inputPar['cellDilate'], inputPar['cellErode'], \
+                inputPar['cellMin'], inputPar['cellMax'], inputPar['cellCe'], 1, True, False)
+        cv.imwrite("fspcPicS4.jpg", outputImg)
+        self.fspcValidCnt = totalCnt
+        return True, 1
+    
     def func_cmd_s5_proc(self, inputPar):
-        return False, 1
+        try:
+            inputImg = cv.imdecode(np.fromfile('fspcPicS4.jpg', dtype=np.uint8), cv.IMREAD_COLOR)
+        except Exception as err:
+            print("FSPC: Read file error, errinfo = ", str(err))
+            return False, -1        
+        self.funcFspcLogTrace("FSPC: stack Stage5, Removing outer wrong findings!")
+        self.fspcGdCircles, badCircles = self.tup_remove_ex_contour_circle(self.fspcOutCt, self.fspcCircles)
+        judgeCircleImg = inputImg.copy()
+        for element in self.fspcGdCircles[0]:
+            cv.circle(judgeCircleImg, (element[0], element[1]), element[2], self._COL_D_RED, 2)
+        for element in badCircles[0]:
+            cv.circle(judgeCircleImg, (element[0], element[1]), element[2], self._COL_D_BLUE, 2)
+        cv.drawContours(judgeCircleImg, self.fspcOutCt, -1, self._COL_D_YELLOW, 3)
+        cv.imwrite("fspcPicS5.jpg", judgeCircleImg)
+        self.fspcValidCnt = len(self.fspcGdCircles)
+        return True, 1
 
     def func_cmd_s6_proc(self, inputPar):
         return False, 1

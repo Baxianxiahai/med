@@ -72,6 +72,7 @@ _TUP_CEBS_CFG_SEC_LIST = [\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'cell_erode', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'cell_ce', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'cell_distance', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'pic_train_delay', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_PIC_TRAIN_DELAY, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_FSPC], 'sctName':'addup_set', 'valType':'bool', 'valDefault':False, 'comVariable':ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET, 'usage':''},\
     ]
 
@@ -128,6 +129,7 @@ class clsL1_ConfigOpr():
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_PIC_TRAIN_DELAY
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET
     
     #从全局变量读取到变量_TUP_CEBS_CFG_SEC_LIST中。读取INI文件的结果是在TUP变量中，所以必须重新刷新到全局变量中，不然全局变量并没有更新
@@ -178,6 +180,7 @@ class clsL1_ConfigOpr():
         index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_ERODE            = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_CE               = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_COEF_CELL_DIST             = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_PIC_TRAIN_DELAY            = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLFSPC_PAR_OFC.FSPC_ADDUP_SET                  = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         
             
