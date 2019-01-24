@@ -188,7 +188,20 @@ class tupTaskUiFspc(tupTaskTemplate, clsL1_ConfigOpr):
             self.funcDebugPrint2Qt("CmdSum exect failure! Error with [%s]" % (msgContent['errInfo']));
         else:
             if (self.fatherUiObj != ''):
-                self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
+                if (msgContent['res'] > 0) and (msgContent['totalCnt'] >= 2):
+                    self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName1'])
+                if (msgContent['res'] > 0) and (msgContent['totalCnt'] >= 3):
+                    time.sleep(self.uiFspcPicTrainDelay)
+                    self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName2'])
+                if (msgContent['res'] > 0) and (msgContent['totalCnt'] >= 4):
+                    time.sleep(self.uiFspcPicTrainDelay)
+                    self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName3'])
+                if (msgContent['res'] > 0) and (msgContent['totalCnt'] >= 5):
+                    time.sleep(self.uiFspcPicTrainDelay)
+                    self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName4'])
+                if (msgContent['res'] > 0) and (msgContent['totalCnt'] >= 1):
+                    time.sleep(self.uiFspcPicTrainDelay)
+                    self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
         return TUP_SUCCESS;
 
     def func_cmd_processing(self, msgContent, ind):

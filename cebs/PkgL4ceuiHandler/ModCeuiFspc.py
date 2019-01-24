@@ -97,6 +97,9 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
     files, ok1 = QFileDialog.getOpenFileNames(self, "多文件选择", "C:/", "All Files (*);;Text Files (*.txt)")
     * 存储文件
     fileName2, ok2 = QFileDialog.getSaveFileName(self, 文件保存", "C:/", "All Files (*);;Text Files (*.txt)")    
+    #
+    #self.label_pic_fspc_fill.setScaledContents(True)
+    #
     '''
     def slot_file_load(self):
         if ('Windows' in platform.system()):
@@ -108,8 +111,15 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
         if (fileName != ''):
             self.picFile = fileName
             img = QtGui.QPixmap(fileName)
-            #固定位置显示
-            img=img.scaled(self.rectPic.width(), self.rectPic.height())
+            wRatio = img.width()/self.rectPic.width()
+            hRatio = img.height()/self.rectPic.height()
+            if (hRatio > wRatio):
+                ratio = hRatio
+            else:
+                ratio = wRatio
+            wScale = int(img.width()/ratio)
+            hScale = int(img.height()/ratio)
+            img=img.scaled(wScale, hScale)
             self.label_pic_fspc_fill.setPixmap(img)
 
 
@@ -176,8 +186,18 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
         else:
             img = QtGui.QPixmap(fileName)
             #固定位置显示
-            img=img.scaled(self.rectPic.width(), self.rectPic.height())
-            self.label_pic_fspc_fill.setPixmap(img)    
+            wRatio = img.width()/self.rectPic.width()
+            hRatio = img.height()/self.rectPic.height()
+            if (hRatio > wRatio):
+                ratio = hRatio
+            else:
+                ratio = wRatio
+            wScale = int(img.width()/ratio)
+            hScale = int(img.height()/ratio)
+            img=img.scaled(wScale, hScale)
+            self.label_pic_fspc_fill.setPixmap(img)
+
+
     
     #
     #  SERVICE FUNCTION PART, 业务函数部分

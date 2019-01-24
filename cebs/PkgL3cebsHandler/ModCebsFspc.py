@@ -147,7 +147,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             return TUP_SUCCESS;
         #Final feedback
         mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 1)
-        self.funcFspcLogTrace(str("Step1 result = %d" % (totalCnt)));
+        self.funcFspcLogTrace(str("Step1 ui show nbr =  %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_FSPC_CMD_S1_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
         self.fspcSucFlagS1 = True
         return TUP_SUCCESS;
@@ -173,7 +173,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             return TUP_SUCCESS;
         #Final feedback
         mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 2)
-        self.funcFspcLogTrace(str("Step2 result = %d" % (totalCnt)));
+        self.funcFspcLogTrace(str("Step2 ui show nbr =  %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_FSPC_CMD_S2_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
         self.fspcSucFlagS2 = True
         return TUP_SUCCESS;
@@ -199,7 +199,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             return TUP_SUCCESS;
         #Final feedback
         mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 3)
-        self.funcFspcLogTrace(str("Step3 result = %d" % (totalCnt)));
+        self.funcFspcLogTrace(str("Step3 ui show nbr =  %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_FSPC_CMD_S3_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
         self.fspcSucFlagS3 = True
         return TUP_SUCCESS;
@@ -226,7 +226,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #Final feedback
         mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 4)
         mbuf['findCnt'] = self.fspcValidCnt
-        self.funcFspcLogTrace(str("Step4 result = %d" % (totalCnt)));
+        self.funcFspcLogTrace(str("Step4 ui show nbr =  %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_FSPC_CMD_S4_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
         self.fspcSucFlagS4 = True
         return TUP_SUCCESS;
@@ -253,7 +253,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #Final feedback
         mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 5)
         mbuf['findCnt'] = self.fspcValidCnt
-        self.funcFspcLogTrace(str("Step5 result = %d" % (totalCnt)));
+        self.funcFspcLogTrace(str("Step5 ui show nbr =  %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_FSPC_CMD_S5_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
         self.fspcSucFlagS5 = True
         return TUP_SUCCESS;
@@ -280,7 +280,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #Final feedback
         mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 6)
         mbuf['findCnt'] = self.fspcValidCnt
-        self.funcFspcLogTrace(str("Step6 result = %d" % (totalCnt)));
+        self.funcFspcLogTrace(str("Step6 ui show nbr =  %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_FSPC_CMD_S6_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
         self.fspcSucFlagS6 = True
         return TUP_SUCCESS;
@@ -307,7 +307,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #Final feedback
         mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 7)
         mbuf['findCnt'] = self.fspcValidCnt
-        self.funcFspcLogTrace(str("Step7 result = %d" % (totalCnt)));
+        self.funcFspcLogTrace(str("Step7 ui show nbr =  %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_FSPC_CMD_S7_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
         self.fspcSucFlagS7 = True
         return TUP_SUCCESS;
@@ -319,22 +319,107 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             mbuf['errInfo'] = 'File not exist!'
             self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
             return TUP_SUCCESS;
-        ret, totalCnt = self.func_cmd_sum_proc(msgContent)
+        #STEP1
+        ret, totalCnt = self.func_cmd_s1_proc(msgContent)
         if (ret == False):
             mbuf['res'] = -2
             string = str('Error find %d' % (totalCnt))
             mbuf['errInfo'] = string
             self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
             return TUP_SUCCESS;
-        #Final feedback
-        mbuf['res'] = 1
-        mbuf['fileName'] = 'fspcPicSum.jpg'
-        mbuf['fileName1'] = 'fspcPicSum1.jpg'
-        mbuf['fileName2'] = 'fspcPicSum2.jpg'
-        mbuf['totalCnt'] = totalCnt
-        mbuf['errInfo'] = ''
-        self.funcFspcLogTrace(str("Step sum result = %d" % (totalCnt)));
-        self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+        else:
+            mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 1)
+            mbuf['findCnt'] = self.fspcValidCnt
+            self.funcFspcLogTrace(str("Step1 ui show nbr =  %d" % (totalCnt)));
+            self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+        #STEP2
+        ret, totalCnt = self.func_cmd_s2_proc(msgContent)
+        if (ret == False):
+            mbuf['res'] = -2
+            string = str('Error find %d' % (totalCnt))
+            mbuf['errInfo'] = string
+            self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+            return TUP_SUCCESS;
+        else:
+            mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 2)
+            mbuf['findCnt'] = self.fspcValidCnt
+            self.funcFspcLogTrace(str("Step2 ui show nbr =  %d" % (totalCnt)));
+            self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+        #STEP3
+        ret, totalCnt = self.func_cmd_s3_proc(msgContent)
+        if (ret == False):
+            mbuf['res'] = -2
+            string = str('Error find %d' % (totalCnt))
+            mbuf['errInfo'] = string
+            self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+            return TUP_SUCCESS;
+        else:
+            mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 3)
+            mbuf['findCnt'] = self.fspcValidCnt
+            self.funcFspcLogTrace(str("Step3 ui show nbr =  %d" % (totalCnt)));
+            self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+        #STEP4
+        ret, totalCnt = self.func_cmd_s4_proc(msgContent)
+        if (ret == False):
+            mbuf['res'] = -2
+            string = str('Error find %d' % (totalCnt))
+            mbuf['errInfo'] = string
+            self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+            return TUP_SUCCESS;
+        else:
+            mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 4)
+            mbuf['findCnt'] = self.fspcValidCnt
+            self.funcFspcLogTrace(str("Step4 ui show nbr =  %d" % (totalCnt)));
+            self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+        #STEP5
+        ret, totalCnt = self.func_cmd_s5_proc(msgContent)
+        if (ret == False):
+            mbuf['res'] = -2
+            string = str('Error find %d' % (totalCnt))
+            mbuf['errInfo'] = string
+            self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+            return TUP_SUCCESS;
+        else:
+            mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 5)
+            mbuf['findCnt'] = self.fspcValidCnt
+            self.funcFspcLogTrace(str("Step5 ui show nbr =  %d" % (totalCnt)));
+            self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+        #STEP6
+        ret, totalCnt = self.func_cmd_s6_proc(msgContent)
+        if (ret == False):
+            mbuf['res'] = -2
+            string = str('Error find %d' % (totalCnt))
+            mbuf['errInfo'] = string
+            self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+            return TUP_SUCCESS;
+        else:
+            mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 6)
+            mbuf['findCnt'] = self.fspcValidCnt
+            self.funcFspcLogTrace(str("Step6 ui show nbr =  %d" % (totalCnt)));
+            self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+        #STEP7
+        ret, totalCnt = self.func_cmd_s7_proc(msgContent)
+        if (ret == False):
+            mbuf['res'] = -2
+            string = str('Error find %d' % (totalCnt))
+            mbuf['errInfo'] = string
+            self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+            return TUP_SUCCESS;
+        else:
+            mbuf = self.proc_mbuf_fix_fill(mbuf, totalCnt, 7)
+            mbuf['findCnt'] = self.fspcValidCnt
+            self.funcFspcLogTrace(str("Step7 ui show nbr =  %d" % (totalCnt)));
+            self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+        
+#         #Final feedback
+#         mbuf['res'] = 1
+#         mbuf['fileName'] = 'fspcPicSum.jpg'
+#         mbuf['fileName1'] = 'fspcPicSum1.jpg'
+#         mbuf['fileName2'] = 'fspcPicSum2.jpg'
+#         mbuf['totalCnt'] = totalCnt
+#         mbuf['errInfo'] = ''
+#         self.funcFspcLogTrace(str("Step sum ui show nbr =  %d" % (totalCnt)));
+#         self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
         return TUP_SUCCESS;
     
     def proc_mbuf_fix_fill(self, mbuf, totalCnt, index):
@@ -392,7 +477,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #图像解析度需要保持稳定
         #两种直线寻找方案都验证了，都好使！
         #线宽也作为参数了！
-        self.funcFspcLogTrace("FSPC: stack Stage1, Finding yellow marked line!")
+        self.funcFspcLogTrace("FSPC: Stack stage1, Finding yellow marked line!")
         b, g, r = cv.split(inputImg)
         grayImg = cv.cvtColor(inputImg, cv.COLOR_BGR2GRAY)
         delImg = grayImg - b
@@ -418,7 +503,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             return False, -1
         #使用黄色线，将正方形区域框定下来，然后再寻找外接框
         #可以考虑使用，使用下面的技巧（多边形技巧），将这个定点多边形搞出来，然后取出限定正方形内的多边形图像
-        self.funcFspcLogTrace("FSPC: stack Stage2, Finding retangle area!")
+        self.funcFspcLogTrace("FSPC: Stack stage2, Finding retangle area!")
         tpList = self.tup_find_retg_area(inputImg, self.fspcMinRect, inputPar['markLine']/100)
         tpListImg = inputImg.copy()
         cv.drawContours(tpListImg, [tpList], -1, self._COL_D_BLUE, 2)
@@ -434,7 +519,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         except Exception as err:
             print("FSPC: Read file error, errinfo = ", str(err))
             return False, -1
-        self.funcFspcLogTrace("FSPC: stack Stage3, fix working contour area!")
+        self.funcFspcLogTrace("FSPC: Stack stage3, fix working contour area!")
         targetImg, self.fspcMinRect, totalCnt, findCnt, self.fspcOutCt, self.fspcOutBox = \
             self.tup_max_contours_itp(inputImg, inputPar['areaDilate'], inputPar['areaErode'], inputPar['areaMin'], inputPar['areaMax'], 0.001, 1, True, True)
         if (findCnt <= 0):
@@ -468,7 +553,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #cirRadMin/cirRadMax - 圆形范围
         #ceMin - 圆形距离
         algoSelction = 1
-        self.funcFspcLogTrace("FSPC: stack Stage4, Hough transform to find potential candidates!")
+        self.funcFspcLogTrace("FSPC: Stack stage4, Hough transform to find potential candidates!")
         if (algoSelction == 1):
             outputImg, findCnt, self.fspcCircles = self.tup_itp_hough_transform(inputImg, inputPar['raduisMin'], inputPar['raduisMax'], inputPar['cellDist'])
             totalCnt = findCnt
@@ -479,7 +564,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
                 inputPar['cellMin'], inputPar['cellMax'], inputPar['cellCe']/100.0, 1, True, True)
         cv.imwrite("fspcPicS4.jpg", outputImg)
         self.fspcValidCnt = findCnt
-        self.funcFspcLogTrace("FSPC: stack Stage4, find total %d!" % (self.fspcValidCnt))
+        self.funcFspcLogTrace("FSPC: Stack stage4, find total %d!" % (self.fspcValidCnt))
         return True, 1
     
     #去圈外的图像
@@ -489,7 +574,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         except Exception as err:
             print("FSPC: Read file error, errinfo = ", str(err))
             return False, -1        
-        self.funcFspcLogTrace("FSPC: stack Stage5, Removing outer wrong findings!")
+        self.funcFspcLogTrace("FSPC: Stack stage5, Removing outer wrong findings!")
         self.fspcGdCircles, badCircles = self.tup_remove_ex_contour_circle(self.fspcOutCt, self.fspcCircles)
         judgeCircleImg = inputImg.copy()
         for element in self.fspcGdCircles[0]:
@@ -499,7 +584,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         cv.drawContours(judgeCircleImg, self.fspcOutCt, -1, self._COL_D_YELLOW, 3)
         cv.imwrite("fspcPicS5.jpg", judgeCircleImg)
         self.fspcValidCnt = len(self.fspcGdCircles[0])
-        self.funcFspcLogTrace("FSPC: stack Stage5, find total %d!" % (self.fspcValidCnt))
+        self.funcFspcLogTrace("FSPC: Stack stage5, find total %d!" % (self.fspcValidCnt))
         return True, 1
     
     #去伪存真
@@ -510,6 +595,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             print("FSPC: Read file error, errinfo = ", str(err))
             return False, -1
         #传统方式干活
+        self.funcFspcLogTrace("FSPC: Stack stage6, Re-checking the target is real or not!")
         tradImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_itp_morphology_transform(inputImg, inputPar['cellDilate'], inputPar['cellErode'], \
                 inputPar['cellMin'], inputPar['cellMax'], inputPar['cellCe']/100.0, 1, True, True)
         cv.imwrite("fspcPicS61.jpg", tradImg)
@@ -519,11 +605,30 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         cv.imwrite("fspcPicS62.jpg", detectImg)
         cv.imwrite("fspcPicS6.jpg", outputImg)
         self.fspcValidCnt = findCnt
-        self.funcFspcLogTrace("FSPC: stack Stage6, find total %d!" % (self.fspcValidCnt))
+        self.funcFspcLogTrace("FSPC: Stack stage6, find total %d!" % (self.fspcValidCnt))
         return True, 3
-
+    
+    #叠加输出
     def func_cmd_s7_proc(self, inputPar):
-        return False, 1
+        try:
+            inputImg = cv.imdecode(np.fromfile(inputPar['fileName'], dtype=np.uint8), cv.IMREAD_COLOR)
+        except Exception as err:
+            print("FSPC: Read file error, errinfo = ", str(err))
+            return False, -1
+        #圆框
+        self.funcFspcLogTrace("FSPC: Stack stage7, final output!")
+        for element in self.fspcCkCircles[0]:
+            cv.circle(inputImg, (element[0], element[1]), element[2], self._COL_D_RED, 2)
+        #叠加
+        outputText = {'totalNbr':0, 'validNbr':0}
+        outputText['totalNbr'] = self.fspcValidCnt
+        outputText['validNbr'] = self.fspcValidCnt
+        if (inputPar['addupSet'] == True):
+            font = cv.FONT_HERSHEY_SIMPLEX
+            cv.putText(inputImg, str("XHT: " + str(outputText)), (10, 30), font, 0.7, self._COL_D_RED, 2, cv.LINE_AA)
+        cv.imwrite("fspcPicS7.jpg", inputImg)
+        self.funcFspcLogTrace("FSPC: Stack stage7, find total %d!" % (self.fspcValidCnt))
+        return True, 1
 
     def func_cmd_sum_proc(self, inputPar):
         return False, 1

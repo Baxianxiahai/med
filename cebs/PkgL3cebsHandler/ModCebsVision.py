@@ -673,7 +673,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         if (ret != True):
             return -1,_;
         frame = cv.flip(frame, 1)#Operation in frame
-        frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_AREA)
+        frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_LINEAR)
         #白平衡算法
         B,G,R = cv.split(frame)
         bMean = cv.mean(B)
@@ -728,7 +728,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         ret, frame = self.capInit.retrieve()
         if (ret == True):
             frame = cv.flip(frame, 1)#Operation in frame
-            frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_AREA)
+            frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_LINEAR)
             #白平衡算法
             B,G,R = cv.split(frame)
             bMean = cv.mean(B)
