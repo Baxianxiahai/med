@@ -555,25 +555,25 @@ class clsL1_ConfigOpr():
         return res;
 
     def combineFileName(self, batch, fileNbr):
-        return str("batch#" + str(batch) + "FileName#" + self.func_cvt_indexfilehole(fileNbr))
+        return str("batch#" + str(batch) + "FileName#" + str(self.func_cvt_indexfilehole(fileNbr)))
 
     def combineScaleFileName(self, batch, fileNbr):
-        return str("scale_batch#" + str(batch) + "FileName#" + self.func_cvt_indexfilehole(fileNbr))
+        return str("scale_batch#" + str(batch) + "FileName#" + str(self.func_cvt_indexfilehole(fileNbr)))
 
     def combineVideoName(self, batch, fileNbr):
-        return str("batch#" + str(batch) + "VideoName#" + self.func_cvt_indexfilehole(fileNbr))
+        return str("batch#" + str(batch) + "VideoName#" + str(self.func_cvt_indexfilehole(fileNbr)))
 
     def combineFileNameWithDir(self, batch, fileNbr):  
-        fileName = str("batch#" + str(batch) + "FileName#" + self.func_cvt_indexfilehole(fileNbr))
+        fileName = str("batch#" + str(batch) + "FileName#" + str(self.func_cvt_indexfilehole(fileNbr)))
         return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
 
     def combineScaleFileNameWithDir(self, batch, fileNbr):
-        fileName = str("scale_batch#" + str(batch) + "FileName#" + self.func_cvt_indexfilehole(fileNbr))
+        fileName = str("scale_batch#" + str(batch) + "FileName#" + str(self.func_cvt_indexfilehole(fileNbr)))
         return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
     
     def combineFileNameVideoWithDir(self, batch, fileNbr):
 
-        fileName = str("batch#" + str(batch) + "FileName#" + self.func_cvt_indexfilehole(fileNbr))
+        fileName = str("batch#" + str(batch) + "FileName#" + str(self.func_cvt_indexfilehole(fileNbr)))
         return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.mp4'  #.mp4, .avi
 
 
