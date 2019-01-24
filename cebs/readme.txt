@@ -31,6 +31,8 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
+//=ZJL, 2019/1/25, CURRENT_SW_DELIVERY R1.60 =>CEBS
+= 去掉GPAR中不再需要的STACK-FLU-PIC处理过程（堆叠荧光图像）
 
 //=ZJL, 2019/1/23, CURRENT_SW_DELIVERY R1.59 =>CEBS
 = 改进CFG文件的管控方式，简化新参数增加、减少的难度
@@ -38,7 +40,6 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 = VISION摄像头中，有关CAM#ID的问题，优化成为：如果DESC找到了，但解码不出来正确的CAMID，则强制赋值为0
 = 继续完善FSPC的黄色标记线算法
 = 基本上完成
-
 
 //=ZJL, 2019/1/19, CURRENT_SW_DELIVERY R1.58 =>CEBS
 = 荧光识别算法改进：依然达不到理想的要求

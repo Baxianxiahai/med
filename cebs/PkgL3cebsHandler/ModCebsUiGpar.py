@@ -33,7 +33,6 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
         #业务处理函数
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GPAR_PIC_TRAIN_RESP, self.fsm_msg_pic_train_resp_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GPAR_PIC_FCC_RESP, self.fsm_msg_pic_flu_cell_count_resp_rcv_handler)
-        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GPAR_PIC_FSC_RESP, self.fsm_msg_pic_flu_stack_count_resp_rcv_handler)
         
         #START TASK
         self.fsm_set(TUP_STM_INIT)
@@ -63,16 +62,6 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
             if (self.fatherUiObj != ''):
                 self.fatherUiObj.gpar_callback_train_resp(msgContent['fileName'])
         return TUP_SUCCESS;
-
-    #复用上面的显示过程
-    def fsm_msg_pic_flu_stack_count_resp_rcv_handler(self, msgContent):
-        if (msgContent['res'] < 0):
-            self.funcDebugPrint2Qt("Open Flu Stack Count picture failure!");
-        else:
-            if (self.fatherUiObj != ''):
-                self.fatherUiObj.gpar_callback_train_resp(msgContent['fileName'])
-        return TUP_SUCCESS;
-
 
     #界面切换进来
     def fsm_msg_ui_focus_rcv_handler(self, msgContent):
@@ -159,24 +148,7 @@ class tupTaskUiGpar(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['fileName'] = fileName 
         self.msg_send(TUP_MSGID_GPAR_PIC_FCC_REQ, TUP_TASK_ID_GPAR, mbuf)
         
-    #荧光分层细胞计数-批量处理模式
-    def func_ui_click_gpar_flu_stack_cnt(self, fileName, liPar1, liPar2, liPar3, liPar4, addupSet, gePar1, gePar2, gePar3, gePar4):
-        print("I am func_ui_click_gpar_flu_stack_cnt!")
-        mbuf={}
-        mbuf['baseLimit'] = liPar1; 
-        mbuf['small2Mid'] = liPar2;
-        mbuf['mid2Big'] = liPar3;
-        mbuf['bigLimit'] = liPar4;
-        mbuf['addupSet'] = addupSet;
-        mbuf['genrPar1'] = gePar1;
-        mbuf['genrPar2'] = gePar2;
-        mbuf['genrPar3'] = gePar3;
-        mbuf['genrPar4'] = gePar4;
-        self.msg_send(TUP_MSGID_GPAR_REFRESH_PAR, TUP_TASK_ID_VISION, mbuf) 
-        mbuf={}
-        mbuf['fileName'] = fileName 
-        self.msg_send(TUP_MSGID_GPAR_PIC_FSC_REQ, TUP_TASK_ID_GPAR, mbuf)
-        
+
         
         
         

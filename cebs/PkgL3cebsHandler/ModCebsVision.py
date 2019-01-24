@@ -161,7 +161,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #GPAR训练图像
         self.add_stm_combine(self._STM_GPAR_UI_ACT, TUP_MSGID_GPAR_PIC_TRAIN_REQ, self.fsm_msg_pic_train_req_rcv_handler)
         self.add_stm_combine(self._STM_GPAR_UI_ACT, TUP_MSGID_GPAR_PIC_FCC_REQ, self.fsm_msg_pic_flu_cell_count_req_rcv_handler)
-        self.add_stm_combine(self._STM_GPAR_UI_ACT, TUP_MSGID_GPAR_PIC_FSC_REQ, self.fsm_msg_pic_flu_stack_count_req_rcv_handler)
         
         #STEST自测模式
         self.add_stm_combine(self._STM_STEST_UI_ACT, TUP_MSGID_STEST_CAM_INQ, self.fsm_msg_stest_cam_inq_rcv_handler)
@@ -597,48 +596,6 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         self.funcVisionLogTrace(str("Final counter = %d" % (totalCnt)));
         self.msg_send(TUP_MSGID_GPAR_PIC_FCC_RESP, TUP_TASK_ID_GPAR, mbuf)
         return TUP_SUCCESS;
-
-    #GPAR中的荧光分层细胞计数过程
-    def fsm_msg_pic_flu_stack_count_req_rcv_handler(self, msgContent):
-        picOrgFile = msgContent['fileName']
-        mbuf={}
-        if (os.path.exists(picOrgFile) == False):
-            mbuf['res'] = -1
-            self.msg_send(TUP_MSGID_GPAR_PIC_FSC_RESP, TUP_TASK_ID_GPAR, mbuf)
-            return TUP_SUCCESS;
-        fileName = picOrgFile
-        fileNukeName = 'tempPic.jpg'
-        dilateBlkSize = self.FLU_CELL_COUNT_genr_par1
-        erodeBlkSize = self.FLU_CELL_COUNT_genr_par2
-        cAreaMin = self.WORM_CLASSIFY_base
-        cAreaMax = self.WORM_CLASSIFY_small2mid
-        cirRadMin = self.WORM_CLASSIFY_mid2big
-        cirRadMax = self.WORM_CLASSIFY_big2top
-        ceMin = self.FLU_CELL_COUNT_genr_par3 #In NF2
-        addupSet = self.WORM_CLASSIFY_addupSet
-        ceDist = self.FLU_CELL_COUNT_genr_par4
-        totalCnt = self.func_vision_flu_stack_count(fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet, cirRadMin, cirRadMax, ceDist)
-        if (os.path.exists('tempPic.jpg') == False):
-            mbuf['res'] = -2
-            self.msg_send(TUP_MSGID_GPAR_PIC_FSC_RESP, TUP_TASK_ID_GPAR, mbuf)
-            return TUP_SUCCESS;
-        #Final feedback
-        mbuf['res'] = 1
-        mbuf['fileName'] = 'tempPic.jpg'
-        mbuf['nbr'] = totalCnt
-        self.funcVisionLogTrace(str("Final counter = %d" % (totalCnt)));
-        self.msg_send(TUP_MSGID_GPAR_PIC_FSC_RESP, TUP_TASK_ID_GPAR, mbuf)
-        return TUP_SUCCESS;
-
-
-
-
-
-
-
-
-
-
 
 
     '''
@@ -1183,147 +1140,147 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     # 细胞识别函数  #分层细胞计数
     #
     '''
-    def func_vision_flu_stack_count(self, fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet, cirRadMin, cirRadMax, ceDist):
-        #处理参数
-        ceMin = ceMin/100
-        #使用LOCAL方式进行叠加，不再使用全局属性，简化处理
-        outputText = {'totalNbr':0, 'validNbr':0}
-        
-        #Reading file: 读取文件
-        if (os.path.exists(fileName) == False):
-            errStr = "L2VISCFY: File %s not exist!" % (fileName)
-            self.medErrorLog(errStr);
-            print("L2VISCFY: File %s not exist!" % (fileName))
-            return -1;
-        try:
-            #inputImg = cv.imread(fileName)
-            inputImg = cv.imdecode(np.fromfile(fileName, dtype=np.uint8), cv.IMREAD_COLOR)
-        except Exception as err:
-            print("L2VISCFY: Read file error, errinfo = ", str(err))
-            return -2;
-
-        #寻找人工标定  #寻找标定线 寻找右下半部分  #寻找黄色标定线： 人工标定的方式，在参数选择上需要固定一种特征，而且保持一定的稳定性，不然无法兑付
-        #图像解析度需要保持稳定
-        #两种直线寻找方案都验证了，都好使！
-        self.funcVisionLogTrace("VISION: stack Stage1, Finding yellow marked line!")
-        b, g, r = cv.split(inputImg)
-        grayImg = cv.cvtColor(inputImg, cv.COLOR_BGR2GRAY)
-        delImg = grayImg - b
-        diImg = self.tup_dilate(delImg, 12)
-        ctImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_max_contours(diImg, 10000, 100000, 0.001, 0.5, True, True)
-        cv.imwrite("tmp_s1FindYellowLine.jpg", ctImg)
-        if (findCnt!=1):
-            return -3;
-        testFlag = False
-        if (testFlag == True):
-            cv.drawContours(ctImg, outCt, -1, self._COL_D_YELLOW, 2)
-            self.tup_img_show(ctImg, "S1: Finding Yellow Line")
-            sp = ctImg.shape
-            #(startPoint, endPoint) = self.tup_cal_rect_line(rect[0], rect[2], (sp[0], sp[1]))
-            (startPoint, endPoint) = self.tup_siml_line_by_contour(ctImg, outCt)
-            cv.line(inputImg, startPoint, endPoint, self._COL_D_RED, 2)
-            self.tup_img_show(inputImg, "S1: Line Cut Image result")
-        lineOutImg = self.tup_cut_line_out_img(inputImg, rect[0], rect[2], 1)
-        
-        #使用黄色线，将正方形区域框定下来，然后再寻找外接框
-        #可以考虑使用，使用下面的技巧（多边形技巧），将这个定点多边形搞出来，然后取出限定正方形内的多边形图像
-        self.funcVisionLogTrace("VISION: stack Stage2, Finding retangle area!")
-        tpList = self.tup_find_retg_area(lineOutImg, rect, 2)
-        rtgImg = self.tup_copy_contour_img(inputImg, tpList)
-        testFlag = False
-        if (testFlag == True):
-            cv.drawContours(inputImg, [tpList], -1, self._COL_D_BLUE, 2)
-            #这里尝试使用polylines方式画框，效果跟drawContours是一致的，所以注释掉，以备下次使用
-            #tarImg = cv.polylines(inputImg, [tpList], True, self._COL_D_RED, 2)
-            self.tup_img_show(inputImg, "S2: tpList show")
-            self.tup_img_show(rtgImg, "S2: reTangle show")
-        
-        #确定目标区域范围
-        self.funcVisionLogTrace("VISION: stack Stage3, fix working contour area!")
-        targetImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_max_contours_itp(rtgImg, 1200, 5, 2000, 1000000, 0.001, 1, False, False)
-        outCtPoly = cv.convexHull(outCt)
-        testFlag = False
-        if (testFlag == True):
-            #外轮廓
-            self.tup_img_show(rtgImg, "S3: Input image")
-            self.tup_img_show(targetImg, "S3: Input contour image")
-            tar1Img = inputImg.copy()
-            cv.drawContours(tar1Img, outCt, -1, self._COL_D_BLUE, 2)
-            self.tup_img_show(tar1Img, "S3: contour direct area")
-            #多边形
-            #outCt2 = cv.convexHull(outCt)
-            tar2Img = inputImg.copy()
-            cv.drawContours(tar2Img, outCtPoly, -1, self._COL_D_YELLOW, 2)
-            self.tup_img_show(tar2Img, "S3: polyline contour area")
-            #多边形填充
-            tarImg3 = cv.polylines(tar2Img, [outCtPoly], True, self._COL_D_RED, 1)
-            cv.fillPoly(tar2Img, [outCtPoly], 255)
-            self.tup_img_show(tarImg3, "S3: Target contour with flood filling")
-        if (findCnt != 1):
-            return -4;
-        
-        #将最终区域扣出来
-        self.funcVisionLogTrace("VISION: stack Stage4, Extract working area and start processing!")
-        cropImg = self.tup_copy_contour_img(inputImg, outCt)
-        testFlag = False
-        if (testFlag == True):
-            self.tup_img_show(cropImg, "S4: Target Cut image")
- 
-        algoSelction = 1
-        #霍夫变换找圆形算法
-        #cirRadMin/cirRadMax - 圆形范围
-        #ceMin - 圆形距离
-        self.funcVisionLogTrace("VISION: stack Stage5, Hough transform to find potential candidates!")
-        if (algoSelction == 1):
-            outputImg, findCnt, circles = self.tup_itp_hough_transform(cropImg, cirRadMin, cirRadMax, ceDist)
-            totalCnt = findCnt
-            testFlag = False
-            if (testFlag == True):
-                self.tup_img_show(outputImg, "S5: hough transform image")
-        #图像形态学算法
-        elif (algoSelction == 2):
-            outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_itp_morphology_transform(cropImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, False)
-        
-        #将圆心不在目标区域内的圆形去掉
-        self.funcVisionLogTrace("VISION: stack Stage6, Removing outer wrong findings!")
-        goodCircles, badCircles = self.tup_remove_ex_contour_circle(outCt, circles)
-        testFlag = False
-        if (testFlag == True):
-            judgeCircleImg = cropImg.copy()
-            for element in goodCircles[0]:
-                cv.circle(judgeCircleImg, (element[0], element[1]), element[2], self._COL_D_RED, 1)
-            for element in badCircles[0]:
-                cv.circle(judgeCircleImg, (element[0], element[1]), element[2], self._COL_D_BLUE, 1)
-            cv.drawContours(judgeCircleImg, outCt, -1, self._COL_D_YELLOW, 1)
-            self.tup_img_show(judgeCircleImg, "S6: Remove out scope circle")
-
-        #复核选定区域的圆形度是否满足要求
-        #下面的bitwise还未搞定
-        #maskedImg = cv.add(originImg, np.zeros(np.shape(originImg), dtype=np.uint8), mask=circleImg)
-        self.funcVisionLogTrace("VISION: stack Stage7, Re-check findings is really rational!")
-        
-        #使用传统方式测试一下
-        testFlag = False
-        if (testFlag == True):
-            outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_itp_morphology_transform(cropImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, True)
-            cv.imwrite("tmp_s7alg1.jpg", outputImg)
-            self.tup_img_show(outputImg, "S7: Individual area by polymethod")
-        #正统方式
-        outputImg, detectImg, totalCnt, findCnt, ckCircle = self.tup_itp_circle_img_filter_out(cropImg, goodCircles, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, True)
-        
-        #最后的处理过程
-        self.funcVisionLogTrace("VISION: stack Stage n, Final output!")
-        outputText['totalNbr'] = totalCnt
-        outputText['validNbr'] = findCnt
-        if (addupSet == True):
-            font = cv.FONT_HERSHEY_SIMPLEX
-            cv.putText(outputImg, str("XHT: " + str(outputText)), (10, 30), font, 0.7, self._COL_D_RED, 2, cv.LINE_AA)
-         
-        #反馈结果
-        outputFn = fileNukeName
-        cv.imwrite(outputFn, outputImg)
-        cv.destroyAllWindows()
-        return outputText['validNbr']
+#     def func_vision_flu_stack_count(self, fileName, fileNukeName, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, addupSet, cirRadMin, cirRadMax, ceDist):
+#         #处理参数
+#         ceMin = ceMin/100
+#         #使用LOCAL方式进行叠加，不再使用全局属性，简化处理
+#         outputText = {'totalNbr':0, 'validNbr':0}
+#         
+#         #Reading file: 读取文件
+#         if (os.path.exists(fileName) == False):
+#             errStr = "L2VISCFY: File %s not exist!" % (fileName)
+#             self.medErrorLog(errStr);
+#             print("L2VISCFY: File %s not exist!" % (fileName))
+#             return -1;
+#         try:
+#             #inputImg = cv.imread(fileName)
+#             inputImg = cv.imdecode(np.fromfile(fileName, dtype=np.uint8), cv.IMREAD_COLOR)
+#         except Exception as err:
+#             print("L2VISCFY: Read file error, errinfo = ", str(err))
+#             return -2;
+# 
+#         #寻找人工标定  #寻找标定线 寻找右下半部分  #寻找黄色标定线： 人工标定的方式，在参数选择上需要固定一种特征，而且保持一定的稳定性，不然无法兑付
+#         #图像解析度需要保持稳定
+#         #两种直线寻找方案都验证了，都好使！
+#         self.funcVisionLogTrace("VISION: stack Stage1, Finding yellow marked line!")
+#         b, g, r = cv.split(inputImg)
+#         grayImg = cv.cvtColor(inputImg, cv.COLOR_BGR2GRAY)
+#         delImg = grayImg - b
+#         diImg = self.tup_dilate(delImg, 12)
+#         ctImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_find_max_contours(diImg, 10000, 100000, 0.001, 0.5, True, True)
+#         cv.imwrite("tmp_s1FindYellowLine.jpg", ctImg)
+#         if (findCnt!=1):
+#             return -3;
+#         testFlag = False
+#         if (testFlag == True):
+#             cv.drawContours(ctImg, outCt, -1, self._COL_D_YELLOW, 2)
+#             self.tup_img_show(ctImg, "S1: Finding Yellow Line")
+#             sp = ctImg.shape
+#             #(startPoint, endPoint) = self.tup_cal_rect_line(rect[0], rect[2], (sp[0], sp[1]))
+#             (startPoint, endPoint) = self.tup_siml_line_by_contour(ctImg, outCt)
+#             cv.line(inputImg, startPoint, endPoint, self._COL_D_RED, 2)
+#             self.tup_img_show(inputImg, "S1: Line Cut Image result")
+#         lineOutImg = self.tup_cut_line_out_img(inputImg, rect[0], rect[2], 1)
+#         
+#         #使用黄色线，将正方形区域框定下来，然后再寻找外接框
+#         #可以考虑使用，使用下面的技巧（多边形技巧），将这个定点多边形搞出来，然后取出限定正方形内的多边形图像
+#         self.funcVisionLogTrace("VISION: stack Stage2, Finding retangle area!")
+#         tpList = self.tup_find_retg_area(lineOutImg, rect, 2)
+#         rtgImg = self.tup_copy_contour_img(inputImg, tpList)
+#         testFlag = False
+#         if (testFlag == True):
+#             cv.drawContours(inputImg, [tpList], -1, self._COL_D_BLUE, 2)
+#             #这里尝试使用polylines方式画框，效果跟drawContours是一致的，所以注释掉，以备下次使用
+#             #tarImg = cv.polylines(inputImg, [tpList], True, self._COL_D_RED, 2)
+#             self.tup_img_show(inputImg, "S2: tpList show")
+#             self.tup_img_show(rtgImg, "S2: reTangle show")
+#         
+#         #确定目标区域范围
+#         self.funcVisionLogTrace("VISION: stack Stage3, fix working contour area!")
+#         targetImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_max_contours_itp(rtgImg, 1200, 5, 2000, 1000000, 0.001, 1, False, False)
+#         outCtPoly = cv.convexHull(outCt)
+#         testFlag = False
+#         if (testFlag == True):
+#             #外轮廓
+#             self.tup_img_show(rtgImg, "S3: Input image")
+#             self.tup_img_show(targetImg, "S3: Input contour image")
+#             tar1Img = inputImg.copy()
+#             cv.drawContours(tar1Img, outCt, -1, self._COL_D_BLUE, 2)
+#             self.tup_img_show(tar1Img, "S3: contour direct area")
+#             #多边形
+#             #outCt2 = cv.convexHull(outCt)
+#             tar2Img = inputImg.copy()
+#             cv.drawContours(tar2Img, outCtPoly, -1, self._COL_D_YELLOW, 2)
+#             self.tup_img_show(tar2Img, "S3: polyline contour area")
+#             #多边形填充
+#             tarImg3 = cv.polylines(tar2Img, [outCtPoly], True, self._COL_D_RED, 1)
+#             cv.fillPoly(tar2Img, [outCtPoly], 255)
+#             self.tup_img_show(tarImg3, "S3: Target contour with flood filling")
+#         if (findCnt != 1):
+#             return -4;
+#         
+#         #将最终区域扣出来
+#         self.funcVisionLogTrace("VISION: stack Stage4, Extract working area and start processing!")
+#         cropImg = self.tup_copy_contour_img(inputImg, outCt)
+#         testFlag = False
+#         if (testFlag == True):
+#             self.tup_img_show(cropImg, "S4: Target Cut image")
+#  
+#         algoSelction = 1
+#         #霍夫变换找圆形算法
+#         #cirRadMin/cirRadMax - 圆形范围
+#         #ceMin - 圆形距离
+#         self.funcVisionLogTrace("VISION: stack Stage5, Hough transform to find potential candidates!")
+#         if (algoSelction == 1):
+#             outputImg, findCnt, circles = self.tup_itp_hough_transform(cropImg, cirRadMin, cirRadMax, ceDist)
+#             totalCnt = findCnt
+#             testFlag = False
+#             if (testFlag == True):
+#                 self.tup_img_show(outputImg, "S5: hough transform image")
+#         #图像形态学算法
+#         elif (algoSelction == 2):
+#             outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_itp_morphology_transform(cropImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, False)
+#         
+#         #将圆心不在目标区域内的圆形去掉
+#         self.funcVisionLogTrace("VISION: stack Stage6, Removing outer wrong findings!")
+#         goodCircles, badCircles = self.tup_remove_ex_contour_circle(outCt, circles)
+#         testFlag = False
+#         if (testFlag == True):
+#             judgeCircleImg = cropImg.copy()
+#             for element in goodCircles[0]:
+#                 cv.circle(judgeCircleImg, (element[0], element[1]), element[2], self._COL_D_RED, 1)
+#             for element in badCircles[0]:
+#                 cv.circle(judgeCircleImg, (element[0], element[1]), element[2], self._COL_D_BLUE, 1)
+#             cv.drawContours(judgeCircleImg, outCt, -1, self._COL_D_YELLOW, 1)
+#             self.tup_img_show(judgeCircleImg, "S6: Remove out scope circle")
+# 
+#         #复核选定区域的圆形度是否满足要求
+#         #下面的bitwise还未搞定
+#         #maskedImg = cv.add(originImg, np.zeros(np.shape(originImg), dtype=np.uint8), mask=circleImg)
+#         self.funcVisionLogTrace("VISION: stack Stage7, Re-check findings is really rational!")
+#         
+#         #使用传统方式测试一下
+#         testFlag = False
+#         if (testFlag == True):
+#             outputImg, rect, totalCnt, findCnt, outCt, outBox = self.tup_itp_morphology_transform(cropImg, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, True)
+#             cv.imwrite("tmp_s7alg1.jpg", outputImg)
+#             self.tup_img_show(outputImg, "S7: Individual area by polymethod")
+#         #正统方式
+#         outputImg, detectImg, totalCnt, findCnt, ckCircle = self.tup_itp_circle_img_filter_out(cropImg, goodCircles, dilateBlkSize, erodeBlkSize, cAreaMin, cAreaMax, ceMin, 1, True, True)
+#         
+#         #最后的处理过程
+#         self.funcVisionLogTrace("VISION: stack Stage n, Final output!")
+#         outputText['totalNbr'] = totalCnt
+#         outputText['validNbr'] = findCnt
+#         if (addupSet == True):
+#             font = cv.FONT_HERSHEY_SIMPLEX
+#             cv.putText(outputImg, str("XHT: " + str(outputText)), (10, 30), font, 0.7, self._COL_D_RED, 2, cv.LINE_AA)
+#          
+#         #反馈结果
+#         outputFn = fileNukeName
+#         cv.imwrite(outputFn, outputImg)
+#         cv.destroyAllWindows()
+#         return outputText['validNbr']
 
 
 
