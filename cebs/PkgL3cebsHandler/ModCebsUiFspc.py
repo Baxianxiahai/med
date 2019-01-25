@@ -13,30 +13,23 @@ import json
 from multiprocessing import Queue, Process
 from PkgL1vmHandler.ModVmCfg import *
 from PkgL1vmHandler.ModVmLayer import *
+from PkgL1vmHandler.ModVmConsole import *
 from PkgL3cebsHandler.ModCebsCom import *
 from PkgL3cebsHandler.ModCebsCfg import *
-from PkgL1vmHandler.ModVmConsole import *
+from PkgL3cebsHandler.ModCebsUiBasic import *
 
 
-class tupTaskUiFspc(tupTaskTemplate, clsL1_ConfigOpr):
-    _STM_ACTIVE = 3
-    _STM_DEACT  = 4 #界面没激活
+class tupTaskUiFspc(tupClassUiBasic):
+    _STM_WORKING = 5    #从5开始属于任务私有部分
     
     #全局变量表
     uiFspcPicTrainDelay = 0
 
     def __init__(self, glPar):
-        tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_UI_FSPC, taskName="TASK_UI_FSPC", glTabEntry=glPar)
-        self.fsm_set(TUP_STM_NULL)
-        self.fatherUiObj = ''   #父对象界面，双向通信
+        tupClassUiBasic.__init__(self, taskidUb=TUP_TASK_ID_UI_FSPC, taskNameUb="TASK_UI_FSPC", glParUb=glPar)
+        #super(tupTaskUiFspc, self).__init__(self, glPar)
         #STM MATRIX
-        self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_com_msg_restart_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_EXIT, self.fsm_com_msg_exit_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TEST, self.fsm_com_msg_test_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_inc_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_FSPC_UI_SWITCH, self.fsm_msg_ui_focus_rcv_handler)
-
         #业务态
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_FSPC_CMD_S1_RESP, self.fsm_msg_cmd_s1_resp_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_FSPC_CMD_S2_RESP, self.fsm_msg_cmd_s2_resp_rcv_handler)
@@ -46,47 +39,22 @@ class tupTaskUiFspc(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_FSPC_CMD_S6_RESP, self.fsm_msg_cmd_s6_resp_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_FSPC_CMD_S7_RESP, self.fsm_msg_cmd_s7_resp_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_FSPC_CMD_SUM_RESP, self.fsm_msg_cmd_sum_resp_rcv_handler)
-
         #START TASK
         self.fsm_set(TUP_STM_INIT)
         self.task_run()
-
-    def fsm_msg_init_rcv_handler(self, msgContent):
-        self.fsm_set(self._STM_DEACT)
-        return TUP_SUCCESS;
-
-    def fsm_msg_trace_inc_rcv_handler(self, msgContent):
-        self.funcDebugPrint2Qt(msgContent);
-        return TUP_SUCCESS;
-        
-    #界面切换进来
-    def fsm_msg_ui_focus_rcv_handler(self, msgContent):
-        self.fsm_set(self._STM_ACTIVE)
-        return TUP_SUCCESS;
     
-    #将界面对象传递给本任务，以便将打印信息送到界面上
-    def funcSaveFatherInst(self, instance):
-        self.fatherUiObj = instance
-    
-    def funcDebugPrint2Qt(self, string):
-        if (self.fatherUiObj == ''):
-            print("FSPC_UI task lose 1 print message due to time sync.")
-        else:
-            self.fatherUiObj.cetk_debug_print(str(string))
-
-    #界面切走
-    def func_ui_click_fspc_switch_to_main(self):
-        print("I am func_ui_click_fspc_switch_to_main!")
-        self.fsm_set(self._STM_DEACT)       
+    #核心函数处理部分
+#     #界面切走
+#     def func_ui_click_fspc_switch_to_main(self):
+#         print("I am func_ui_click_fspc_switch_to_main!")
+#         self.fsm_set(self._STM_DEACT)       
 
     #清理各项操作
-    def func_ui_click_fspc_close(self):
-        print("I am func_ui_click_fspc_close!")
-        #暂时没有要做的，所以不发送消息给FSPC模块
-
+#     def func_ui_click_fspc_close(self):
+#         print("I am func_ui_click_fspc_close!")
+#         #暂时没有要做的，所以不发送消息给FSPC模块
             
     #业务状态处理过程
-
     #主界面承接过来的执行函数
     #parInput = (parMarkLine, parAreaMin, parAreaMax, parAreaDilate, parAreaErode, parCellMin, parCellMax, parRaduisMin, parRaduisMax, parCellDilate, parCellErode, parCellCe, parCellDist, addupSet)
     def func_ui_click_cmd_s1(self, fileName, parInput):

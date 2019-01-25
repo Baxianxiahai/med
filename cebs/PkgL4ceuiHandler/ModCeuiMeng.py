@@ -153,8 +153,8 @@ class SEUI_L4_MengForm(QtWidgets.QWidget, Ui_cebsMengForm, clsL1_ConfigOpr):
 
     #Give up and not save parameters
     def closeEvent(self, event):
-        self.TkMengUi.func_ui_click_meng_close()
-        self.TkMengUi.func_ui_click_meng_switch_to_main()
+        self.TkMengUi.func_ui_click_basic_close()
+        self.TkMengUi.func_ui_click_basic_switch_to_main()
         self.sgL4MainWinVisible.emit()
         self.close()
         

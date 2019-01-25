@@ -31,6 +31,15 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
+
+
+
+//=ZJL, 2019/1/25, CURRENT_SW_DELIVERY R1.62 =>CEBS
+= 使用重载，简化UI-TASK新模块的编写
+
+//=ZJL, 2019/1/25, CURRENT_SW_DELIVERY R1.61 =>CEBS
+= 清理无效部分
+
 //=ZJL, 2019/1/25, CURRENT_SW_DELIVERY R1.60 =>CEBS
 = 去掉GPAR中不再需要的STACK-FLU-PIC处理过程（堆叠荧光图像）
 

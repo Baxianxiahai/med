@@ -27,13 +27,12 @@ from PkgL3cebsHandler.ModCebsCfg import *
 from form_qt.cebsmainform import Ui_cebsMainWindow
 
 #UI Class
-import PkgL4ceuiHandler.ModCeuiCalib
+import PkgL4ceuiHandler.ModCeuiCalib 
 import PkgL4ceuiHandler.ModCeuiGpar
 import PkgL4ceuiHandler.ModCeuiMeng
 import PkgL4ceuiHandler.ModCeuiStest
 import PkgL4ceuiHandler.ModCeuiSaht
 import PkgL4ceuiHandler.ModCeuiFspc
-
 
 
 
@@ -139,10 +138,9 @@ class SEUI_L4_MainWindow(QtWidgets.QMainWindow, Ui_cebsMainWindow, clsL1_ConfigO
         self.instL4MengForm = PkgL4ceuiHandler.ModCeuiMeng.SEUI_L4_MengForm(self.TkMengUi)
         self.instL4StestForm = PkgL4ceuiHandler.ModCeuiStest.SEUI_L4_StestForm(self.TkStestUi)
         self.instL4SahtForm = PkgL4ceuiHandler.ModCeuiSaht.SEUI_L4_SahtForm(self.TkSahtUi)
-        self.instL4FspcForm = PkgL4ceuiHandler.ModCeuiFspc.SEUI_L4_FspcForm(self.TkFspcUi)
+        self.instL4FspcForm =PkgL4ceuiHandler.ModCeuiFspc.SEUI_L4_FspcForm(self.TkFspcUi)
         
-        #SIGNAL SLOT, 连接信号槽
-        self.sgL4MainWinUnvisible.connect(self.funcMainWinUnvisible);
+        #SIGNAL SLOPkgL4qtuiHandler  self.sgL4MainWinUnvisible.connect(self.funcMainWinUnvisible);
         self.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.instL4CalibForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);
         self.instL4GparForm.sgL4MainWinVisible.connect(self.funcMainWinVisible);

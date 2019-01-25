@@ -46,7 +46,7 @@ class SEUI_L4_StestForm(QtWidgets.QWidget, Ui_cebsStestForm, clsL1_ConfigOpr):
         self.initParameter()
     
     def initParameter(self):
-        pass        
+        pass
 
     def cetk_debug_print(self, info):
         time.sleep(0.01)
@@ -117,8 +117,8 @@ class SEUI_L4_StestForm(QtWidgets.QWidget, Ui_cebsStestForm, clsL1_ConfigOpr):
 
     #Give up and not save parameters
     def closeEvent(self, event):
-        self.TkStestUi.func_ui_click_stest_close()
-        self.TkStestUi.func_ui_click_stest_switch_to_main()
+        self.TkStestUi.func_ui_click_basic_close()
+        self.TkStestUi.func_ui_click_basic_switch_to_main()
         self.sgL4MainWinVisible.emit()
         self.close()
 

@@ -513,8 +513,8 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm, clsL1_ConfigOpr):
         self.close()
 
     def closeEvent(self, event):
-        self.TkCalibUi.func_ui_click_calib_close()
-        self.TkCalibUi.func_ui_click_calib_switch_to_main()
+        self.TkCalibUi.func_ui_click_basic_close()
+        self.TkCalibUi.func_ui_click_basic_switch_to_main()
         self.sgL4MainWinVisible.emit()
         self.close()
 

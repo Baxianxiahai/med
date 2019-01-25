@@ -19,22 +19,17 @@ from PkgL1vmHandler.ModVmLayer import *
 from PkgL3cebsHandler.ModCebsCom import *
 from PkgL3cebsHandler.ModCebsCfg import *
 from PkgL1vmHandler.ModVmConsole import *
+from PkgL3cebsHandler.ModCebsUiBasic import *
 
 
-class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
-    _STM_ACTIVE = 3
-    _STM_DEACT  = 4 #界面没激活
+
+
+class tupTaskUiMain(tupClassUiBasic):
+    _STM_WORKING = 5    #从5开始属于任务私有部分
     
     def __init__(self, glPar):
-        tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_UI_MAIN, taskName="TASK_UI_MAIN", glTabEntry=glPar)
-        self.fsm_set(TUP_STM_NULL)
-        self.fatherUiObj = ''   #父对象界面，双向通信
+        tupClassUiBasic.__init__(self, taskidUb=TUP_TASK_ID_UI_MAIN, taskNameUb="TASK_UI_MAIN", glParUb=glPar)
         #STM MATRIX
-        self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_com_msg_restart_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_EXIT, self.fsm_com_msg_exit_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TEST, self.fsm_com_msg_test_rcv_handler)
-        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_inc_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_ui_focus_rcv_handler)
         #测试消息，后面可以去掉
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TEST, self.fsm_msg_print_test_inc_rcv_handler)
@@ -44,7 +39,7 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         self.fsm_set(TUP_STM_INIT)
         self.task_run()
     
-    #延迟一秒，确保打印消息不丢失
+    #延迟一秒，确保打印消息不丢失 - 重载
     def fsm_msg_init_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
         time.sleep(1)
@@ -56,27 +51,9 @@ class tupTaskUiMain(tupTaskTemplate, clsL1_ConfigOpr):
         self.msg_send(TUP_MSGID_CTRL_SCHD_MV_ZERO, TUP_TASK_ID_CTRL_SCHD, "")
         return TUP_SUCCESS;
 
-    def fsm_msg_trace_inc_rcv_handler(self, msgContent):
-        self.funcDebugPrint2Qt(msgContent);
-        return TUP_SUCCESS;
-
-    def fsm_msg_ui_focus_rcv_handler(self, msgContent):
-        self.fsm_set(self._STM_ACTIVE)
-        return TUP_SUCCESS;
-    
     def fsm_msg_print_test_inc_rcv_handler(self, msgContent):
         self.funcDebugPrint2Qt(msgContent);
         return TUP_SUCCESS;
-    
-    #将界面对象传递给本任务，以便将打印信息送到界面上
-    def funcSaveFatherInst(self, instance):
-        self.fatherUiObj = instance
-    
-    def funcDebugPrint2Qt(self, string):
-        if (self.fatherUiObj == ''):
-            print("MAIN_UI task lose 1 print message due to time sync.")
-        else:
-            self.fatherUiObj.cetk_debug_print(str(string))
     
     #主界面承接过来的执行函数-测试函数
     def funcPrintTestCalledByQt(self, string):

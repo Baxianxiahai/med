@@ -71,9 +71,9 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
 
     def closeEvent(self, event):
         #关闭钩子
-        self.TkFspcUi.func_ui_click_fspc_close()
+        self.TkFspcUi.func_ui_click_basic_close()
         #关闭切换界面钩子
-        self.TkFspcUi.func_ui_click_fspc_switch_to_main()
+        self.TkFspcUi.func_ui_click_basic_switch_to_main()
         #QT本身的界面切换
         self.sgL4MainWinVisible.emit()
         self.close()

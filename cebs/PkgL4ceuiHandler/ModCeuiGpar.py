@@ -276,9 +276,9 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, clsL1_ConfigOpr):
         #必须将参数的更新放在这个地方：如果是存储，则将最终的参数传进去，如果是放弃，则将系统缺省参数传进去
         self.TkGparUi.func_ui_click_gpar_refresh_par()
         #关闭钩子
-        self.TkGparUi.func_ui_click_gpar_close()
+        self.TkGparUi.func_ui_click_basic_close()
         #关闭切换界面钩子
-        self.TkGparUi.func_ui_click_gpar_switch_to_main()
+        self.TkGparUi.func_ui_click_basic_switch_to_main()
         #QT本身的界面切换
         self.sgL4MainWinVisible.emit()
         self.close()
