@@ -526,14 +526,10 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         if (batch < 0):
             self.updateBatCntWithIniFileSyned(False, GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT*(-1), 0)
             self.funcCtrlSchdLogTrace("L3CTRLSCHD: Normal picture classification not found: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
-#             self.fsm_set(self._STM_ACTIVE)
-#             return TUP_FAILURE;
         
         #CREATE FILE NAME
         fileName = self.getStoredFileName(batch, fileNbr);
         fileNukeName = self.getStoredFileNukeName(batch, fileNbr)
-        #print("file name",fileName)
-        #print("fileNukeName",fileNukeName)
         if (fileName == None) or (fileNukeName == None):
             self.updateBatCntWithIniFileSyned(False, GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT*(-1), 0)
             self.funcCtrlSchdLogTrace("L3CTRLSCHD: Picture classification finished: remaining NUMBERS=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
@@ -559,8 +555,6 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
             self.funcCtrlSchdErrTrace("L3CTRLSCHD: Normal picture classification failure, remaining NUMBRES=%d." %(GLCFG_PAR_OFC.PIC_PROC_REMAIN_CNT))
 
         #不成功则继续搜索下一个文件，而不能直接结束
-#             self.fsm_set(self._STM_ACTIVE)
-#             return TUP_FAILURE;
 
         #更新成功完成后的文件信息
         self.updateBatCntWithIniFileSyned(False, -1, 0)

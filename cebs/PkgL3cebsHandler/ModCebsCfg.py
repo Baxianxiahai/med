@@ -543,7 +543,10 @@ class clsL1_ConfigOpr():
         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
         batchStr = "batch#" + str(batch)
         fileName = self.combineFileName(batch, fileNbr)
-        res = self.CReader[batchStr][fileName];
+        try:
+            res = self.CReader[batchStr][fileName];
+        except Exception: 
+            res = ''
         return res;
 
     #Without file path

@@ -932,7 +932,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             outputFn = GLCFG_PAR_OFC.PIC_MIDDLE_PATH + '/' + "result_" + fileNukeName
         cv.imwrite(outputFn, outputImg)
         cv.destroyAllWindows()
-        return 1,outputFn,str(outText)
+        return 1, outputFn, str(outText)
 
     def proc_vision_worm_binvalue(self, img):
         new = np.zeros(img.shape, np.uint8)

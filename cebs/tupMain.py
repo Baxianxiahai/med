@@ -21,6 +21,32 @@ from PkgL3cebsHandler import ModCebsPrjEntry
 - PkgL2svrHandler：公共服务接口和模块
 - PkgL3cebsHandler：Cebs项目的任务模块
 - PkgL4ceuiHandler：Cebs项目的界面
+
+- TupMain
+    -> PrjEntry
+        -> L4 Ceui Main QT Task （QT界面任务）
+            -> L4 Ceui QT xxx Task
+        -> L3 CebsUiXxx Task （QT界面接口任务）
+            -> L3 CebsUiBasic基类
+                -> L3CFG: clsL1_ConfigOpr
+                -> L2 Service: TupClsPicProc
+                -> L1VMLayer: tupTaskTemplate
+        -> L3 Moto Task    （马达处理任务）
+            -> L3 CebsUiBasic基类
+                -> L3CFG: clsL1_ConfigOpr
+                -> L2 Service: TupClsPicProc
+                -> L1VMLayer: tupTaskTemplate
+        -> L3 Vision Task    （摄像头处理任务）
+            -> L3 CebsUiBasic基类
+                -> L3CFG: clsL1_ConfigOpr
+                -> L2Service: TupClsPicProc
+                -> L1VMLayer: tupTaskTemplate
+        -> L3 CebsXxx Task    （业务逻辑处理任务）
+            -> L3 CebsBasic基类
+                -> L3CFG: clsL1_ConfigOpr
+                -> L2Service: TupClsPicProc
+                -> L1VMLayer: tupTaskTemplate
+            
 '''
 
 

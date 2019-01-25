@@ -36,6 +36,7 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 //=ZJL, 2019/1/25, CURRENT_SW_DELIVERY R1.62 =>CEBS
 = 使用重载，简化UI-TASK新模块的编写
+= 为TASK和UI-TASK都增加了基类，未来可以进一步优化任务模块的编写
 
 //=ZJL, 2019/1/25, CURRENT_SW_DELIVERY R1.61 =>CEBS
 = 清理无效部分
