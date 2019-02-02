@@ -32,7 +32,8 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
-
+//=ZJL, 2019/2/2, CURRENT_SW_DELIVERY R1.63 =>CEBS
+= 准备构造Hstapi库函数
 
 //=ZJL, 2019/1/25, CURRENT_SW_DELIVERY R1.62 =>CEBS
 = 使用重载，简化UI-TASK新模块的编写
