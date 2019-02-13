@@ -10,8 +10,6 @@ Created on 2018/4/29
 import sys
 import time
 from multiprocessing import freeze_support
-from PkgL3cebsHandler import ModCebsPrjEntry
-
 
 
 '''
@@ -53,20 +51,26 @@ from PkgL3cebsHandler import ModCebsPrjEntry
 ####################################################
 # 项目设置与选择
 ####################################################
-PRJ_SET_CEBS        = 1
-PRJ_SET_CEBS_MK2    = 2
-PRJ_SET_MPLYAER     = 3
-PRJ_SET_CUR         = PRJ_SET_CEBS
+PRJ_SET_CEBS        = 1 #基于PC
+PRJ_SET_CEBS_MK2    = 2 #基于VCD+MDC
+PRJ_SET_MPLYAER     = 3 #演示
+PRJ_SET_FAWS        = 4 #秤项
+PRJ_SET_CUR         = PRJ_SET_CEBS_MK2
 ####################################################
 
 
 #Pyinstaller打包多进程程序出错解决办法    https://blog.csdn.net/zyc121561/article/details/82941056
 #运行时会出错，表现为进程不断增加至占满电脑CPU死机 
 #SYSTEM ENTRY
+from PkgL3cebsHandler import ModCebsPrjEntry
 if __name__ == '__main__':
     if (PRJ_SET_CUR  == PRJ_SET_CEBS):
         freeze_support() 
         print("[CEBS] ", time.asctime(), ", System starting...\n" );
+        ModCebsPrjEntry.prj_cebs_main_entry();
+    elif (PRJ_SET_CUR  == PRJ_SET_CEBS_MK2):
+        freeze_support() 
+        print("[CEBS-Mk2] ", time.asctime(), ", System starting...\n" );
         ModCebsPrjEntry.prj_cebs_main_entry();
     else:
         print("[NOBODY] ", time.asctime(), ", System starting and existing!\n" );

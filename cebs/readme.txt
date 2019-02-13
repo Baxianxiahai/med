@@ -32,6 +32,16 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
+
+
+
+
+
+
+
+//=ZJL, 2019/2/13, CURRENT_SW_DELIVERY R1.64 =>CEBS
+= 构建TUP共流架构，试图通过增加FAWS项目来验证多项目共流逻辑
+
 //=ZJL, 2019/2/2, CURRENT_SW_DELIVERY R1.63 =>CEBS
 = 准备构造Hstapi库函数
 
