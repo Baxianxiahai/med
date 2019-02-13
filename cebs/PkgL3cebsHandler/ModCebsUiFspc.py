@@ -97,6 +97,18 @@ class tupTaskUiFspc(tupClassUiBasic):
         mbuf = self.proc_cmd_store_into_buffer(fileName, parInput)
         self.msg_send(TUP_MSGID_FSPC_CMD_SUM_REQ, TUP_TASK_ID_FSPC, mbuf)
     
+    def func_ui_click_give_up_set(self):
+        print("I am func_ui_click_give_up_set!")
+        mbuf = {}
+        mbuf['FlagS1'] = 0
+        mbuf['FlagS2'] = 0
+        mbuf['FlagS3'] = 0
+        mbuf['FlagS4'] = 0
+        mbuf['FlagS5'] = 0
+        mbuf['FlagS6'] = 0
+        mbuf['FlagS7'] = 0
+        self.msg_send(TUP_MSGID_FSPC_GIVE_UP_SET, TUP_TASK_ID_FSPC,mbuf)
+    
     def proc_cmd_store_into_buffer(self, fileName, parInput):
         mbuf={}
         mbuf['fileName'] = fileName
