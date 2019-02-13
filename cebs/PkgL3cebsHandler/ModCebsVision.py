@@ -395,6 +395,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         self.FLU_CELL_COUNT_genr_par3 = msgContent['genrPar3'];
         self.FLU_CELL_COUNT_genr_par4 = msgContent['genrPar4'];
         return TUP_SUCCESS;
+    
     def fsm_msg_ref_resolution_rcv_handler(self,msgContent):
         _TUP_VISION_CAMBER_RES_WIDTH = msgContent['width']
         _TUP_VISION_CAMBER_RES_HEIGHT = msgContent['height']

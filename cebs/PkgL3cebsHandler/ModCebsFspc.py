@@ -78,7 +78,7 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_EXIT, self.fsm_com_msg_exit_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TEST, self.fsm_com_msg_test_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_inc_rcv_handler)
-
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_FSPC_GIVE_UP_SET, self.fsm_msg_fspc_give_up_set_rcv_handler)
         #业务处理部分
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_FSPC_CMD_S1_REQ, self.fsm_msg_cmd_s1_req_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_FSPC_CMD_S2_REQ, self.fsm_msg_cmd_s2_req_rcv_handler)
@@ -420,6 +420,16 @@ class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
 #         mbuf['errInfo'] = ''
 #         self.funcFspcLogTrace(str("Step sum ui show nbr =  %d" % (totalCnt)));
 #         self.msg_send(TUP_MSGID_FSPC_CMD_SUM_RESP, TUP_TASK_ID_UI_FSPC, mbuf)
+        return TUP_SUCCESS;
+    
+    def fsm_msg_fspc_give_up_set_rcv_handler(self,msgContent):
+        self.fspcSucFlagS1 = msgContent['FlagS1']
+        self.fspcSucFlagS2 = msgContent['FlagS2']
+        self.fspcSucFlagS3 = msgContent['FlagS3']
+        self.fspcSucFlagS4 = msgContent['FlagS4']
+        self.fspcSucFlagS5 = msgContent['FlagS5']
+        self.fspcSucFlagS6 = msgContent['FlagS6']
+        self.fspcSucFlagS7 = msgContent['FlagS7']
         return TUP_SUCCESS;
     
     def proc_mbuf_fix_fill(self, mbuf, totalCnt, index):

@@ -70,7 +70,7 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
         self.initParameter()
 
     def closeEvent(self, event):
-        #关闭钩子
+        #关闭钩子        
         self.TkFspcUi.func_ui_click_basic_close()
         #关闭切换界面钩子
         self.TkFspcUi.func_ui_click_basic_switch_to_main()
@@ -82,10 +82,14 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
         self.textEdit_fspc_cmd_log.clear();
 
     def slot_giveup(self):
+        print("I am point test 1!")
+        self.TkFspcUi.func_ui_click_give_up_set()
+        print("I am point test 2!")
         self.close()
 
     def slot_cmpl(self):
         self.func_update_par_and_write_ini()
+        
         self.close()
         
         
@@ -249,7 +253,9 @@ class SEUI_L4_FspcForm(QtWidgets.QMainWindow, Ui_cebsFspcForm, clsL1_ConfigOpr):
         GLFSPC_PAR_OFC.FSPC_ADDUP_SET) = parRes
         #FINAL UPDATE
         self.updateFpscSectionCtrlPar()
- 
+        
+        
+        
     #读取荧光堆叠训练参数
     def func_read_fpsc_par(self):
         #黄线部分
