@@ -43,7 +43,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     #
     '''
     #初始化表单 - 如果读取失败，则自动插入一条新记录，所有的参数都是缺省的。这样处理将更加理性和完善。
-    def envCreate(self, jsonContent):
+    def envCreate(self, tupLable):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
             if element['actionName'] == 'opr_env':
@@ -51,9 +51,8 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
                 actionId = element['actionId']
         if (searchFlag == False):
             return -1, ''
-        newPar = jsonContent
-        newPar['cmd'] = 'update'
-        inputJson = self.hstapiEncode('dba', actionId, True, json.dumps(newPar))
+        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'add', 'tupLable':tupLable} )
+        print("inputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -74,6 +73,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'read', 'tupLable':tupLable})
+        print("inputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -92,7 +92,8 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
                 actionId = element['actionId']
         if (searchFlag == False):
             return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'del', 'tupLable':tupLable})
+        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'delete', 'tupLable':tupLable})
+        print("inputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -103,8 +104,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -4, ''
         return 1, parContent    
     
-    #更新表单 - 假设是一直存同一条记录，通过TupLable进行区分
-    def envUpdateAll(self, jsonContent):
+    def envModify(self, tupLable):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
             if element['actionName'] == 'opr_env':
@@ -112,9 +112,29 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
                 actionId = element['actionId']
         if (searchFlag == False):
             return -1, ''
-        newPar = jsonContent
-        newPar['cmd'] = 'updateAll'
-        inputJson = self.hstapiEncode('dba', actionId, True, json.dumps(newPar))
+        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'modify', 'tupLable':tupLable})
+        print("inputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent
+    
+    #更新表单 - 假设是一直存同一条记录，通过TupLable进行区分
+    def envUpdateAll(self, tupLable):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'opr_env':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'updateAll', 'tupLable':tupLable})
+        print("inputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -267,9 +287,15 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
 if __name__ == '__main__':
     cls = TupClsCebsDbaItf()
     #res = hst.hstCurlPost({"restTag": "dba", "actionId": 3800, "parFlag": 1, "parContent":{"cmd":"add","user":"test222"}})
-    print(cls.hstapiEnvCreate({'test':1}))
-    print(cls.hstapiEnvRead('test'))
-    print(cls.hstapiEnvUpdateAll({'a':1, 'b':2}))
+    #lc:create test ok
+    #print(cls.envCreate({'workdir':'D','pic_origin':'E','pic_middle':'F'}))
+    #lc:read test ok 
+    #print(cls.envRead({'workdir':'workdir','pic_origin':'pic_origin','pic_middle':'pic_middle'}))
+    #lc:modify test ok
+    #print(cls.envModify({'workdir':'123'}))
+    #lc:delete test ok
+    print(cls.envDelete({'workdir':'123'}))
+    
 
 
 
