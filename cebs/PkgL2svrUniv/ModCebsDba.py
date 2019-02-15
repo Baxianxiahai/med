@@ -458,7 +458,7 @@ if __name__ == '__main__':
     #res = hst.hstCurlPost({"restTag": "dba", "actionId": 3800, "parFlag": 1, "parContent":{"cmd":"add","user":"test222"}})
     #env test
     #lc:create test ok
-    print(cls.envCreate({'workdir':'D','pic_origin':'E','pic_middle':'F'}))
+    #print(cls.envCreate({'workdir':'D','pic_origin':'E','pic_middle':'F'}))
     #lc:read test ok 
     #print(cls.envRead({'workdir':'workdir','pic_origin':'pic_origin','pic_middle':'pic_middle'}))
     #lc:modify test ok
@@ -466,12 +466,23 @@ if __name__ == '__main__':
     #lc:delete test ok
     #print(cls.envDelete({'workdir':'123'}))
     
-   
+    #counter test
+    print(cls.counterCreate({'picbatchcnt':'100'}))
+    #print(cls.counterRead({'picbatchcnt':'picbatchcnt'}))
+    #print(cls.counterModify({'picbatchcnt':'500'}))
+    #print(cls.counterDelete({'picbatchcnt':'500'}))
 
-
-
-
-
+    #fspc test
+#     print(cls.fspcCreate({'mark_line':'100'}))
+#     print(cls.fspcRead({'mark_line':'mark_line'}))
+#     print(cls.fspcModify({'mark_line':'500'}))
+#     print(cls.fspcDelete({'mark_line':'500'}))
+    
+    #batchfile test
+    #print(cls.fileCreate({'batch_no':'100'}))
+#     print(cls.fileRead({'batch_no':'batch_no'}))
+#     print(cls.fileModify({'batch_no':'500'}))
+#     print(cls.fileDelete({'batch_no':'500'}))
 
 
 

@@ -80,6 +80,7 @@ class TupClsHstapiBasic(object):
     
     #解码过程
     def hstapiDecode(self, inputJson):
+        print("inputJson",inputJson)
         restTag = 'NONE'
         actionId = -1
         parFlag = -1
