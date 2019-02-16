@@ -24,10 +24,10 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     #
     '''
     _TUP_HST_MSG_MATRIX = [\
-        {'restTag':'dba', 'actionId':0x3800, 'actionName':'opr_env', 'comments':''},\
-        {'restTag':'dba', 'actionId':0x3801, 'actionName':'opr_counter', 'comments':''},\
-        {'restTag':'dba', 'actionId':0x3802, 'actionName':'opr_fspc', 'comments':''},\
-        {'restTag':'dba', 'actionId':0x3803, 'actionName':'opr_file', 'comments':''},\
+        {'restTag':'dba', 'actionId':0X0ED8, 'actionName':'opr_env', 'comments':''},\
+        {'restTag':'dba', 'actionId':0X0ED9, 'actionName':'opr_counter', 'comments':''},\
+        {'restTag':'dba', 'actionId':0X0EDA, 'actionName':'opr_fspc', 'comments':''},\
+        {'restTag':'dba', 'actionId':0X0EDB, 'actionName':'opr_file', 'comments':''},\
         ]
     
     def __init__(self):
@@ -458,31 +458,31 @@ if __name__ == '__main__':
     #res = hst.hstCurlPost({"restTag": "dba", "actionId": 3800, "parFlag": 1, "parContent":{"cmd":"add","user":"test222"}})
     #env test
     #lc:create test ok
-    #print(cls.envCreate({'workdir':'D','pic_origin':'E','pic_middle':'F'}))
+    #print(cls.envCreate({'tupLable':'1','workdir':'D','pic_origin':'E','pic_middle':'F'}))
     #lc:read test ok 
     #print(cls.envRead({'workdir':'workdir','pic_origin':'pic_origin','pic_middle':'pic_middle'}))
     #lc:modify test ok
-    #print(cls.envModify({'workdir':'123'}))
+    #print(cls.envModify({'tupLable':'1','workdir':'123'}))
     #lc:delete test ok
-    #print(cls.envDelete({'workdir':'123'}))
+    #print(cls.envDelete({'tupLable':'1'})) #删除操作依靠tupLable 来进行
     
     #counter test
-    print(cls.counterCreate({'picbatchcnt':'100'}))
+    #print(cls.counterCreate({'tupLable':'1','picbatchcnt':'100'}))
     #print(cls.counterRead({'picbatchcnt':'picbatchcnt'}))
-    #print(cls.counterModify({'picbatchcnt':'500'}))
-    #print(cls.counterDelete({'picbatchcnt':'500'}))
+    #print(cls.counterModify({'tupLable':'1','picbatchcnt':'500'}))
+    #print(cls.counterDelete({'tupLable':'1'})) #删除操作依靠tupLable 来进行
 
     #fspc test
-#     print(cls.fspcCreate({'mark_line':'100'}))
+    #print(cls.fspcCreate({'tupLable':'1','mark_line':'100'}))
 #     print(cls.fspcRead({'mark_line':'mark_line'}))
-#     print(cls.fspcModify({'mark_line':'500'}))
-#     print(cls.fspcDelete({'mark_line':'500'}))
+    #print(cls.fspcModify({'tupLable':'1','mark_line':'500'}))
+#     print(cls.fspcDelete({'tupLable':'1'})) #删除操作依靠tupLable 来进行
     
     #batchfile test
     #print(cls.fileCreate({'batch_no':'100'}))
 #     print(cls.fileRead({'batch_no':'batch_no'}))
-#     print(cls.fileModify({'batch_no':'500'}))
-#     print(cls.fileDelete({'batch_no':'500'}))
+    #print(cls.fileModify({'batch_no':'500'}))
+#     print(cls.fileDelete({'batch_no':'500'}))    #删除操作依靠batch number来进行
 
 
 
