@@ -124,66 +124,66 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -4, ''
         return 1, parContent
     
-    #更新表单 - 假设是一直存同一条记录，通过TupLable进行区分
-    def envUpdateAll(self, tupLable):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_env':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'updateAll', 'tupLable':tupLable})
-        print("inputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
+#     #更新表单 - 假设是一直存同一条记录，通过TupLable进行区分
+#     def envUpdateAll(self, tupLable):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'opr_env':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'updateAll', 'tupLable':tupLable})
+#         print("inputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
 
-    #更新部分参数 - 左下角
-    def envUpdateAxisLeftBot(self, left_bot_x, left_bot_y):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_env':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'updateAxisLeftBot', 'left_bot_x':left_bot_x, 'left_bot_y':left_bot_y})
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    #更新部分参数-右上角
-    def envUpdateAxisRightUp(self, right_up_x, right_up_y):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_env':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'updateAxisRightUp', 'right_up_x':right_up_x, 'right_up_y':right_up_y})
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
+#     #更新部分参数 - 左下角
+#     def envUpdateAxisLeftBot(self, left_bot_x, left_bot_y):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'opr_env':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'updateAxisLeftBot', 'left_bot_x':left_bot_x, 'left_bot_y':left_bot_y})
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+#     
+#     #更新部分参数-右上角
+#     def envUpdateAxisRightUp(self, right_up_x, right_up_y):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'opr_env':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'updateAxisRightUp', 'right_up_x':right_up_x, 'right_up_y':right_up_y})
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
 
     #增加更多的api访问函数。每个函数对应的处理过程，都要由这里以及HST中的服务一起完成
 
@@ -460,29 +460,29 @@ if __name__ == '__main__':
     #lc:create test ok
     #print(cls.envCreate({'tupLable':'1','workdir':'D','pic_origin':'E','pic_middle':'F'}))
     #lc:read test ok 
-    #print(cls.envRead({'workdir':'workdir','pic_origin':'pic_origin','pic_middle':'pic_middle'}))
+    #print(cls.envRead({'tupLable':'1','workdir':'123','pic_middle':'F'}))   #读取操作按照某个参数进行索引 全部读取后  判断传入后截取所需   # 定行 定列
     #lc:modify test ok
-    #print(cls.envModify({'tupLable':'1','workdir':'123'}))
+    #print(cls.envModify({'tupLable':'3','workdir':'test'}))
     #lc:delete test ok
     #print(cls.envDelete({'tupLable':'1'})) #删除操作依靠tupLable 来进行
     
     #counter test
     #print(cls.counterCreate({'tupLable':'1','picbatchcnt':'100'}))
-    #print(cls.counterRead({'picbatchcnt':'picbatchcnt'}))
+    #print(cls.counterRead({'tupLable':'1','picbatchcnt':'picbatchcnt'}))# 定行 定列
     #print(cls.counterModify({'tupLable':'1','picbatchcnt':'500'}))
     #print(cls.counterDelete({'tupLable':'1'})) #删除操作依靠tupLable 来进行
 
     #fspc test
-    #print(cls.fspcCreate({'tupLable':'1','mark_line':'100'}))
-#     print(cls.fspcRead({'mark_line':'mark_line'}))
+    #print(cls.fspcCreate({'tupLable':'3','mark_line':'100'}))
+    #print(cls.fspcRead({'tupLable':'1','mark_line':''})) # 定行 定列
     #print(cls.fspcModify({'tupLable':'1','mark_line':'500'}))
 #     print(cls.fspcDelete({'tupLable':'1'})) #删除操作依靠tupLable 来进行
     
     #batchfile test
-    #print(cls.fileCreate({'batch_no':'100'}))
-#     print(cls.fileRead({'batch_no':'batch_no'}))
-    #print(cls.fileModify({'batch_no':'500'}))
-#     print(cls.fileDelete({'batch_no':'500'}))    #删除操作依靠batch number来进行
+    #print(cls.fileCreate({'batch_no':'30','hole_no':'30'}))
+    #print(cls.fileRead({'batch_no':'8','hole_no':'','hole_name':''})) #batch 定行 
+    #print(cls.fileModify({'batch_no':'8','hole_name':'board48'})) #batch 定行 
+    #print(cls.fileDelete({'batch_no':'100','hole_no':'1'}))    #删除操作依靠batch number来进行
 
 
 

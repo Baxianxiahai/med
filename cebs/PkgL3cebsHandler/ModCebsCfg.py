@@ -568,15 +568,18 @@ class clsL1_ConfigOpr():
 
     def combineFileNameWithDir(self, batch, fileNbr):  
         fileName = str("batch#" + str(batch) + "FileName#" + str(self.func_cvt_indexfilehole(fileNbr)))
+        print(self.func_cvt_indexfilehole(fileNbr))
         return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
 
     def combineScaleFileNameWithDir(self, batch, fileNbr):
         fileName = str("scale_batch#" + str(batch) + "FileName#" + str(self.func_cvt_indexfilehole(fileNbr)))
+        print(self.func_cvt_indexfilehole(fileNbr))
         return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
     
     def combineFileNameVideoWithDir(self, batch, fileNbr):
 
         fileName = str("batch#" + str(batch) + "FileName#" + str(self.func_cvt_indexfilehole(fileNbr)))
+        print(self.func_cvt_indexfilehole(fileNbr))
         return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.mp4'  #.mp4, .avi
 
 

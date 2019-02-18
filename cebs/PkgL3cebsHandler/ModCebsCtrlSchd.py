@@ -251,7 +251,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         #更新批次存储文件
         self.updateBatCntWithIniFileSyned(True, 0, 0)
         self.createBatSectAndIniSyned(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
-        
+        print('point test 1')
         #生成文件名字
         fnPic = self.combineFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
         fnScale = self.combineScaleFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
@@ -259,7 +259,13 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         vdCtrl = GLVIS_PAR_OFC.CAPTURE_ENABLE 
         sclCtrl = GLVIS_PAR_OFC.PIC_SCALE_ENABLE_FLAG
         vdDur = GLVIS_PAR_OFC.CAPTURE_DUR_IN_SEC
+        print('fnPic',fnPic)
+        print('fnScale',fnScale)
+        print('fnVideo',fnVideo)
+        print('vdCtrl',vdCtrl)
+        print('sclCtrl',sclCtrl)
         
+        time.sleep(0.2)
         #移动到合适孔位，然后拍摄
         mbuf={}
         if (GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == True):
