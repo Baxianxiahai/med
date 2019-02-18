@@ -460,27 +460,27 @@ if __name__ == '__main__':
     #lc:create test ok
     #print(cls.envCreate({'tupLable':'1','workdir':'D','pic_origin':'E','pic_middle':'F'}))
     #lc:read test ok 
-    #print(cls.envRead({'tupLable':'1','workdir':'123','pic_middle':'F'}))   #读取操作按照某个参数进行索引 全部读取后  判断传入后截取所需   # 定行 定列
+    #print(cls.envRead({'tupLable':'1','holeboard_left_bot_x':'','holeboard_left_bot_y':'','holeboard_right_up_x':'','holeboard_right_up_y':''}))   #读取操作按照某个参数进行索引 全部读取后  判断传入后截取所需   # 定行 定列
     #lc:modify test ok
     #print(cls.envModify({'tupLable':'3','workdir':'test'}))
     #lc:delete test ok
     #print(cls.envDelete({'tupLable':'1'})) #删除操作依靠tupLable 来进行
     
     #counter test
-    #print(cls.counterCreate({'tupLable':'1','picbatchcnt':'100'}))
-    #print(cls.counterRead({'tupLable':'1','picbatchcnt':'picbatchcnt'}))# 定行 定列
-    #print(cls.counterModify({'tupLable':'1','picbatchcnt':'500'}))
+    #print(cls.counterCreate({'tupLable':'3','picbatchcnt':'100'}))
+    #print(cls.counterRead({'tupLable':'3','picbatchcnt':''}))# 定行 定列
+    #print(cls.counterModify({'tupLable':'2','picbatchcnt':'250'}))
     #print(cls.counterDelete({'tupLable':'1'})) #删除操作依靠tupLable 来进行
 
     #fspc test
     #print(cls.fspcCreate({'tupLable':'3','mark_line':'100'}))
-    #print(cls.fspcRead({'tupLable':'1','mark_line':''})) # 定行 定列
+    #print(cls.fspcRead({'tupLable':'3','mark_line':''})) # 定行 定列
     #print(cls.fspcModify({'tupLable':'1','mark_line':'500'}))
 #     print(cls.fspcDelete({'tupLable':'1'})) #删除操作依靠tupLable 来进行
     
     #batchfile test
-    #print(cls.fileCreate({'batch_no':'30','hole_no':'30'}))
-    #print(cls.fileRead({'batch_no':'8','hole_no':'','hole_name':''})) #batch 定行 
+    #print(cls.fileCreate({'batch_no':'6','hole_no':'200'}))
+    print(cls.fileRead({'batch_no':'8','hole_no':'1000','pic_file_name':''})) #batch 和孔号 来定行 
     #print(cls.fileModify({'batch_no':'8','hole_name':'board48'})) #batch 定行 
     #print(cls.fileDelete({'batch_no':'100','hole_no':'1'}))    #删除操作依靠batch number来进行
 
