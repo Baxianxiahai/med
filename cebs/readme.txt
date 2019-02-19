@@ -35,9 +35,12 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
-
-
-
+//=ZJL, 2019/2/19, CURRENT_SW_DELIVERY R1.65 =>CEBS
+= 增加了HUICOBUS模块
+= 本地测试该模块，功能正常
+= 将HUICOBUS的上层模块应用注册为CTRL_SDHL，这个可以灵活注册的，目的是为了接受消息得到目的地
+= HUICOBUS将接收消息并解码
+= HUICOBUS内部含有单独的线程，干接收HUICOBUS接收频道的事
 
 //=ZJL, 2019/2/13, CURRENT_SW_DELIVERY R1.64 =>CEBS
 = 构建TUP共流架构，试图通过增加FAWS项目来验证多项目共流逻辑

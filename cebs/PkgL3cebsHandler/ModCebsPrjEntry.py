@@ -11,6 +11,8 @@ from PkgL1vmHandler.ModVmCfg import *
 from PkgL1vmHandler.ModVmLayer import *
 from PkgL1vmHandler.ModVmConsole import *
 
+from PkgL2svrUniv import ModCebsHuicobus
+
 from PkgL3cebsHandler.ModCebsCom import *
 from PkgL3cebsHandler.ModCebsCfg import *
 
@@ -87,6 +89,21 @@ def prj_cebs_main_entry():
     initMsg['dst'] = TUP_TASK_ID_VMCONSL
     VmConslTaskInst.msg_send_in(initMsg)
     VmConslTaskInst.tup_dbg_print("Create VM task success!")
+
+    #HUICOBUS Basic service Task
+    HuicobusTaskInst = ModCebsHuicobus.TupClsCebsHuicobusItf(TUP_GL_CFG);
+    initMsg['dst'] = TUP_TASK_ID_HUICOBUS
+    HuicobusTaskInst.msg_send_in(initMsg)
+    HuicobusTaskInst.tup_dbg_print("Create HUICOBUS task success!")
+    #注册上层应用模块
+    regMsg = {}
+    regMsg['mid'] = TUP_MSGID_HUICOBUS_REG_UP_USER
+    regMsg['src'] = TUP_TASK_ID_TUPCONSL
+    regMsg['dst'] = TUP_TASK_ID_HUICOBUS
+    mbuf = {}
+    mbuf['userTaskId'] = TUP_TASK_ID_CTRL_SCHD
+    regMsg['content'] = mbuf
+    HuicobusTaskInst.msg_send_in(regMsg)
     
     #UI_MAIN
     MainUiTaskInst = ModCebsUiMain.tupTaskUiMain(TUP_GL_CFG);
@@ -197,6 +214,7 @@ def prj_cebs_main_entry():
     #CLOSE ALL TASK: total 12 tasks
     print("Project CEBS terminate all existing tasks Start!")
     VmConslTaskInst.task_stop()
+    HuicobusTaskInst.task_stop()
     MainUiTaskInst.task_stop()
     CalibUiTaskInst.task_stop()
     GparUiTaskInst.task_stop()
