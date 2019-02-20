@@ -31,7 +31,7 @@ _TUP_CEBS_CFG_SEC_LIST = [\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'workdir', 'valType':'string', 'valDefault':'', 'comVariable':ModCebsCom.GLCFG_PAR_OFC.PIC_WORK_DIR, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic_origin', 'valType':'string', 'valDefault':'', 'comVariable':ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic_middle', 'valType':'string', 'valDefault':'', 'comVariable':ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_MIDDLE_PATH, 'usage':''},\
-    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'holeboard_type', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'holeboard_type', 'valType':'string', 'valDefault':'96_STANDARD', 'comVariable':ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'holeboard, left_bot X-axis', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[0], 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'holeboard, left_bot Y-axis', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[1], 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'holeboard, right_up X-Axis', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2], 'usage':''},\
