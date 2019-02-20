@@ -15,7 +15,7 @@ import time
 from PkgL3cebsHandler import ModCebsCom
 import urllib3
 import json
-
+from PkgL2svrUniv import ModCebsDba
 
 '''
 配置模块
@@ -811,6 +811,7 @@ class clsL1_ConfigOpr():
     
     #将index孔位转化为标签
     def func_cvt_indexfilehole(self,index):
+        
         if (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_96_STANDARD):
             return self._MOD_CEBS_CFG_HB96[index];
         if (ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_TYPE == ModCebsCom.GLPLT_PAR_OFC.HB_TARGET_48_STANDARD):
