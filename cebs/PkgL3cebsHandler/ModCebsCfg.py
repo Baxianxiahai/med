@@ -37,6 +37,7 @@ _TUP_CEBS_CFG_SEC_LIST = [\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'holeboard, right_up X-Axis', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2], 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'holeboard, right_up Y-Axis', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3], 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic taking fix point set', 'valType':'bool', 'valDefault':False, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic taking second autoexpo set', 'valType':'bool', 'valDefault':False, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.PIC_SECOND_AUTOEXPO_SET, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic classification set', 'valType':'bool', 'valDefault':False, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic auto-work after start set', 'valType':'bool', 'valDefault':False, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic auto-work tti', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN, 'usage':''},\
@@ -94,6 +95,7 @@ class clsL1_ConfigOpr():
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2]
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3]
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.PIC_SECOND_AUTOEXPO_SET
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN
@@ -145,6 +147,7 @@ class clsL1_ConfigOpr():
         index +=1;  ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[2]                  = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLPLT_PAR_OFC.HB_POS_IN_UM[3]                  = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET         = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.PIC_SECOND_AUTOEXPO_SET          = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET    = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN      = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
@@ -568,18 +571,17 @@ class clsL1_ConfigOpr():
 
     def combineFileNameWithDir(self, batch, fileNbr):  
         fileName = str("batch#" + str(batch) + "FileName#" + str(self.func_cvt_indexfilehole(fileNbr)))
-        print(self.func_cvt_indexfilehole(fileNbr))
         return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
 
     def combineScaleFileNameWithDir(self, batch, fileNbr):
         fileName = str("scale_batch#" + str(batch) + "FileName#" + str(self.func_cvt_indexfilehole(fileNbr)))
-        print(self.func_cvt_indexfilehole(fileNbr))
+   
         return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.jpg'
     
     def combineFileNameVideoWithDir(self, batch, fileNbr):
 
         fileName = str("batch#" + str(batch) + "FileName#" + str(self.func_cvt_indexfilehole(fileNbr)))
-        print(self.func_cvt_indexfilehole(fileNbr))
+      
         return str(ModCebsCom.GLCFG_PAR_OFC.PIC_ABS_ORIGIN_PATH) + fileName + '.mp4'  #.mp4, .avi
 
 

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'cebsGparform.ui'
 #
-# Created by: PyQt5 UI code generator 5.10
+# Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -36,6 +36,10 @@ class Ui_cebsGparForm(object):
         self.checkBox_gpar_picFixPos.setGeometry(QtCore.QRect(240, 30, 71, 16))
         self.checkBox_gpar_picFixPos.setChecked(False)
         self.checkBox_gpar_picFixPos.setObjectName("checkBox_gpar_picFixPos")
+        self.checkBox_gpar_second_autoexpo = QtWidgets.QCheckBox(self.groupBox_gpar_normal)
+        self.checkBox_gpar_second_autoexpo.setGeometry(QtCore.QRect(330, 30, 121, 16))
+        self.checkBox_gpar_second_autoexpo.setChecked(False)
+        self.checkBox_gpar_second_autoexpo.setObjectName("checkBox_gpar_second_autoexpo")
         self.groupBox_gpar_pic = QtWidgets.QGroupBox(cebsGparForm)
         self.groupBox_gpar_pic.setGeometry(QtCore.QRect(200, 200, 291, 191))
         self.groupBox_gpar_pic.setObjectName("groupBox_gpar_pic")
@@ -207,6 +211,7 @@ class Ui_cebsGparForm(object):
         self.label_gpar_picTti_min.setText(_translate("cebsGparForm", "分钟"))
         self.checkBox_gpar_autoPic.setText(_translate("cebsGparForm", "定时自动拍照"))
         self.checkBox_gpar_picFixPos.setText(_translate("cebsGparForm", "定点拍照"))
+        self.checkBox_gpar_second_autoexpo.setText(_translate("cebsGparForm", "二次自动曝光模式"))
         self.groupBox_gpar_pic.setTitle(_translate("cebsGparForm", "图像识别参数设置"))
         self.lineEdit_gpar_vision_small_low_limit.setText(_translate("cebsGparForm", "200"))
         self.label_gpar_vision_t1.setText(_translate("cebsGparForm", "小尺寸门限"))

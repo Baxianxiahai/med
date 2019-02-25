@@ -345,6 +345,8 @@ class clsL0_MedComPicPar():
     #Fix point to take picture or not? Formally auto-working shall set as False.
     #定点拍照
     PIC_TAKING_FIX_POINT_SET = False; 
+    #增加二次曝光功能试图解决图片模糊的问题
+    PIC_SECOND_AUTOEXPO_SET = False
     #After taking picture, whether the pic identification will be run automatically
     #拍照后是否自动识别
     PIC_CLASSIFIED_AFTER_TAKE_SET = False;
@@ -498,7 +500,7 @@ class clsL0_MedSpsPar():
 
     #马达归零最大循环次数
     #确保归零的时间预算 = 30秒 = 次数 x 采样间隔（0.2s)
-    MOTOR_MAX_RETRY_TIMES = 150 #正常需要放置150次数，
+    MOTOR_MAX_RETRY_TIMES = 10 #正常需要放置150次数，
 
     #ROUNDS of auto-pilot run
     PILOT_WOKING_ROUNDS_MAX = 5;

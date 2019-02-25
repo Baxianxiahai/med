@@ -251,7 +251,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         #更新批次存储文件
         self.updateBatCntWithIniFileSyned(True, 0, 0)
         self.createBatSectAndIniSyned(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX);
-        print('point test 1')
+    
         #生成文件名字
         fnPic = self.combineFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
         fnScale = self.combineScaleFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
@@ -266,7 +266,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         print('sclCtrl',sclCtrl)
         
         time.sleep(0.2)
-        #移动到合适孔位，然后拍摄
+        #移动到合适孔位，然后拍摄 
         mbuf={}
         if (GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET == True):
             mbuf['fnPic'] = fnPic
@@ -286,6 +286,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     #STEP2马达运动
     def fsm_msg_ctrs_moto_mv_hn_resp_rcv_handler(self, msgContent):
         #生成文件名字
+     
         fnPic = self.combineFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
         fnScale = self.combineScaleFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
         fnVideo = self.combineFileNameVideoWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
@@ -302,6 +303,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['vdDur'] = vdDur
         time.sleep(0.2)
         #两个消息共享该控制消息，故而需要分别控制
+        
         if (self.fsm_get() == self._STM_PIC_CAP_EXEC):
             self.msg_send(TUP_MSGID_CTRS_PIC_CAP_REQ, TUP_TASK_ID_VISION, mbuf)
         elif (self.fsm_get() == self._STM_FLU_CAP_EXEC):
@@ -311,6 +313,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     #STEP3获得了图像，然后进入下一次运动
     def fsm_msg_ctrs_pic_cap_resp_rcv_handler(self, msgContent):
         #错误处理
+        
         res = msgContent['res']
         if res < 0:
             self.funcCtrlSchdLogTrace("L3SCHD: Error feedback get from camera and can not continue!")

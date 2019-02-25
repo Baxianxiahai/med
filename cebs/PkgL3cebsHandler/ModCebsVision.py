@@ -343,6 +343,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             print("CAP_PROP_WHITE_BALANCE_BLUE_U = ", self.capInit.get(cv.CAP_PROP_WHITE_BALANCE_BLUE_U))
             print("CAP_PROP_ISO_SPEED = ", self.capInit.get(cv.CAP_PROP_ISO_SPEED))
             print("CAP_PROP_IRIS = ", self.capInit.get(cv.CAP_PROP_IRIS))
+            
             #WINDOWS POP-UP控件，可让人工干预，对参数进行调整
             #self.capInit.set(cv.CAP_PROP_SETTINGS, 1)
             if not self.capInit.isOpened():
@@ -500,10 +501,24 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         vdCtrl = msgContent['vdCtrl']
         sclCtrl = msgContent['sclCtrl']
         vdDur = msgContent['vdDur']
-        res = self.func_pic_vid_cap_and_save_file_in_running_mode(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
-        mbuf={}
-        mbuf['res'] = res
-        self.msg_send(TUP_MSGID_CTRS_PIC_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+        if (ModCebsCom.GLVIS_PAR_OFC.PIC_SECOND_AUTOEXPO_SET == True):
+            print("二次曝光模式")
+            #开始拍照时。设置成自动曝光   
+            self.capInit.set(cv.CAP_PROP_AUTO_EXPOSURE, -1)
+            time.sleep(0.2)
+            res = self.func_pic_vid_cap_and_save_file_in_running_mode(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
+            mbuf={}
+            mbuf['res'] = res
+            #抓取完成后再次设置未非自动曝光模式
+            self.capInit.set(cv.CAP_PROP_EXPOSURE, -3)
+            print("set disable autoexpo")
+            self.msg_send(TUP_MSGID_CTRS_PIC_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+        else:
+            print("非二次曝光模式")
+            res = self.func_pic_vid_cap_and_save_file_in_running_mode(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
+            mbuf={}
+            mbuf['res'] = res
+            self.msg_send(TUP_MSGID_CTRS_PIC_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         return TUP_SUCCESS;
     
     #FLU图像拍摄的功能还未完善，暂时使用了白光拍摄的手法
@@ -519,6 +534,9 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         mbuf={}
         mbuf['res'] = res
         self.msg_send(TUP_MSGID_CTRS_FLU_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+        #抓取完成后再次设置未非自动曝光模式
+        self.capInit.set(cv.CAP_PROP_EXPOSURE, -3)
+        print("set disable autoexpo flu")
         return TUP_SUCCESS;
 
     #识别算法

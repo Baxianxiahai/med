@@ -874,6 +874,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
         ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET = self.checkBox_gpar_autoIdf.isChecked();
         ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET = self.checkBox_gpar_autoPic.isChecked();
         ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET = self.checkBox_gpar_picFixPos.isChecked();
+        ModCebsCom.GLVIS_PAR_OFC.PIC_SECOND_AUTOEXPO_SET = self.checkBox_gpar_second_autoexpo.isChecked
         try: 
             ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR = int(self.lineEdit_gpar_camera_nbr.text());
         except Exception: 
@@ -931,6 +932,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm):
     #Using global parameter set to UI during launch
     def funcGlobalParReadSet2Ui(self):
         self.checkBox_gpar_picFixPos.setChecked(ModCebsCom.GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET)
+        self.checkBox_gpar_second_autoexpo.setChecked(ModCebsCom.GLVIS_PAR_OFC.PIC_SECOND_AUTOEXPO_SET)
         self.checkBox_gpar_autoIdf.setChecked(ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET)
         self.checkBox_gpar_autoPic.setChecked(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET)
         self.lineEdit_gpar_camera_nbr.setText(str(ModCebsCom.GLVIS_PAR_OFC.VISION_CAMBER_NBR))
