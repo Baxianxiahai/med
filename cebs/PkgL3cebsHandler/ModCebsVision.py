@@ -22,6 +22,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 import multiprocessing
+import argparse
 from   ctypes import c_uint8
 from ctypes import *
 import win32com.client  #pip install pyWin32
@@ -530,13 +531,25 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         vdCtrl = msgContent['vdCtrl']
         sclCtrl = msgContent['sclCtrl']
         vdDur = msgContent['vdDur']
-        res = self.func_pic_vid_cap_and_save_file_in_running_mode(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
-        mbuf={}
-        mbuf['res'] = res
-        self.msg_send(TUP_MSGID_CTRS_FLU_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
-        #抓取完成后再次设置未非自动曝光模式
-        self.capInit.set(cv.CAP_PROP_EXPOSURE, -3)
-        print("set disable autoexpo flu")
+        if (ModCebsCom.GLVIS_PAR_OFC.PIC_SECOND_AUTOEXPO_SET == True):
+            print("二次曝光模式")
+            #开始拍照时。设置成自动曝光   
+            self.capInit.set(cv.CAP_PROP_AUTO_EXPOSURE, -1)
+            time.sleep(0.2)
+            res = self.func_pic_vid_cap_and_save_file_in_running_mode(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
+            mbuf={}
+            mbuf['res'] = res
+            #抓取完成后再次设置未非自动曝光模式
+            self.capInit.set(cv.CAP_PROP_EXPOSURE, -3)
+            print("set disable autoexpo flu")
+            self.msg_send(TUP_MSGID_CTRS_FLU_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+        else:
+            print("非二次曝光模式")
+            res = self.func_pic_vid_cap_and_save_file_in_running_mode(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
+            mbuf={}
+            mbuf['res'] = res
+            self.msg_send(TUP_MSGID_CTRS_FLU_CAP_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+                
         return TUP_SUCCESS;
 
     #识别算法
@@ -703,7 +716,30 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         
         ret, frame = self.capInit.retrieve()
         ret, frame = self.capInit.retrieve()
-        if (ret == True):
+        
+        if (ret == True):            
+            #增加模糊检测
+            gray = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
+            fm = self.variance_of_laplacian(gray)
+            print("图片模糊度 =",fm)
+            ap = argparse.ArgumentParser()
+            #以下的default值 在观察不同的物品时，值也不太一样
+            #比如放一张纸 模糊度为10   放个其他的可能就是2
+            #全黑图片是0.01左右
+            ap.add_argument("-t", "--threshold", type=float, default=10.0,
+                            help="focus measures that fall below this value will be considered 'blurry'")
+            args = vars(ap.parse_args())
+            
+            while(fm < args["threshold"]):
+                print("图片模糊  请调整好焦距 ") 
+                ret,frame = self.capInit.retrieve()  
+                gray = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
+                fm = self.variance_of_laplacian(gray) 
+                             
+            else:
+                print("图片清晰")
+                
+            
             frame = cv.flip(frame, 1)#Operation in frame
             frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_LINEAR)
             #白平衡算法
@@ -718,10 +754,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             B = B * kb
             G = G * kg
             R = R * kr
-            outputFrame = cv.merge([B, G, R])
-            cv.imwrite(fnPic, outputFrame)
+            outputFrame = cv.merge([B, G, R])    
+            cv.imwrite(fnPic, outputFrame) 
             if sclCtrl == True:
                 self.proc_algo_vis_get_radians(GLPLT_PAR_OFC.med_get_radians_len_in_us(), fnPic, fnScale)
+                
         if (ret == True) and (vdCtrl == True):
             #Video capture with 3 second
             fourcc = cv.VideoWriter_fourcc(*'mp4v')  #mp4v(.mp4), XVID(.avi)
@@ -745,6 +782,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         return 1;
     
     
+    
+    def variance_of_laplacian(self,gray):
+    # compute the Laplacian of the image and then return the focus
+    # measure, which is simply the variance of the Laplacian
+        return cv.Laplacian(gray, cv.CV_64F).var()
     '''
     #计算弧度的方式
     #INPUT: refRadInUm, 孔半径长度，um单位
