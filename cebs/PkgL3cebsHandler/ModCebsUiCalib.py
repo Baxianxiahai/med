@@ -27,6 +27,7 @@ class tupTaskUiCalib(tupClassUiBasic):
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_VDISP_RESP, self.fsm_msg_calib_vdisp_resp_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_MOMV_DIR_RESP, self.fsm_msg_momv_dir_resp_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_MOFM_DIR_RESP, self.fsm_msg_force_move_dir_resp_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CAL_BLURRY_RET_VALUE,self.fsm_msg_cal_blurry_handler)
         #START TASK
         self.fsm_set(TUP_STM_INIT)
         self.task_run()
@@ -68,7 +69,13 @@ class tupTaskUiCalib(tupClassUiBasic):
     def fsm_msg_force_move_dir_resp_rcv_handler(self, msgContent):
         self.funcDebugPrint2Qt(str(msgContent))
         return TUP_SUCCESS;    
-                
+    
+    def fsm_msg_cal_blurry_handler(self, msgContent):   
+        if (self.fatherUiObj == ''):
+            print("CAL_UI task lose 1 print message due to time sync.")
+        else:      
+            self.fatherUiObj.cal_callback_blurry_ret(msgContent['res'])
+        return TUP_SUCCESS;         
     #主界面承接过来的执行函数
     def func_ui_click_pilot_mv(self, scale, dir):
         print("I am func_ui_click_pilot_mv!")

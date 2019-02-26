@@ -72,7 +72,11 @@ class SEUI_L4_CalibForm(QtWidgets.QWidget, Ui_cebsCalibForm, clsL1_ConfigOpr):
     #  SLOT FUNCTION, 槽函数部分
     #    DO NOT MODIFY SLOT FUNCTION NAMES, 以下部分为系统接口对应的槽函数，函数命名不得动
     #
-    # 
+    #
+    #给TkCalibUi回调的处理过程
+    def cal_callback_blurry_ret(self,res):
+        self.lineEdit_current_pic_blurry_value.setText(str(res))
+        
     def slot_calib_pilot_move_up(self):
         time.sleep(0.1)
         radioCala10um = self.radioButton_calib_10um.isChecked();

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'cebsCalibform.ui'
 #
-# Created by: PyQt5 UI code generator 5.10
+# Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -150,6 +150,12 @@ class Ui_cebsCalibForm(object):
         self.pushButton_calib_pilot_camera_cap.setGeometry(QtCore.QRect(280, 30, 81, 41))
         self.pushButton_calib_pilot_camera_cap.setCheckable(False)
         self.pushButton_calib_pilot_camera_cap.setObjectName("pushButton_calib_pilot_camera_cap")
+        self.label_current_pic_blurry = QtWidgets.QLabel(self.groupBox_calib_pilot)
+        self.label_current_pic_blurry.setGeometry(QtCore.QRect(210, 90, 91, 16))
+        self.label_current_pic_blurry.setObjectName("label_current_pic_blurry")
+        self.lineEdit_current_pic_blurry_value = QtWidgets.QLineEdit(self.groupBox_calib_pilot)
+        self.lineEdit_current_pic_blurry_value.setGeometry(QtCore.QRect(300, 90, 71, 20))
+        self.lineEdit_current_pic_blurry_value.setObjectName("lineEdit_current_pic_blurry_value")
         self.label_calib_RtCam_Fill = QtWidgets.QLabel(cebsCalibForm)
         self.label_calib_RtCam_Fill.setGeometry(QtCore.QRect(470, 50, 841, 631))
         self.label_calib_RtCam_Fill.setObjectName("label_calib_RtCam_Fill")
@@ -245,6 +251,7 @@ class Ui_cebsCalibForm(object):
         self.pushButton_calib_pilot_move_n.setText(_translate("cebsCalibForm", "移动到#号孔"))
         self.lineEdit_pilot_move_n.setText(_translate("cebsCalibForm", "1"))
         self.pushButton_calib_pilot_camera_cap.setText(_translate("cebsCalibForm", "立即拍照"))
+        self.label_current_pic_blurry.setText(_translate("cebsCalibForm", "当前照片模糊值"))
         self.label_calib_RtCam_Fill.setText(_translate("cebsCalibForm", "TextLabel"))
         self.label_calib_RtCam_title.setText(_translate("cebsCalibForm", "实时摄像头"))
         self.groupBox_calib_force_move.setTitle(_translate("cebsCalibForm", "强制移动"))

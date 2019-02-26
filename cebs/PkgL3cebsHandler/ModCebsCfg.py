@@ -41,6 +41,7 @@ _TUP_CEBS_CFG_SEC_LIST = [\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic classification set', 'valType':'bool', 'valDefault':False, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic auto-work after start set', 'valType':'bool', 'valDefault':False, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic auto-work tti', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN, 'usage':''},\
+    {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'pic blurry limit', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.PIC_BLURRY_LIMIT, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'vision small-low limit', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'vision small-mid limit', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT, 'usage':''},\
     {'domain':_TUP_CEBS_CFG_SEC_SET[_TUP_CEBS_CFG_SEC_ENV], 'sctName':'vision mid-big limit', 'valType':'int', 'valDefault':0, 'comVariable':ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT, 'usage':''},\
@@ -99,6 +100,7 @@ class clsL1_ConfigOpr():
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN
+        index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.PIC_BLURRY_LIMIT
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT
         index +=1; _TUP_CEBS_CFG_SEC_LIST[index]['comVariable'] = ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT
@@ -151,6 +153,7 @@ class clsL1_ConfigOpr():
         index +=1;  ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET    = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN      = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
+        index +=1;  ModCebsCom.GLVIS_PAR_OFC.PIC_BLURRY_LIMIT                 = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT                  = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT                  = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']
         index +=1;  ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT                    = _TUP_CEBS_CFG_SEC_LIST[index]['comVariable']

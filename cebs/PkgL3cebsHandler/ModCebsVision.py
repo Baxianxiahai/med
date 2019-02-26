@@ -485,7 +485,10 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             self.funcVisionErrTrace("VISION: capture error as not init camera!")
             return TUP_FAILURE;
         #CAPTURE PICTURE
-        ret, outFrame = self.func_cap_one_hole_frame_in_calib_mode()
+        ret, outFrame, fm = self.func_cap_one_hole_frame_in_calib_mode()
+        mbuf={} 
+        mbuf['res'] = round(fm, 3)
+        self.msg_send(TUP_MSGID_CAL_BLURRY_RET_VALUE, TUP_TASK_ID_CALIB, mbuf)
         if (ret <0):
             self.funcVisionErrTrace("VISION: capture picture error!")
             return TUP_FAILURE;
@@ -662,6 +665,10 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             pass
         if (ret != True):
             return -1,_;
+        #增加模糊检测
+        gray = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
+        fm = self.variance_of_laplacian(gray)
+        
         frame = cv.flip(frame, 1)#Operation in frame
         frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_LINEAR)
         #白平衡算法
@@ -676,7 +683,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         G = G * kg
         R = R * kr
         outputFrame = cv.merge([B, G, R])
-        return 1, outputFrame
+        return 1, outputFrame , fm
 
 
 
@@ -721,21 +728,21 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             #增加模糊检测
             gray = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
             fm = self.variance_of_laplacian(gray)
-            print("图片模糊度 =",fm)
+            print("blurry value",fm)
             ap = argparse.ArgumentParser()
             #以下的default值 在观察不同的物品时，值也不太一样
             #比如放一张纸 模糊度为10   放个其他的可能就是2
             #全黑图片是0.01左右
-            ap.add_argument("-t", "--threshold", type=float, default=10.0,
+            ap.add_argument("-t", "--threshold", type=int, default=ModCebsCom.GLVIS_PAR_OFC.PIC_BLURRY_LIMIT,
                             help="focus measures that fall below this value will be considered 'blurry'")
             args = vars(ap.parse_args())
-            
+            print("blurry limit",args["threshold"])
             while(fm < args["threshold"]):
-                print("图片模糊  请调整好焦距 ") 
+                print("blurry limit",args["threshold"])
+                print("blurry value",fm) 
                 ret,frame = self.capInit.retrieve()  
                 gray = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
-                fm = self.variance_of_laplacian(gray) 
-                             
+                fm = self.variance_of_laplacian(gray)           
             else:
                 print("图片清晰")
                 

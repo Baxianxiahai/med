@@ -586,6 +586,29 @@ p, li { white-space: pre-wrap; }
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QLabel" name="label_current_pic_blurry">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>90</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>当前照片模糊值</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_current_pic_blurry_value">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>90</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QLabel" name="label_calib_RtCam_Fill">
    <property name="geometry">

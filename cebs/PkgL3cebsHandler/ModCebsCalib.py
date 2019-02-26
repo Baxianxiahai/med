@@ -51,7 +51,7 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_MOMV_START, self.fsm_msg_momv_start_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_MOMV_HOLEN, self.fsm_msg_momv_holen_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_PIC_CAP_HOLEN, self.fsm_msg_pic_cap_holen_rcv_handler)
-        
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CAL_BLURRY_RET_VALUE,self.fsm_msg_cal_blurry_rcv_handler)
         #巡游
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_CALIB_PILOT_START, self.fsm_msg_pilot_start_rcv_handler)
         self.add_stm_combine(self._STM_PILOT, TUP_MSGID_CALIB_PILOT_MV_HN_RESP, self.fsm_msg_pilot_mv_hn_resp_rcv_handler)
@@ -248,6 +248,11 @@ class tupTaskCalib(tupTaskTemplate, clsL1_ConfigOpr):
         self.addNormalBatchFile(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, newHoldNbr)
         
         return TUP_SUCCESS;
+    
+    def fsm_msg_cal_blurry_rcv_handler(self,msgContent):
+        self.msg_send(TUP_MSGID_CAL_BLURRY_RET_VALUE, TUP_TASK_ID_UI_CALIB, msgContent)
+        return TUP_SUCCESS;
+    
     
     #巡游开始
     def fsm_msg_pilot_start_rcv_handler(self, msgContent):

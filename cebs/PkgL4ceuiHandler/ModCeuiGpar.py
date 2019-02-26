@@ -137,6 +137,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, clsL1_ConfigOpr):
         self.checkBox_gpar_autoIdf.setChecked(ModCebsCom.GLVIS_PAR_OFC.PIC_CLASSIFIED_AFTER_TAKE_SET)
         self.checkBox_gpar_autoPic.setChecked(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET)
         self.lineEdit_gpar_picTti.setText(str(ModCebsCom.GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN))
+        self.lineEdit_gpar_blurry.setText(str(ModCebsCom.GLVIS_PAR_OFC.PIC_BLURRY_LIMIT))
         self.lineEdit_gpar_vision_small_low_limit.setText(str(ModCebsCom.GLVIS_PAR_OFC.SMALL_LOW_LIMIT))
         self.lineEdit_gpar_vision_small_mid_limit.setText(str(ModCebsCom.GLVIS_PAR_OFC.SMALL_MID_LIMIT))
         self.lineEdit_gpar_vision_mid_big_limit.setText(str(ModCebsCom.GLVIS_PAR_OFC.MID_BIG_LIMIT))
@@ -180,6 +181,10 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, clsL1_ConfigOpr):
         GLVIS_PAR_OFC.PIC_AUTO_WORKING_AFTER_START_SET = self.checkBox_gpar_autoPic.isChecked();
         GLVIS_PAR_OFC.PIC_TAKING_FIX_POINT_SET = self.checkBox_gpar_picFixPos.isChecked();
         GLVIS_PAR_OFC.PIC_SECOND_AUTOEXPO_SET = self.checkBox_gpar_second_autoexpo.isChecked();
+        try: 
+            GLVIS_PAR_OFC.PIC_BLURRY_LIMIT = int(self.lineEdit_gpar_blurry.text());
+        except Exception: 
+            GLVIS_PAR_OFC.PIC_BLURRY_LIMIT = 5
         try: 
             GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN = int(self.lineEdit_gpar_picTti.text());
         except Exception: 
