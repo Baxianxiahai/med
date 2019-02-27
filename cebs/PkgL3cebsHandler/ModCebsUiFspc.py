@@ -205,8 +205,9 @@ class tupTaskUiFspc(tupClassUiBasic):
                     self.fatherUiObj.fspc_callback_cmd_exec_resp(msgContent['fileName'])
         
 
-
-
+    def func_ui_click_basic_close(self):
+        print("I am func_ui_fspc_close!")   
+        self.msg_send(TUP_MSGID_CTRL_SCHD_SWITCH_ON, TUP_TASK_ID_CTRL_SCHD, "")
 
 
 

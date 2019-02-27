@@ -332,7 +332,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             print("CAP_PROP_HUE = ", self.capInit.get(cv.CAP_PROP_HUE))
             #self.capInit.set(cv.CAP_PROP_AUTO_EXPOSURE, 0.25)
             self.capInit.set(cv.CAP_PROP_EXPOSURE, -3)
-            self.funcVisionLogTrace(self.capInit.get(cv.CAP_PROP_EXPOSURE))
+            #self.funcVisionLogTrace(self.capInit.get(cv.CAP_PROP_EXPOSURE))
             print("CAP_PROP_EXPOSURE = ", self.capInit.get(cv.CAP_PROP_EXPOSURE))
             #自动曝光设置，没找到成功设置的方法
             #self.capInit.set(cv.CAP_PROP_AUTO_EXPOSURE, -1)
@@ -396,6 +396,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         self.FLU_CELL_COUNT_genr_par2 = msgContent['genrPar2'];
         self.FLU_CELL_COUNT_genr_par3 = msgContent['genrPar3'];
         self.FLU_CELL_COUNT_genr_par4 = msgContent['genrPar4'];
+        
         return TUP_SUCCESS;
     
     def fsm_msg_ref_resolution_rcv_handler(self,msgContent):
@@ -728,7 +729,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             #增加模糊检测
             gray = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
             fm = self.variance_of_laplacian(gray)
-            print("blurry value",fm)
+            print("blurry value",fm*1000)
             ap = argparse.ArgumentParser()
             #以下的default值 在观察不同的物品时，值也不太一样
             #比如放一张纸 模糊度为10   放个其他的可能就是2
@@ -736,15 +737,14 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             ap.add_argument("-t", "--threshold", type=int, default=ModCebsCom.GLVIS_PAR_OFC.PIC_BLURRY_LIMIT/1000,
                             help="focus measures that fall below this value will be considered 'blurry'")
             args = vars(ap.parse_args())
-            print("blurry limit",args["threshold"])
+            print("blurry limit",args["threshold"]*1000)
             while(fm < args["threshold"]):
-                print("blurry limit",args["threshold"])
-                print("blurry value",fm) 
+                self.funcVisionLogTrace("Blurred Image:Current Blurry Value=%d"%(fm*1000))
                 ret,frame = self.capInit.retrieve()  
                 gray = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
                 fm = self.variance_of_laplacian(gray)           
             else:
-                print("图片清晰")
+                self.funcVisionLogTrace("Clear Image")
                 
             
             frame = cv.flip(frame, 1)#Operation in frame

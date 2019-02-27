@@ -65,6 +65,7 @@ class tupClassUiBasic(tupTaskTemplate, clsL1_ConfigOpr):
     #界面切走 - 模板
     def func_ui_click_basic_switch_to_main(self):
         print("I am func_ui_click_basic_switch_to_main!")
+        
         self.fsm_set(self._STM_DEACT)       
 
     #清理各项操作 - 模板

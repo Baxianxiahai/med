@@ -63,6 +63,8 @@ class tupTaskUiMeng(tupClassUiBasic):
     def func_ui_click_basic_close(self):
         print("I am func_ui_click_meng_close!")
         self.msg_send(TUP_MSGID_MENG_CLOSE_REQ, TUP_TASK_ID_MENG, "")
+        self.msg_send(TUP_MSGID_CTRL_SCHD_SWITCH_ON, TUP_TASK_ID_CTRL_SCHD, "")
+        self.msg_send(TUP_MSGID_MAIN_UI_SWITCH,TUP_TASK_ID_MOTO,"")
             
 
 

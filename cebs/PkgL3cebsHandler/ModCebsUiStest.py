@@ -91,7 +91,10 @@ class tupTaskUiStest(tupClassUiBasic):
 
 
 
-
+    def func_ui_click_basic_close(self):
+        print("I am func_ui_self_test_close!")   
+        self.msg_send(TUP_MSGID_MAIN_UI_SWITCH, TUP_TASK_ID_MOTO,"")    
+        self.msg_send(TUP_MSGID_MAIN_UI_SWITCH,TUP_TASK_ID_VISION,"") 
 
 
 

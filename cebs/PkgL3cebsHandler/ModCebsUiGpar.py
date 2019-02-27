@@ -33,6 +33,8 @@ class tupTaskUiGpar(tupClassUiBasic):
     def func_ui_click_basic_close(self):
         print("I am func_ui_click_gpar_close!")
         self.msg_send(TUP_MSGID_GPAR_CLOSE_REQ, TUP_TASK_ID_GPAR, "")
+        self.msg_send(TUP_MSGID_CTRL_SCHD_SWITCH_ON, TUP_TASK_ID_CTRL_SCHD, "")
+        self.msg_send(TUP_MSGID_MAIN_UI_SWITCH,TUP_TASK_ID_VISION,"")
                 
     #业务处理部分
     def fsm_msg_pic_train_resp_rcv_handler(self, msgContent):

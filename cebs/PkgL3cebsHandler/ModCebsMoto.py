@@ -721,6 +721,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     def funcMotoStop(self):
         self.funcMotoLogTrace("L2MOTO: Send full stop command to moto!")
         self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_STP_NOR_CMID, 1, 1, 0, 0)
+        self.fsm_set(self._STM_MAIN_UI_ACT)
         return 1
     
     def funcMotoResume(self):
