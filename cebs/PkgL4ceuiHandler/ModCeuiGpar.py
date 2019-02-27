@@ -184,7 +184,7 @@ class SEUI_L4_GparForm(QtWidgets.QWidget, Ui_cebsGparForm, clsL1_ConfigOpr):
         try: 
             GLVIS_PAR_OFC.PIC_BLURRY_LIMIT = int(self.lineEdit_gpar_blurry.text());
         except Exception: 
-            GLVIS_PAR_OFC.PIC_BLURRY_LIMIT = 5
+            GLVIS_PAR_OFC.PIC_BLURRY_LIMIT = 5000
         try: 
             GLVIS_PAR_OFC.PIC_AUTO_WORKING_TTI_IN_MIN = int(self.lineEdit_gpar_picTti.text());
         except Exception: 

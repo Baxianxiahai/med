@@ -353,8 +353,8 @@ class clsL0_MedComPicPar():
     #Whether taking picture will be happened automatically after starting.
     #设备启动后是否自动工作-界面叫定时自动拍照
     PIC_AUTO_WORKING_AFTER_START_SET = False;    
-    #模糊度阈值
-    PIC_BLURRY_LIMIT = 5.0
+    #模糊度阈值       NF3
+    PIC_BLURRY_LIMIT = 5000
     #Auto taking picture TTI times in minutes
     #定时工作时长间隔
     PIC_AUTO_WORKING_TTI_IN_MIN = 60;

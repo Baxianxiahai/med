@@ -487,7 +487,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #CAPTURE PICTURE
         ret, outFrame, fm = self.func_cap_one_hole_frame_in_calib_mode()
         mbuf={} 
-        mbuf['res'] = round(fm, 3)
+        mbuf['res'] = round(fm, 3)*1000
         self.msg_send(TUP_MSGID_CAL_BLURRY_RET_VALUE, TUP_TASK_ID_CALIB, mbuf)
         if (ret <0):
             self.funcVisionErrTrace("VISION: capture picture error!")
@@ -733,7 +733,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             #以下的default值 在观察不同的物品时，值也不太一样
             #比如放一张纸 模糊度为10   放个其他的可能就是2
             #全黑图片是0.01左右
-            ap.add_argument("-t", "--threshold", type=int, default=ModCebsCom.GLVIS_PAR_OFC.PIC_BLURRY_LIMIT,
+            ap.add_argument("-t", "--threshold", type=int, default=ModCebsCom.GLVIS_PAR_OFC.PIC_BLURRY_LIMIT/1000,
                             help="focus measures that fall below this value will be considered 'blurry'")
             args = vars(ap.parse_args())
             print("blurry limit",args["threshold"])

@@ -609,6 +609,19 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
    </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>90</y>
+      <width>51</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>NF3</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QLabel" name="label_calib_RtCam_Fill">
    <property name="geometry">
