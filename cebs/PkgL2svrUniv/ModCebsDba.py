@@ -24,10 +24,15 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     #
     '''
     _TUP_HST_MSG_MATRIX = [\
-        {'restTag':'dba', 'actionId':0X0ED8, 'actionName':'opr_env', 'comments':''},\
-        {'restTag':'dba', 'actionId':0X0ED9, 'actionName':'opr_counter', 'comments':''},\
-        {'restTag':'dba', 'actionId':0X0EDA, 'actionName':'opr_fspc', 'comments':''},\
-        {'restTag':'dba', 'actionId':0X0EDB, 'actionName':'opr_file', 'comments':''},\
+        {'restTag':'dba', 'actionId':0X0ED7, 'actionName':'cebs_user_sheet', 'comments':''},\
+        {'restTag':'dba', 'actionId':0X0ED8, 'actionName':'cebs_product_profile', 'comments':''},\
+        {'restTag':'dba', 'actionId':0X0ED9, 'actionName':'cebs_cali_profile', 'comments':''},\
+        {'restTag':'dba', 'actionId':0X0EDA, 'actionName':'cebs_object_profile', 'comments':''},\
+        {'restTag':'dba', 'actionId':0X0EDB, 'actionName':'cebs_config_eleg', 'comments':''},\
+        {'restTag':'dba', 'actionId':0X0EDC, 'actionName':'cebs_config_stackcell', 'comments':''},\
+        {'restTag':'dba', 'actionId':0X0EDD, 'actionName':'cebs_result_eleg', 'comments':''},\
+        {'restTag':'dba', 'actionId':0X0EDE, 'actionName':'cebs_result_stackcell', 'comments':''},\
+ 
         ]
     
     def __init__(self):
@@ -38,41 +43,20 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     
     '''
     #
-    #ENV部分
+    #cebs_user_sheet部分
     #
     #
     '''
-    #初始化表单 - 如果读取失败，则自动插入一条新记录，所有的参数都是缺省的。这样处理将更加理性和完善。
-    def envCreate(self, tupLable):
+    #创建表单， 在创建表单的时候把表所有字段参数全部传入
+    def cebs_user_sheet_Create(self, uid, login_name, pass_word, grade_level, email, memo):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_env':
+            if element['actionName'] == 'cebs_user_sheet':
                 searchFlag = True
                 actionId = element['actionId']
         if (searchFlag == False):
             return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'add', 'tupLable':tupLable} )
-        print("inputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-
-    #读取完整的信息，必须通过tupLable进行索引
-    def envRead(self, tupLable):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_env':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'read', 'tupLable':tupLable})
+        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'add', 'uid':uid, 'login_name':login_name, 'pass_word':pass_word, 'grade_level':grade_level,'email':email, 'memo':memo } )
         print("inputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
@@ -84,15 +68,36 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -4, ''
         return 1, parContent
     
-    def envDelete(self, tupLable):
+    def cebs_product_profile_Create(self, dev_code, hw_ver, sw_ver, authtoken):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_env':
+            if element['actionName'] == 'cebs_product_profile':
                 searchFlag = True
                 actionId = element['actionId']
         if (searchFlag == False):
             return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'delete', 'tupLable':tupLable})
+        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'add', 'dev_code':dev_code, 'hw_ver':hw_ver, 'sw_ver':sw_ver, 'authtoken':authtoken} )
+        print("inputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent
+    
+    def cebs_cali_profile_Create(self, platetype, uid , left_bot_x, left_bot_y, right_up_x, right_up_y, accspeed, decspeed, movespeed, zero_spd, zero_dec, back_step):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_cali_profile':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'add', 'platetype':platetype,'uid':uid, 'left_bot_x':left_bot_x, 
+        'left_bot_y':left_bot_y, 'right_up_x':right_up_x, 'right_up_y':right_up_y, 'accspeed':accspeed, 'decspeed':decspeed, 'movespeed':movespeed, 'zero_spd':zero_spd, 'zero_dec':zero_dec, 'back_step':back_step} )
         print("inputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
@@ -104,15 +109,16 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -4, ''
         return 1, parContent    
     
-    def envModify(self, tupLable):
+    def cebs_object_profile_Create(self, objname, objtype , uid, dir_origin, dir_middle, memo):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_env':
+            if element['actionName'] == 'cebs_object_profile':
                 searchFlag = True
                 actionId = element['actionId']
         if (searchFlag == False):
             return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'modify', 'tupLable':tupLable})
+        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'add', 'objname':objname,'objtype':objtype, 'uid':uid, 
+        'dir_origin':dir_origin, 'dir_middle':dir_middle, 'memo':memo} )
         print("inputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
@@ -122,88 +128,19 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -3, ''
         if (parFlag <= 0):
             return -4, ''
-        return 1, parContent
+        return 1, parContent    
     
-#     #更新表单 - 假设是一直存同一条记录，通过TupLable进行区分
-#     def envUpdateAll(self, tupLable):
-#         searchFlag = False
-#         for element in self._TUP_HST_MSG_MATRIX:
-#             if element['actionName'] == 'opr_env':
-#                 searchFlag = True
-#                 actionId = element['actionId']
-#         if (searchFlag == False):
-#             return -1, ''
-#         inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'updateAll', 'tupLable':tupLable})
-#         print("inputJson",inputJson)
-#         res = self.hstCurlPost(inputJson)
-#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-#         if (restTag != 'dba'):
-#             return -2, ''
-#         if (newActionId != actionId):
-#             return -3, ''
-#         if (parFlag <= 0):
-#             return -4, ''
-#         return 1, parContent
-
-#     #更新部分参数 - 左下角
-#     def envUpdateAxisLeftBot(self, left_bot_x, left_bot_y):
-#         searchFlag = False
-#         for element in self._TUP_HST_MSG_MATRIX:
-#             if element['actionName'] == 'opr_env':
-#                 searchFlag = True
-#                 actionId = element['actionId']
-#         if (searchFlag == False):
-#             return -1, ''
-#         inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'updateAxisLeftBot', 'left_bot_x':left_bot_x, 'left_bot_y':left_bot_y})
-#         res = self.hstCurlPost(inputJson)
-#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-#         if (restTag != 'dba'):
-#             return -2, ''
-#         if (newActionId != actionId):
-#             return -3, ''
-#         if (parFlag <= 0):
-#             return -4, ''
-#         return 1, parContent
-#     
-#     #更新部分参数-右上角
-#     def envUpdateAxisRightUp(self, right_up_x, right_up_y):
-#         searchFlag = False
-#         for element in self._TUP_HST_MSG_MATRIX:
-#             if element['actionName'] == 'opr_env':
-#                 searchFlag = True
-#                 actionId = element['actionId']
-#         if (searchFlag == False):
-#             return -1, ''
-#         inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'updateAxisRightUp', 'right_up_x':right_up_x, 'right_up_y':right_up_y})
-#         res = self.hstCurlPost(inputJson)
-#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-#         if (restTag != 'dba'):
-#             return -2, ''
-#         if (newActionId != actionId):
-#             return -3, ''
-#         if (parFlag <= 0):
-#             return -4, ''
-#         return 1, parContent
-
-    #增加更多的api访问函数。每个函数对应的处理过程，都要由这里以及HST中的服务一起完成
-
-
-    '''
-    #
-    #COUNTER部分
-    #
-    #
-    '''
-    #读取完整的信息，必须通过tupLable进行索引
-    def counterCreate(self, tupLable):
+    def cebs_config_eleg_Create(self, objid, fixpoint , autovideo, autodist, addset, autocap, autoperiod, videotime, slimit, smlimit, mblimit, blimit):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_counter':
+            if element['actionName'] == 'cebs_config_eleg':
                 searchFlag = True
                 actionId = element['actionId']
         if (searchFlag == False):
             return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'add', 'tupLable':tupLable})
+        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'add', 'objid':objid,'fixpoint':fixpoint, 'autovideo':autovideo, 
+        'autodist':autodist, 'addset':addset, 'autocap':autocap, 'autoperiod':autoperiod, 'videotime':videotime, 'slimit':slimit,'smlimit':smlimit, 'mblimit':mblimit, 'blimit':blimit} )
+        print("inputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -212,287 +149,16 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -3, ''
         if (parFlag <= 0):
             return -4, ''
-        return 1, parContent
+        return 1, parContent    
     
-    def counterRead(self, tupLable):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_counter':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'read', 'tupLable':tupLable})
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-
-    def counterDelete(self, tupLable):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_counter':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'delete', 'tupLable':tupLable})
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    def counterModify(self, tupLable):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_counter':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'modify', 'tupLable':tupLable})
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    #增加更多的api访问函数。每个函数对应的处理过程，都要由这里以及HST中的服务一起完成
-
-
-    '''
-    #
-    #FSPC部分
-    #
-    #
-    '''
-    def fspcCreate(self, tupLable):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_fspc':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'add', 'tupLable':tupLable})
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    def fspcRead(self, tupLable):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_fspc':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'read', 'tupLable':tupLable})
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    def fspcDelete(self, tupLable):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_fspc':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'delete', 'tupLable':tupLable})
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    def fspcModify(self, tupLable):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_fspc':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'modify', 'tupLable':tupLable})
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    #增加更多的api访问函数。每个函数对应的处理过程，都要由这里以及HST中的服务一起完成
-
-
-
-    '''
-    #
-    #FILE部分
-    #
-    #
-    '''
-
-    def fileCreate(self, tupLable):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_file':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'add', 'tupLable':tupLable})
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    def fileRead(self, tupLable):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_file':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'read', 'tupLable':tupLable})
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-
-    def fileDelete(self, tupLable):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_file':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'delete', 'tupLable':tupLable})
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    def fileModify(self, tupLable):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'opr_file':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, {'cmd':'modify', 'tupLable':tupLable})
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    #增加更多的api访问函数。每个函数对应的处理过程，都要由这里以及HST中的服务一起完成
-
-
-
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
     cls = TupClsCebsDbaItf()
     #res = hst.hstCurlPost({"restTag": "dba", "actionId": 3800, "parFlag": 1, "parContent":{"cmd":"add","user":"test222"}})
-    #env test
-    #lc:create test ok
-    #print(cls.envCreate({'tupLable':'1','workdir':'D','pic_origin':'E','pic_middle':'F'}))
-    #lc:read test ok    
-#     for i in range(1,4):
-#         inputstr = {'tupLable':i,'holeboard_left_bot_x':''}
-#         print(cls.envRead(inputstr))   #读取操作按照某个参数进行索引 全部读取后  判断传入后截取所需   # 定行 定列
-    #lc:modify test ok
-    #print(cls.envModify({'tupLable':'1','workdir':'test'}))
-    #lc:delete test ok
-    #print(cls.envDelete({'tupLable':'1'})) #删除操作依靠tupLable 来进行
-    
-    #counter test
-    #print(cls.counterCreate({'tupLable':'3','picbatchcnt':'100'}))
-    #print(cls.counterRead({'tupLable':'3','picbatchcnt':''}))# 定行 定列
-    #print(cls.counterModify({'tupLable':'3','picbatchclas':'250'}))
-    #print(cls.counterDelete({'tupLable':'1'})) #删除操作依靠tupLable 来进行
-
-    #fspc test
-    #print(cls.fspcCreate({'tupLable':'3','mark_line':'100'}))
-    #print(cls.fspcRead({'tupLable':'3','mark_line':''})) # 定行 定列
-    #print(cls.fspcModify({'tupLable':'2','mark_width':'200'}))
-#     print(cls.fspcDelete({'tupLable':'1'})) #删除操作依靠tupLable 来进行
-    
-    #batchfile test
-#     for i in range(1,97):
-#         inputstr = {'batch_no':'1','hole_no':i}
-#         print(cls.fileCreate(inputstr))
-    
-    #print(cls.fileRead({'batch_no':'1','hole_no':'3','hole_name':''})) #batch 和孔号 来定行 
-    print(cls.fileModify({'batch_no':'1','hole_no':'4','pic_file_name':'111'})) #batch和孔号 来定行 
-    #print(cls.fileDelete({'batch_no':'1','hole_no':'2'}))    #删除操作依靠batch number来进行
-
-
-
-
-
+    #print(cls.cebs_user_sheet_Create(1, 'admin', 'bxxh123', 1, '13525@qq.com', 'thisisdemo' ))
+    #print(cls.cebs_product_profile_Create('SHKD001', 222, 333,'thisisdemo' ))
+    #print(cls.cebs_cali_profile_Create(1, 1535, 0, 0, 0, 0, 20, 20, 20, 20, 20, 12800))
+    #print(cls.cebs_object_profile_Create('xianchong', 1, 1535, 'varcebs', 'varcebs', 'thisisdemo'))
+    print(cls.cebs_config_eleg_Create(1535, 0, 0, 0, 1, 0, 60, 3, 200, 500, 2000, 5000))
 
 
 
