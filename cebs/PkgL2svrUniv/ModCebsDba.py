@@ -89,6 +89,26 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -4, ''
         return 1, parContent
     
+    def cebs_user_sheet_Read(self, uid):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_user_sheet':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'read', 'uid':uid} )
+        print("inputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent
+    
     '''
     #
     #cebs_product_profile部分
@@ -134,6 +154,27 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (parFlag <= 0):
             return -4, ''
         return 1, parContent
+
+    def cebs_product_profile_Read(self, id):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_product_profile':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'read', 'id':id} )
+        print("inputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent
+    
     '''
     #
     #cebs_cali_profile部分
@@ -179,6 +220,25 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (parFlag <= 0):
             return -4, ''
         return 1, parContent 
+
+    def cebs_cali_profile_Read(self, id):
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_cali_profile':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'read', 'id':id} )
+        print("inputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent
     '''
     #
     #cebs_object_profile部分
@@ -225,6 +285,26 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (parFlag <= 0):
             return -4, ''
         return 1, parContent
+
+    def cebs_object_profile_Read(self, objid):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_object_profile':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'read', 'objid':objid } )
+        print("inputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent
     '''
     #
     #cebs_config_eleg部分
@@ -252,7 +332,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -4, ''
         return 1, parContent   
     
-    def cebs_config_eleg_Delete(self, objid):
+    def cebs_config_eleg_Delete(self, confid):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
             if element['actionName'] == 'cebs_config_eleg':
@@ -260,7 +340,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
                 actionId = element['actionId']
         if (searchFlag == False):
             return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'delete', 'objid':objid})
+        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'delete', 'confid':confid})
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -270,6 +350,25 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (parFlag <= 0):
             return -4, ''
         return 1, parContent  
+    
+    def cebs_config_eleg_Read(self, confid):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_config_eleg':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'read', 'confid':confid})
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent 
     '''
     #
     #cebs_config_stackcell部分
@@ -300,7 +399,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -4, ''
         return 1, parContent    
 
-    def cebs_config_stackcell_Delete(self, objid):
+    def cebs_config_stackcell_Delete(self, confid):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
             if element['actionName'] == 'cebs_config_stackcell':
@@ -308,7 +407,27 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
                 actionId = element['actionId']
         if (searchFlag == False):
             return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'delete', 'objid':objid} )
+        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'delete', 'confid':confid} )
+        print("inputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent
+    
+    def cebs_config_stackcell_Read(self, confid):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_config_stackcell':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'read', 'confid':confid} )
         print("inputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
@@ -368,6 +487,26 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (parFlag <= 0):
             return -4, ''
         return 1, parContent
+    
+    def cebs_result_eleg_Read(self, sid):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_result_eleg':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'read', 'sid':sid} )
+        print("inputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent
     '''
     #
     #cebs_result_stackcell部分
@@ -414,30 +553,58 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (parFlag <= 0):
             return -4, ''
         return 1, parContent
-    
+ 
+    def cebs_result_stackcell_Read(self, sid):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_result_stackcell':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'read','sid':sid})
+        print("inputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent  
+     
 if __name__ == '__main__':
     cls = TupClsCebsDbaItf()
     #res = hst.hstCurlPost({"restTag": "dba", "actionId": 3800, "parFlag": 1, "parContent":{"cmd":"add","user":"test222"}})
     #create operation
     #print(cls.cebs_user_sheet_Create(1, 'admin', 'bxxh123', 1, '13525@qq.com', 'thisisdemo' ))
     #print(cls.cebs_product_profile_Create('SHKD001', 222, 333,'thisisdemo' ))
-    #print(cls.cebs_cali_profile_Create(1, 1535, 0, 0, 0, 0, 20, 20, 20, 20, 20, 12800))
-    #print(cls.cebs_object_profile_Create('xianchong', 1, 1535, 'varcebs', 'varcebs', 'thisisdemo'))
-    #print(cls.cebs_config_eleg_Create(1535, 0, 0, 0, 1, 0, 60, 3, 200, 500, 2000, 5000))
-    #print(cls.cebs_config_stackcell_Create(1535, 1, 10000, 44, 222, 22, 1000000, 100000, 1500, 5, 920, 1500, 19, 23, 61, 5, 50, 30, 2))
-    #print(cls.cebs_result_eleg_Create(1535, 0, 0, 1, 'fileA', 'resultfileA', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'thisisdemo'))
-    #print(cls.cebs_result_stackcell_Create(1535, 1, 'fileA', 'resultfileA', 0, 0, 0, 'thisisdemo'))
+    #print(cls.cebs_cali_profile_Create(1, 1, 0, 0, 0, 0, 20, 20, 20, 20, 20, 12800))
+    #print(cls.cebs_object_profile_Create('xianchong', 1, 1, 'varcebs', 'varcebs', 'thisisdemo'))
+    #print(cls.cebs_config_eleg_Create(1, 0, 0, 0, 1, 0, 60, 3, 200, 500, 2000, 5000))
+    #print(cls.cebs_config_stackcell_Create(1, 1, 10000, 44, 222, 22, 1000000, 100000, 1500, 5, 920, 1500, 19, 23, 61, 5, 50, 30, 2))
+    #print(cls.cebs_result_eleg_Create(1, 0, 0, 1, 'fileA', 'resultfileA', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'thisisdemo'))
+    #print(cls.cebs_result_stackcell_Create(1, 1, 'fileA', 'resultfileA', 0, 0, 0, 'thisisdemo'))
 
     #delete operation
     #print(cls.cebs_user_sheet_Delete(1))
     #print(cls.cebs_product_profile_Delete(1))
     #print(cls.cebs_cali_profile_Delete(1))
-    #print(cls.cebs_object_profile_Delete(1535))
+    #print(cls.cebs_object_profile_Delete(1))
     #print(cls.cebs_config_eleg_Delete(1))
     #print(cls.cebs_config_stackcell_Delete(1))
     #print(cls.cebs_result_eleg_Delete(1))
     #print(cls.cebs_result_stackcell_Delete(1))
 
-    
+    #read operation
+    print(cls.cebs_user_sheet_Read(1))
+    print(cls.cebs_product_profile_Read(1))
+    print(cls.cebs_cali_profile_Read(1))
+    print(cls.cebs_object_profile_Read(1))
+    print(cls.cebs_config_eleg_Read(1))
+    print(cls.cebs_config_stackcell_Read(1))
+    print(cls.cebs_result_eleg_Read(1))
+    print(cls.cebs_result_stackcell_Read(1))
 
 
