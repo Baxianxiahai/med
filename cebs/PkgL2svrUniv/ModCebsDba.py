@@ -57,8 +57,28 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
                 actionId = element['actionId']
         if (searchFlag == False):
             return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True, inputData)
+        print("outputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent
+
+    def cebs_user_sheet_Delete(self, inputData):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_user_sheet':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True,inputData )
-        print("inputJson",inputJson)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -69,7 +89,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -4, ''
         return 1, parContent
     
-    def cebs_user_sheet_Delete(self, inputData):
+    def cebs_user_sheet_Modify(self, inputData):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
             if element['actionName'] == 'cebs_user_sheet':
@@ -78,7 +98,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True,inputData )
-        print("inputJson",inputJson)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -87,7 +107,8 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -3, ''
         if (parFlag <= 0):
             return -4, ''
-        return 1, parContent
+        return 1, parContent  
+     
     
     def cebs_user_sheet_Read(self, inputData):
         searchFlag = False
@@ -98,7 +119,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True,inputData )
-        print("inputJson",inputJson)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -124,7 +145,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True,inputData )
-        print("inputJson",inputJson)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -144,7 +165,27 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("inputJson",inputJson)
+        print("outputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent
+    
+    def cebs_product_profile_Modify(self, inputData):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_product_profile':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -164,7 +205,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True,inputData )
-        print("inputJson",inputJson)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -190,7 +231,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True,inputData)
-        print("inputJson",inputJson)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -209,7 +250,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True,inputData )
-        print("inputJson",inputJson)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -219,6 +260,25 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (parFlag <= 0):
             return -4, ''
         return 1, parContent 
+    
+    def cebs_cali_profile_Modify(self, inputData):
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_cali_profile':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+        print("outputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent
 
     def cebs_cali_profile_Read(self, inputData):
         for element in self._TUP_HST_MSG_MATRIX:
@@ -228,7 +288,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True,inputData)
-        print("inputJson",inputJson)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -253,7 +313,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("inputJson",inputJson)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -273,7 +333,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("inputJson",inputJson)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -284,6 +344,26 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -4, ''
         return 1, parContent
 
+    def cebs_object_profile_Modify(self, inputData):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_object_profile':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+        print("outputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent
+    
     def cebs_object_profile_Read(self, inputData):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
@@ -293,7 +373,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("inputJson",inputJson)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -318,7 +398,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True, inputData)
-        print("inputJson",inputJson)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -338,6 +418,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True, inputData)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -347,6 +428,26 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (parFlag <= 0):
             return -4, ''
         return 1, parContent  
+
+    def cebs_config_eleg_Modify(self, inputData):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_config_eleg':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True, inputData)
+        print("outputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent
     
     def cebs_config_eleg_Read(self, inputData):
         searchFlag = False
@@ -357,6 +458,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -381,7 +483,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("inputJson",inputJson)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -392,7 +494,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -4, ''
         return 1, parContent    
 
-    def cebs_config_stackcell_Delete(self, confid):
+    def cebs_config_stackcell_Delete(self, inputData):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
             if element['actionName'] == 'cebs_config_stackcell':
@@ -400,8 +502,8 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
                 actionId = element['actionId']
         if (searchFlag == False):
             return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'delete', 'confid':confid} )
-        print("inputJson",inputJson)
+        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -412,7 +514,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -4, ''
         return 1, parContent
     
-    def cebs_config_stackcell_Read(self, confid):
+    def cebs_config_stackcell_Modify(self, inputData):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
             if element['actionName'] == 'cebs_config_stackcell':
@@ -420,8 +522,28 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
                 actionId = element['actionId']
         if (searchFlag == False):
             return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'read', 'confid':confid} )
-        print("inputJson",inputJson)
+        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+        print("outputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent
+    
+    def cebs_config_stackcell_Read(self, inputData):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_config_stackcell':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True, inputData)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -437,11 +559,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     #
     #
     '''    
-    def aa(self,inputData):
-        actionId=""
-        inputJson=self.hstapiEncode("dba", actionId, True, inputData)
-        print("inputJson",inputJson)
-        return 
+
     def cebs_result_eleg_Create(self, inputData):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
@@ -451,7 +569,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("inputJson",inputJson)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -462,7 +580,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -4, ''
         return 1, parContent
 
-    def cebs_result_eleg_Delete(self, sid):
+    def cebs_result_eleg_Delete(self, inputData):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
             if element['actionName'] == 'cebs_result_eleg':
@@ -470,8 +588,28 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
                 actionId = element['actionId']
         if (searchFlag == False):
             return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'delete', 'sid':sid} )
-        print("inputJson",inputJson)
+        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+        print("outputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent
+
+    def cebs_result_eleg_Modify(self, inputData):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_result_eleg':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -482,7 +620,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -4, ''
         return 1, parContent
     
-    def cebs_result_eleg_Read(self, sid):
+    def cebs_result_eleg_Read(self, inputData):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
             if element['actionName'] == 'cebs_result_eleg':
@@ -490,8 +628,8 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
                 actionId = element['actionId']
         if (searchFlag == False):
             return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'read', 'sid':sid} )
-        print("inputJson",inputJson)
+        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -516,7 +654,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (searchFlag == False):
             return -1, ''
         inputJson = self.hstapiEncode('dba', actionId, True, inputData)
-        print("inputJson",inputJson)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -527,7 +665,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -4, ''
         return 1, parContent 
     
-    def cebs_result_stackcell_Delete(self, sid):
+    def cebs_result_stackcell_Delete(self, inputData):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
             if element['actionName'] == 'cebs_result_stackcell':
@@ -535,8 +673,28 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
                 actionId = element['actionId']
         if (searchFlag == False):
             return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'delete', 'sid':sid} )
-        print("inputJson",inputJson)
+        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+        print("outputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent
+    
+    def cebs_result_stackcell_Modify(self, inputData):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_result_stackcell':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -547,7 +705,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
             return -4, ''
         return 1, parContent
  
-    def cebs_result_stackcell_Read(self, sid):
+    def cebs_result_stackcell_Read(self, inputData):
         searchFlag = False
         for element in self._TUP_HST_MSG_MATRIX:
             if element['actionName'] == 'cebs_result_stackcell':
@@ -555,8 +713,8 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
                 actionId = element['actionId']
         if (searchFlag == False):
             return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,{'cmd':'read','sid':sid})
-        print("inputJson",inputJson)
+        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+        print("outputJson",inputJson)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
@@ -571,31 +729,57 @@ if __name__ == '__main__':
     cls = TupClsCebsDbaItf()
     #res = hst.hstCurlPost({"restTag": "dba", "actionId": 3800, "parFlag": 1, "parContent":{"cmd":"add","user":"test222"}})
     #create operation
-    print(cls.cebs_user_sheet_Create({'cmd':'add', 'uid':250, 'login_name':'admin', 'pass_word':'13456', 'grade_level':1,'email':'13525@.com', 'memo':'this'}))
-    print(cls.cebs_product_profile_Create({'cmd':'add', 'dev_code':'shanghai', 'hw_ver':222, 'sw_ver':333, 'authtoken':'thisis'} ))
-    print(cls.cebs_cali_profile_Create({'cmd':'add', 'platetype':1,'uid':250, 'left_bot_x':0, 'left_bot_y':0, 'right_up_x':0, 'right_up_y':0, 'accspeed':20, 'decspeed':20, 'movespeed':20, 'zero_spd':20, 'zero_dec':20, 'back_step':12800} ))
-    print(cls.cebs_object_profile_Create({'cmd':'add', 'objname':'xianchong','objtype':1, 'uid':250, 'dir_origin':'varcebs', 'dir_middle':'varcebs', 'memo':'varcebs'}))
-    print(cls.cebs_config_eleg_Create({'cmd':'add', 'objid':1,'fixpoint':0, 'autovideo':0, 'autodist':0, 'addset':1, 'autocap':0, 'autoperiod':60, 'videotime':3, 'slimit':200,'smlimit':500, 'mblimit':2000, 'blimit':5000} ))
-    print(cls.cebs_config_stackcell_Create({'cmd':'add', 'objid':1,'addset':1, 'line_area':10000, 'line_width':44, 'line_long':222, 'line_dilate':22, 'area_up':1000000, 'area_low':100000, 'area_dilate':1500,'area_erode':5, 'square_min':920, 'square_max':1500,'radius_min':19, 'radius_max':23, 'cell_dilate':61, 'cell_erode':5, 'cell_round':50, 'cell_distance':60, 'train_delay':3}))
-    print(cls.cebs_result_eleg_Create({'cmd':'add', 'confid':1,'snbatch':0, 'snhole':0, 'file_attr':1, 'name_before':'cebs', 'name_after':'cebs', 'bigalive':0, 'bigdead':0, 'midalive':0,'middead':0, 'smaalive':0, 'smdead':0,'totalalive':0, 'totaldead':0, 'totalsum':0, 'doneflag':0, 'memo':'this'}))
-    print(cls.cebs_result_stackcell_Create({'cmd':'add', 'confid':1,'file_attr':0, 'name_before':'fileb','name_after':'resultfileA', 'totalnbr':0, 'validnbr':0, 'doneflag':0, 'memo':'thisisdemo'}))
+    print("create operation\r\n")
+    #print(cls.cebs_user_sheet_Create({'cmd':'add', 'uid':250, 'login_name':'admin', 'pass_word':'13456', 'grade_level':1,'email':'13525@.com', 'memo':'this'}))
+    #print(cls.cebs_product_profile_Create({'cmd':'add', 'dev_code':'shanghai', 'hw_ver':222, 'sw_ver':333, 'authtoken':'thisis'} ))
+    #print(cls.cebs_cali_profile_Create({'cmd':'add', 'platetype':1,'uid':250, 'left_bot_x':0, 'left_bot_y':0, 'right_up_x':0, 'right_up_y':0, 'accspeed':20, 'decspeed':20, 'movespeed':20, 'zero_spd':20, 'zero_dec':20, 'back_step':12800} ))
+    #print(cls.cebs_object_profile_Create({'cmd':'add', 'objname':'xianchong','objtype':1, 'uid':250, 'dir_origin':'varcebs', 'dir_middle':'varcebs', 'memo':'varcebs'}))
+    #print(cls.cebs_config_eleg_Create({'cmd':'add', 'objid':5,'fixpoint':0, 'autovideo':0, 'autodist':0, 'addset':1, 'autocap':0, 'autoperiod':60, 'videotime':3, 'slimit':200,'smlimit':500, 'mblimit':2000, 'blimit':5000} ))
+    #print(cls.cebs_config_stackcell_Create({'cmd':'add', 'objid':5,'addset':1, 'line_area':10000, 'line_width':44, 'line_long':222, 'line_dilate':22, 'area_up':1000000, 'area_low':100000, 'area_dilate':1500,'area_erode':5, 'square_min':920, 'square_max':1500,'radius_min':19, 'radius_max':23, 'cell_dilate':61, 'cell_erode':5, 'cell_round':50, 'cell_distance':60, 'train_delay':3}))
+    #print(cls.cebs_result_eleg_Create({'cmd':'add', 'confid':5,'snbatch':0, 'snhole':0, 'file_attr':1, 'name_before':'cebs', 'name_after':'cebs', 'bigalive':0, 'bigdead':0, 'midalive':0,'middead':0, 'smaalive':0, 'smdead':0,'totalalive':0, 'totaldead':0, 'totalsum':0, 'doneflag':0, 'memo':'this'}))
+    #print(cls.cebs_result_stackcell_Create({'cmd':'add', 'confid':5,'file_attr':0, 'name_before':'fileb','name_after':'resultfileA', 'totalnbr':0, 'validnbr':0, 'doneflag':0, 'memo':'thisisdemo'}))
 
+    '''
+    note：
+           根据有无传入字段来进行判断要更新那些值   
+    '''
+    
+    #modify operation 
+    #print(cls.cebs_user_sheet_Modify({'cmd':'modify','uid':250,'pass_word':54321}))
+    #print(cls.cebs_product_profile_Modify({'cmd':'modify','id':4,'hw_ver':352}))
+    #print(cls.cebs_cali_profile_Modify({'cmd':'modify','id':5,'left_bot_x':100,'left_bot_y':200,'right_up_x':400,'right_up_y':800}))
+    #print(cls.cebs_object_profile_Modify({'cmd':'modify','objid':5,'objname':'prototype','dir_origin':'test'}))
+    #print(cls.cebs_config_eleg_Modify({'cmd':'modify','confid':11,'slimit':250,'smlimit':250,'mblimit':250,'blimit':250}))
+    #print(cls.cebs_config_stackcell_Modify({'cmd':'modify','confid':4,'line_area':250,'line_long':250}))
+    #print(cls.cebs_result_eleg_Modify({'cmd':'modify','sid':5,'snbatch':25,'snhole':250,'name_after':'prototype'}))
+    #print(cls.cebs_result_stackcell_Modify({'cmd':'modify','sid':5,'file_attr':2}))
+    '''
+    note:
+            这里的读取操作， 是根据传入主键参数  来获取表单内全部内容（hst中写的是返回该主键对应行的全部字段及参数）上层接收到再进行处理
+            还是说我要什么就字段的参数就将字段参数传入，只返回需要的字段参数,方式不同在hst服务中相应的code不同
+    ''' 
+    #read operation    
+#     print("read operation\r\n")
+#     print(cls.cebs_user_sheet_Read({'cmd':'read', 'uid':250}))
+#     print(cls.cebs_product_profile_Read({'cmd':'read', 'id':5}))
+#     print(cls.cebs_cali_profile_Read({'cmd':'read', 'id':5}))
+#     print(cls.cebs_object_profile_Read({'cmd':'read', 'objid':5}))
+#     print(cls.cebs_config_eleg_Read({'cmd':'read', 'confid':11}))
+#     print(cls.cebs_config_stackcell_Read({'cmd':'read', 'confid':4}))
+#     print(cls.cebs_result_eleg_Read({'cmd':'read', 'sid':5}))
+#     print(cls.cebs_result_stackcell_Read({'cmd':'read', 'sid':5}))
+ 
+ 
+    
     #delete operation
-    print(cls.cebs_user_sheet_Delete({'cmd':'delete', 'uid':250}))
-    print(cls.cebs_product_profile_Delete({'cmd':'delete', 'id':1}))
-    print(cls.cebs_cali_profile_Delete({'cmd':'delete', 'id':1}))
-    print(cls.cebs_object_profile_Delete({'cmd':'delete', 'objid':1}))
-    print(cls.cebs_config_eleg_Delete({'cmd':'delete', 'confid':1}))
-    print(cls.cebs_config_stackcell_Delete({'cmd':'delete', 'confid':1}))
-    print(cls.cebs_result_eleg_Delete({'cmd':'delete', 'sid':1}))
-    print(cls.cebs_result_stackcell_Delete({'cmd':'delete', 'sid':1}))
+#     print("delete operation")
+#     print(cls.cebs_user_sheet_Delete({'cmd':'delete', 'uid':250}))
+#     print(cls.cebs_product_profile_Delete({'cmd':'delete', 'id':1}))
+#     print(cls.cebs_cali_profile_Delete({'cmd':'delete', 'id':1}))
+#     print(cls.cebs_object_profile_Delete({'cmd':'delete', 'objid':1}))
+#     print(cls.cebs_config_eleg_Delete({'cmd':'delete', 'confid':1}))
+#     print(cls.cebs_config_stackcell_Delete({'cmd':'delete', 'confid':1}))
+#     print(cls.cebs_result_eleg_Delete({'cmd':'delete', 'sid':1}))
+#     print(cls.cebs_result_stackcell_Delete({'cmd':'delete', 'sid':1}))
 
-    #read operation
-    print(cls.cebs_user_sheet_Read({'cmd':'read', 'uid':250}))
-    print(cls.cebs_product_profile_Read({'cmd':'read', 'id':1}))
-    print(cls.cebs_cali_profile_Read({'cmd':'read', 'id':1}))
-    print(cls.cebs_object_profile_Read({'cmd':'read', 'objid':1}))
-    print(cls.cebs_config_eleg_Read({'cmd':'read', 'confid':1}))
-    print(cls.cebs_config_stackcell_Read({'cmd':'read', 'confid':1}))
-    print(cls.cebs_result_eleg_Read({'cmd':'read', 'sid':1}))
-    print(cls.cebs_result_stackcell_Read({'cmd':'read', 'sid':1}))
+    
