@@ -743,15 +743,18 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
                 args = vars(ap.parse_args())
                 print("blurry limit",args["threshold"]*1000)
                 while(fm < args["threshold"]):
-                    time.sleep(1)
+                    time.sleep(0.5)
                     self.funcVisionLogTrace("Blurred Image:Current Blurry Value=%d"%(fm*1000))
                     ret,frame = self.capInit.retrieve()                
                     gray = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
-                    fm = self.variance_of_laplacian(gray)           
+                    fm = self.variance_of_laplacian(gray)
+                    if (i>9):
+                        self.funcVisionLogTrace("more than 10 times,exit while loop")
+                        break  
+                    i=i+1         
                 else:
                     self.funcVisionLogTrace("Clear Image")
                 
-            
             frame = cv.flip(frame, 1)#Operation in frame
             frame = cv.resize(frame, None, fx=1, fy=1, interpolation=cv.INTER_LINEAR)
             #白平衡算法
