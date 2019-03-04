@@ -728,27 +728,28 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         ret, frame = self.capInit.retrieve()
         ret, frame = self.capInit.retrieve()
         
-        if (ret == True):            
-            #增加模糊检测
-            gray = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
-            fm = self.variance_of_laplacian(gray)
-            print("blurry value",fm*1000)
-            ap = argparse.ArgumentParser()
-            #以下的default值 在观察不同的物品时，值也不太一样
-            #比如放一张纸 模糊度为10   放个其他的可能就是2
-            #全黑图片是0.01左右
-            ap.add_argument("-t", "--threshold", type=int, default=ModCebsCom.GLVIS_PAR_OFC.PIC_BLURRY_LIMIT/1000,
-                            help="focus measures that fall below this value will be considered 'blurry'")
-            args = vars(ap.parse_args())
-            print("blurry limit",args["threshold"]*1000)
-            while(fm < args["threshold"]):
-                time.sleep(0.2)
-                self.funcVisionLogTrace("Blurred Image:Current Blurry Value=%d"%(fm*1000))
-                ret,frame = self.capInit.retrieve()                
+        if (ret == True):   
+            if (ModCebsCom.GLVIS_PAR_OFC.PIC_SECOND_AUTOEXPO_SET == True):         
+                #增加模糊检测
                 gray = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
-                fm = self.variance_of_laplacian(gray)           
-            else:
-                self.funcVisionLogTrace("Clear Image")
+                fm = self.variance_of_laplacian(gray)
+                print("blurry value",fm*1000)
+                ap = argparse.ArgumentParser()
+                #以下的default值 在观察不同的物品时，值也不太一样
+                #比如放一张纸 模糊度为10   放个其他的可能就是2
+                #全黑图片是0.01左右
+                ap.add_argument("-t", "--threshold", type=int, default=ModCebsCom.GLVIS_PAR_OFC.PIC_BLURRY_LIMIT/1000,
+                                help="focus measures that fall below this value will be considered 'blurry'")
+                args = vars(ap.parse_args())
+                print("blurry limit",args["threshold"]*1000)
+                while(fm < args["threshold"]):
+                    time.sleep(1)
+                    self.funcVisionLogTrace("Blurred Image:Current Blurry Value=%d"%(fm*1000))
+                    ret,frame = self.capInit.retrieve()                
+                    gray = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
+                    fm = self.variance_of_laplacian(gray)           
+                else:
+                    self.funcVisionLogTrace("Clear Image")
                 
             
             frame = cv.flip(frame, 1)#Operation in frame
