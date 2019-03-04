@@ -76,6 +76,7 @@ _TUP_VISION_DESC_LIST = [\
     {'name':'OBVIOUS_E3ISPM05000KPA', 'desc':'VID_0547&PID_114C', 'width':2448, 'height':2048, 'usage':'荧光尝试1，放弃'},\
     {'name':'TOUPCAM_E3ISPM06300KPB', 'desc':'VID_0547&PID_1217', 'width':3072, 'height':2048, 'usage':'荧光目标型号'},\
     {'name':'TOUPCAM_UCMOS05100KPA', 'desc':'VID_0547&PID_6510','width':2592,'height':1944, 'usage':'新华医院独有白光型号'},\
+    {'name':'MS60', 'desc':'VID_04B4&PID_B630','width':3072,'height':2048, 'usage':'明美摄像头'},\
     ]
 #分辨率必须根据设备型号，重新选择 #DEFAULT SELCTION
 _TUP_VISION_CAMBER_RES_WIDTH = 2592
@@ -322,15 +323,16 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             print("WIDTH",_TUP_VISION_CAMBER_RES_WIDTH)
             print("HEIGHT",_TUP_VISION_CAMBER_RES_HEIGHT)
             #试验型拍照设计方法
-            self.capInit.set(cv.CAP_PROP_BRIGHTNESS, 0)
-            print("CAP_PROP_BRIGHTNESS = ", self.capInit.get(cv.CAP_PROP_BRIGHTNESS))
-            self.capInit.set(cv.CAP_PROP_CONTRAST, 0)
-            print("CAP_PROP_CONTRAST = ", self.capInit.get(cv.CAP_PROP_CONTRAST))
-            self.capInit.set(cv.CAP_PROP_SATURATION, 128)
-            print("CAP_PROP_SATURATION = ", self.capInit.get(cv.CAP_PROP_SATURATION))
-            self.capInit.set(cv.CAP_PROP_HUE, 0)
-            print("CAP_PROP_HUE = ", self.capInit.get(cv.CAP_PROP_HUE))
+#             self.capInit.set(cv.CAP_PROP_BRIGHTNESS, 0)
+#             print("CAP_PROP_BRIGHTNESS = ", self.capInit.get(cv.CAP_PROP_BRIGHTNESS))
+#             self.capInit.set(cv.CAP_PROP_CONTRAST, 0)
+#             print("CAP_PROP_CONTRAST = ", self.capInit.get(cv.CAP_PROP_CONTRAST))
+#             self.capInit.set(cv.CAP_PROP_SATURATION, 128)
+#             print("CAP_PROP_SATURATION = ", self.capInit.get(cv.CAP_PROP_SATURATION))
+#             self.capInit.set(cv.CAP_PROP_HUE, 0)
+#             print("CAP_PROP_HUE = ", self.capInit.get(cv.CAP_PROP_HUE))
             #self.capInit.set(cv.CAP_PROP_AUTO_EXPOSURE, 0.25)
+            #只留下自动曝光设置，其他不需要设置，因为不同相机默认参数不同   怕会影响
             self.capInit.set(cv.CAP_PROP_EXPOSURE, -3)
             #self.funcVisionLogTrace(self.capInit.get(cv.CAP_PROP_EXPOSURE))
             print("CAP_PROP_EXPOSURE = ", self.capInit.get(cv.CAP_PROP_EXPOSURE))
@@ -509,7 +511,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         if (ModCebsCom.GLVIS_PAR_OFC.PIC_SECOND_AUTOEXPO_SET == True):
             print("二次曝光模式")
             #开始拍照时。设置成自动曝光   
-            self.capInit.set(cv.CAP_PROP_AUTO_EXPOSURE, -1)
+            self.capInit.release()
+            self.capInit = cv.VideoCapture(0)
             time.sleep(0.2)
             res = self.func_pic_vid_cap_and_save_file_in_running_mode(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
             mbuf={}
@@ -739,8 +742,9 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             args = vars(ap.parse_args())
             print("blurry limit",args["threshold"]*1000)
             while(fm < args["threshold"]):
+                time.sleep(0.2)
                 self.funcVisionLogTrace("Blurred Image:Current Blurry Value=%d"%(fm*1000))
-                ret,frame = self.capInit.retrieve()  
+                ret,frame = self.capInit.retrieve()                
                 gray = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
                 fm = self.variance_of_laplacian(gray)           
             else:

@@ -786,10 +786,6 @@ if __name__ == '__main__':
 
 
     #MAY USE EXTRA API 
-    #read one batch file result 
-    #loop here may be better than loop in the hst
-#     for i in range(1,97):
-#         print(cls.cebs_result_eleg_Create({'cmd':'add', 'confid':5,'snbatch':20, 'snhole':i, 'file_attr':1, 'name_before':'cebs', 'name_after':'cebs', 'bigalive':0, 'bigdead':0, 'midalive':0,'middead':0, 'smaalive':0, 'smdead':0,'totalalive':0, 'totaldead':0, 'totalsum':0, 'doneflag':0, 'memo':'this'}))
     #read the hole batch file result
     print(cls.cebs_result_eleg_Read({'cmd':'read', 'snbatch':20}))
     
