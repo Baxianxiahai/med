@@ -541,7 +541,8 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         if (ModCebsCom.GLVIS_PAR_OFC.PIC_SECOND_AUTOEXPO_SET == True):
             print("二次曝光模式")
             #开始拍照时。设置成自动曝光   
-            self.capInit.set(cv.CAP_PROP_AUTO_EXPOSURE, -1)
+            self.capInit.release()
+            self.capInit = cv.VideoCapture(0)
             time.sleep(0.2)
             res = self.func_pic_vid_cap_and_save_file_in_running_mode(fnPic, fnScale, fnVideo, vdCtrl, sclCtrl, vdDur);
             mbuf={}

@@ -7,7 +7,7 @@ Created on 2018/4/29
 ####!/usr/bin/python3.6
 #### -*- coding: UTF-8 -*-
 
-import sys
+# import sys
 import time
 from multiprocessing import freeze_support
 

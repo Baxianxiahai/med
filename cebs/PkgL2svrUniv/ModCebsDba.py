@@ -6,7 +6,7 @@ Created on 2019年2月13日
 
 from PkgL2svrHandler.ModHstapi import *
 from _tkinter import create
-from pip._vendor.packaging.requirements import EXTRA
+#from pip._vendor.packaging.requirements import EXTRA
 
 
 #业务处理类，继承基类的属性
@@ -754,7 +754,7 @@ if __name__ == '__main__':
 #     print(cls.cebs_config_eleg_Modify({'cmd':'modify','confid':11,'slimit':250,'smlimit':250,'mblimit':250,'blimit':250}))
 #     print(cls.cebs_config_stackcell_Modify({'cmd':'modify','confid':4,'line_area':250,'line_long':250}))
 #     print(cls.cebs_result_eleg_Modify({'cmd':'modify','sid':7,'snbatch':25,'snhole':250,'name_after':'prototype'}))
-#     print(cls.cebs_result_stackcell_Modify({'cmd':'modify','sid':5,'file_attr':2}))
+    print(cls.cebs_result_stackcell_Modify({'cmd':'modify','sid':5,'rec_time':'2019-03-01 08:33:33'}))
     '''
     note:
             这里的读取操作， 是根据传入主键参数  来获取表单内全部内容（hst中写的是返回该主键对应行的全部字段及参数）上层接收到再进行处理
@@ -787,7 +787,7 @@ if __name__ == '__main__':
 
     #MAY USE EXTRA API 
     #read the hole batch file result
-    print(cls.cebs_result_eleg_Read({'cmd':'read', 'snbatch':20}))
+    #print(cls.cebs_result_eleg_Read({'cmd':'read', 'snbatch':20}))
     
     
     

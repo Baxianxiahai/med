@@ -5,24 +5,24 @@ Created on 2019年1月3日
 '''
 
 
-import random
-import sys
-import time
-import json
-import os
-import re
-import urllib
-import http
-import socket
-import datetime
-import string
+# import random
+# import sys
+# import time
+# import json
+# import os
+# import re
+# import urllib
+# import http
+# import socket
+# import datetime
+# import string
 import ctypes 
-import random
+# import random
 import cv2 as cv
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import math
-from   ctypes import c_uint8
+# from   ctypes import c_uint8
 
 #自有的视频处理库函数
 class TupClsPicProc(object):
