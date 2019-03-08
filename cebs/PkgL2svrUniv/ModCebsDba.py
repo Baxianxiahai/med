@@ -747,29 +747,29 @@ if __name__ == '__main__':
     
     #modify operation 
 #     print("modify operation")
-#     print(cls.cebs_user_sheet_Modify({'cmd':'modify','uid':250,'pass_word':54321}))
-#     print(cls.cebs_product_profile_Modify({'cmd':'modify','id':4,'hw_ver':352}))
-#     print(cls.cebs_cali_profile_Modify({'cmd':'modify','id':5,'left_bot_x':100,'left_bot_y':200,'right_up_x':400,'right_up_y':800}))
+#     print(cls.cebs_user_sheet_Modify({'cmd':'modify','uid':250,'pass_word':54321,'reg_date':'2019-03-01 08:33:33',}))
+#     print(cls.cebs_product_profile_Modify({'cmd':'modify','id':4,'hw_ver':250,'mfd':'2019-03-01 08:33:33'}))
+#     print(cls.cebs_cali_profile_Modify({'cmd':'modify','id':5,'calitime':'2019-03-01 08:33:33','left_bot_x':100,'left_bot_y':200,'right_up_x':400,'right_up_y':800}))
 #     print(cls.cebs_object_profile_Modify({'cmd':'modify','objid':5,'objname':'prototype','dir_origin':'test'}))
 #     print(cls.cebs_config_eleg_Modify({'cmd':'modify','confid':11,'slimit':250,'smlimit':250,'mblimit':250,'blimit':250}))
 #     print(cls.cebs_config_stackcell_Modify({'cmd':'modify','confid':4,'line_area':250,'line_long':250}))
-#     print(cls.cebs_result_eleg_Modify({'cmd':'modify','sid':7,'snbatch':25,'snhole':250,'name_after':'prototype'}))
-    print(cls.cebs_result_stackcell_Modify({'cmd':'modify','sid':5,'rec_time':'2019-03-01 08:33:33'}))
+#     print(cls.cebs_result_eleg_Modify({'cmd':'modify','sid':11,'snbatch':25,'snhole':250,'cap_time':'2019-03-01 08:33:33','rec_time':'2019-03-01 08:33:33'}))
+#     print(cls.cebs_result_stackcell_Modify({'cmd':'modify','sid':6,'rec_time':'2019-03-01 08:33:33'}))
     '''
     note:
             这里的读取操作， 是根据传入主键参数  来获取表单内全部内容（hst中写的是返回该主键对应行的全部字段及参数）上层接收到再进行处理
             还是说我要什么就字段的参数就将字段参数传入，只返回需要的字段参数,方式不同在hst服务中相应的code不同
     ''' 
     #read operation    
-#     print("read operation")
-#     print(cls.cebs_user_sheet_Read({'cmd':'read', 'uid':250}))
-#     print(cls.cebs_product_profile_Read({'cmd':'read', 'id':5}))
-#     print(cls.cebs_cali_profile_Read({'cmd':'read', 'id':5}))
-#     print(cls.cebs_object_profile_Read({'cmd':'read', 'objid':5}))
-#     print(cls.cebs_config_eleg_Read({'cmd':'read', 'confid':11}))
-#     print(cls.cebs_config_stackcell_Read({'cmd':'read', 'confid':4}))
-#     print(cls.cebs_result_eleg_Read({'cmd':'read', 'sid':11}))
-#     print(cls.cebs_result_stackcell_Read({'cmd':'read', 'sid':5}))
+    print("read operation")
+    print(cls.cebs_user_sheet_Read({'cmd':'read', 'uid':250}))
+    print(cls.cebs_product_profile_Read({'cmd':'read', 'id':5}))
+    print(cls.cebs_cali_profile_Read({'cmd':'read', 'id':5}))
+    print(cls.cebs_object_profile_Read({'cmd':'read', 'objid':7}))
+    print(cls.cebs_config_eleg_Read({'cmd':'read', 'confid':11}))
+    print(cls.cebs_config_stackcell_Read({'cmd':'read', 'confid':4}))
+    print(cls.cebs_result_eleg_Read({'cmd':'read', 'sid':11}))
+    print(cls.cebs_result_stackcell_Read({'cmd':'read', 'sid':5}))
  
  
     
