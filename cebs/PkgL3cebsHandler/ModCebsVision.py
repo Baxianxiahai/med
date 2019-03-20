@@ -77,6 +77,7 @@ _TUP_VISION_DESC_LIST = [\
     {'name':'TOUPCAM_E3ISPM06300KPB', 'desc':'VID_0547&PID_1217', 'width':3072, 'height':2048, 'usage':'荧光目标型号'},\
     {'name':'TOUPCAM_UCMOS05100KPA', 'desc':'VID_0547&PID_6510','width':2592,'height':1944, 'usage':'新华医院独有白光型号'},\
     {'name':'MS60', 'desc':'VID_04B4&PID_B630','width':3072,'height':2048, 'usage':'明美摄像头'},\
+    {'name':'MS50-T-3', 'desc':'VID_04B4&PID_B504','width':2592,'height':1944, 'usage':'低配版明美摄像头'},\
     ]
 #分辨率必须根据设备型号，重新选择 #DEFAULT SELCTION
 _TUP_VISION_CAMBER_RES_WIDTH = 2592
@@ -739,6 +740,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
                 #以下的default值 在观察不同的物品时，值也不太一样
                 #比如放一张纸 模糊度为10   放个其他的可能就是2
                 #全黑图片是0.01左右
+                i = 0
                 ap.add_argument("-t", "--threshold", type=int, default=ModCebsCom.GLVIS_PAR_OFC.PIC_BLURRY_LIMIT/1000,
                                 help="focus measures that fall below this value will be considered 'blurry'")
                 args = vars(ap.parse_args())
