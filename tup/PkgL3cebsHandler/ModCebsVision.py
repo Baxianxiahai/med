@@ -25,14 +25,14 @@ import multiprocessing
 import argparse
 from   ctypes import c_uint8
 from ctypes import *
-import win32com.client  #pip install pyWin32
-from win32com.client import GetObject
+#import win32com.client  #pip install pyWin32
+#from win32com.client import GetObject
 #import usb.core
 #from   cv2 import waitKey
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import pyqtSlot
 from multiprocessing import Queue, Process
-from _overlapped import NULL
+#from _overlapped import NULL
 
 
 
@@ -1066,7 +1066,14 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         outText['totalDead'] = 0
         
         #Searching out-form shape: 找到轮廓
-        _, contours, hierarchy = cv.findContours(nfImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
+        #LC：windows下调用这个
+        #_, contours, hierarchy = cv.findContours(nfImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
+        
+        #LC：ubuntu下调用这个
+        contours, hierarchy = cv.findContours(nfImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
+        
+        
+        
         #contours = contours[0] if imutils.is_cv() else contours[1]
         
         #Output graphic: 输出图形

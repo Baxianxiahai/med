@@ -171,7 +171,12 @@ class TupClsPicProc(object):
     '''
     def tup_find_contours(self, grayInputImg, areaMin, areaMax, ceMin, ceMax, areaTextFlag, ceTextFlag):
         ret, binImg = cv.threshold(grayInputImg, 130, 255, cv.THRESH_BINARY)
-        _, contours, hierarchy = cv.findContours(binImg, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
+        #LC：windows下调用这个
+        #_, contours, hierarchy = cv.findContours(binImg, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
+        #LC：ubuntu下调用这个
+        contours, hierarchy = cv.findContours(binImg, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
+        
+        
         outputImg = cv.cvtColor(binImg, cv.COLOR_GRAY2BGR)
         #Analysis one by one: 分别分析
         totalCnt=0
@@ -221,7 +226,10 @@ class TupClsPicProc(object):
     #用于掩模
     def tup_find_max_contours(self, grayInputImg, areaMin, areaMax, ceMin, ceMax, areaTextFlag, ceTextFlag):
         ret, binImg = cv.threshold(grayInputImg, 130, 255, cv.THRESH_BINARY)
-        _, contours, hierarchy = cv.findContours(binImg, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP CHAIN_APPROX_SIMPLE  CHAIN_APPROX_NONE
+        #LC：windows下调用这个
+        #_, contours, hierarchy = cv.findContours(binImg, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP CHAIN_APPROX_SIMPLE  CHAIN_APPROX_NONE
+       #LC：ubuntu下调用这个
+        contours, hierarchy = cv.findContours(binImg, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP CHAIN_APPROX_SIMPLE  CHAIN_APPROX_NONE
         outputImg = cv.cvtColor(binImg, cv.COLOR_GRAY2BGR)
         #Analysis one by one: 分别分析
         totalCnt=0
