@@ -1,0 +1,10 @@
+18:18:20 **** Incremental Build of configuration Debug for project testcallso ****
+make all 
+Building target: testcallso
+Invoking: GCC C Linker
+gcc -L. -o "testcallso"  ./src/testcallso.o   -ldrawbmpso
+Finished building target: testcallso
+ 
+
+18:18:21 Build Finished (took 441ms)
+

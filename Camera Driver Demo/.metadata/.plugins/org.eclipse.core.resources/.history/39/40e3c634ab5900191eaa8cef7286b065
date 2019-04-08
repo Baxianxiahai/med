@@ -1,0 +1,8 @@
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+#include "DVPCamera.h"
+
+
+int test(void);
+

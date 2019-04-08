@@ -1,0 +1,3664 @@
+﻿/** @mainpage  Summary
+*
+*@section Company website
+* http //www.do3think.com
+*
+*
+*@section Document release record
+*-# 2016-4-1(2.5)  Release the first version
+*-# 2016-5-19(2.6) Release the second version
+*/
+#ifndef __DVPCAMERA_H__
+#define __DVPCAMERA_H__
+
+#include <stdint.h>
+#ifdef _WIN32
+#include <windows.h>
+#endif // _WIN32
+
+#ifndef __cplusplus
+#define bool unsigned char
+#define false (0)
+#define true  (1)
+#endif
+
+#ifdef _WIN32
+#ifndef dvp2api
+#ifndef __cplusplus
+#define dvp2api extern     __declspec(dllimport)
+#else
+#define dvp2api extern "C" __declspec(dllimport)
+#endif
+#endif
+#else
+#ifndef dvp2api
+#ifndef __cplusplus
+#define dvp2api extern
+#else
+#define dvp2api extern "C"
+#endif
+#endif
+#endif // _WIN32
+
+/** @defgroup __DVP2_ENUM__ Enumerated type
+*@{
+*/
+/** @brief Image format*/
+typedef enum dvpImageFormat
+{
+    /** @brief Monochrome image */
+    FORMAT_MONO = 0,
+
+    /** @brief BGGR image */
+    FORMAT_BAYER_BG = 1,
+
+    /** @brief GBRG image */
+    FORMAT_BAYER_GB = 2,
+
+    /** @brief GRBG image */
+    FORMAT_BAYER_GR = 3,
+
+    /** @brief RGGB image */
+    FORMAT_BAYER_RG = 4,
+
+    /** @brief RGB tri-channel 24 bits image */
+    FORMAT_BGR24 = 10,
+
+    /** @brief RGBA four-channel 32 bits image */
+    FORMAT_BGR32 = 11,
+
+    /** @brief YUV411 */
+    FORMAT_YUV_411 = 20,
+
+    /** @brief YUV422 */
+    FORMAT_YUV_422 = 21,
+
+} dvpImageFormat;
+
+
+/** @brief Data stream format*/
+typedef enum dvpStreamFormat
+{
+    /** @brief 8 bits image */
+    S_RAW8 = 0,
+
+    /** @brief 10 bits image */
+    S_RAW10 = 1,
+
+    /** @brief 12 bits image */
+    S_RAW12 = 2,
+
+    /** @brief 14 bits image */
+    S_RAW14 = 3,
+
+    /** @brief 16 bits image */
+    S_RAW16 = 4,
+
+    /** @brief RGB tri-channel 24 bits image */
+    S_BGR24 = 10,
+
+    /** @brief YUV411 */
+    S_YCBCR_411 = 20,
+
+    /** @brief YUV422 */
+    S_YCBCR_422 = 21,
+
+    /** @brief YUV444 */
+    S_YCBCR_444 = 22,
+
+    /** @brief 8 bits grayscale image  */
+    S_MONO8 = 30,
+
+    /** @brief 10 bits grayscale image */
+    S_MONO10 = 31,
+
+    /** @brief 12 bits grayscale image */
+    S_MONO12 = 32,
+
+    /** @brief 14 bits grayscale image*/
+    S_MONO14 = 33,
+
+    /** @brief 16 bits grayscale image */
+    S_MONO16 = 34,
+
+} dvpStreamFormat;
+
+
+/** @brief Image data bit wide */
+typedef enum dvpBits
+{
+    /** @brief 8 bits data */
+    BITS_8 = 0,
+
+    /** @brief 10 bits data */
+    BITS_10 = 1,
+
+    /** @brief 12 bits data */
+    BITS_12 = 2,
+
+    /** @brief 14 bits data */
+    BITS_14 = 3,
+
+    /** @brief 16 bits data */
+    BITS_16 = 4,
+
+} dvpBits;
+
+
+/** @brief The mode of automatic exposure */
+typedef enum dvpAeMode
+{
+    /** @brief The automatic exposure and the automatic gain are opened, priority to open the automatic exposure */
+    AE_MODE_AE_AG = 0,
+
+    /** @brief The automatic exposure and the automatic gain are opened, priority to open the automatic gain  */
+    AE_MODE_AG_AE = 1,
+
+    /** @brief Only to open  the automatic exposure */
+    AE_MODE_AE_ONLY = 2,
+
+    /** @brief Only to open the automatic gain */
+    AE_MODE_AG_ONLY = 3,
+
+} dvpAeMode;
+
+
+/** @brief The operation of automatic exposure */
+typedef enum dvpAeOperation
+{
+    /** @brief The operation of automatic exposure is closed */
+    AE_OP_OFF = 0,
+
+    /** @brief The operation of automatic exposure is executed one time */
+    AE_OP_ONCE = 1,
+
+    /** @brief The operation of automatic exposure is executed continuously */
+    AE_OP_CONTINUOUS = 2,
+
+} dvpAeOperation;
+
+
+/** @brief The operation of automatic white balance */
+typedef enum dvpAwbOperation
+{
+    /** @brief The operation of automatic white balance is closed */
+    AWB_OP_OFF = 0,
+
+    /** @brief The operation of automatic white balance is executed one time */
+    AWB_OP_ONCE = 1,
+
+    /** @brief The operation of automatic white balance is executed continuously */
+    AWB_OP_CONTINUOUS = 2,
+
+} dvpAwbOperation;
+
+
+/** @brief  Light flick */
+typedef enum dvpAntiFlick
+{
+    /** @brief Disable the function of anti-flick */
+    ANTIFLICK_DISABLE = 0,
+
+    /** @brief Eliminate 50hz flick */
+    ANTIFLICK_50HZ = 1,
+
+    /** @brief Eliminate 60hz flick */
+    ANTIFLICK_60HZ = 2,
+
+} dvpAntiFlick;
+
+
+/** @brief The type of sensor */
+typedef enum dvpSensorType
+{
+    /** @brief CMOS image sensor */
+    SENSOR_TYPE_CMOS = 0,
+
+    /** @brief CCD image sensor*/
+    SENSOR_TYPE_CCD = 1,
+
+} dvpSensorType;
+
+
+/** @brief The type of sensor pixel */
+typedef enum dvpSensorPixel
+{
+    /** @brief Monochrome  pixels */
+    SENSOR_PIXEL_MONO = 0,
+
+    /** @brief RGGB colorful pixels */
+    SENSOR_PIXEL_BAYER_RG = 1,
+
+    /** @brief GBRG colorful pixels */
+    SENSOR_PIXEL_BAYER_GB = 2,
+
+    /** @brief GRBG colorful pixels */
+    SENSOR_PIXEL_BAYER_GR = 3,
+
+    /** @brief BGGR colorful pixels */
+    SENSOR_PIXEL_BAYER_BG = 4,
+
+} dvpSensorPixel;
+
+
+/** @brief The event of the video stream callback */
+typedef enum dvpStreamEvent
+{
+    /** @brief The images have arrived  */
+    STREAM_EVENT_ARRIVED = 0,
+
+    /** @brief The images have been corrected */
+    STREAM_EVENT_CORRECTED = 1,
+
+    /** @brief The images have been processed */
+    STREAM_EVENT_PROCESSED = 2,
+
+} dvpStreamEvent;
+
+
+/** @brief The type of trigger input signal */
+typedef enum dvpTriggerInputType
+{
+    /** @brief The function of trigger input is closed */
+    TRIGGER_IN_OFF = 0,
+
+    /** @brief Negative edge trigger */
+    TRIGGER_NEG_EDGE = 1,
+
+    /** @brief Low level trigger */
+    TRIGGER_LOW_LEVEL = 2,
+
+    /** @brief Positive edge trigger */
+    TRIGGER_POS_EDGE = 3,
+
+    /** @brief High level trigger */
+    TRIGGER_HIGH_LEVEL = 4,
+
+} dvpTriggerInputType;
+
+
+/** @brief The type of strobe output signal */
+typedef enum dvpStrobeOutputType
+{
+    /** @brief The strobe output is closed */
+    STROBE_OUT_OFF = 0,
+
+    /** @brief The strobe outputs low level */
+    STROBE_OUT_LOW = 1,
+
+    /** @brief The strobe outputs high level */
+    STROBE_OUT_HIGH = 2,
+
+} dvpStrobeOutputType;
+
+
+/** @brief The driving mode of strobe signal */
+typedef enum dvpStrobeDriver
+{
+    /** @brief The strobe signal is valid in the whole frame period */
+    FRAME_DURATION = 0,
+
+    /** @brief The strobe signal is driven by the timer */
+    TIMER_LOGIC = 1,
+
+    /** @brief The strobe signal is driven by the SENSOR's strobe signal */
+    SENSOR_STROBE = 2,
+
+} dvpStrobeDriver;
+
+
+/** @brief Output mode */
+typedef enum dvpOutputIoFunction
+{
+    /** @brief Normal output */
+    OUTPUT_FUNCTION_NORMAL = 0x0000,
+
+    /** @brief Strobe output */
+    OUTPUT_FUNCTION_STROBE = 0x0001,
+
+} dvpOutputIoFunction;
+
+
+/** @brief Input mode*/
+typedef enum dvpInputIoFunction
+{
+    /** @brief Normal input */
+    INPUT_FUNCTION_NORMAL = 0x8001,
+
+    /** @brief Trigger input */
+    INPUT_FUNCTION_TRIGGER = 0x8002,
+
+} dvpInputIoFunction;
+
+
+/** @brief Output IO*/
+typedef enum dvpOutputIo
+{
+    /** @brief Output IO Port1 */
+    OUTPUT_IO_1 = 0x0001,
+
+    /** @brief Output IO Port2 */
+    OUTPUT_IO_2 = 0x0002,
+
+    /** @brief Output IO Port3 */
+    OUTPUT_IO_3 = 0x0003,
+
+    /** @brief Output IO Port4 */
+    OUTPUT_IO_4 = 0x0004,
+
+    /** @brief Output IO Port5 */
+    OUTPUT_IO_5 = 0x0005,
+
+    /** @brief Output IO Port6 */
+    OUTPUT_IO_6 = 0x0006,
+
+    /** @brief Output IO Port7 */
+    OUTPUT_IO_7 = 0x0007,
+
+    /** @brief Output IO Port8 */
+    OUTPUT_IO_8 = 0x0008,
+
+} dvpOutputIo;
+
+
+/** @brief IutputIO*/
+typedef enum dvpInputIo
+{
+    /** @brief Iutput IO Port1 */
+    INPUT_IO_1 = 0x8001,
+
+    /** @brief Iutput IO Port2 */
+    INPUT_IO_2 = 0x8002,
+
+    /** @brief Iutput IO Port3 */
+    INPUT_IO_3 = 0x8003,
+
+    /** @brief Iutput IO Port4 */
+    INPUT_IO_4 = 0x8004,
+
+    /** @brief Iutput IO Port5 */
+    INPUT_IO_5 = 0x8005,
+
+    /** @brief Iutput IO Port6 */
+    INPUT_IO_6 = 0x8006,
+
+    /** @brief Iutput IO Port7 */
+    INPUT_IO_7 = 0x8007,
+
+    /** @brief Iutput IO Port8 */
+    INPUT_IO_8 = 0x8008,
+
+} dvpInputIo;
+
+
+/** @brief The mode of opening device
+*@note support the "or" operation*/
+typedef enum dvpOpenMode
+{
+    /** @brief Open offline */
+    OPEN_OFFLINE = 0,
+
+    /** @brief Open normally */
+    OPEN_NORMAL = 1,
+
+    /** @brief Open the device by debugging.For the Gige camera,the heartbeat packets timeout that was resulted from sigle-step debugging or breakpoint can be avoided */
+    OPEN_DEBUG = 1<<3,
+} dvpOpenMode;
+
+
+/** @brief The state of video Stream */
+typedef enum dvpStreamState
+{
+    /** @brief The video stream have been stopped @see dvpStop */
+    STATE_STOPED = 0,
+
+    /** @brief The video stream was ready /paused @see dvpPause */
+    STATE_PAUSED = 1,
+
+    /** @brief The video stream have been started @see dvpStart */
+    STATE_STARTED = 2,
+
+} dvpStreamState;
+
+
+/** @brief The status code of all standard interfaces */
+typedef enum dvpStatus
+{
+    /** @brief The operation is ignored,any operation is not required */
+    DVP_STATUS_IGNORED = 7,
+
+    /** @brief Other data and operations are required */
+    DVP_STATUS_NEED_OTHER = 6,
+
+    /** @brief At present only partial operations are implemented, the next staged operations still are required*/
+    DVP_STATUS_NEXT_STAGE = 5,
+
+    /** @brief The camera is busying,the operation can not be implemented now */
+    DVP_STATUS_BUSY = 4,
+
+    /** @brief The operation need to wait for a while and try again  */
+    DVP_STATUS_WAIT = 3,
+
+    /** @brief The camera is running, the operation has been executed */
+    DVP_STATUS_IN_PROCESS = 2,
+
+    /** @brief The operation is successful */
+    DVP_STATUS_OK = 1,
+
+    /** @brief The operation is failed*/
+    DVP_STATUS_FAILED = 0,
+
+    /** @brief Unknown error */
+    DVP_STATUS_UNKNOW = -1,
+
+    /** @brief The operation is not supported  */
+    DVP_STATUS_NOT_SUPPORTED = -2,
+
+    /** @brief The initialization is uncompleted */
+    DVP_STATUS_NOT_INITIALIZED = -3,
+
+    /** @brief Invalid Parameter */
+    DVP_STATUS_PARAMETER_INVALID = -4,
+
+    /** @brief The parameter is out of the bound */
+    DVP_STATUS_PARAMETER_OUT_OF_BOUND = -5,
+
+    /** @brief The feature is disable */
+    DVP_STATUS_UNENABLE = -6,
+
+    /** @brief No device has been connected */
+    DVP_STATUS_UNCONNECTED = -7,
+
+    /** @brief The function is Invalid */
+    DVP_STATUS_NOT_VALID = -8,
+
+    /** @brief The device is unopened  */
+    DVP_STATUS_UNPLAY = -9,
+
+    /** @brief The video stream is not started */
+    DVP_STATUS_NOT_STARTED = -10,
+
+    /** @brief The video stream is not stopped*/
+    DVP_STATUS_NOT_STOPPED = -11,
+
+    /** @brief The operation is not ready */
+    DVP_STATUS_NOT_READY = -12,
+
+    /** @brief The handle （empty handle or wild handle）is invalid, it usually is resulted from that the camera has not been opened */
+    DVP_STATUS_INVALID_HANDLE = -13,
+
+    /** @brief The description is wrong */
+    DVP_STATUS_DESCR_FAULT = -20,
+
+    /** @brief The name is wrong */
+    DVP_STATUS_NAME_FAULT = -21,
+
+    /** @brief The Assignment is wrong */
+    DVP_STATUS_VALUE_FAULT = -22,
+
+    /** @brief The operation is Limited  */
+    DVP_STATUS_LIMITED = -28,
+
+    /** @brief The operation is invalid */
+    DVP_STATUS_FUNCTION_INVALID = -29,
+
+    /** @brief The operation is in automatic mode,so the manual mode is invalid */
+    DVP_STATUS_IN_AUTO = -30,
+
+    /** @brief The operation is refused */
+    DVP_STATUS_DENIED = -31,
+
+    /** @brief The address is offset or not aligned */
+    DVP_STATUS_BAD_ALIGNMENT = -40,
+
+    /** @brief The address is invalid */
+    DVP_STATUS_ADDRESS_INVALID = -41,
+
+    /** @brief The size of data block is invalid  */
+    DVP_STATUS_SIZE_INVALID = -42,
+
+    /** @brief The data overload */
+    DVP_STATUS_OVER_LOAD = -43,
+
+    /** @brief The data lack */
+    DVP_STATUS_UNDER_LOAD = -44,
+
+    /** @brief The operation of checking and verifying is failed*/
+    DVP_STATUS_CHECKED_FAILED = -50,
+
+    /** @brief The operation is unusable */
+    DVP_STATUS_UNUSABLE = -51,
+
+    /** @brief The business ID is invalid or mismatched */
+    DVP_STATUS_BID_INVALID = -52,
+
+    /** @brief Time out */
+    DVP_STATUS_TIME_OUT = -1000,
+
+    /** @brief Hardware IO error */
+    DVP_STATUS_IO_ERROR = -1001,
+
+    /** @brief The communication error */
+    DVP_STATUS_COMM_ERROR = -1002,
+
+    /** @brief Bus error */
+    DVP_STATUS_BUS_ERROR = -1003,
+
+    /** @brief Format error */
+    DVP_STATUS_FORMAT_INVALID = -1004,
+
+    /** @brief The content is invalid */
+    DVP_STATUS_CONTENT_INVALID = -1005,
+
+    /** @brief I2C bus error*/
+    DVP_STATUS_I2C_FAULT = -1010,
+
+    /** @brief The I2C signal of waiting for response time out */
+    DVP_STATUS_I2C_ACK_TIMEOUT = -1011,
+
+    /** @brief The I2C signal of waiting for the bus action time out , such as the SCL is set as low level by the peripheral device */
+    DVP_STATUS_I2C_BUS_TIMEOUT = -1012,
+
+    /** @brief SPI bus error */
+    DVP_STATUS_SPI_FAULT = -1020,
+
+    /** @brief UART  bus error */
+    DVP_STATUS_UART_FAULT = -1030,
+
+    /** @brief GPIO bus error */
+    DVP_STATUS_GPIO_FAULT = -1040,
+
+    /** @brief USB bus error */
+    DVP_STATUS_USB_FAULT = -1050,
+
+    /** @brief PCI bus error */
+    DVP_STATUS_PCI_FAULT = -1060,
+
+    /** @brief Physical layer error*/
+    DVP_STATUS_PHY_FAULT = -1070,
+
+    /** @brief Link layer error */
+    DVP_STATUS_LINK_FAULT = -1080,
+
+    /** @brief Transport layer error*/
+    DVP_STATUS_TRANS_FAULT = -1090,
+
+    /** @brief No device has been found */
+    DVP_STATUS_NO_DEVICE_FOUND = -1100,
+
+    /** @brief No logical device has been found */
+    DVP_STATUS_NO_LOGIC_DEVICE_FOUND = -1101,
+
+    /** @brief The device has been opened */
+    DVP_STATUS_DEVICE_IS_OPENED = -1102,
+
+    /** @brief The device has been closed */
+    DVP_STATUS_DEVICE_IS_CLOSED = -1103,
+
+    /** @brief The device has been disconnected */
+    DVP_STATUS_DEVICE_IS_DISCONNECTED = -1104,
+
+    /** @brief The device has been opened by the other host*/
+    DVP_STATUS_DEVICE_IS_OPENED_BY_ANOTHER = -1105,
+
+    /** @brief The device has been started */
+    DVP_STATUS_DEVICE_IS_STARTED = -1106,
+
+    /** @brief The device has been stopped or opened by the other host  */
+    DVP_STATUS_DEVICE_IS_STOPPED = -1107,
+
+    /** @brief The system RAM is insufficient */
+    DVP_STATUS_INSUFFICIENT_MEMORY = -1200,
+
+    /** @brief The error code occurs in reading or writing the memory; Unable to read or write the memory normally */
+    DVP_STATUS_MEMORY_FAULT = -1201,
+
+    /** @brief The opertion of writing is protected, so unable to write */
+    DVP_STATUS_WRITE_PROTECTED = -1202,
+
+    /** @brief Create file unsuccessfully */
+    DVP_STATUS_FILE_CREATE_FAILED = -1300,
+
+    /** @brief The file format is invalid */
+    DVP_STATUS_FILE_INVALID = -1301,
+
+    /** @brief Read data from the file unsuccessfully */
+    DVP_STATUS_FILE_READ_FAILED = -1302,
+
+    /** @brief Write data into the file unsuccessfully */
+    DVP_STATUS_FILE_WRITE_FAILED = -1303,
+
+    /** @brief Open the file unsuccessfully */
+    DVP_STATUS_FILE_OPEN_FAILED = -1304,
+
+    /** @brief Read data verification unsuccessfully */
+    DVP_STATUS_FILE_CHECKSUM_FAILED = -1305,
+
+    /** @brief The data is not acquired in the specified time,so data acquisition is failed */
+    DVP_STATUS_GRAB_FAILED = -1600,
+
+    /** @brief The data is lost and incomplete */
+    DVP_STATUS_LOST_DATA = -1601,
+
+    /** @brief The frame terminator is not received */
+    DVP_STATUS_EOF_ERROR = -1602,
+
+    /** @brief The function of data acquisition has been opened */
+    DVP_STATUS_GRAB_IS_OPENED = -1603,
+
+    /** @brief The function of data acquisition has been turned off */
+    DVP_STATUS_GRAB_IS_CLOSED = -1604,
+
+    /** @brief The operation of data acquisition has been started */
+    DVP_STATUS_GRAB_IS_STARTED = -1605,
+
+    /** @brief The operation of data acquisition has been stopped*/
+    DVP_STATUS_GRAB_IS_STOPPED = -1606,
+
+    /** @brief The operation of data acquisition is being restarted */
+    DVP_STATUS_GRAB_IS_RESTARTING = -1607,
+
+    /** @brief Set the parameters of ROI invalidly */
+    DVP_STATUS_ROI_PARAM_INVALID = -1610,
+
+    /** @brief The function of ROI is not supported  */
+    DVP_STATUS_ROI_NOT_SUPPORTED = -1611,
+} dvpStatus;
+
+
+/** @} End of __DVP2_ENUM__ */
+/** @brief 64 bytes string */
+typedef char dvpString64[64];
+
+/** @brief 128 bytes string */
+typedef char dvpString128[128];
+
+/** @brief 32 bytes boolean array  */
+typedef bool dvpBool32[32];
+
+/** @brief 32 bits signed integer  */
+typedef uint32_t dvpInt32;
+
+/** @brief 32 bits unsigned integer */
+typedef uint32_t dvpUint32;
+
+/** @brief 64 bits signed integer */
+typedef int64_t dvpInt64;
+
+/** @brief 64 bits unsigned integer */
+typedef uint64_t dvpUint64;
+
+/** @brief Simple matrix contains four rows of three columns */
+typedef float dvpMatrix[4][3];
+
+/** @brief Camera handle
+*@see dvpOpen
+*@see dvpOpenByName */
+typedef dvpUint32 dvpHandle;
+
+/** @brief Video encoder handle
+*@see dvpStartVideoRecord */
+typedef dvpUint32 dvpRecordHandle;
+
+/** @brief Color matrix */
+typedef struct dvpColorMatrix
+{
+    /** @brief matrix */
+    dvpMatrix matrix;
+
+    /** @brief Reserved bytes */
+    dvpInt32 reserved[32];
+} dvpColorMatrix;
+
+/** @brief Camera information
+*@see dvpGetCameraInfo
+*@see dvpEnum */
+typedef struct dvpCameraInfo
+{
+    /** @brief Design Vendor */
+    dvpString64 Vendor;
+    /** @brief Manufacturer*/
+    dvpString64 Manufacturer;
+
+    /** @brief Model */
+    dvpString64 Model;
+
+    /** @brief Series */
+    dvpString64 Family;
+
+    /** @brief Connection name */
+    dvpString64 LinkName;
+
+    /** @brief Sensor description  */
+    dvpString64 SensorInfo;
+
+    /** @brief Hardware version */
+    dvpString64 HardwareVersion;
+
+    /** @brief Firmware version  */
+    dvpString64 FirmwareVersion;
+
+    /** @brief Kernel driver version  */
+    dvpString64 KernelVersion;
+
+    /** @brief Device driver version  */
+    dvpString64 DscamVersion;
+
+    /** @brief Friendly device name  */
+    dvpString64 FriendlyName;
+
+    /** @brief Port description */
+    dvpString64 PortInfo;
+
+    /** @brief Serial number  */
+    dvpString64 SerialNumber;
+
+    /** @brief Camera description */
+    dvpString128 CameraInfo;
+
+    /** @brief User id */
+    dvpString128 UserID;
+
+    /** @brief Reserved bytes  */
+    char reserved[128];
+} dvpCameraInfo;
+
+
+/** @brief Region description */
+typedef struct dvpRegionDescr
+{
+    /** @brief Minimum width */
+    dvpInt32 iMinW;
+
+    /** @brief Minimum height */
+    dvpInt32 iMinH;
+
+    /** @brief Maximum width */
+    dvpInt32 iMaxW;
+
+    /** @brief Maximum height */
+    dvpInt32 iMaxH;
+
+    /** @brief The width of the step  */
+    dvpInt32 iStepW;
+
+    /** @brief The height of the step  */
+    dvpInt32 iStepH;
+
+    /** @brief Reserved bytes  */
+    dvpInt32 reserved[32];
+} dvpRegionDescr;
+
+
+/** @brief Region of interest that start at the top left corner 
+*@see dvpGetRoi
+*@see dvpGetAwbRoi
+*@see dvpGetAeRoi 
+*@warning Data member usually is the even number, detials refer to the device manual */
+typedef struct dvpRegion
+{
+    /** @brief Horizontal initial position */
+    dvpInt32 X;
+
+    /** @brief Vertical initial position*/
+    dvpInt32 Y;
+
+    /** @brief Width (greater than 0) */
+    dvpInt32 W;
+
+    /** @brief Height (greater than 0) */
+    dvpInt32 H;
+
+    /** @brief Reserved bytes  */
+    dvpInt32 reserved[32];
+} dvpRegion;
+
+
+/** @brief Frame information 
+*@see dvpGetFrame */
+typedef struct dvpFrame
+{
+    /** @brief Format */
+    enum dvpImageFormat format;
+
+    /** @brief Bit wide */
+    enum dvpBits bits;
+
+    /** @brief Bytes */
+    dvpUint32 uBytes;
+
+    /** @brief Width */
+    dvpInt32 iWidth;
+
+    /** @brief Height */
+    dvpInt32 iHeight;
+
+    /** @brief Frame number  */
+    dvpUint64 uFrameID;
+
+    /** @brief Timestamp  */
+    dvpUint64 uTimestamp;
+
+    /** @brief Exposure time (us) */
+    double fExposure;
+
+    /** @brief Analog gain  */
+    float fAGain;
+
+    /** @brief Reserved bytes*/
+    dvpInt32 reserved[32];
+} dvpFrame;
+
+
+/** @brief The description of the integer data  */
+typedef struct dvpIntDescr
+{
+    /** @brief The step  */
+    dvpInt32 iStep;
+
+    /** @brief The minimum */
+    dvpInt32 iMin;
+
+    /** @brief The maximum */
+    dvpInt32 iMax;
+
+    /** @brief The default value  */
+    dvpInt32 iDefault;
+
+    /** @brief Reserved bytes  */
+    dvpInt32 reserved[32];
+} dvpIntDescr;
+
+
+/** @brief The description of the floating point data   */
+typedef struct dvpFloatDescr
+{
+    /** @brief The step */
+    float fStep;
+
+    /** @brief The minimum */
+    float fMin;
+
+    /** @brief The maximum */
+    float fMax;
+
+    /** @brief The default value  */
+    float fDefault;
+
+    /** @brief Reserved bytes  */
+    dvpInt32 reserved[32];
+} dvpFloatDescr;
+
+
+/** @brief The description of double data */
+typedef struct dvpDoubleDescr
+{
+    /** @brief The step  */
+    double fStep;
+
+    /** @brief The minimum */
+    double fMin;
+
+    /** @brief The maximum */
+    double fMax;
+
+    /** @brief The default value */
+    double fDefault;
+
+    /** @brief Reserved bytes  */
+    dvpInt32 reserved[32];
+} dvpDoubleDescr;
+
+
+/** @brief The description of 64 bits unsigned integer data  */
+typedef struct dvpUint64Descr
+{
+    /** @brief The step */
+    dvpUint64 uStep;
+
+    /** @brief The minimum  */
+    dvpUint64 uMin;
+
+    /** @brief The maximum */
+    dvpUint64 uMax;
+
+    /** @brief The default value */
+    dvpUint64 uDefault;
+
+    /** @brief Reserved bytes   */
+    dvpInt32 reserved[32];
+} dvpUint64Descr;
+
+
+/** @brief The description of options  */
+typedef struct dvpSelectionDescr
+{
+    /** @brief The default index */
+    dvpUint32 uDefault;
+
+    /** @brief The number of index  */
+    dvpUint32 uCount;
+
+    /** @brief Whether the video stream is stopped  */
+    bool bNeedStop;
+
+    /** @brief Reserved bytes */
+    dvpInt32 reserved[32];
+} dvpSelectionDescr;
+
+
+/** @brief Options */
+typedef struct dvpSelection
+{
+    /** @brief The description of string  */
+    dvpString64 string;
+
+    /** @brief The Index  */
+    dvpInt32 iIndex;
+
+    /** @brief Reserved bytes  */
+    dvpInt32 reserved[32];
+} dvpSelection;
+
+
+/** @brief ROI mode 
+*@see dvpGetTriggerModeSelDetail */
+typedef struct dvpResolutionMode
+{
+    /** @brief The options of ROI mode */
+    struct dvpSelection selection;
+
+    /** @brief The region */
+    struct dvpRegionDescr region;
+
+    /** @brief Reserved bytes  */
+    dvpInt32 reserved[32];
+} dvpResolutionMode;
+
+
+/** @brief Quick roi
+*@see dvpGetQuickRoiSelDetail */
+typedef struct dvpQuickRoi
+{
+    /** @brief The options  */
+    struct dvpSelection selection;
+
+    /** @brief The region of interest*/
+    struct dvpRegion roi;
+
+    /** @brief The resolution mode  */
+    struct dvpResolutionMode mode;
+
+    /** @brief Reserved bytes */
+    dvpInt32 reserved[32];
+} dvpQuickRoi;
+
+
+/** @brief Frame count 
+@see dvpGetFrameCount */
+typedef struct dvpFrameCount
+{
+    /** @brief Total frames */
+    dvpUint32 uFrameCount;
+
+    /** @brief The frames that are lost or read no time */
+    dvpUint32 uFrameDrop;
+
+    /** @brief The frames that are discarded after acquiring */
+    dvpUint32 uFrameIgnore;
+
+    /** @brief False frame count */
+    dvpUint32 uFrameError;
+
+    /** @brief The valid frames that are acquired  */
+    dvpUint32 uFrameOK;
+
+    /** @brief The valid frames that are submitted or outputted */
+    dvpUint32 uFrameOut;
+
+    /** @brief The retransmitted frames*/
+    dvpUint32 uFrameResend;
+
+    /** @brief The total frames that are processed */
+    dvpUint32 uFrameProc;
+
+    /** @brief The frame rate of acquiring images  */
+    float fFrameRate;
+
+    /** @brief The frame rate of processing images  */
+    float fProcRate;
+
+    /** @brief Reserved bytes   */
+    dvpInt32 reserved[32];
+} dvpFrameCount;
+
+
+/** @brief User IO information 
+@see dvpGetUserIoInfo */
+typedef struct dvpUserIoInfo
+{
+    /** @brief Valid input IO */
+    dvpBool32 inputValid;
+
+    /** @brief Valid output IO */
+    dvpBool32 outputValid;
+
+    /** @brief Reserved bytes   */
+    dvpInt32 reserved[32];
+} dvpUserIoInfo;
+
+
+/** @brief Sensor(Image sensor) information
+@see dvpGetSensorInfo */
+typedef struct dvpSensorInfo
+{
+    /** @brief The description of string  */
+    dvpString64 descr;
+
+    /** @brief The type of sensor */
+    enum dvpSensorType sensor;
+
+    /** @brief The type of original pixel */
+    enum dvpSensorPixel pixel;
+
+    /** @brief The region */
+    struct dvpRegionDescr region;
+
+    /** @brief Reserved bytes   */
+    dvpInt32 reserved[32];
+} dvpSensorInfo;
+
+
+
+/** @defgroup __DVP2_API__ API
+*@{
+*/
+/**
+*@brief User may get the camera information by invoking this function. 
+*@param[in] handle  Specifies the camera handle. 
+*@param[out] pCameraInfo  The pointer to a dvpCameraInfo structure that can be used for saving the camera information.
+*@return Status code  DVP_STATUS_OK if the call succeeds.			
+*@ingroup __DVP_INFORMATION__
+*/
+dvp2api dvpStatus dvpGetCameraInfo(dvpHandle handle, dvpCameraInfo *pCameraInfo);
+
+
+/**
+*@brief User may get the sensor information by invoking this function. 
+*@param[in] handle  Specifies the camera handle. 
+*@param[out] pSensorInfo  The pointer to a dvpSensorInfo structure that can be used for saving the sensor information. 
+*@return  Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_INFORMATION__
+*/
+dvp2api dvpStatus dvpGetSensorInfo(dvpHandle handle, dvpSensorInfo *pSensorInfo);
+
+
+/**
+*@brief User may get the frame count by invoking this function. 
+*@param[in] handle  Specifies the camera handle. 
+*@param[out] pFrameCount  The pointer to a dvpFrameCount structure that can be used for saving the frame count.  
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_INFORMATION__
+*/
+dvp2api dvpStatus dvpGetFrameCount(dvpHandle handle, dvpFrameCount *pFrameCount);
+
+
+/**
+*@brief User may get the valid sign of users' IO by invoking this function. 
+*@param[in] handle  Specifies the camera handle. 
+*@param[out] pUserIoInfo  The pointer to a dvpUserIoInfo structure that can be used for saving the valid sign of users' IO.   
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_INFORMATION__
+*/
+dvp2api dvpStatus dvpGetUserIoInfo(dvpHandle handle, dvpUserIoInfo *pUserIoInfo);
+
+
+/**
+*@brief User may send the software trigger signal by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*/
+dvp2api dvpStatus dvpTriggerFire(dvpHandle handle);
+
+
+/**
+*@brief User may create colorful pixels information by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*/
+dvp2api dvpStatus dvpCreateDefectFixInfo(dvpHandle handle);
+
+
+/**
+*@brief User may create a flat field information by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*/
+dvp2api dvpStatus dvpCreateFlatFieldInfo(dvpHandle handle);
+
+
+/**
+*@brief  User may restart the Video Stream by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*/
+dvp2api dvpStatus dvpRestart(dvpHandle handle);
+
+
+/**
+*@brief User may get the descriptive information of the red digital gain by invoking this function.  
+*@param[in] handle  Specifies the camera handle. 
+*@param[out] pRGainDescr  The pointer to a dvpFloatDescr structure that can be used for saving the descriptive information of the red digital gain. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetRgbGainState
+*@see dvpGetRgbGainState
+*@see dvpSetRgbGain
+*@see dvpGetRgbGain
+*/
+dvp2api dvpStatus dvpGetRGainDescr(dvpHandle handle, dvpFloatDescr *pRGainDescr);
+
+
+/**
+*@brief User may get the descriptive information of the green digital gain by invoking this function.
+*@param[in] handle 	Specifies the camera handle.
+*@param[out] pGGainDescr  The pointer to a dvpFloatDescr structure that can be used for saving the descriptive information of the green digital gain. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetRgbGainState
+*@see dvpGetRgbGainState
+*@see dvpSetRgbGain
+*@see dvpGetRgbGain
+*/
+dvp2api dvpStatus dvpGetGGainDescr(dvpHandle handle, dvpFloatDescr *pGGainDescr);
+
+
+/**
+*@brief User may get the descriptive information of the blue digital gain by invoking this function. 
+*@param[in] handle  Specifies the camera handle. 
+*@param[out] pBGainDescr  The pointer to a dvpFloatDescr structure that can be used for saving the descriptive information of the blue digital gain . 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetRgbGainState
+*@see dvpGetRgbGainState
+*@see dvpSetRgbGain
+*@see dvpGetRgbGain
+*/
+dvp2api dvpStatus dvpGetBGainDescr(dvpHandle handle, dvpFloatDescr *pBGainDescr);
+
+
+/**
+*@brief User may get the gamma value by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pGamma  The pointer to a dvpInt32 variable that can be used for saving the gamma value.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetGammaState
+*@see dvpGetGammaState
+*@see dvpGetGammaDescr
+*@see dvpSetGamma
+*/
+dvp2api dvpStatus dvpGetGamma(dvpHandle handle, dvpInt32 *pGamma);
+
+
+/**
+*@brief  User may set the gamma value by invoking this function.  
+*@param[in] handle  Specifies the camera handle. 
+*@param[in] Gamma  Specifies the gamma value to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetGammaState
+*@see dvpGetGammaState
+*@see dvpGetGammaDescr
+*@see dvpGetGamma
+*/
+dvp2api dvpStatus dvpSetGamma(dvpHandle handle, dvpInt32 Gamma);
+
+
+/**
+*@brief User may get the descriptive information of the Gamma by invoking this function.  
+*@param[in] handle  Specifies the camera handle. 
+*@param[out] pGammaDescr  The pointer to a dvpIntDescr structure that can be used for saving the descriptive information of the Gamma.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetGammaState
+*@see dvpGetGammaState
+*@see dvpSetGamma
+*@see dvpGetGamma
+*/
+dvp2api dvpStatus dvpGetGammaDescr(dvpHandle handle, dvpIntDescr *pGammaDescr);
+
+
+/**
+*@brief User may get the enabled status of the Gamma by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pGammaState  The pointer to a Boolean variable that can be used for saving the enabled status of the Gamma. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetGamma
+*@see dvpGetGamma
+*@see dvpGetGammaDescr
+*@see dvpSetGammaState
+*/
+dvp2api dvpStatus dvpGetGammaState(dvpHandle handle, bool *pGammaState);
+
+
+/**
+*@brief User may set the enabled status of the Gamma by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] GammaState  Specifies the enabled status of the Gamma to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetGamma
+*@see dvpGetGamma
+*@see dvpGetGammaDescr
+*@see dvpGetGammaState
+*/
+dvp2api dvpStatus dvpSetGammaState(dvpHandle handle, bool GammaState);
+
+
+/**
+*@brief User may get the contrast value by invoking this function.  
+*@param[in] handle  Specifies the camera handle. 
+*@param[out] pContrast  The pointer to a dvpInt32 variable that can be used for saving the contrast value. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetContrastState
+*@see dvpGetContrastState
+*@see dvpGetContrastDescr
+*@see dvpSetContrast
+*/
+dvp2api dvpStatus dvpGetContrast(dvpHandle handle, dvpInt32 *pContrast);
+
+
+/**
+*@brief User may set the contrast value by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[in] Contrast  Specifies the contrast value to be set. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetContrastState
+*@see dvpGetContrastState
+*@see dvpGetContrastDescr
+*@see dvpGetContrast
+*/
+dvp2api dvpStatus dvpSetContrast(dvpHandle handle, dvpInt32 Contrast);
+
+
+/**
+*@brief User may get the descriptive information of the Contrast by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pContrastDescr  The pointer to a dvpIntDescr structure that can be used for saving the descriptive information of the Contrast.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetContrastState
+*@see dvpGetContrastState
+*@see dvpSetContrast
+*@see dvpGetContrast
+*/
+dvp2api dvpStatus dvpGetContrastDescr(dvpHandle handle, dvpIntDescr *pContrastDescr);
+
+
+/**
+*@brief User may get the enabled status of the Contrast by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pContrastState  The pointer to a boolean variable that can be used for saving the enabled status of the Contrast. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetContrast
+*@see dvpGetContrast
+*@see dvpGetContrastDescr
+*@see dvpSetContrastState
+*/
+dvp2api dvpStatus dvpGetContrastState(dvpHandle handle, bool *pContrastState);
+
+
+/**
+*@brief User may set the enabled status of the Contrast by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] ContrastState  Specifies the enabled status of Contrast to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetContrast
+*@see dvpGetContrast
+*@see dvpGetContrastDescr
+*@see dvpGetContrastState
+*/
+dvp2api dvpStatus dvpSetContrastState(dvpHandle handle, bool ContrastState);
+
+
+/**
+*@brief User may get the ROI value (relative to the whole sensor region) by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pRoi  The pointer to a dvpRegion structure that can be used for saving the ROI value (relative to the whole sensor region).
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_SIZE__
+*@see dvpSetRoiState
+*@see dvpGetRoiState
+*@see dvpGetRoiDescr
+*@see dvpSetRoi
+*/
+dvp2api dvpStatus dvpGetRoi(dvpHandle handle, dvpRegion *pRoi);
+
+
+/**
+*@brief User may set the ROI value (relative to the whole sensor region) by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] Roi  Specifies the ROI value (relative to the whole sensor region) to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_SIZE__
+*@see dvpSetRoiState
+*@see dvpGetRoiState
+*@see dvpGetRoiDescr
+*@see dvpGetRoi
+*/
+dvp2api dvpStatus dvpSetRoi(dvpHandle handle, dvpRegion Roi);
+
+
+/**
+*@brief User may get the descriptive information of the ROI (relative to the whole sensor region) by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pRoiDescr  The pointer to a dvpRegionDescr structure that can be used for saving the descriptive information of the ROI (relative to the whole sensor region).
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_SIZE__
+*@see dvpSetRoiState
+*@see dvpGetRoiState
+*@see dvpSetRoi
+*@see dvpGetRoi
+*/
+dvp2api dvpStatus dvpGetRoiDescr(dvpHandle handle, dvpRegionDescr *pRoiDescr);
+
+
+/**
+*@brief User may get the enabled status of the ROI (relative to the whole sensor region) by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pRoiState  The pointer to a boolean variable that can be used for saving the enabled status of the ROI (relative to the whole sensor region). 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_SIZE__
+*@see dvpSetRoi
+*@see dvpGetRoi
+*@see dvpGetRoiDescr
+*@see dvpSetRoiState
+*/
+dvp2api dvpStatus dvpGetRoiState(dvpHandle handle, bool *pRoiState);
+
+
+/**
+*@brief User may set the enabled status of the ROI (relative to the whole sensor region) by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] RoiState  Specifies the enabled status of the ROI (relative to the whole sensor region) to be set. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_SIZE__
+*@see dvpSetRoi
+*@see dvpGetRoi
+*@see dvpGetRoiDescr
+*@see dvpGetRoiState
+*/
+dvp2api dvpStatus dvpSetRoiState(dvpHandle handle, bool RoiState);
+
+
+/**
+*@brief User may get the color temperature value by invoking this function.(Unit K)
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pColorTemperature  The pointer to a dvpInt32 variable that can be used for saving the color temperature value.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetColorTemperatureState
+*@see dvpGetColorTemperatureState
+*@see dvpGetColorTemperatureDescr
+*@see dvpSetColorTemperature
+*/
+dvp2api dvpStatus dvpGetColorTemperature(dvpHandle handle, dvpInt32 *pColorTemperature);
+
+
+/**
+*@brief User may set the color temperature value by invoking this function.(Unit K)
+*@param[in] handle  Specifies the camera handle.
+*@param[in] ColorTemperature  Specifies the color temperature value to be set.(Unit K)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetColorTemperatureState
+*@see dvpGetColorTemperatureState
+*@see dvpGetColorTemperatureDescr
+*@see dvpGetColorTemperature
+*/
+dvp2api dvpStatus dvpSetColorTemperature(dvpHandle handle, dvpInt32 ColorTemperature);
+
+
+/**
+*@brief User may get the descriptive information of the Color Temperature by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pColorTemperatureDescr  The pointer to a dvpIntDescr structure that can be used for saving the descriptive information of the Color Temperature.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetColorTemperatureState
+*@see dvpGetColorTemperatureState
+*@see dvpSetColorTemperature
+*@see dvpGetColorTemperature
+*/
+dvp2api dvpStatus dvpGetColorTemperatureDescr(dvpHandle handle, dvpIntDescr *pColorTemperatureDescr);
+
+
+/**
+*@brief User may get the enabled status of the Color Temperature by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pColorTemperatureState  The pointer to a Boolean variable that can be used for saving the enabled status of  the Color Temperature.  
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetColorTemperature
+*@see dvpGetColorTemperature
+*@see dvpGetColorTemperatureDescr
+*@see dvpSetColorTemperatureState
+*/
+dvp2api dvpStatus dvpGetColorTemperatureState(dvpHandle handle, bool *pColorTemperatureState);
+
+
+/**
+*@brief User may set the enabled status of the Color Temperature by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] ColorTemperatureState  Specifies the enabled status of the Color Temperature to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetColorTemperature
+*@see dvpGetColorTemperature
+*@see dvpGetColorTemperatureDescr
+*@see dvpGetColorTemperatureState
+*/
+dvp2api dvpStatus dvpSetColorTemperatureState(dvpHandle handle, bool ColorTemperatureState);
+
+
+/**
+*@brief User may get the sharpness value by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pSharpness  The pointer to a dvpInt32 variable that can be used for saving the sharpness value.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetSharpnessState
+*@see dvpGetSharpnessState
+*@see dvpGetSharpnessDescr
+*@see dvpSetSharpness
+*/
+dvp2api dvpStatus dvpGetSharpness(dvpHandle handle, dvpInt32 *pSharpness);
+
+
+/**
+*@brief User may set the sharpness value by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[in] Sharpness  Specifies the sharpness value to be set. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetSharpnessState
+*@see dvpGetSharpnessState
+*@see dvpGetSharpnessDescr
+*@see dvpGetSharpness
+*/
+dvp2api dvpStatus dvpSetSharpness(dvpHandle handle, dvpInt32 Sharpness);
+
+
+/**
+*@brief User may get the descriptive information of the Sharpness by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pSharpnessDescr  The pointer to a dvpFloatDescr structure that can be used for saving the descriptive information of the Sharpness. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetSharpnessState
+*@see dvpGetSharpnessState
+*@see dvpSetSharpness
+*@see dvpGetSharpness
+*/
+dvp2api dvpStatus dvpGetSharpnessDescr(dvpHandle handle, dvpIntDescr *pSharpnessDescr);
+
+
+/**
+*@brief User may get the enabled status of the Sharpness by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pSharpnessState  The pointer to a Boolean variable that can be used for saving the enabled status of the Sharpness.   
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__ 
+*@see dvpSetSharpness
+*@see dvpGetSharpness
+*@see dvpGetSharpnessDescr
+*@see dvpSetSharpnessState
+*/
+dvp2api dvpStatus dvpGetSharpnessState(dvpHandle handle, bool *pSharpnessState);
+
+
+/**
+*@brief User may set the enabled status of the Sharpness by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] SharpnessState  Specifies the enabled status of the Sharpness to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetSharpness
+*@see dvpGetSharpness
+*@see dvpGetSharpnessDescr
+*@see dvpGetSharpnessState
+*/
+dvp2api dvpStatus dvpSetSharpnessState(dvpHandle handle, bool SharpnessState);
+
+
+/**
+*@brief User may get the saturation value by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pSaturation  The pointer to a dvpInt32 variable that can be used for saving the saturation value.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetSaturationState
+*@see dvpGetSaturationState
+*@see dvpGetSaturationDescr
+*@see dvpSetSaturation
+*/
+dvp2api dvpStatus dvpGetSaturation(dvpHandle handle, dvpInt32 *pSaturation);
+
+
+/**
+*@brief User may set the saturation value by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] Saturation  Specifies the saturation value to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetSaturationState
+*@see dvpGetSaturationState
+*@see dvpGetSaturationDescr
+*@see dvpGetSaturation
+*/
+dvp2api dvpStatus dvpSetSaturation(dvpHandle handle, dvpInt32 Saturation);
+
+
+/**
+*@brief User may get the descriptive information of the Saturation by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pSaturationDescr  The pointer to a dvpIntDescr structure that can be used for saving the descriptive information of the Saturation.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetSaturationState
+*@see dvpGetSaturationState
+*@see dvpSetSaturation
+*@see dvpGetSaturation
+*/
+dvp2api dvpStatus dvpGetSaturationDescr(dvpHandle handle, dvpIntDescr *pSaturationDescr);
+
+
+/**
+*@brief User may get the enabled status of the Saturation by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pSaturationState  The pointer to a boolean variable that can be used for saving the enabled status of the Saturation.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetSaturation
+*@see dvpGetSaturation
+*@see dvpGetSaturationDescr
+*@see dvpSetSaturationState
+*/
+dvp2api dvpStatus dvpGetSaturationState(dvpHandle handle, bool *pSaturationState);
+
+
+/**
+*@brief User may set the enabled status of the Saturation by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] SaturationState  Specifies the enabled status of the Saturation to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetSaturation
+*@see dvpGetSaturation
+*@see dvpGetSaturationDescr
+*@see dvpGetSaturationState
+*/
+dvp2api dvpStatus dvpSetSaturationState(dvpHandle handle, bool SaturationState);
+
+
+/**
+*@brief User may get the 2D noise reduction value by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pNoiseReduct2d  The pointer to a dvpInt32 variable that can be used for saving the 2D noise reduction value.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetNoiseReduct2dState
+*@see dvpGetNoiseReduct2dState
+*@see dvpGetNoiseReduct2dDescr
+*@see dvpSetNoiseReduct2d
+*/
+dvp2api dvpStatus dvpGetNoiseReduct2d(dvpHandle handle, dvpInt32 *pNoiseReduct2d);
+
+
+/**
+*@brief User may set the 2D noise reduction value by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] NoiseReduct2d  Specifies the 2D noise reduction value to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetNoiseReduct2dState
+*@see dvpGetNoiseReduct2dState
+*@see dvpGetNoiseReduct2dDescr
+*@see dvpGetNoiseReduct2d
+*/
+dvp2api dvpStatus dvpSetNoiseReduct2d(dvpHandle handle, dvpInt32 NoiseReduct2d);
+
+
+/**
+*@brief User may get the descriptive information of the 2D Noise Reduction by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pNoiseReduct2dDescr  The pointer to a dvpIntDescr structure that can be used for saving the descriptive information of the 2D Noise Reduction. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetNoiseReduct2dState
+*@see dvpGetNoiseReduct2dState
+*@see dvpSetNoiseReduct2d
+*@see dvpGetNoiseReduct2d
+*/
+dvp2api dvpStatus dvpGetNoiseReduct2dDescr(dvpHandle handle, dvpIntDescr *pNoiseReduct2dDescr);
+
+
+/**
+*@brief User may get the enabled status of the 2D Noise Reduction by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pNoiseReduct2dState  The pointer to a Boolean variable that can be used for saving the enabled status of the 2D Noise Reduction. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetNoiseReduct2d
+*@see dvpGetNoiseReduct2d
+*@see dvpGetNoiseReduct2dDescr
+*@see dvpSetNoiseReduct2dState
+*/
+dvp2api dvpStatus dvpGetNoiseReduct2dState(dvpHandle handle, bool *pNoiseReduct2dState);
+
+
+/**
+*@brief User may set the enabled status of the 2D Noise Reduction by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] NoiseReduct2dState  Specifies the enabled status of the 2D Noise Reduction to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetNoiseReduct2d
+*@see dvpGetNoiseReduct2d
+*@see dvpGetNoiseReduct2dDescr
+*@see dvpGetNoiseReduct2dState
+*/
+dvp2api dvpStatus dvpSetNoiseReduct2dState(dvpHandle handle, bool NoiseReduct2dState);
+
+
+/**
+*@brief User may get the 3D noise reduction value by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pNoiseReduct3d  The pointer to a dvpInt32 variable that can be used for saving the 3D noise reduction value.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetNoiseReduct3dState
+*@see dvpGetNoiseReduct3dState
+*@see dvpGetNoiseReduct3dDescr
+*@see dvpSetNoiseReduct3d
+*/
+dvp2api dvpStatus dvpGetNoiseReduct3d(dvpHandle handle, dvpInt32 *pNoiseReduct3d);
+
+
+/**
+*@brief User may set the 3D noise reduction value by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] NoiseReduct3d  Specifies the 3D noise reduction value to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetNoiseReduct3dState
+*@see dvpGetNoiseReduct3dState
+*@see dvpGetNoiseReduct3dDescr
+*@see dvpGetNoiseReduct3d
+*/
+dvp2api dvpStatus dvpSetNoiseReduct3d(dvpHandle handle, dvpInt32 NoiseReduct3d);
+
+
+/**
+*@brief User may get the descriptive information of the 3D Noise Reduction by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pNoiseReduct3dDescr  The pointer to a dvpIntDescr structure that can be used for saving the descriptive information of the 3D Noise Reduction.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetNoiseReduct3dState
+*@see dvpGetNoiseReduct3dState
+*@see dvpSetNoiseReduct3d
+*@see dvpGetNoiseReduct3d
+*/
+dvp2api dvpStatus dvpGetNoiseReduct3dDescr(dvpHandle handle, dvpIntDescr *pNoiseReduct3dDescr);
+
+
+/**
+*@brief User may get the enabled status of the 3D Noise Reduction by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pNoiseReduct3dState  The pointer to a Boolean variable that can be used for saving the enabled status of the 3D Noise Reduction. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetNoiseReduct3d
+*@see dvpGetNoiseReduct3d
+*@see dvpGetNoiseReduct3dDescr
+*@see dvpSetNoiseReduct3dState
+*/
+dvp2api dvpStatus dvpGetNoiseReduct3dState(dvpHandle handle, bool *pNoiseReduct3dState);
+
+
+/**
+*@brief User may set the enabled status of the 3D Noise Reduction by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[in] NoiseReduct3dState  Specifies the enabled status of the 3D Noise Reduction to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetNoiseReduct3d
+*@see dvpGetNoiseReduct3d
+*@see dvpGetNoiseReduct3dDescr
+*@see dvpGetNoiseReduct3dState
+*/
+dvp2api dvpStatus dvpSetNoiseReduct3dState(dvpHandle handle, bool NoiseReduct3dState);
+
+
+/**
+*@brief User may get the black level value by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pBlackLevel  The pointer to a floating variable that can be used for saving the black level value.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetBlackLevelState
+*@see dvpGetBlackLevelState
+*@see dvpGetBlackLevelDescr
+*@see dvpSetBlackLevel
+*/
+dvp2api dvpStatus dvpGetBlackLevel(dvpHandle handle, float *pBlackLevel);
+
+
+/**
+*@brief User may set the black level value by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] BlackLevel  Specifies the black level value to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetBlackLevelState
+*@see dvpGetBlackLevelState
+*@see dvpGetBlackLevelDescr
+*@see dvpGetBlackLevel
+*/
+dvp2api dvpStatus dvpSetBlackLevel(dvpHandle handle, float BlackLevel);
+
+
+/**
+*@brief User may get the descriptive information of the Black Level by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pBlackLevelDescr  The pointer to a dvpFloatDescr structure that can be used for saving the descriptive information of the Black Level.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetBlackLevelState
+*@see dvpGetBlackLevelState
+*@see dvpSetBlackLevel
+*@see dvpGetBlackLevel
+*/
+dvp2api dvpStatus dvpGetBlackLevelDescr(dvpHandle handle, dvpFloatDescr *pBlackLevelDescr);
+
+
+/**
+*@brief User may get the enabled status of the Black Level by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pBlackLevelState  The pointer to a Boolean variable that can be used for saving the enabled status of the Black Level. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetBlackLevel
+*@see dvpGetBlackLevel
+*@see dvpGetBlackLevelDescr
+*@see dvpSetBlackLevelState
+*/
+dvp2api dvpStatus dvpGetBlackLevelState(dvpHandle handle, bool *pBlackLevelState);
+
+
+/**
+*@brief User may set the enabled status of the Black Level by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] BlackLevelState  Specifies the enabled status of the Black Level to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetBlackLevel
+*@see dvpGetBlackLevel
+*@see dvpGetBlackLevelDescr
+*@see dvpGetBlackLevelState
+*/
+dvp2api dvpStatus dvpSetBlackLevelState(dvpHandle handle, bool BlackLevelState);
+
+
+/**
+*@brief User may get the value of the software loop trigger by invoking this function.(Unit us)
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pSoftTriggerLoop  The pointer to a double variable that can be used for saving the value of the software loop trigger.(Unit us)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetSoftTriggerLoopState
+*@see dvpGetSoftTriggerLoopState
+*@see dvpGetSoftTriggerLoopDescr
+*@see dvpSetSoftTriggerLoop
+*/
+dvp2api dvpStatus dvpGetSoftTriggerLoop(dvpHandle handle, double *pSoftTriggerLoop);
+
+
+/**
+*@brief User may set the value of the software loop trigger by invoking this function.(Unit us)
+*@param[in] handle  Specifies the camera handle.
+*@param[in] SoftTriggerLoop  Specifies the value of the software loop trigger to be set.(Unit us)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetSoftTriggerLoopState
+*@see dvpGetSoftTriggerLoopState
+*@see dvpGetSoftTriggerLoopDescr
+*@see dvpGetSoftTriggerLoop
+*/
+dvp2api dvpStatus dvpSetSoftTriggerLoop(dvpHandle handle, double SoftTriggerLoop);
+
+
+/**
+*@brief User may get the descriptive information of the software loop trigger by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pSoftTriggerLoopDescr  The pointer to a dvpDoubleDescr structure that can be used for saving the descriptive information of the software loop trigger.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetSoftTriggerLoopState
+*@see dvpGetSoftTriggerLoopState
+*@see dvpSetSoftTriggerLoop
+*@see dvpGetSoftTriggerLoop
+*/
+dvp2api dvpStatus dvpGetSoftTriggerLoopDescr(dvpHandle handle, dvpDoubleDescr *pSoftTriggerLoopDescr);
+
+
+/**
+*@brief User may get the enabled status of the software loop trigger by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pSoftTriggerLoopState  The pointer to a Boolean variable that can be used for saving the enabled status of the software loop trigger. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetSoftTriggerLoop
+*@see dvpGetSoftTriggerLoop
+*@see dvpGetSoftTriggerLoopDescr
+*@see dvpSetSoftTriggerLoopState
+*/
+dvp2api dvpStatus dvpGetSoftTriggerLoopState(dvpHandle handle, bool *pSoftTriggerLoopState);
+
+
+/**
+*@brief User may set the enabled status of the software loop trigger by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] SoftTriggerLoopState  Specifies the enabled status of the software loop trigger to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetSoftTriggerLoop
+*@see dvpGetSoftTriggerLoop
+*@see dvpGetSoftTriggerLoopDescr
+*@see dvpGetSoftTriggerLoopState
+*/
+dvp2api dvpStatus dvpSetSoftTriggerLoopState(dvpHandle handle, bool SoftTriggerLoopState);
+
+
+/**
+*@brief User may get the value of the transmission packet interval of network camera by invoking this function.(Unit us)
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pStreamPackInterval  The pointer to a dvpInt32 variable that can be used for saving the value of the transmission packet interval of network camera.(Unit us)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetStreamPackIntervalDescr
+*@see dvpSetStreamPackInterval
+*/
+dvp2api dvpStatus dvpGetStreamPackInterval(dvpHandle handle, dvpInt32 *pStreamPackInterval);
+
+
+/**
+*@brief User may set the value of the transmission packet interval of network camera by invoking this function.(Unit us)
+*@param[in] handle  Specifies the camera handle.
+*@param[in] StreamPackInterval  Specifies the value of the transmission packet interval of network camera to be set.(Unit us)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetStreamPackIntervalDescr
+*@see dvpGetStreamPackInterval
+*/
+dvp2api dvpStatus dvpSetStreamPackInterval(dvpHandle handle, dvpInt32 StreamPackInterval);
+
+
+/**
+*@brief User may get the descriptive information of the transmission packet interval of network camera by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pStreamPackIntervalDescr  The pointer to a dvpIntDescr structure that can be used for saving the descriptive information of the transmission packet interval of network camera.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpSetStreamPackInterval
+*@see dvpGetStreamPackInterval
+*/
+dvp2api dvpStatus dvpGetStreamPackIntervalDescr(dvpHandle handle, dvpIntDescr *pStreamPackIntervalDescr);
+
+
+/**
+*@brief User may get the value of the transmission packet size of network camera by invoking this function.(Unit bit)
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pStreamPackSize  The pointer to a dvpInt32 variable that can be used for saving the value of the transmission packet size of network camera.(Unit bit)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetStreamPackSizeDescr
+*@see dvpSetStreamPackSize
+*/
+dvp2api dvpStatus dvpGetStreamPackSize(dvpHandle handle, dvpInt32 *pStreamPackSize);
+
+
+/**
+*@brief User may set the value of the transmission packet size of network camera by invoking this function.(Unit bit)
+*@param[in] handle  Specifies the camera handle.
+*@param[in] StreamPackSize  Specifies the value of the transmission packet size of network camera to be set.(Unit bit)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetStreamPackSizeDescr
+*@see dvpGetStreamPackSize
+*/
+dvp2api dvpStatus dvpSetStreamPackSize(dvpHandle handle, dvpInt32 StreamPackSize);
+
+
+/**
+*@brief User may get the descriptive information of the transmission packet size of network camera by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pStreamPackSizeDescr  The pointer to a dvpIntDescr structure that can be used for saving the descriptive information of the transmission packet size of network camera.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpSetStreamPackSize
+*@see dvpGetStreamPackSize
+*/
+dvp2api dvpStatus dvpGetStreamPackSizeDescr(dvpHandle handle, dvpIntDescr *pStreamPackSizeDescr);
+
+
+/**
+*@brief User may get the exposure time by invoking this function.(Unit us)
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pExposure  The pointer to a double variable that can be used for saving the exposure time.(Unit us)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpGetExposureDescr
+*@see dvpSetExposure
+*/
+dvp2api dvpStatus dvpGetExposure(dvpHandle handle, double *pExposure);
+
+
+/**
+*@brief User may set the exposure time by invoking this function.(Unit us)
+*@param[in] handle  Specifies the camera handle.
+*@param[in] Exposure  Specifies the exposure time to be set.(Unit us)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpGetExposureDescr
+*@see dvpGetExposure
+*/
+dvp2api dvpStatus dvpSetExposure(dvpHandle handle, double Exposure);
+
+
+/**
+*@brief User may get the descriptive information of the exposure time by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pExposureDescr  The pointer to a dvpDoubleDescr structure that can be used for saving the descriptive information of the exposure time. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpSetExposure
+*@see dvpGetExposure
+*/
+dvp2api dvpStatus dvpGetExposureDescr(dvpHandle handle, dvpDoubleDescr *pExposureDescr);
+
+
+/**
+*@brief User may get the AE target lightness by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pAeTarget  The pointer to a dvpInt32 variable that can be used for saving the AE target lightness.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpGetAeTargetDescr
+*@see dvpSetAeTarget
+*/
+dvp2api dvpStatus dvpGetAeTarget(dvpHandle handle, dvpInt32 *pAeTarget);
+
+
+/**
+*@brief User may set the AE target lightness by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] AeTarget  Specifies the AE target lightness to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpGetAeTargetDescr
+*@see dvpGetAeTarget
+*/
+dvp2api dvpStatus dvpSetAeTarget(dvpHandle handle, dvpInt32 AeTarget);
+
+
+/**
+*@brief User may get the descriptive information of the AE target lightness by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pAeTargetDescr  The pointer to a dvpIntDescr structure that can be used for saving the descriptive information of the AE target lightness.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpSetAeTarget
+*@see dvpGetAeTarget
+*/
+dvp2api dvpStatus dvpGetAeTargetDescr(dvpHandle handle, dvpIntDescr *pAeTargetDescr);
+
+
+/**
+*@brief User may get the analog gain by invoking this function.   
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pAnalogGain  The pointer to a floating-point variable that can be used for saving the analog gain.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpGetAnalogGainDescr
+*@see dvpSetAnalogGain
+*/
+dvp2api dvpStatus dvpGetAnalogGain(dvpHandle handle, float *pAnalogGain);
+
+
+/**
+*@brief User may set the analog gain by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[in] AnalogGain  Specifies the analog gain to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpGetAnalogGainDescr
+*@see dvpGetAnalogGain
+*/
+dvp2api dvpStatus dvpSetAnalogGain(dvpHandle handle, float AnalogGain);
+
+
+/**
+*@brief User may get the descriptive information of the analog gain by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pAnalogGainDescr  The pointer to a dvpFloatDescr structure that can be used for saving the descriptive information of the analog gain.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpSetAnalogGain
+*@see dvpGetAnalogGain
+*/
+dvp2api dvpStatus dvpGetAnalogGainDescr(dvpHandle handle, dvpFloatDescr *pAnalogGainDescr);
+
+
+/**
+*@brief User may get the value of the jitter time of hardware trigger signal by invoking this function.(Unit us)
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pTriggerJitterFilter  The pointer to a double variable that can be used for saving the value of the jitter time of hardware trigger signal.(Unit us)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetTriggerJitterFilterDescr
+*@see dvpSetTriggerJitterFilter
+*/
+dvp2api dvpStatus dvpGetTriggerJitterFilter(dvpHandle handle, double *pTriggerJitterFilter);
+
+
+/**
+*@brief User may set the value of the jitter time of hardware trigger signal by invoking this function.(Unit us)
+*@param[in] handle  Specifies the camera handle.
+*@param[in] TriggerJitterFilter  Specifies the value of the jitter time of hardware trigger signal to be set.(Unit us)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetTriggerJitterFilterDescr
+*@see dvpGetTriggerJitterFilter
+*/
+dvp2api dvpStatus dvpSetTriggerJitterFilter(dvpHandle handle, double TriggerJitterFilter);
+
+
+/**
+*@brief User may get the descriptive information of the jitter time of hardware trigger signal by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pTriggerJitterFilterDescr  The pointer to a dvpDoubleDescr structure that can be used for saving the descriptive information of the jitter time of hardware trigger signal.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetTriggerJitterFilter
+*@see dvpGetTriggerJitterFilter
+*/
+dvp2api dvpStatus dvpGetTriggerJitterFilterDescr(dvpHandle handle, dvpDoubleDescr *pTriggerJitterFilterDescr);
+
+
+/**
+*@brief User may get the value of the trigger delay by invoking this function.(Unit us) 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pTriggerDelay  The pointer to a double variable that can be used for saving the value of the trigger delay.(Unit us)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetTriggerDelayDescr
+*@see dvpSetTriggerDelay
+*/
+dvp2api dvpStatus dvpGetTriggerDelay(dvpHandle handle, double *pTriggerDelay);
+
+
+/**
+*@brief User may set the value of the trigger delay by invoking this function.(Unit us)
+*@param[in] handle  Specifies the camera handle.
+*@param[in] TriggerDelay  Specifies the trigger delay value to be set.(Unit us)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetTriggerDelayDescr
+*@see dvpGetTriggerDelay
+*/
+dvp2api dvpStatus dvpSetTriggerDelay(dvpHandle handle, double TriggerDelay);
+
+
+/**
+*@brief User may get the descriptive information of the trigger delay by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pTriggerDelayDescr  The pointer to a dvpDoubleDescr structure that can be used for saving the descriptive information of the trigger delay.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetTriggerDelay
+*@see dvpGetTriggerDelay
+*/
+dvp2api dvpStatus dvpGetTriggerDelayDescr(dvpHandle handle, dvpDoubleDescr *pTriggerDelayDescr);
+
+
+/**
+*@brief User may get the value of the strobe signal delay by invoking this function.(Unit us)
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pStrobeDelay  The pointer to a double variable that can be used for saving the value of the strobe signal delay.(Unit us)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetStrobeDelayDescr
+*@see dvpSetStrobeDelay
+*/
+dvp2api dvpStatus dvpGetStrobeDelay(dvpHandle handle, double *pStrobeDelay);
+
+
+/**
+*@brief User may set the value of the strobe signal delay by invoking this function.(Unit us)
+*@param[in] handle  Specifies the camera handle.
+*@param[in] StrobeDelay  Specifies the value of the strobe signal delay to be set.(Unit us)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetStrobeDelayDescr
+*@see dvpGetStrobeDelay
+*/
+dvp2api dvpStatus dvpSetStrobeDelay(dvpHandle handle, double StrobeDelay);
+
+
+/**
+*@brief User may get the descriptive information of the strobe signal delay by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pStrobeDelayDescr  The pointer to a dvpDoubleDescr structure that can be used for saving the descriptive information of the strobe signal delay.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetStrobeDelay
+*@see dvpGetStrobeDelay
+*/
+dvp2api dvpStatus dvpGetStrobeDelayDescr(dvpHandle handle, dvpDoubleDescr *pStrobeDelayDescr);
+
+
+/**
+*@brief User may get the value of the strobe signal duration by invoking this function.(Unit us)
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pStrobeDuration  The pointer to a double variable that can be used for saving the value of the strobe signal duration.(Unit us)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetStrobeDurationDescr
+*@see dvpSetStrobeDuration
+*/
+dvp2api dvpStatus dvpGetStrobeDuration(dvpHandle handle, double *pStrobeDuration);
+
+
+/**
+*@brief User may set the value of the strobe signal duration by invoking this function.(Unit us)
+*@param[in] handle  Specifies the camera handle.
+*@param[in] StrobeDuration  Specifies the value of the strobe signal duration to be set.(Unit us)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetStrobeDurationDescr
+*@see dvpGetStrobeDuration
+*/
+dvp2api dvpStatus dvpSetStrobeDuration(dvpHandle handle, double StrobeDuration);
+
+
+/**
+*@brief User may get the descriptive information of the strobe signal duration by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pStrobeDurationDescr  The pointer to a dvpDoubleDescr structure that can be used for saving the descriptive information of the strobe signal duration.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetStrobeDuration
+*@see dvpGetStrobeDuration
+*/
+dvp2api dvpStatus dvpGetStrobeDurationDescr(dvpHandle handle, dvpDoubleDescr *pStrobeDurationDescr);
+
+
+/**
+*@brief User may get the output frames of the single trigger by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pFramesPerTrigger  The pointer to a dvpInt32 variable that can be used for saving the value of the output frames of the single trigger.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetFramesPerTriggerDescr
+*@see dvpSetFramesPerTrigger
+*/
+dvp2api dvpStatus dvpGetFramesPerTrigger(dvpHandle handle, dvpInt32 *pFramesPerTrigger);
+
+
+/**
+*@brief User may set the output frames of the single trigger by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] FramesPerTrigger  Specifies the value of the output frames of the single trigger to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetFramesPerTriggerDescr
+*@see dvpGetFramesPerTrigger
+*/
+dvp2api dvpStatus dvpSetFramesPerTrigger(dvpHandle handle, dvpInt32 FramesPerTrigger);
+
+
+/**
+*@brief User may get the descriptive information of the output frames of the single trigger by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pFramesPerTriggerDescr  The pointer to a dvpIntDescr structure that can be used for saving the descriptive information of the output frames of the single trigger.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetFramesPerTrigger
+*@see dvpGetFramesPerTrigger
+*/
+dvp2api dvpStatus dvpGetFramesPerTriggerDescr(dvpHandle handle, dvpIntDescr *pFramesPerTriggerDescr);
+
+
+/**
+*@brief User may get the timer value by invoking this function.(Unit us)
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pTimerValue  The pointer to a double variable that can be used for saving the timer value.(Unit us)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpGetTimerValueDescr
+*@see dvpSetTimerValue
+*/
+dvp2api dvpStatus dvpGetTimerValue(dvpHandle handle, double *pTimerValue);
+
+
+/**
+*@brief User may set the timer value by invoking this function.(Unit us)
+*@param[in] handle  Specifies the camera handle.
+*@param[in] TimerValue  Specifies the timer value to be set.(Unit us)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpGetTimerValueDescr
+*@see dvpGetTimerValue
+*/
+dvp2api dvpStatus dvpSetTimerValue(dvpHandle handle, double TimerValue);
+
+
+/**
+*@brief User may get the descriptive information of the Timer by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pTimerValueDescr  The pointer to a dvpDoubleDescr structure that can be used for saving the descriptive information of the Timer.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpSetTimerValue
+*@see dvpGetTimerValue
+*/
+dvp2api dvpStatus dvpGetTimerValueDescr(dvpHandle handle, dvpDoubleDescr *pTimerValueDescr);
+
+
+/**
+*@brief User may get the video stream status by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pStreamState  The pointer to a dvpStreamState variable that can be used for saving the video stream status.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpSetStreamState
+*/
+dvp2api dvpStatus dvpGetStreamState(dvpHandle handle, dvpStreamState *pStreamState);
+
+
+/**
+*@brief User may set the video stream status by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] StreamState  Specifies the video stream status to be set. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetStreamState
+*/
+dvp2api dvpStatus dvpSetStreamState(dvpHandle handle, dvpStreamState StreamState);
+
+
+/**
+*@brief User may get the enabled status of the trigger mode by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pTriggerState  The pointer to a boolean variable that can be used for saving the enabled status of the trigger mode.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetTriggerState
+*/
+dvp2api dvpStatus dvpGetTriggerState(dvpHandle handle, bool *pTriggerState);
+
+
+/**
+*@brief User may set the enabled status of the trigger mode by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] TriggerState  Specifies the enabled status of the trigger mode to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetTriggerState
+*/
+dvp2api dvpStatus dvpSetTriggerState(dvpHandle handle, bool TriggerState);
+
+
+/**
+*@brief User may get the enabled status of the Monochrome by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pMonoState  The pointer to a boolean variable that can be used for saving the enabled status of the Monochrome. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetMonoState
+*/
+dvp2api dvpStatus dvpGetMonoState(dvpHandle handle, bool *pMonoState);
+
+
+/**
+*@brief User may set the enabled status of the Monochrome by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] MonoState  Specifies the enabled status of the Monochrome to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpGetMonoState
+*/
+dvp2api dvpStatus dvpSetMonoState(dvpHandle handle, bool MonoState);
+
+
+/**
+*@brief User may get the enabled status of the Inverse by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pInverseState  The pointer to a boolean variable that can be used for saving the enabled status of the Inverse.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetInverseState
+*/
+dvp2api dvpStatus dvpGetInverseState(dvpHandle handle, bool *pInverseState);
+
+
+/**
+*@brief User may set the enabled status of the Inverse by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] InverseState  Specifies the enabled status of the Inverse to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpGetInverseState
+*/
+dvp2api dvpStatus dvpSetInverseState(dvpHandle handle, bool InverseState);
+
+
+/**
+*@brief User may get the enabled status of the horizontal flip by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pFlipHorizontalState  The pointer to a boolean variable that can be used for saving the enabled status of the horizontal flip. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetFlipHorizontalState
+*/
+dvp2api dvpStatus dvpGetFlipHorizontalState(dvpHandle handle, bool *pFlipHorizontalState);
+
+
+/**
+*@brief User may set the enabled status of the horizontal flip by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] FlipHorizontalState  Specifies the enabled status of the horizontal flip to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpGetFlipHorizontalState
+*/
+dvp2api dvpStatus dvpSetFlipHorizontalState(dvpHandle handle, bool FlipHorizontalState);
+
+
+/**
+*@brief User may get the enabled status of the vertical flip by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pFlipVerticalState  The pointer to a boolean variable that can be used for saving the enabled status of the vertical flip. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetFlipVerticalState
+*/
+dvp2api dvpStatus dvpGetFlipVerticalState(dvpHandle handle, bool *pFlipVerticalState);
+
+
+/**
+*@brief User may set the enabled status of the vertical flip by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] FlipVerticalState  Specifies the enabled status of the vertical flip to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpGetFlipVerticalState
+*/
+dvp2api dvpStatus dvpSetFlipVerticalState(dvpHandle handle, bool FlipVerticalState);
+
+
+/**
+*@brief User may get the statistic region of the Auto Exposure (relative to the whole visible region) by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pAeRoi  The pointer to a dvpRegion structure that can be used for saving the statistic region of the Auto Exposure (relative to the whole visible region).
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpSetAeRoi
+*/
+dvp2api dvpStatus dvpGetAeRoi(dvpHandle handle, dvpRegion *pAeRoi);
+
+
+/**
+*@brief User may set the statistic region of the Auto Exposure (relative to the whole visible region) by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] AeRoi  Specifies the statistic region of the Auto Exposure (relative to the whole visible region) to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpGetAeRoi
+*/
+dvp2api dvpStatus dvpSetAeRoi(dvpHandle handle, dvpRegion AeRoi);
+
+
+/**
+*@brief User may get the statistic region of the Auto White Balance (relative to the whole visible region) by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pAwbRoi  The pointer to a dvpRegion structure that can be used for saving the statistic region of the Auto White Balance (relative to the whole visible region).
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetAwbRoi
+*/
+dvp2api dvpStatus dvpGetAwbRoi(dvpHandle handle, dvpRegion *pAwbRoi);
+
+
+/**
+*@brief User may set the statistic region of the Auto White Balance (relative to the whole visible region) by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] AwbRoi  Specifies the statistic region value of the Auto White Balance (relative to the whole visible region) to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpGetAwbRoi
+*/
+dvp2api dvpStatus dvpSetAwbRoi(dvpHandle handle, dvpRegion AwbRoi);
+
+
+/**
+*@brief User may get the auto exposure mode by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pAeMode  The pointer to a dvpAeMode variable that can be used for saving the auto exposure mode.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpSetAeMode
+*/
+dvp2api dvpStatus dvpGetAeMode(dvpHandle handle, dvpAeMode *pAeMode);
+
+
+/**
+*@brief User may set the auto exposure mode by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] AeMode  Specifies the auto exposure mode to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpGetAeMode
+*/
+dvp2api dvpStatus dvpSetAeMode(dvpHandle handle, dvpAeMode AeMode);
+
+
+/**
+*@brief User may get the anti-flick status by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pAntiFlick  The pointer to a dvpAntiFlick variable that can be used for saving the anti-flick status. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpSetAntiFlick
+*/
+dvp2api dvpStatus dvpGetAntiFlick(dvpHandle handle, dvpAntiFlick *pAntiFlick);
+
+
+/**
+*@brief User may set the anti-flick status by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] AntiFlick  Specifies the anti-flick status to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpGetAntiFlick
+*/
+dvp2api dvpStatus dvpSetAntiFlick(dvpHandle handle, dvpAntiFlick AntiFlick);
+
+
+/**
+*@brief User may get the auto exposure operation by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pAeOperation  The pointer to a dvpAeOperation variable that can be used for saving the auto exposure operation.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpSetAeOperation
+*/
+dvp2api dvpStatus dvpGetAeOperation(dvpHandle handle, dvpAeOperation *pAeOperation);
+
+
+/**
+*@brief User may set the auto exposure operation by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] AeOperation  Specifies the auto exposure operation to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_EXPOSURE__
+*@see dvpGetAeOperation
+*/
+dvp2api dvpStatus dvpSetAeOperation(dvpHandle handle, dvpAeOperation AeOperation);
+
+
+/**
+*@brief User may get the auto white balance operation by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pAwbOperation  The pointer to a dvpAwbOperation variable that can be used for saving the auto white balance operation.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetAwbOperation
+*/
+dvp2api dvpStatus dvpGetAwbOperation(dvpHandle handle, dvpAwbOperation *pAwbOperation);
+
+
+/**
+*@brief User may set the auto white balance operation by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] AwbOperation  Specifies the auto white balance operation to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpGetAwbOperation
+*/
+dvp2api dvpStatus dvpSetAwbOperation(dvpHandle handle, dvpAwbOperation AwbOperation);
+
+
+/**
+*@brief User may get the strobe driver mode by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pStrobeDriver  The pointer to a dvpStrobeDriver variable that can be used for saving the strobe driver mode.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetStrobeDriver
+*/
+dvp2api dvpStatus dvpGetStrobeDriver(dvpHandle handle, dvpStrobeDriver *pStrobeDriver);
+
+
+/**
+*@brief User may set the strobe driver mode by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] StrobeDriver  Specifies the strobe driver mode to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetStrobeDriver
+*/
+dvp2api dvpStatus dvpSetStrobeDriver(dvpHandle handle, dvpStrobeDriver StrobeDriver);
+
+
+/**
+*@brief User may get the strobe output type by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pStrobeOutputType  The pointer to a dvpStrobeOutputType variable that can be used for saving the strobe output type.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetStrobeOutputType
+*/
+dvp2api dvpStatus dvpGetStrobeOutputType(dvpHandle handle, dvpStrobeOutputType *pStrobeOutputType);
+
+
+/**
+*@brief User may set the strobe output type by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] StrobeOutputType  Specifies the strobe output type to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetStrobeOutputType
+*/
+dvp2api dvpStatus dvpSetStrobeOutputType(dvpHandle handle, dvpStrobeOutputType StrobeOutputType);
+
+
+/**
+*@brief User may get the trigger input type by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pTriggerInputType  The pointer to a dvpTriggerInputType variable that can be used for saving the trigger input type.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetTriggerInputType
+*/
+dvp2api dvpStatus dvpGetTriggerInputType(dvpHandle handle, dvpTriggerInputType *pTriggerInputType);
+
+
+/**
+*@brief User may set the trigger input type by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[in] TriggerInputType  Specifies the trigger input type to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetTriggerInputType
+*/
+dvp2api dvpStatus dvpSetTriggerInputType(dvpHandle handle, dvpTriggerInputType TriggerInputType);
+
+
+/**
+*@brief User may get the source image format by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pSourceFormat  The pointer to a dvpStreamFormat variable that can be used for saving the source image format.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetSourceFormat
+*/
+dvp2api dvpStatus dvpGetSourceFormat(dvpHandle handle, dvpStreamFormat *pSourceFormat);
+
+
+/**
+*@brief User may set the source image format by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] SourceFormat  Specifies the source image format to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpGetSourceFormat
+*/
+dvp2api dvpStatus dvpSetSourceFormat(dvpHandle handle, dvpStreamFormat SourceFormat);
+
+
+/**
+*@brief User may get the target image format by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pTargetFormat  The pointer to a dvpStreamFormat variable that can be used for saving the target image format.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpSetTargetFormat
+*/
+dvp2api dvpStatus dvpGetTargetFormat(dvpHandle handle, dvpStreamFormat *pTargetFormat);
+
+
+/**
+*@brief User may set the target image format image by invoking this function.  
+*@param[in] handle  Specifies the camera handle.
+*@param[in] TargetFormat  Specifies the target image format to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ENHANCE__
+*@see dvpGetTargetFormat
+*/
+dvp2api dvpStatus dvpSetTargetFormat(dvpHandle handle, dvpStreamFormat TargetFormat);
+
+/**
+*@brief User may get the user color matrix by invoking this function.
+*@param[in] handle Specifies the camera handle.
+*@param[out] pUserColorMatrix The pointer to a dvpColorMatrix array that can be used for saving the user color matrix.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetUserColorMatrix
+*@note MAT[0][0] + MAT[1][0] + MAT[2][0] identically equal to 1.0
+*@note MAT[0][1] + MAT[1][1] + MAT[2][1] identically equal to 1.0
+*@note MAT[0][2] + MAT[1][2] + MAT[2][2] identically equal to 1.0
+*@note Input color [B0.G0.R0]
+*@note Output color [B1.G1.R1]
+*@note B1 = B0*MAT[0][0] + G0*MAT[1][0] + R0*MAT[2][0] + MAT[3][0]
+*@note G1 = B0*MAT[0][1] + G0*MAT[1][1] + R0*MAT[2][1] + MAT[3][1]
+*@note R1 = B0*MAT[0][2] + G0*MAT[1][2] + R0*MAT[2][2] + MAT[3][2]
+*/
+dvp2api dvpStatus dvpGetUserColorMatrix(dvpHandle handle, dvpColorMatrix *pUserColorMatrix);
+
+/**
+*@brief User may set the user color matrix by invoking this function.
+*@param[in] handle Specifies the camera handle.
+*@param[in] UserColorMatrix Specifies the user color matrix to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpGetUserColorMatrix
+*@note MAT[0][0] + MAT[1][0] + MAT[2][0] identically equal to 1.0
+*@note MAT[0][1] + MAT[1][1] + MAT[2][1] identically equal to 1.0
+*@note MAT[0][2] + MAT[1][2] + MAT[2][2] identically equal to 1.0
+*@note Input color [B0.G0.R0]
+*@note Output color [B1.G1.R1]
+*@note B1 = B0*MAT[0][0] + G0*MAT[1][0] + R0*MAT[2][0] + MAT[3][0]
+*@note G1 = B0*MAT[0][1] + G0*MAT[1][1] + R0*MAT[2][1] + MAT[3][1]
+*@note R1 = B0*MAT[0][2] + G0*MAT[1][2] + R0*MAT[2][2] + MAT[3][2]
+*/
+dvp2api dvpStatus dvpSetUserColorMatrix(dvpHandle handle, dvpColorMatrix UserColorMatrix);
+
+/**
+*@brief User may get the time value of connection timeout by invoking this function (unit ms).
+*@param[in] handle Specifies the camera handles.
+*@param[out] pLinkTimeout The pointer to a dvpUint32 variable that can be used for saving the time value of connection timeout(unit ms).
+*@return Status code  DVP_STATUS_OK if the call succeeds. 
+*@ingroup __DVP_ADVANCED__
+*@see dvpSetLinkTimeout
+*/
+dvp2api dvpStatus dvpGetLinkTimeout(dvpHandle handle, dvpUint32 *pLinkTimeout);
+
+/**
+*@brief User may set the time value of connection timeout by invoking this function (unit ms).
+*@param[in] handle Specifies the camera handle.
+*@param[in] LinkTimeout Specifies the time value of connection timeout to be set(unit ms).
+*@return Status code  DVP_STATUS_OK if the call succeeds. 
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetLinkTimeout
+*/
+dvp2api dvpStatus dvpSetLinkTimeout(dvpHandle handle, dvpUint32 LinkTimeout);
+
+/**
+*@brief User may get the level status of the Input IO by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] inputIo  Specifies the IO type.
+*@param[out] pInputIoLevel  The pointer to a Boolean variable that can be used for saving the level status of the Input IO.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*/
+dvp2api dvpStatus dvpGetInputIoLevel(dvpHandle handle, dvpInputIo inputIo, bool *pInputIoLevel);
+
+
+/**
+*@brief User may get the level status of the Output IO by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] outputIo  Specifies the IO type.
+*@param[out] pOutputIoLevel  The pointer to a boolean variable that can be used for saving the level status of the Output IO.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetOutputIoLevel
+*/
+dvp2api dvpStatus dvpGetOutputIoLevel(dvpHandle handle, dvpOutputIo outputIo, bool *pOutputIoLevel);
+
+
+/**
+*@brief User may set the level status of the Output IO by invoking this function. 
+*@param[in] handle  Specifies the camera handle.
+*@param[in] outputIo  Specifies the IO type to be set.
+*@param[in] OutputIoLevel  Specifies the level status of the Output IO to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetOutputIoLevel
+*/
+dvp2api dvpStatus dvpSetOutputIoLevel(dvpHandle handle, dvpOutputIo outputIo, bool OutputIoLevel);
+
+
+/**
+*@brief User may get the configuration of the Output IO by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] outputIo  Specifies the IO type. 
+*@param[out] pOutputIoFunction  The pointer to a dvpOutputIoFunction variable that can be used for saving the configuration of the Output IO.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetOutputIoFunction
+*/
+dvp2api dvpStatus dvpGetOutputIoFunction(dvpHandle handle, dvpOutputIo outputIo, dvpOutputIoFunction *pOutputIoFunction);
+
+
+/**
+*@brief User may set the configuration of the Output IO by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] outputIo  Specifies the IO type to be set.
+*@param[in] OutputIoFunction  Specifies the configuration of the Output IO to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetOutputIoFunction
+*/
+dvp2api dvpStatus dvpSetOutputIoFunction(dvpHandle handle, dvpOutputIo outputIo, dvpOutputIoFunction OutputIoFunction);
+
+
+/**
+*@brief User may get the configuration of the Input IO by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] inputIo  Specifies the IO type.
+*@param[out] pInputIoFunction  The pointer to a dvpInputIoFunction variable that can be used for saving the configuration of the Input IO.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpSetInputIoFunction
+*/
+dvp2api dvpStatus dvpGetInputIoFunction(dvpHandle handle, dvpInputIo inputIo, dvpInputIoFunction *pInputIoFunction);
+
+
+/**
+*@brief User may set the configuration of the Input IO by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] inputIo  Specifies the IO type to be set.
+*@param[in] InputIoFunction  Specifies the configuration of the Input IO to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_TRIGGER__
+*@see dvpGetInputIoFunction
+*/
+dvp2api dvpStatus dvpSetInputIoFunction(dvpHandle handle, dvpInputIo inputIo, dvpInputIoFunction InputIoFunction);
+
+
+/**
+*@brief User may get the index of the current color solution options by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pColorSolutionSel  The pointer to a dvpUint32 variable that can be used for saving the index of the current color solution options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetColorSolutionSelDescr
+*@see dvpGetColorSolutionSelDetail
+*@see dvpSetColorSolutionSel
+*/
+dvp2api dvpStatus dvpGetColorSolutionSel(dvpHandle handle, dvpUint32 *pColorSolutionSel);
+
+
+/**
+*@brief User may set the index of the current color solution options by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] ColorSolutionSel  Specifies the index of the current color solution options to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetColorSolutionSelDescr
+*@see dvpGetColorSolutionSelDetail
+*@see dvpGetColorSolutionSel
+*/
+dvp2api dvpStatus dvpSetColorSolutionSel(dvpHandle handle, dvpUint32 ColorSolutionSel);
+
+
+/**
+*@brief User may obtian the descriptive information of the index of the current color solution options by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pColorSolutionSelDescr  The pointer to a dvpSelectionDescr structure that can be used for saving the descriptive information of the index of the current color solution options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetColorSolutionSel
+*@see dvpGetColorSolutionSelDetail
+*/
+dvp2api dvpStatus dvpGetColorSolutionSelDescr(dvpHandle handle, dvpSelectionDescr *pColorSolutionSelDescr);
+
+
+/**
+*@brief User may get the detailed information of the index of the current color solution options by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] ColorSolutionSel  Specifies the index of the current color solution.
+*@param[out] pColorSolutionSelDetail  The pointer to a dvpSelection structure that can be used for saving the detailed information of the index of the current color solution options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetColorSolutionSel
+*@see dvpGetColorSolutionSelDescr
+*/
+dvp2api dvpStatus dvpGetColorSolutionSelDetail(dvpHandle handle, dvpUint32 ColorSolutionSel, dvpSelection *pColorSolutionSelDetail);
+
+
+/**
+*@brief User may get the index of the current BAYER converted to RGB decode algorithm options by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[out] pBayerDecodeSel  The pointer to a dvpUint32 variable that can be used for saving the index of the current BAYER converted to RGB decode algorithm options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__ 
+*@see dvpGetBayerDecodeSelDescr
+*@see dvpGetBayerDecodeSelDetail
+*@see dvpSetBayerDecodeSel
+*/
+dvp2api dvpStatus dvpGetBayerDecodeSel(dvpHandle handle, dvpUint32 *pBayerDecodeSel);
+
+
+/**
+*@brief User may set the index of the current BAYER converted to RGB decode algorithm options by invoking this function.
+*@param[in] handle  Specifies the camera handle.
+*@param[in] BayerDecodeSel  Specifies the index of the current BAYER converted to RGB decode algorithm options to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetBayerDecodeSelDescr
+*@see dvpGetBayerDecodeSelDetail
+*@see dvpGetBayerDecodeSel
+*/
+dvp2api dvpStatus dvpSetBayerDecodeSel(dvpHandle handle, dvpUint32 BayerDecodeSel);
+
+
+/**
+*@brief User may get the descriptive information of the index of the current BAYER converted to RGB decode algorithm options by invoking this function.
+*@param[in] handle  Specifies the camera handle. 
+*@param[out] pBayerDecodeSelDescr  The pointer to a dvpSelectionDescr structure that can be used for saving the descriptive information of the index of the current BAYER converted to RGB decode algorithm options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetBayerDecodeSel
+*@see dvpGetBayerDecodeSelDetail
+*/
+dvp2api dvpStatus dvpGetBayerDecodeSelDescr(dvpHandle handle, dvpSelectionDescr *pBayerDecodeSelDescr);
+
+
+/**
+*@brief User may get the detailed information of the index of the current BAYER converted to RGB decode algorithm options by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] BayerDecodeSel  Specifies the index of the current BAYER converted to RGB decode algorithm.
+*@param[out] pBayerDecodeSelDetail  The pointer to a dvpSelection structure that can be used for saving the detailed information of the index of the current BAYER converted to RGB decode algorithm options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetBayerDecodeSel
+*@see dvpGetBayerDecodeSelDescr
+*/
+dvp2api dvpStatus dvpGetBayerDecodeSelDetail(dvpHandle handle, dvpUint32 BayerDecodeSel, dvpSelection *pBayerDecodeSelDetail);
+
+
+/**
+*@brief User may get the index of the current resolution mode options by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[out] pResolutionModeSel  The pointer to a dvpUint32 variable that can be used for saving the index of the current resolution mode options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_SIZE__
+*@see dvpGetResolutionModeSelDescr
+*@see dvpGetResolutionModeSelDetail
+*@see dvpSetResolutionModeSel
+*/
+dvp2api dvpStatus dvpGetResolutionModeSel(dvpHandle handle, dvpUint32 *pResolutionModeSel);
+
+
+/**
+*@brief User may set the index of the current resolution mode options by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] ResolutionModeSel  Specifies the index of the current resolution mode options to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_SIZE__
+*@see dvpGetResolutionModeSelDescr
+*@see dvpGetResolutionModeSelDetail
+*@see dvpGetResolutionModeSel
+*/
+dvp2api dvpStatus dvpSetResolutionModeSel(dvpHandle handle, dvpUint32 ResolutionModeSel);
+
+
+/**
+*@brief User may get the descriptive information of the the index of the current resolution mode options by invoking this function. 
+*@param[in] handle  Specifies the camera handle.  
+*@param[out] pResolutionModeSelDescr  The pointer to a dvpSelectionDescr structure that can be used for saving the descriptive information of the index of the current resolution mode options .
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_SIZE__
+*@see dvpGetResolutionModeSel
+*@see dvpGetResolutionModeSelDetail
+*/
+dvp2api dvpStatus dvpGetResolutionModeSelDescr(dvpHandle handle, dvpSelectionDescr *pResolutionModeSelDescr);
+
+
+/**
+*@brief User may get the detialed information of the the index of the current resolution mode options by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] ResolutionModeSel  Specifies the index of the current BAYER converted to RGB decode algorithm.
+*@param[out] pResolutionModeSelDetail  The pointer to a dvpResolutionMode structure that can be used for saving the detailed information of the index of the current resolution mode options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_SIZE__
+*@see dvpGetResolutionModeSel
+*@see dvpGetResolutionModeSelDescr
+*/
+dvp2api dvpStatus dvpGetResolutionModeSelDetail(dvpHandle handle, dvpUint32 ResolutionModeSel, dvpResolutionMode *pResolutionModeSelDetail);
+
+
+/**
+*@brief User may get the index of the current auto exposure solution options by invoking this function. 
+*@param[in] handle  Specifies the camera handle.  
+*@param[out] pAeSchemeSel  The pointer to a floating variable that can be used for saving the index of the current auto exposure solution options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetAeSchemeSelDescr
+*@see dvpGetAeSchemeSelDetail
+*@see dvpSetAeSchemeSel
+*/
+dvp2api dvpStatus dvpGetAeSchemeSel(dvpHandle handle, dvpUint32 *pAeSchemeSel);
+
+
+/**
+*@brief User may set the index of the current auto exposure solution options by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] AeSchemeSel  Specifies the index of the current auto exposure solution options to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetAeSchemeSelDescr
+*@see dvpGetAeSchemeSelDetail
+*@see dvpGetAeSchemeSel
+*/
+dvp2api dvpStatus dvpSetAeSchemeSel(dvpHandle handle, dvpUint32 AeSchemeSel);
+
+
+/**
+*@brief User may get the decriptive information of the index of the current auto exposure solution options by invoking this function. 
+*@param[in] handle  Specifies the camera handle.  
+*@param[out] pAeSchemeSelDescr  The pointer to a dvpSelectionDescr structure that can be used for saving the descriptive information of the index of the current auto exposure solution options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetAeSchemeSel
+*@see dvpGetAeSchemeSelDetail
+*/
+dvp2api dvpStatus dvpGetAeSchemeSelDescr(dvpHandle handle, dvpSelectionDescr *pAeSchemeSelDescr);
+
+
+/**
+*@brief User may get the detailed information of the index of the current auto exposure solution options by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] AeSchemeSel  Specifies the index of the current auto exposure solution options.
+*@param[out] pAeSchemeSelDetail  The pointer to a dvpSelection structure that can be used for saving the detailed information of the index of the current auto exposure solution options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetAeSchemeSel
+*@see dvpGetAeSchemeSelDescr
+*/
+dvp2api dvpStatus dvpGetAeSchemeSelDetail(dvpHandle handle, dvpUint32 AeSchemeSel, dvpSelection *pAeSchemeSelDetail);
+
+
+/**
+*@brief User may get the index of the current quick ROI options by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[out] pQuickRoiSel  The pointer to a dvpUint32 variable that can be used for saving the index of the current quick ROI options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_SIZE__
+*@see dvpGetQuickRoiSelDescr
+*@see dvpGetQuickRoiSelDetail
+*@see dvpSetQuickRoiSel
+*/
+dvp2api dvpStatus dvpGetQuickRoiSel(dvpHandle handle, dvpUint32 *pQuickRoiSel);
+
+
+/**
+*@brief User may set the index of the current quick ROI options by invoking this function. 
+*@param[in] handle  Specifies the camera handle. 
+*@param[in] QuickRoiSel  Specifies the index of the current quick ROI options to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_SIZE__
+*@see dvpGetQuickRoiSelDescr
+*@see dvpGetQuickRoiSelDetail
+*@see dvpGetQuickRoiSel
+*/
+dvp2api dvpStatus dvpSetQuickRoiSel(dvpHandle handle, dvpUint32 QuickRoiSel);
+
+
+/**
+*@brief User may get the descriptive information of the index of the current quick ROI options by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[out] pQuickRoiSelDescr  The pointer to a dvpSelectionDescr structure that can be used for saving the descriptive information of the index of the current quick ROI options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_SIZE__
+*@see dvpGetQuickRoiSel
+*@see dvpGetQuickRoiSelDetail
+*/
+dvp2api dvpStatus dvpGetQuickRoiSelDescr(dvpHandle handle, dvpSelectionDescr *pQuickRoiSelDescr);
+
+
+/**
+*@brief User may get the detailed information of the index of the current quick ROI options by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] QuickRoiSel  Specifies the index of the current quick ROI options.
+*@param[out] pQuickRoiSelDetail  The pointer to a dvpQuickRoi structure that can be used for saving the detailed information of the index of the current quick ROI options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_SIZE__
+*@see dvpGetQuickRoiSel
+*@see dvpGetQuickRoiSelDescr
+*/
+dvp2api dvpStatus dvpGetQuickRoiSelDetail(dvpHandle handle, dvpUint32 QuickRoiSel, dvpQuickRoi *pQuickRoiSelDetail);
+
+
+/**
+*@brief User may get the options' index of the current rate of acquiring pixels by invoking this function. 
+*@param[in] handle  Specifies the camera handle.  
+*@param[out] pPixelRateSel  The pointer to a dvpUint32 variable that can be used for saving the options' index of the current rate of acquiring pixels.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetPixelRateSelDescr
+*@see dvpGetPixelRateSelDetail
+*@see dvpSetPixelRateSel
+*/
+dvp2api dvpStatus dvpGetPixelRateSel(dvpHandle handle, dvpUint32 *pPixelRateSel);
+
+
+/**
+*@brief User may set the options' index of the current rate of acquiring pixels by invoking this function. 
+*@param[in] handle  Specifies the camera handle. 
+*@param[in] PixelRateSel  Specifies the index of the current rate of acquiring pixels options to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetPixelRateSelDescr
+*@see dvpGetPixelRateSelDetail
+*@see dvpGetPixelRateSel
+*/
+dvp2api dvpStatus dvpSetPixelRateSel(dvpHandle handle, dvpUint32 PixelRateSel);
+
+
+/**
+*@brief User may get the descriptive information of the options' index of the current rate of acquiring pixels by invoking this function. 
+*@param[in] handle  Specifies the camera handle.    
+*@param[out] pPixelRateSelDescr  The pointer to a dvpSelectionDescr structure that can be used for saving the descriptive information of the options' index of the current rate of acquiring pixels.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetPixelRateSel
+*@see dvpGetPixelRateSelDetail
+*/
+dvp2api dvpStatus dvpGetPixelRateSelDescr(dvpHandle handle, dvpSelectionDescr *pPixelRateSelDescr);
+
+
+/**
+*@brief User may get the detailed information of the options' index of the current rate of acquiring pixels by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] PixelRateSel  Specifies the index of the current rate of acquiring pixels.
+*@param[out] pPixelRateSelDetail  The pointer to a dvpSelection structure that can be used for saving the detailed information of the options' index of the current rate of acquiring pixels.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetPixelRateSel
+*@see dvpGetPixelRateSelDescr
+*/
+dvp2api dvpStatus dvpGetPixelRateSelDetail(dvpHandle handle, dvpUint32 PixelRateSel, dvpSelection *pPixelRateSelDetail);
+
+
+/**
+*@brief User may get the index of the current data packet size options by invoking this function. 
+*@param[in] handle  Specifies the camera handle.  
+*@param[out] pPacketSizeSel  The pointer to a dvpUint32 variable that can be used for saving the index of the current data packet size options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetPacketSizeSelDescr
+*@see dvpGetPacketSizeSelDetail
+*@see dvpSetPacketSizeSel
+*/
+dvp2api dvpStatus dvpGetPacketSizeSel(dvpHandle handle, dvpUint32 *pPacketSizeSel);
+
+
+/**
+*@brief User may set the index of the current data packet size options by invoking this function. 
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] PacketSizeSel  Specifies the index of the current data packet size options to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetPacketSizeSelDescr
+*@see dvpGetPacketSizeSelDetail
+*@see dvpGetPacketSizeSel
+*/
+dvp2api dvpStatus dvpSetPacketSizeSel(dvpHandle handle, dvpUint32 PacketSizeSel);
+
+
+/**
+*@brief User may get the descriptive information of the index of the current data packet size options by invoking this function.  
+*@param[in] handle  Specifies the camera handle.  
+*@param[out] pPacketSizeSelDescr  The pointer to a dvpSelectionDescr structure that can be used for saving the descriptive information of the index of the current data packet size options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetPacketSizeSel
+*@see dvpGetPacketSizeSelDetail
+*/
+dvp2api dvpStatus dvpGetPacketSizeSelDescr(dvpHandle handle, dvpSelectionDescr *pPacketSizeSelDescr);
+
+
+/**
+*@brief User may get the detailed information of the index of the current data packet size options by invoking this function. 
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] PacketSizeSel  Specifies the index of the current data packet size options.
+*@param[out] pPacketSizeSelDetail  The pointer to a dvpSelection structure that can be used for saving the detailed information of the index of the current data packet size options. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__ 
+*@see dvpGetPacketSizeSel
+*@see dvpGetPacketSizeSelDescr
+*/
+dvp2api dvpStatus dvpGetPacketSizeSelDetail(dvpHandle handle, dvpUint32 PacketSizeSel, dvpSelection *pPacketSizeSelDetail);
+
+
+/**
+*@brief User may get the index of the current hardware acceleration options by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[out] pAccelerateSel  The pointer to a dvpUint32 variable that can be used for saving the index of the current hardware acceleration options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetAccelerateSelDescr
+*@see dvpGetAccelerateSelDetail
+*@see dvpSetAccelerateSel
+*/
+dvp2api dvpStatus dvpGetAccelerateSel(dvpHandle handle, dvpUint32 *pAccelerateSel);
+
+
+/**
+*@brief User may set the index of the current hardware acceleration options by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] AccelerateSel  Specifies the index of the current hardware acceleration options to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetAccelerateSelDescr
+*@see dvpGetAccelerateSelDetail
+*@see dvpGetAccelerateSel
+*/
+dvp2api dvpStatus dvpSetAccelerateSel(dvpHandle handle, dvpUint32 AccelerateSel);
+
+
+/**
+*@brief User may get the descriptive information of the index of the current hardware acceleration options by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[out] pAccelerateSelDescr  The pointer to a dvpSelectionDescr structure that can be used for saving the descriptive information of the index of the current hardware acceleration options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetAccelerateSel
+*@see dvpGetAccelerateSelDetail
+*/
+dvp2api dvpStatus dvpGetAccelerateSelDescr(dvpHandle handle, dvpSelectionDescr *pAccelerateSelDescr);
+
+
+/**
+*@brief User may get the detailed information of the index of the current hardware acceleration options by invoking this function.
+*@param[in] handle  Specifies the camera handle.   
+*@param[in] AccelerateSel  Specifies the index of the current hardware acceleration options.
+*@param[out] pAccelerateSelDetail  The pointer to a dvpSelection structure that can be used for saving the detailed information of the index of the current hardware acceleration options.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_ADVANCED__
+*@see dvpGetAccelerateSel
+*@see dvpGetAccelerateSelDescr
+*/
+dvp2api dvpStatus dvpGetAccelerateSelDetail(dvpHandle handle, dvpUint32 AccelerateSel, dvpSelection *pAccelerateSelDetail);
+
+
+/**
+*@brief User may set the R/G/B digital gain by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] rGain  Specifies the red gain.
+*@param[in] gGain  Specifies the green gain.
+*@param[in] bGain  Specifies the blue gain.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpGetRgbGain
+*@see dvpSetRgbGainState
+*@see dvpGetRgbGainState
+*@see dvpGetRGainDescr
+*/
+dvp2api dvpStatus dvpSetRgbGain(dvpHandle handle, float rGain, float gGain, float bGain);
+
+
+/**
+*@brief User may get the R/G/B digital gain by invoking this function. 
+*@param[in] handle  Specifies the camera handle.  
+*@param[out] prGain  The pointer to a floating-point variable that can be used for saving the value of the red gain. 
+*@param[out] pgGain  The pointer to a floating-point variable that can be used for saving the value of the green gain.
+*@param[out] pbGain  The pointer to a floating-point variable that can be used for saving the value of the blue hain.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetRgbGain
+*@see dvpSetRgbGainState
+*@see dvpGetRgbGainState
+*@see dvpGetRGainDescr
+*/
+dvp2api dvpStatus dvpGetRgbGain(dvpHandle handle, float *prGain, float *pgGain, float *pbGain);
+
+
+/**
+*@brief User may set the enabled status of the R/G/B digital gain by invoking this function. 
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] state  Specifies the enabled status of the R/G/B digital gain to be set.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetRgbGain
+*@see dvpGetRgbGain
+*@see dvpGetRgbGainState
+*/
+dvp2api dvpStatus dvpSetRgbGainState(dvpHandle handle, bool state);
+
+
+/**
+*@brief User may get the enabled status of the R/G/B digital gain by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[out] pState  The pointer to a Boolean variable that can be used for saving the enabled status of the R/G/B digital gain. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@ingroup __DVP_COLOR__
+*@see dvpSetRgbGain
+*@see dvpGetRgbGain
+*@see dvpSetRgbGainState
+*/
+dvp2api dvpStatus dvpGetRgbGainState(dvpHandle handle, bool *pState);
+
+
+
+/** @defgroup __DVP2_API_BASE__  Basic functions 
+*@{
+*/
+/**
+*@brief User may refresh the list of camera that has been connected to a computer and get the number of camera by invoking this function.
+*@param[out] pCount  The pointer to a dvpUint32 variable that can be used for saving the number of the camera.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpEnum
+*@see dvpOpen
+*@see dvpOpenByName
+*@note   The function should be invoked ahead of @link #dvpEnum enumerating the camera @endlink or @link #dvpOpen opening the camera @endlink and in the same thread as them.
+*/
+dvp2api dvpStatus dvpRefresh(dvpUint32 *pCount);
+
+
+/**
+*@brief User may enumerate the camera's information according to the index by invoking this function.
+*@param[in] index  Specifies the camera index.
+*@param[out] pCameraInfo  The pointer to a dvpUint32 variable that can be used for saving the camera information. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpGetCameraInfo
+*@code
+dvpUint32 count;
+dvpRefresh(&count);
+for (dvpUint32 i = 0; i < count; i++)
+{
+    dvpCameraInfo info;
+    if(dvpEnum(i, &info) == DVP_STATUS_OK)
+    {
+        printf("Camera FriendlyName : %s", info.FriendlyName);
+    }
+}
+*@endcode
+*@note  The function should be invoked after @link #dvpRefresh refresh the camera @endlink and in the same thread as it.
+*/
+dvp2api dvpStatus dvpEnum(dvpUint32 index, dvpCameraInfo *pCameraInfo);
+
+
+/**
+*@brief User may open the camera according to @link #dvpCameraInfo  FriendlyName friendly name @endlink by invoking this function..
+*@param[in] friendlyName  Specifies the Friendly Name. 
+*@param[in] type  Specifies the open mode.
+*@param[out] pHandle  The pointer to a dvpHandle variable that can be used for saving the information of the camera handle.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpEnum
+*@see dvpOpen
+*@see dvpGetCameraInfo
+*@note      The operation will automatically @link #dvpRefresh refresh @endlink the number of the camera.  
+*@warning   The function can not be invoked in @link #dvpStreamCallback callback function @endlink.
+*/
+dvp2api dvpStatus dvpOpenByName(const char *friendlyName, dvpOpenMode type, dvpHandle *pHandle);
+
+
+/**
+*@brief User may open the camera according to the index by invoking this function.
+*@param[in] index  Specifies the camera index. 
+*@param[in] mode  Specifies the open mode.
+*@param[out] pHandle  The pointer to a dvpHandle variable that can be used for saving the information of the camera handle.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpRefresh
+*@see dvpEnum
+*@see dvpOpenByName
+*@see dvpGetCameraInfo
+*@note     The function should be invoked after @link #dvpRefresh refresh the camera @endlink and in the same thread as it.
+*@warning  The function can not be invoked in @link #dvpStreamCallback callback function @endlink.  
+*/
+dvp2api dvpStatus dvpOpen(dvpUint32 index, dvpOpenMode mode, dvpHandle *pHandle);
+
+
+/**
+*@brief User may check whether the camera handle is valid by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[out] pIsValid  The pointer to a boolean variable that can be used for saving the valid status. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@note If @link #dvpOpen open the camera @endlink successfully, the camera handle is valid.If @link #dvpClose close the camera @endlink successfully,the camera handle is invalid. 
+*/
+dvp2api dvpStatus dvpIsValid(dvpHandle handle, bool *pIsValid);
+
+
+/**
+*@brief User may check whether the camera is online by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] pIsOnline  Specifies the online status. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*/
+dvp2api dvpStatus dvpIsOnline(dvpHandle handle, bool *pIsOnline);
+
+
+/**
+*@brief User may open the video stream by invoking this function. 
+*@param[in] handle  Specifies the camera handle.  
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpOpen
+*@see dvpStop
+*/
+dvp2api dvpStatus dvpStart(dvpHandle handle);
+
+
+/**
+*@brief User may stop the video stream by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpStart
+*@see dvpClose
+*/
+dvp2api dvpStatus dvpStop(dvpHandle handle);
+
+
+/**
+*@brief User may acquire a frame image by invoking this function. 
+*@param[in] handle  Specifies the camera handle.  
+*@param[out] pFrame  The pointer to a dvpFrame structure that can be used for saving the frame information. 
+*@param[out] pBuffer  The pointer to a void pointer that can be used for pointing to the starting address of the image data buffer.
+*@param[in] timeout  Specifies the time of the timeout(ms).
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpStreamCallback
+*@note		The function should be invoked after @link #dvpStart playing the video stream @endlink. 
+*@warning   If the function is invoked again,the Image Data Buffer that is got by this function will be invalid. therefore, the thread should be synchronized and the critical section shuold be protected in the application of acquiring images simultaneously by the multithreading. 
+*/
+dvp2api dvpStatus dvpGetFrame(dvpHandle handle, dvpFrame *pFrame, void **pBuffer, dvpUint32 timeout);
+
+
+/**
+*@brief User may close the camera by invoking this function.  
+*@param[in] handle  Specifies the camera handle.  
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpStop
+*@warning     The function can not be invoked in @link #dvpStreamCallback callback function @endlink.
+*@warning     the camera handle will be invalid after the camera has been closed.
+*/
+dvp2api dvpStatus dvpClose(dvpHandle handle);
+
+
+
+/** @defgroup __DVP2_API_CALLBACK__  Callback function 
+*@{
+*/
+/** @brief  The video stream callback function 
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] event   Specifies the event type. 
+*@param[in] pContext  The pointer to a void variable that can be used for saving the user information. 
+*@param[in] pFrame    The pointer to a dvpFrame structure that can be used for saving the frame information.
+*@param[in] pBuffer   The pointer to a void variable that can be used for saving the image data.
+*@see dvpRegisterStreamCallback
+*@see dvpUnregisterStreamCallback
+*@note      Allow handle @link #dvpDrawPicture display @endlink and @link #dvpSavePicture save @endlink the images in the callback function.
+*@warning   Must not @link #dvpOpen open the camera @endlink,@link #dvpClose close the camera @endlink,@link #dvpStart start the video stream @endlink, @link #dvpStop stop the video stream @endlink and @link #dvpGetFrame grab the images @endlink in the callback function. 
+*/
+typedef dvpInt32(dvpStreamCallback)(dvpHandle handle, dvpStreamEvent event, void *pContext, dvpFrame *pFrame, void *pBuffer);
+
+/**
+*@brief User may register the video stream callback function by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] proc    Specifies the pointer to the callback function.
+*@param[in] event   Specifies the event type of the callback function.
+*@param[in] pContex  Specifies the user pointer to the callback function.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see   dvpUnregisterStreamCallback
+*@note  A callback function depend on the front 3 parameters of this function. 
+*/
+dvp2api dvpStatus dvpRegisterStreamCallback(dvpHandle handle, dvpStreamCallback proc, dvpStreamEvent event, void *pContex);
+
+
+/**
+*@brief  User may unregister the video stream callback function by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] proc    Specifies the pointer to the callback function. 
+*@param[in] event   Specifies the event type of the callback function.  
+*@param[in] pContex  Specifies the user pointer to the callback function. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@note  The front 3 parameters of this function and @link #dvpRegisterStreamCallback register callback function @endlink should be the same.
+*/
+dvp2api dvpStatus dvpUnregisterStreamCallback(dvpHandle handle, dvpStreamCallback proc, dvpStreamEvent event, void *pContex);
+
+
+/** @} end of __DVP2_API_CALLBACK__ */
+
+/** @defgroup __DVP2_API_CONFIG__   Archive and load files 
+*@{
+*/
+/**
+*@brief User may load the default setting by invoking this function. 
+*@param[in] handle  Specifies the camera handle.  
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpLoadConfig
+*@see dvpSaveConfig
+*@warning   The function will cover the current setting. If necessary, please invoke the function after @link #dvpSaveConfig saving the current setting @endlink into the configuration file.
+*/
+dvp2api dvpStatus dvpLoadDefault(dvpHandle handle);
+
+
+/**
+*@brief User may load the setting from the configuration file by invoking this function. 
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] path  Specifies the configuration file path/file name.(automatically select path)/empty pointer (automatically select path and file name) 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpLoadDefault
+*@see dvpSaveConfig
+*@warning   The function will cover the current setting. If necessary, please invoke the function after @link #dvpSaveConfig saving the current setting @endlink into the configuration file.
+*/
+dvp2api dvpStatus dvpLoadConfig(dvpHandle handle, const char *path);
+
+
+/**
+*@brief User may save the current setting into the configuration file by invoking this function. 
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] path  Specifies the configuration file path/file name.(automatically select path)/empty pointer (automatically select path and file name) 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpLoadDefault
+*@see dvpLoadConfig
+*@warning   Must make sure that the write permission of this file is permitted in the curent process. 
+*/
+dvp2api dvpStatus dvpSaveConfig(dvpHandle handle, const char *path);
+
+
+/** @} end of __DVP2_API_CONFIG__ */
+/** @} end of __DVP2_API_BASE__ */
+
+/** @defgroup __DVP2_API_EXTEND__   Practical function 
+*@{
+*/
+
+/**
+*@brief User may save the image into file by invoking this function. 
+*@param[in] pFrame  Specifies the frame information.  
+*@param[in] pBuffer  Specifies the starting address of the Image Data Buffer.(support data formats includes  RAW,RGB24)  
+*@param[in] file    Specifies the File name or complete path.(image file format is decided by file extension name.At present support the image format includes bmp, jpeg, png, tiff, gif, dat.( single image date) 
+*@param[in] quality  Image quality, only support the JPEG format, and the value range is [1,100]. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpGetFrame
+*@see dvpStreamCallback
+*/
+dvp2api dvpStatus dvpSavePicture(const dvpFrame *pFrame, const void *pBuffer, const char *file, dvpInt32 quality);
+
+#ifdef _WIN32
+
+/**
+*@brief User may display the images in the window by invoking this function. 
+*@param[in] pFrame 	Specifies the frame information.  
+*@param[in] pBuffer  Specifies the starting address of the image data buffer.(support data formats includes  RAW,RGB24)  
+*@param[in] hWnd    Specifies the WindowHandle that can be used for displaying the images.  
+*@param[in] sRect   Specifies the image area that can be used for displaying.(the empty pointer represents the whole iamge area)
+*@param[in] dRect   Specifies the window area that can be used for dispalying.(the empty pointer represents the whole window area)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@note     Suggest invoke the function in @link #dvpStreamCallback callback function @endlink.
+*@warning  At present only support the RGB24 image data format.
+*/
+dvp2api dvpStatus dvpDrawPicture(dvpFrame *pFrame, void *pBuffer, HWND hWnd, LPRECT sRect, LPRECT dRect);
+
+
+/**
+*@brief User may start the video stream, create video file, and get the video encoder handle by invoking this function.  
+*@param[in] file      Specifies the video filename or complete path.( the video file format is decided by file extension name.At present support the video formats includes  wmv avi）
+*@param[in] width     Specifies the video image width. 
+*@param[in] height    Specifies the video image height. 
+*@param[in] quality   Specifies the video image quality, only support the avi format, and the value range is [1,100]. 
+*@param[out] pHandle  The pointer to a dvpRecordHandle variable that can be used for saving the video encoder handle. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpVideoRecordWrite
+*@see dvpStopVideoRecord
+*/
+dvp2api dvpStatus dvpStartVideoRecord(const char *file, dvpUint32 width, dvpUint32 height, dvpInt32 quality, dvpRecordHandle *pHandle);
+
+
+/**
+*@brief User may check whether the video encoder handle is valid by invoking this function. 
+*@param[in] handle    Specifies the video encoder handle.
+*@param[out] pValid   The pointer to a boolean variable that can be used for saving the valid status of the video encoder handle. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@note  If @link #dvpStartVideoRecord start video record @endlink successfully, the video encoder handle is valid, If @link #dvpStopVideoRecord stop video record @endlink successufully,the video encoder handle is invalid.
+*/
+dvp2api dvpStatus dvpIsVideoRecorderValid(dvpRecordHandle handle, bool *pValid);
+
+
+/**
+*@brief User may write the video steam into the video files by invoking this function. 
+*@param[in] handle    Specifies the video encoder handle.
+*@param[in] pFrame    Specifies the frame information. 
+*@param[in] pBuffer   Specifies the starting address of the image data buffer. (At present support the data format includes  RGB24) 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpGetFrame
+*@see dvpStartVideoRecord
+*@see dvpStopVideoRecord
+*/
+dvp2api dvpStatus dvpVideoRecordWrite(dvpRecordHandle handle, dvpFrame *pFrame, void *pBuffer);
+
+
+/**
+*@brief User may stop the video record, close the video file, and release the video encoder handle by invoking this function. 
+*@param[in] handle    Specifies the video encoder handle.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpVideoRecordWrite
+*@see dvpStartVideoRecord
+*/
+dvp2api dvpStatus dvpStopVideoRecord(dvpRecordHandle handle);
+
+
+/**
+*@brief User may display the camera's property modal dialogue box by invoking this function. 
+*@param[in] handle    Specifies the camera handle.
+*@param[in] hParent   Specifies the WindowHandle of the parent window. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*/
+dvp2api dvpStatus dvpShowPropertyModalDialog(dvpHandle handle, HWND hParent);
+
+
+/**
+*@brief User may display the camera's options dialogue box by invoking this function. 
+*@param[in] hParent  Specifies the WindowHandle of the parent window.
+*@param[out] pCameraInfo  Specifies the camera information. 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*/
+dvp2api dvpStatus dvpShowSelectionDialog(HWND hParent, dvpCameraInfo *pCameraInfo);
+#endif // _WIN32
+
+/**
+*@brief User may read the user defined data from the camera buffer by invoking this function.   
+*@param[in] handle  Specifies the camera handle. 
+*@param[in] addr  Specifies the read address. 
+*@param[in, out] pBuffer  Specifies the starting address of the image data buffer.
+*@param[in] size  Specifies the length of the data (usually less than or equal to 4k bytes). 
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpWriteUserData
+*@note  The buffer space that has been read can not bigger than the max buffer space. 
+*@note  The function should be invoked after @link #dvpOpen opening the camera @endlink. 
+*@warning   The function is a intensive IO operation,so it may take long time to wait. 
+*/
+dvp2api dvpStatus dvpReadUserData(dvpHandle handle, dvpUint32 addr, void *pBuffer, dvpUint32 size);
+
+
+/**
+*@brief User may write the user defined data  into the camera buffer by invoking this function.  
+*@param[in] handle   Specifies the camera handle.  
+*@param[in] addr     Specifies the write address. 
+*@param[in] pBuffer  Specifies the starting address of the image data buffer.
+*@param[in] size     Specifies the length of the data.(usually less than or equal to 4k bytes)
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpReadUserData
+*@note    The buffer space that has been writed can not bigger than the max buffer space.  
+*@note    The function should be invoked after @link #dvpOpen opening the camera @endlink. 
+*@warning The function is a intensive IO operation,so it may take long time to wait. 
+*/
+dvp2api dvpStatus dvpWriteUserData(dvpHandle handle, dvpUint32 addr, void *pBuffer, dvpUint32 size);
+
+
+/**
+*@brief User may set a @link #dvpCameraInfo  UserID (User Defined Name) @endlink for the camera by invoking this function.
+*@param[in] handle  Specifies the camera handle.  
+*@param[in] UserId  Specifies the user ID. 
+*@param[in, out] pLength  The input is the length of the string that is provided and the output is the length of the string that is used actually.
+*@return Status code  DVP_STATUS_OK if the call succeeds.
+*@see dvpGetCameraInfo
+*/
+dvp2api dvpStatus dvpSetUserId(dvpHandle handle, const char *UserId, dvpUint32 *pLength);
+
+
+/** @} end of __DVP2_API_EXTEND__ */
+
+/** @defgroup __DVP_EXPOSURE__ The exposure function
+*@{
+*/
+/** @} end of __DVP_EXPOSURE__ */
+
+/** @defgroup __DVP_COLOR__  The color adjustment 
+*@{
+*/
+/** @} end of __DVP_COLOR__ */
+
+/** @defgroup __DVP_ENHANCE__  The enhancing effect
+*@{
+*/
+/** @} end of __DVP_ENHANCE__ */
+
+/** @defgroup __DVP_ADVANCED__ The advanced setting
+*@{
+*/
+/** @} end of __DVP_ADVANCED__ */
+
+/** @defgroup __DVP_SIZE__  The image size
+*@{
+*/
+/** @} end of __DVP_SIZE__ */
+
+/** @defgroup __DVP_TRIGGER__ The trigger function 
+*@{
+*/
+/** @} end of __DVP_TRIGGER__ */
+
+/** @defgroup __DVP_INFORMATION__  The basic information
+*@{
+*/
+/** @} end of __DVP_INFORMATION__ */
+/** @} end of __DVP2_API__ */
+
+#endif /* __DVPCAMERA_H__ */
+

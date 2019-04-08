@@ -23,8 +23,9 @@ import matplotlib.pyplot as plt
 import math
 import multiprocessing
 import argparse
-from   ctypes import c_uint8
-from ctypes import *
+#from   ctypes import c_uint8
+#from ctypes import *
+from ctypes import cdll
 #import win32com.client  #pip install pyWin32
 #from win32com.client import GetObject
 #import usb.core
@@ -244,9 +245,9 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     def fsm_msg_init_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
         #全局搜索摄像头
-        self.camera_nbr = -1
-        p = clsCamDevHdl()
-        self.camera_nbr = p.dhSearchRunCam()
+        self.camera_nbr = 0
+#         p = clsCamDevHdl()
+#         self.camera_nbr = p.dhSearchRunCam()
         res = "L2VISCAP: Valid camera number = " + str(self.camera_nbr)     
         self.funcVisionLogTrace(str(res))
         #INIT
@@ -255,6 +256,21 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             return TUP_FAILURE;
         #正确的情况
         try:
+            ##############################################
+            #mshot camera   linux 
+            count = 0
+            h = 0
+            exp = 0
+            gain = 0
+            strDllPath = sys.path[0] + str(os.sep) + "libdvp.so"
+            print(strDllPath)
+            objDll = cdll.LoadLibrary(strDllPath)
+            print("objDll",objDll)
+            objDll.dvpRefresh(count)
+            objDll.dvpOpen(0,1,h)
+            objDll.dvpGetExposure(h,exp)
+            objDll.dvpGetAnalogGain(h,gain)
+            print("exposure=%f,gain=%f"%(exp,gain))
                         #toupcam
 #             strDllPath = sys.path[0] + str(os.sep) + "toupcam.dll"
 #             print(strDllPath)
@@ -279,15 +295,23 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
 #             print("ret",ret)
         
             ###############################################
-            #nncam 
-#             strDllPath = sys.path[0] + str(os.sep) + "nncam.dll"
-#             print(strDllPath)           
-#             objDll = ctypes.windll.LoadLibrary(strDllPath)
+            #nncam                                   #libdrawbmpso.so
+#             strDllPath = sys.path[0] + str(os.sep) + "libcreate_so.so"
+#             print(strDllPath)  
+#             objDll = cdll.LoadLibrary(strDllPath)
 #             print("objDll",objDll)
+#             print("point test A\n")
+#             c = objDll.test_add(2,9)
+#             print("res",c)
+#             print("point test B\n")
+#             objDll.test()
+#             print("point test C\n")
+#             cdll.FreeLibrary(strDllPath)
 #             openvalue = objDll.Nncam_Open
-#             openvalue.restypes = c_void_p
-#             callres = openvalue(NULL)
-#             #print("callres",callres)
+#             callres = openvalue(0)
+#             print("callres",callres)
+#             objDll.Nncam_put_AutoExpoEnable(callres,0);
+            
 #             ret1 = objDll.Nncam_Close(callres)
 #             #print("ret1",ret1)
 #             openvalue1 = objDll.Nncam_Open

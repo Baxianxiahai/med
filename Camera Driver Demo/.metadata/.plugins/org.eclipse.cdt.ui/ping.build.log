@@ -1,0 +1,7 @@
+11:06:11 **** Clean-only build of configuration Debug for project ping ****
+make clean 
+rm -rf  ./src/ping.o  ./src/ping.d  ping
+ 
+
+11:06:11 Build Finished (took 377ms)
+

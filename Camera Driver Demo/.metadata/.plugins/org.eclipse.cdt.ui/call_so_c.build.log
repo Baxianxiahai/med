@@ -1,0 +1,7 @@
+11:06:09 **** Clean-only build of configuration Debug for project call_so_c ****
+make clean 
+rm -rf  ./src/call_so_c.o  ./src/call_so_c.d  call_so_c
+ 
+
+11:06:09 Build Finished (took 375ms)
+

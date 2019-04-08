@@ -1,0 +1,11 @@
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=linux
+configDescList=org.eclipse.launchbar.core.descriptorType.default\:Mshot,org.eclipse.launchbar.core.descriptorType.default\:ping,org.eclipse.launchbar.core.descriptorType.default\:cebs ModCebsFspc.py,org.eclipse.launchbar.core.descriptorType.default\:cebs ModCebsMoto.py,org.eclipse.launchbar.core.descriptorType.default\:cebs test.py,org.eclipse.launchbar.core.descriptorType.default\:hst hstMain.py,org.eclipse.launchbar.core.descriptorType.default\:cebs ModCebsDba.py,org.eclipse.launchbar.core.descriptorType.default\:drawbmp,org.eclipse.launchbar.core.descriptorType.default\:testcallso,org.eclipse.launchbar.core.descriptorType.default\:callso,org.eclipse.launchbar.core.descriptorType.default\:cebs ModCebsVision.py,org.eclipse.launchbar.core.descriptorType.default\:cebs tupMain.py,org.eclipse.launchbar.core.descriptorType.default\:call_mshot_so_c
+eclipse.preferences.version=1
+org.eclipse.launchbar.core.descriptorType.default\:cebs\ test.py/activeLaunchMode=run
+org.eclipse.launchbar.core.descriptorType.default\:cebs\ test.py/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
+org.eclipse.launchbar.core.descriptorType.default\:cebs\ tupMain.py/activeLaunchMode=run
+org.eclipse.launchbar.core.descriptorType.default\:cebs\ tupMain.py/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
+org.eclipse.launchbar.core.descriptorType.default\:drawbmp/activeLaunchMode=run
+org.eclipse.launchbar.core.descriptorType.default\:hst\ hstMain.py/activeLaunchMode=run
+org.eclipse.launchbar.core.descriptorType.default\:ping/activeLaunchMode=run

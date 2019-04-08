@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item value="false" key="isRegEx"/>
+		<item value="camera index" key="selection"/>
+		<item value="false" key="casesensitive"/>
+		<item value="false" key="incremental"/>
+		<item value="true" key="wrap"/>
+		<item value="false" key="wholeword"/>
+		<list key="findhistory">
+			<item value="camera index"/>
+			<item value="Nncam_Snap"/>
+			<item value="NNCAM_EVENT_STILLIMAGE"/>
+			<item value="ROI"/>
+			<item value="bSnap"/>
+			<item value="EventCallback"/>
+			<item value="HRESULT"/>
+			<item value="hr"/>
+			<item value="Nncam_PullStillImage"/>
+			<item value="NncamModelV2"/>
+			<item value="NncamInstV2"/>
+			<item value="CP2102 USB to UART Bridge Controller"/>
+			<item value="/dev/ttyUSB0"/>
+			<item value="funcInitSps"/>
+			<item value="medErrorLog"/>
+		</list>
+		<list key="replacehistory">
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item value="338" key="DIALOG_WIDTH"/>
+		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+		<item value="434" key="DIALOG_HEIGHT"/>
+		<item value="1097" key="DIALOG_X_ORIGIN"/>
+		<item value="264" key="DIALOG_Y_ORIGIN"/>
+	</section>
+</section>

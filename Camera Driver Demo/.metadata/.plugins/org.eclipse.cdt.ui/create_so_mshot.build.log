@@ -1,0 +1,15 @@
+11:48:09 **** Incremental Build of configuration Debug for project create_so_mshot ****
+make all 
+Building file: ../src/create_so_mshot.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"src/create_so_mshot.d" -MT"src/create_so_mshot.o" -o "src/create_so_mshot.o" "../src/create_so_mshot.c"
+Finished building: ../src/create_so_mshot.c
+ 
+Building target: libcreate_so_mshot.so
+Invoking: GCC C Linker
+gcc -L. -shared -Wl,-soname=create_so_mshot -o "libcreate_so_mshot.so"  ./src/create_so_mshot.o   -ldvp -lhzd
+Finished building target: libcreate_so_mshot.so
+ 
+
+11:48:10 Build Finished (took 477ms)
+

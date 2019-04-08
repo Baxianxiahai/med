@@ -1,0 +1,7 @@
+11:06:11 **** Clean-only build of configuration Debug for project toupcam_bmp_c++ ****
+make clean 
+rm -rf  ./src/drawbmp2.o  ./src/drawbmp2.d  toupcam_bmp_c++
+ 
+
+11:06:12 Build Finished (took 393ms)
+
