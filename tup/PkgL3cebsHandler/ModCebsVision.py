@@ -257,20 +257,16 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         #正确的情况
         try:
             ##############################################
-            #mshot camera   linux 
-            count = 0
-            h = 0
-            exp = 0
-            gain = 0
-            strDllPath = sys.path[0] + str(os.sep) + "libdvp.so"
+            #LC:mshot camera   linux 
+            #mshot 摄像头完全可以用了，后续就是根据要求修改一下曝光之类的参数就行
+            strDllPath = sys.path[0] + str(os.sep) + "libcreate_so_mshot.so"
             print(strDllPath)
             objDll = cdll.LoadLibrary(strDllPath)
             print("objDll",objDll)
-            objDll.dvpRefresh(count)
-            objDll.dvpOpen(0,1,h)
-            objDll.dvpGetExposure(h,exp)
-            objDll.dvpGetAnalogGain(h,gain)
-            print("exposure=%f,gain=%f"%(exp,gain))
+            objDll.test(1,2)    #这里第一个参数代表的是batch的值，第二个代表的是空号
+            for i in range(1,50):
+                objDll.test(2,i) 
+            
                         #toupcam
 #             strDllPath = sys.path[0] + str(os.sep) + "toupcam.dll"
 #             print(strDllPath)

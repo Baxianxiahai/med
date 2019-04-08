@@ -28,11 +28,20 @@
 3.注意：pyinstaller打包多进程程序出错解决办法
 https://blog.csdn.net/zyc121561/article/details/82941056
 
+//=LC, 2019/4/8, CURRENT_SW_DELIVERY R1.67 =>CEBS
+=将生成的相关的几个摄像头驱动工程进行了git
+=通过c code制作Mshot摄像头so文件，基本上可以使用了，由于在python中传文件名作为参数没走通，
+于是更改方式，在so文件代码中，直接传入batch num 和 hole num，实现生成文件名称与之前windows下的一致
+其他更详细的参数设定后续可以依照需求再加
+=通过c code制作nncam摄像头so文件，这个还有点小问题，python调用是可以完成的，但是由于这个so中含有另一个线程，所以在so的code中加了exit，
+这个会导致界面报错，假设我们后面不需要界面的话，可能会好使
 
 
-
-
-
+//=LC, 2019/3/27, CURRENT_SW_DELIVERY R1.66 =>CEBS
+=USB串口之前在windows环境下是使用搜索设备描述符来锁定设备端口，在ubuntu下需要修改。
+=现在暂时使用的是udev rules来处理的，在/etc/udev/rules.d/下创建新的.rules文件来实现
+=修复在ubuntu下图像训练，图像堆叠的报错问题
+=在ubuntu下和在windows下图像识别的结果有差异，暂时怀疑是python版本不同和系统的差异导致
 
 
 //=ZJL, 2019/2/19, CURRENT_SW_DELIVERY R1.65 =>CEBS
