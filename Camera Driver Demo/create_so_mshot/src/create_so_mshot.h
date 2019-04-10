@@ -5,5 +5,7 @@
 #include "dvp.h"
 
 
-int test(char *filename);
+int test(int i, int j);
+
+char * combinename(int i, int j);
 
