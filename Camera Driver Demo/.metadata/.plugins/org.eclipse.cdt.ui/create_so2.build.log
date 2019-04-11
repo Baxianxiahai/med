@@ -1,0 +1,6 @@
+18:17:34 **** Incremental Build of configuration Debug for project create_so2 ****
+make all 
+make: Nothing to be done for 'all'.
+
+18:17:34 Build Finished (took 410ms)
+

@@ -23,16 +23,17 @@ import matplotlib.pyplot as plt
 import math
 import multiprocessing
 import argparse
-from   ctypes import c_uint8
-from ctypes import *
-import win32com.client  #pip install pyWin32
-from win32com.client import GetObject
+#from   ctypes import c_uint8
+#from ctypes import *
+from ctypes import cdll
+#import win32com.client  #pip install pyWin32
+#from win32com.client import GetObject
 #import usb.core
 #from   cv2 import waitKey
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import pyqtSlot
 from multiprocessing import Queue, Process
-from _overlapped import NULL
+#from _overlapped import NULL
 
 
 
@@ -244,9 +245,9 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     def fsm_msg_init_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
         #全局搜索摄像头
-        self.camera_nbr = -1
-        p = clsCamDevHdl()
-        self.camera_nbr = p.dhSearchRunCam()
+        self.camera_nbr = 0
+#         p = clsCamDevHdl()
+#         self.camera_nbr = p.dhSearchRunCam()
         res = "L2VISCAP: Valid camera number = " + str(self.camera_nbr)     
         self.funcVisionLogTrace(str(res))
         #INIT
@@ -255,6 +256,17 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             return TUP_FAILURE;
         #正确的情况
         try:
+            ##############################################
+            #LC:mshot camera   linux 
+            #mshot 摄像头完全可以用了，后续就是根据要求修改一下曝光之类的参数就行
+            strDllPath = sys.path[0] + str(os.sep) + "libcreate_so_mshot.so"
+            print(strDllPath)
+            objDll = cdll.LoadLibrary(strDllPath)
+            print("objDll",objDll)
+            objDll.test(1,2)    #这里第一个参数代表的是batch的值，第二个代表的是空号
+            for i in range(1,50):
+                objDll.test(2,i) 
+            
                         #toupcam
 #             strDllPath = sys.path[0] + str(os.sep) + "toupcam.dll"
 #             print(strDllPath)
@@ -279,15 +291,23 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
 #             print("ret",ret)
         
             ###############################################
-            #nncam 
-#             strDllPath = sys.path[0] + str(os.sep) + "nncam.dll"
-#             print(strDllPath)           
-#             objDll = ctypes.windll.LoadLibrary(strDllPath)
+            #nncam                                   #libdrawbmpso.so
+#             strDllPath = sys.path[0] + str(os.sep) + "libcreate_so.so"
+#             print(strDllPath)  
+#             objDll = cdll.LoadLibrary(strDllPath)
 #             print("objDll",objDll)
+#             print("point test A\n")
+#             c = objDll.test_add(2,9)
+#             print("res",c)
+#             print("point test B\n")
+#             objDll.test()
+#             print("point test C\n")
+#             cdll.FreeLibrary(strDllPath)
 #             openvalue = objDll.Nncam_Open
-#             openvalue.restypes = c_void_p
-#             callres = openvalue(NULL)
-#             #print("callres",callres)
+#             callres = openvalue(0)
+#             print("callres",callres)
+#             objDll.Nncam_put_AutoExpoEnable(callres,0);
+            
 #             ret1 = objDll.Nncam_Close(callres)
 #             #print("ret1",ret1)
 #             openvalue1 = objDll.Nncam_Open
@@ -1066,7 +1086,14 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         outText['totalDead'] = 0
         
         #Searching out-form shape: 找到轮廓
-        _, contours, hierarchy = cv.findContours(nfImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
+        #LC：windows下调用这个
+        #_, contours, hierarchy = cv.findContours(nfImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
+        
+        #LC：ubuntu下调用这个
+        contours, hierarchy = cv.findContours(nfImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
+        
+        
+        
         #contours = contours[0] if imutils.is_cv() else contours[1]
         
         #Output graphic: 输出图形

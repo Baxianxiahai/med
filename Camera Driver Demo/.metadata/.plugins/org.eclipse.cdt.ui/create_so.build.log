@@ -1,0 +1,28 @@
+11:14:16 **** Build of configuration Debug for project create_so ****
+make all 
+Building file: ../src/create_so.c
+Invoking: GCC C Compiler
+gcc -O0 -g -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"src/create_so.d" -MT"src/create_so.o" -o "src/create_so.o" "../src/create_so.c"
+../src/create_so.c: In function ‘test’:
+../src/create_so.c:129:13: warning: unused variable ‘hr1’ [-Wunused-variable]
+     HRESULT hr1 = Nncam_get_Size(g_hcam, &nWidth, &nHeight);
+             ^
+../src/create_so.c:125:9: warning: unused variable ‘i’ [-Wunused-variable]
+     int i = 0;
+         ^
+../src/create_so.c:124:14: warning: unused variable ‘Time’ [-Wunused-variable]
+     unsigned Time=0;
+              ^
+../src/create_so.c:123:33: warning: unused variable ‘auto_expo_flag’ [-Wunused-variable]
+     int nWidth = 0, nHeight = 0,auto_expo_flag=0xFF;
+                                 ^
+Finished building: ../src/create_so.c
+ 
+Building target: libcreate_so.so
+Invoking: GCC C Linker
+gcc -L. -shared -Wl,-soname=create_so -o "libcreate_so.so"  ./src/create_so.o   -lnncam
+Finished building target: libcreate_so.so
+ 
+
+11:14:16 Build Finished (took 547ms)
+

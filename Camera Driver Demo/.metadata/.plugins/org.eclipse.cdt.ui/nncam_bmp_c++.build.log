@@ -1,0 +1,7 @@
+11:06:10 **** Clean-only build of configuration Debug for project nncam_bmp_c++ ****
+make clean 
+rm -rf  ./src/drawbmp.o  ./src/drawbmp.d  nncam_bmp_c++
+ 
+
+11:06:11 Build Finished (took 431ms)
+

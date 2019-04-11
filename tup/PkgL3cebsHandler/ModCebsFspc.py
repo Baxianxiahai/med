@@ -24,14 +24,14 @@ import math
 import multiprocessing
 from   ctypes import c_uint8
 from ctypes import *
-import win32com.client  #pip install pyWin32
-from win32com.client import GetObject
+#import win32com.client  #pip install pyWin32
+#from win32com.client import GetObject
 #import usb.core
 #from   cv2 import waitKey
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import pyqtSlot
 from multiprocessing import Queue, Process
-from _overlapped import NULL
+#from _overlapped import NULL
 
 from multiprocessing import Queue, Process
 

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;create_so_mshot/src/DVPCamera.h&apos; to &apos;dvp.h&apos;" description="Rename resource &apos;DVPCamera.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/DVPCamera.h" name="dvp.h" stamp="1554692747201" updateReferences="true"/>
+</session>

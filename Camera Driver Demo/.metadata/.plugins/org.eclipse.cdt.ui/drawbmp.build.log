@@ -1,0 +1,32 @@
+17:16:15 **** Build of configuration Debug for project drawbmp ****
+make all 
+Building file: ../src/drawbmp.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"src/drawbmp.d" -MT"src/drawbmp.o" -o "src/drawbmp.o" "../src/drawbmp.cpp"
+../src/drawbmp.cpp: In function ‘int test()’:
+../src/drawbmp.cpp:137:33: warning: unused variable ‘auto_expo_flag’ [-Wunused-variable]
+     int nWidth = 0, nHeight = 0,auto_expo_flag=0xFF;
+                                 ^
+../src/drawbmp.cpp:138:14: warning: unused variable ‘Time’ [-Wunused-variable]
+     unsigned Time=0;
+              ^
+../src/drawbmp.cpp:139:9: warning: unused variable ‘i’ [-Wunused-variable]
+     int i = 0;
+         ^
+../src/drawbmp.cpp:143:13: warning: unused variable ‘hr1’ [-Wunused-variable]
+     HRESULT hr1 = Nncam_get_Size(g_hcam, &nWidth, &nHeight);
+             ^
+../src/drawbmp.cpp: In function ‘void main_sample(unsigned char*, int)’:
+../src/drawbmp.cpp:210:27: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+     char* imageFileName = "bitmapImage.bmp";
+                           ^
+Finished building: ../src/drawbmp.cpp
+ 
+Building target: libdrawbmp
+Invoking: GCC C++ Linker
+g++ -L. -shared -Wl,-soname=libdrawbmp -o "libdrawbmp"  ./src/drawbmp.o   -lnncam
+Finished building target: libdrawbmp
+ 
+
+17:16:16 Build Finished (took 585ms)
+

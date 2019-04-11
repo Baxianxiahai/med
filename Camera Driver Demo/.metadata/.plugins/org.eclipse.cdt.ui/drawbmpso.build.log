@@ -1,0 +1,15 @@
+18:11:35 **** Incremental Build of configuration Debug for project drawbmpso ****
+make all 
+Building file: ../src/drawbmp.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"src/drawbmp.d" -MT"src/drawbmp.o" -o "src/drawbmp.o" "../src/drawbmp.c"
+Finished building: ../src/drawbmp.c
+ 
+Building target: libdrawbmpso.so
+Invoking: GCC C Linker
+gcc -shared -o "libdrawbmpso.so"  ./src/drawbmp.o   
+Finished building target: libdrawbmpso.so
+ 
+
+18:11:36 Build Finished (took 457ms)
+

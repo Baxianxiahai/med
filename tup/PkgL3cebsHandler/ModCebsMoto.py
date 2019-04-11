@@ -580,41 +580,55 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     #初始化串口
     #注意两种串口设备，描述符是不一样的，需要通过描述符来锁定设备端口
     def funcInitSps(self):
-        plist = list(serial.tools.list_ports.comports())
-        self.targetComPortString = GLSPS_PAR_OFC.SPS_USB_CARD_SET
-        self.drvVerNbr = -1
-        if len(plist) <= 0:
-            self.funcMotoErrTrace("L2MOTO: Not serial device installed!")
-            return -2
-        else:
-            maxList = len(plist)
-            searchComPartString = ''
-            for index in range(0, maxList):
-                self.medErrorLog("L2MOTO: " + str(plist[index]))
-                plistIndex =list(plist[index])
-                string = ("L2MOTO: Sps Init = ", plistIndex)
-                self.tup_dbg_print(string)
-                #Find right COM#
-                for comPortStr in plistIndex:
-                    indexStart = comPortStr.find(self.targetComPortString)
-                    indexEnd = comPortStr.find(')')
-                    if (indexStart >= 0) and (indexEnd >=0) and (indexEnd > len(self.targetComPortString)):
-                        searchComPartString = comPortStr[len(self.targetComPortString):indexEnd]
-            if searchComPartString == '':
-                self.funcMotoErrTrace("L2MOTO: Can not find right serial port!")
-                return -1
-            else:
-                self.funcMotoLogTrace("L2MOTO: Serial port is to open = " + str(searchComPartString))
-                serialName = searchComPartString
-            try:
-                self.serialFd = serial.Serial(serialName, 9600, timeout = 0.2)
-            except Exception:
-                self.IsSerialOpenOk = False
-                self.funcMotoErrTrace("L2MOTO: Serial exist, but can't open!")
-                return -1
-            self.IsSerialOpenOk = True
-            self.funcMotoLogTrace("L2MOTO: Success open serial port!")
-            return 1
+        #LC：ubuntu环境下，之前使用的那一套搜索设备符需要修改
+        #现在使用的方案是创建udev rules文件来处理的
+        try:
+            self.serialFd = serial.Serial('/dev/cebsusb', 9600, timeout = 0.2)
+        except Exception:
+            self.IsSerialOpenOk = False
+            self.funcMotoErrTrace("L2MOTO: Serial exist, but can't open!")
+            return -1
+        self.IsSerialOpenOk = True
+        self.funcMotoLogTrace("L2MOTO: Success open serial port!")
+        return 1
+        
+        #windows下
+        
+#         plist = list(serial.tools.list_ports.comports())
+#         self.targetComPortString = GLSPS_PAR_OFC.SPS_USB_CARD_SET
+#         self.drvVerNbr = -1
+#         if len(plist) <= 0:
+#             self.funcMotoErrTrace("L2MOTO: Not serial device installed!")
+#             return -2
+#         else:
+#             maxList = len(plist)
+#             searchComPartString = ''
+#             for index in range(0, maxList):
+#                 self.medErrorLog("L2MOTO: " + str(plist[index]))
+#                 plistIndex =list(plist[index])
+#                 string = ("L2MOTO: Sps Init = ", plistIndex)
+#                 self.tup_dbg_print(string)
+#                 #Find right COM#
+#                 for comPortStr in plistIndex:
+#                     indexStart = comPortStr.find(self.targetComPortString)
+#                     indexEnd = comPortStr.find(')')
+#                     if (indexStart >= 0) and (indexEnd >=0) and (indexEnd > len(self.targetComPortString)):
+#                         searchComPartString = comPortStr[len(self.targetComPortString):indexEnd]
+#             if searchComPartString == '':
+#                 self.funcMotoErrTrace("L2MOTO: Can not find right serial port!")
+#                 return -1
+#             else:
+#                 self.funcMotoLogTrace("L2MOTO: Serial port is to open = " + str(searchComPartString))
+#                 serialName = searchComPartString
+#             try:
+#                 self.serialFd = serial.Serial(serialName, 9600, timeout = 0.2)
+#             except Exception:
+#                 self.IsSerialOpenOk = False
+#                 self.funcMotoErrTrace("L2MOTO: Serial exist, but can't open!")
+#                 return -1
+#             self.IsSerialOpenOk = True
+#             self.funcMotoLogTrace("L2MOTO: Success open serial port!")
+#             return 1
         
     #命令打包
     def funcSendCmdPack(self, cmdId, par1, par2, par3, par4):

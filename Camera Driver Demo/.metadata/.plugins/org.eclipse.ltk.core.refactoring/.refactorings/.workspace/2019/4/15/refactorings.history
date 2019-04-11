@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete 8 resources" deleteContents="false" description="Delete 8 resources" element1="/create_so/Debug/0bitmapImage.bmp" element2="/create_so/Debug/1bitmapImage.bmp" element3="/create_so/Debug/2bitmapImage.bmp" element4="/create_so/Debug/3bitmapImage.bmp" element5="/create_so/Debug/4bitmapImage.bmp" element6="/create_so/Debug/5bitmapImage.bmp" element7="/create_so/Debug/6bitmapImage.bmp" element8="/create_so/Debug/7bitmapImage.bmp" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="8" stamp="1554693236187"/>
+</session>
