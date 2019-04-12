@@ -56,8 +56,8 @@ class TupClsHstapiBasic(object):
             body=encoded_data, 
             headers={'Content-Type':'application/json', 'Connection': 'close'}
             )
-        print("*"*25)
-        print(r.data)
+#         print("*"*25)
+#         print(r.data)
         try:
             result = json.loads(r.data)
         except Exception:
