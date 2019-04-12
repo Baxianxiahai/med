@@ -731,7 +731,7 @@ if __name__ == '__main__':
     #res = hst.hstCurlPost({"restTag": "dba", "actionId": 3800, "parFlag": 1, "parContent":{"cmd":"add","user":"test222"}})
     #create operation
 #     print("create operation\r\n")
-#     print(cls.cebs_user_sheet_Create({'cmd':'add', 'uid':250, 'login_name':'admin', 'pass_word':'13456', 'grade_level':1,'email':'13525@.com', 'memo':'this'}))
+    print(cls.cebs_user_sheet_Create({'cmd':'add', 'uid':250, 'login_name':'admin', 'pass_word':'13456', 'grade_level':1,'email':'13525@.com', 'memo':'this'}))
 #     print(cls.cebs_product_profile_Create({'cmd':'add', 'dev_code':'shanghai', 'hw_ver':222, 'sw_ver':333, 'authtoken':'thisis'} ))
 #     print(cls.cebs_cali_profile_Create({'cmd':'add', 'platetype':1,'uid':250, 'left_bot_x':0, 'left_bot_y':0, 'right_up_x':0, 'right_up_y':0, 'accspeed':20, 'decspeed':20, 'movespeed':20, 'zero_spd':20, 'zero_dec':20, 'back_step':12800} ))
 #     print(cls.cebs_object_profile_Create({'cmd':'add', 'objname':'xianchong','objtype':1, 'uid':250, 'dir_origin':'varcebs', 'dir_middle':'varcebs', 'memo':'varcebs'}))
@@ -747,7 +747,7 @@ if __name__ == '__main__':
     
     #modify operation 
 #     print("modify operation")
-#     print(cls.cebs_user_sheet_Modify({'cmd':'modify','uid':250,'pass_word':54321,'reg_date':'2019-03-01 08:33:33',}))
+#     print(cls.cebs_user_sheet_Modify({'cmd':'modify','uid':250,'pass_word':54321,'reg_date':'2019-03-01 08:33:33'}))
 #     print(cls.cebs_product_profile_Modify({'cmd':'modify','id':4,'hw_ver':250,'mfd':'2019-03-01 08:33:33'}))
 #     print(cls.cebs_cali_profile_Modify({'cmd':'modify','id':5,'calitime':'2019-03-01 08:33:33','left_bot_x':100,'left_bot_y':200,'right_up_x':400,'right_up_y':800}))
 #     print(cls.cebs_object_profile_Modify({'cmd':'modify','objid':5,'objname':'prototype','dir_origin':'test'}))
@@ -761,15 +761,15 @@ if __name__ == '__main__':
             还是说我要什么就字段的参数就将字段参数传入，只返回需要的字段参数,方式不同在hst服务中相应的code不同
     ''' 
     #read operation    
-    print("read operation")
-    print(cls.cebs_user_sheet_Read({'cmd':'read', 'uid':250}))
-    print(cls.cebs_product_profile_Read({'cmd':'read', 'id':5}))
-    print(cls.cebs_cali_profile_Read({'cmd':'read', 'id':5}))
-    print(cls.cebs_object_profile_Read({'cmd':'read', 'objid':7}))
-    print(cls.cebs_config_eleg_Read({'cmd':'read', 'confid':11}))
-    print(cls.cebs_config_stackcell_Read({'cmd':'read', 'confid':4}))
-    print(cls.cebs_result_eleg_Read({'cmd':'read', 'sid':11}))
-    print(cls.cebs_result_stackcell_Read({'cmd':'read', 'sid':5}))
+#     print("read operation")
+#     print(cls.cebs_user_sheet_Read({'cmd':'read', 'uid':250}))
+#     print(cls.cebs_product_profile_Read({'cmd':'read', 'id':5}))
+#     print(cls.cebs_cali_profile_Read({'cmd':'read', 'id':5}))
+#     print(cls.cebs_object_profile_Read({'cmd':'read', 'objid':7}))
+#     print(cls.cebs_config_eleg_Read({'cmd':'read', 'confid':11}))
+#     print(cls.cebs_config_stackcell_Read({'cmd':'read', 'confid':4}))
+#     print(cls.cebs_result_eleg_Read({'cmd':'read', 'sid':11}))
+#     print(cls.cebs_result_stackcell_Read({'cmd':'read', 'sid':5}))
  
  
     

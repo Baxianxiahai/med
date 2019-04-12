@@ -5,7 +5,10 @@
 #include "dvp.h"
 
 
-int test(int i, int j);
+int mshot_init(void);
+int mshot_capture(int i ,int j, int boardtype);
+int mshot_capture_image(int i, int j ,int boardtype);
+
 
 char * combinename(int i, int j);
 
