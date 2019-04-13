@@ -7,7 +7,7 @@
 //LC:以下建立分布的摄像头操作，目的是实现相机初始化消息有返回，实际上初始化后就关闭了摄像头，后续切换到校准界面，或者正式开始拍摄时还需再次open的
 int mshot_init(void)
 {
-	printf("init camera...\r\n");
+	printf("Init camera...\r\n");
 	dvpUint32 count;
 	dvpStatus status;
 	dvpRefresh(&count);
@@ -26,9 +26,15 @@ int mshot_init(void)
 		return 0;
 	}
 
-
 }
+/*
+#define  96_board    5
+#define  48_board    4
+#define  24_board    3
+#define  12_board    2
+#define  6_board     1
 
+*/
 int mshot_capture(int i ,int j, int boardtype)
 {
 	dvpStatus status;
@@ -53,7 +59,9 @@ int mshot_capture(int i ,int j, int boardtype)
 	char* filenamepart = "FileName#";
 	char a[10];
 	char* b;
-
+    char *globalname[97];
+    if (5 == boardtype ){
+    printf("this is the 96_board\r\n");
 	char *name[97] = {
 						"A0", "A1", "A2","A3","A4","A5","A6","A7","A8","A9","A10", "A11","A12",\
 						"B1", "B2", "B3","B4","B5","B6","B7","B8","B9","B10","B11","B12",\
@@ -63,7 +71,44 @@ int mshot_capture(int i ,int j, int boardtype)
 						"F1", "F2", "F3","F4","F5","F6","F7","F8","F9","F10","F11","F12",\
 						"G1", "G2", "G3","G4","G5","G6","G7","G8","G9","G10","G11","G12",\
 						"H1", "H2", "H3","H4","H5","H6","H7","H8","H9","H10","H11","H12"};
+    memcpy(globalname,name,sizeof(name));
 
+    }
+    if (4 == boardtype){
+    printf("this is the 48_board\r\n");
+	char *name[49] = {
+						"A0", "A1", "A2","A3","A4","A5","A6","A7","A8",\
+							"B1", "B2", "B3","B4","B5","B6","B7","B8",\
+							"C1", "C2", "C3","C4","C5","C6","C7","C8",\
+							"D1", "D2", "D3","D4","D5","D6","D7","D8",\
+							"E1", "E2", "E3","E4","E5","E6","E7","E8",\
+							"F1", "F2", "F3","F4","F5","F6","F7","F8"};
+	memcpy(globalname,name,sizeof(name));
+    }
+    if (3 == boardtype){
+    printf("this is the 24_board\r\n");
+	char *name[25] = {
+						"A0", "A1", "A2","A3","A4","A5","A6",\
+							"B1", "B2", "B3","B4","B5","B6",\
+							"C1", "C2", "C3","C4","C5","C6",\
+							"D1", "D2", "D3","D4","D5","D6"};
+	memcpy(globalname,name,sizeof(name));
+    }
+    if (2 == boardtype){
+    printf("this is the 12_board\r\n");
+	char *name[13] = {
+						"A0", "A1", "A2","A3","A4",\
+							"B1", "B2", "B3","B4",\
+							"C1", "C2", "C3","C4"};
+	memcpy(globalname,name,sizeof(name));
+	}
+    if (1 == boardtype){
+    printf("this is the 6_board\r\n");
+	char *name[7] = {
+						"A0", "A1", "A2","A3",\
+							"B1", "B2", "B3"};
+	memcpy(globalname,name,sizeof(name));
+  	}
 
 
 	char * combinename(int i, int j)
@@ -72,7 +117,7 @@ int mshot_capture(int i ,int j, int boardtype)
 		 sprintf(a,"%d",i);
 		 totalname = strcat(batchpart,a);
 		 totalname = strcat(totalname,filenamepart);
-		 b= name[j];
+		 b= globalname[j];
 		 totalname = strcat(totalname,b);
 		 totalname = strcat(totalname,imageFileType);
 		 return totalname;

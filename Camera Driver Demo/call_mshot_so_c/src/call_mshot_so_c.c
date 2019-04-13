@@ -13,7 +13,8 @@
 
 int i = 0;
 int main(void) {
-	for (i=0;i<10;i++){
-    test("batchfilename.jpeg");
-	}
+
+	mshot_init();
+	mshot_capture(1,12,2);
+	//mshot_capture_image(3, 4);
 }

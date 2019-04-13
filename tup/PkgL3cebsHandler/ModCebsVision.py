@@ -263,11 +263,12 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             print(strDllPath)
             objDll = cdll.LoadLibrary(strDllPath)
             print("objDll",objDll)
-            objDll.test(1,2)    #这里第一个参数代表的是batch的值，第二个代表的是空号
-            for i in range(1,50):
-                objDll.test(2,i) 
-            
-                        #toupcam
+#             objDll.test(1,2)    #这里第一个参数代表的是batch的值，第二个代表的是空号
+#             for i in range(1,97):
+#                 objDll.test(2,i) 
+            objDll.mshot_init()   #初始化                      
+            objDll.mshot_capture(1,2) #拍照
+            #toupcam
 #             strDllPath = sys.path[0] + str(os.sep) + "toupcam.dll"
 #             print(strDllPath)
 #             objDll = ctypes.windll.LoadLibrary(strDllPath)
