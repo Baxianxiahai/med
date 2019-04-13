@@ -1,0 +1,20 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+paho-mqtt = "*"
+urllib3 = "*"
+pycurl = "*"
+certifi = "*"
+opencv-python = "*"
+matplotlib = "*"
+pyserial = "*"
+pyqt5 = "==5.10.*"
+pywin32 = "*"
+
+[requires]
+python_version = "3.6.8"
