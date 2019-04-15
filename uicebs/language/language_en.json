@@ -1,0 +1,107 @@
+{
+  "name": "language",
+  "owner": "system",
+  "app":{
+    "modalhead":"Warning",
+    "modaltips":"Are u want do delete this configuration?",
+    "modaltips2":"Are u want stop current configuration?",
+    "modalconfirm":"confirm",
+    "modalcancel":"cancel",
+    "userunknown":"",
+    "tempmodaltitle":"Temp Parameter",
+    "tempmodalrun":"Try"
+  },
+  "head":{
+    "icon":"",
+    "nologin":"no login",
+    "title":"Intelligent bio-detect platform",
+    "greet":"Hello"
+  },
+  "foot":{
+    "content":"Model:DRAFT 0.1 ©ZHIHE",
+    "getting":"Getting......",
+    "upgrade":"System upgrade, new version:",
+    "pnotifytitle":"System message:"
+  },
+  "basicview":{
+    "panel":{
+      "panelinfo":"Panel status",
+      "consoletitle":"Log",
+      "batch":"batch",
+      "date":"date",
+      "owner":"owner",
+      "tupid":"tupid"
+    },
+    "parameter":{
+      "parameterinfo":"system parameter",
+      "consoletitle":"Realtime log"
+    },
+    "result":{
+      "pictureinfo":"shoot",
+      "consoletitle":"result",
+      "noresult":"no result",
+      "choicetitle":"picture",
+      "buttonmod":"ModePara",
+      "buttonsave":"SavePara",
+      "shieldtitle":"Re-analysis by temp parameter"
+    },
+    "task":{
+      "taskparameter":"parameter",
+      "taskinfo":"task info",
+      "consoletitle":"Realtime log",
+      "start":"Start",
+      "stop":"Stop",
+      "reset":"Reset"
+    }
+  },
+  "alarmview":{
+    "alarm":"resolution alarm",
+    "error":"System error"
+  },
+  "loginview":{
+    "title":"System Login",
+    "username":"UserName",
+    "password":"PassWord",
+    "confirm":"Login"
+  },
+  "systeminfo":{
+    "systeminfo":"System info",
+    "consoletitle":"Realtime log"
+  },
+  "message":{
+    "alert1":"System Error, please contract Admin!",
+    "alert2":"Login Fail, please try again!",
+    "alert3":"Can not get mandatory information, please contract Admin!",
+    "alert4":"Fail while start case, please contract Admin!",
+    "alert5":"Fail while stop case, please contract Admin!",
+    "alert6":"Run error, system is shutting down!",
+    "alert7":"Can not save new config!",
+    "alert8":"Modify config save error!",
+    "alert9":"System config save error!",
+    "alert10":"Debug command error!",
+    "alert11":"Revolution error, the min size should be higher than 1366x768",
+    "message11":"Modify success, please login with new password!",
+    "message12":"Reset success, default password is 123456!",
+    "message13":"Create success, default password is 123456!",
+    "message1":"Warning:Delete Fail!!!",
+    "message2":"Delete successfully!",
+    "message3":"run successfully!",
+    "message4":"Save successfully!",
+    "message5":"Please confirm if want to delete:",
+    "message6":"Please confirm if want to stop:",
+    "message7":"Temp Parameter is saved",
+    "message8":"",
+    "message9":"",
+    "message10":"",
+    "title1":"Balance Calibration",
+    "title2":"new Configuration",
+    "title3":"System debug",
+    "title4":"System Configuration",
+    "title5":"Please Login",
+    "title6":"Log Export",
+    "title7":"Fetal Error"
+
+  }
+
+
+}

@@ -1,0 +1,11 @@
+{
+  "info":[
+    {"title":"状态1","value":"123","alarm":false},
+    {"title":"状态2","value":"123","alarm":false},
+    {"title":"状态3","value":"123","alarm":false},
+    {"title":"状态4","value":"123","alarm":false},
+    {"title":"状态5","value":"123","alarm":false},
+    {"title":"状态6","value":"123","alarm":false},
+    {"title":"状态7","value":"123","alarm":false}
+  ]
+}

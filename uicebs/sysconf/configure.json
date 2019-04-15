@@ -1,0 +1,26 @@
+{
+  "name": "configure",
+  "owner": "system",
+  "parameter": {
+    "groups":[
+      {
+        "groupname": "版型选择",
+        "list": [
+          {"paraname":"托盘类型","type":"choice","max":"","min":"","value":"0","items":["96孔板","48孔板","24孔板","12孔板","6孔板","384孔板"],"note":"choice info"}
+        ]
+      },{
+        "groupname": "全局参数设置",
+        "list": [
+          {"paraname":"拍照后自动识别","type":"checkbox","max":"","min":"","value":true,"note":"Note info"}
+        ]
+      },{
+        "groupname": "计划任务设置",
+        "list": [
+          {"paraname":"启动计划任务","type":"checkbox","max":"","min":"","value":false,"note":"Note info"},
+          {"paraname":"定时自动拍照","type":"checkbox","max":"","min":"","value":true,"note":"Note info"},
+          {"paraname":"定点拍照","type":"checkbox","max":"","min":"","value":true,"note":"Note info"},
+          {"paraname":"定时拍照时间间隔","type":"int","max":"100","min":"0","value":"60","note":"单位：分钟"}
+        ]
+      }]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "basic":{
+    "longitude":["1","2","3","4"],
+    "latitude":["A","B","C"],
+    "name":"3x4",
+    "batch":[],
+    "date":"",
+    "owner":"",
+    "tupid":"",
+    "extra":[{"title":"","value":""}]
+  },
+  "analysis":[],
+  "analysisclass":{
+    "series":"",
+    "analysis":{
+      "result":[{"title":"","value":""}]
+    }
+  }
+}
