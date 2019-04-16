@@ -34,6 +34,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         {'restTag':'dba', 'actionId':0X0EDC, 'actionName':'cebs_config_stackcell', 'comments':''},\
         {'restTag':'dba', 'actionId':0X0EDD, 'actionName':'cebs_result_eleg', 'comments':''},\
         {'restTag':'dba', 'actionId':0X0EDE, 'actionName':'cebs_result_stackcell', 'comments':''},\
+        {'restTag':'dba', 'actionId':0X0EDF, 'actionName':'cebs_result_init_conf', 'comments':''},\
  
         ]
     
@@ -725,7 +726,27 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (parFlag <= 0):
             return -4, ''
         return 1, parContent  
-     
+
+    def cebs_result_init_conf_Read(self, inputData):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_result_init_conf':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+        print("outputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent 
+
 if __name__ == '__main__':
     cls = TupClsCebsDbaItf()
     #res = hst.hstCurlPost({"restTag": "dba", "actionId": 3800, "parFlag": 1, "parContent":{"cmd":"add","user":"test222"}})
