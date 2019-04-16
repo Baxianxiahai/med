@@ -769,6 +769,7 @@ if __name__ == '__main__':
     #modify operation 
 #     print("modify operation")
     print(cls.cebs_user_sheet_Modify({'cmd':'modify','uid':250,'pass_word':54321,'reg_date':'2019-03-01 08:33:33'}))
+    print(cls.cebs_result_init_conf_Read({'cmd':'read'}))
 #     print(cls.cebs_product_profile_Modify({'cmd':'modify','id':4,'hw_ver':250,'mfd':'2019-03-01 08:33:33'}))
 #     print(cls.cebs_cali_profile_Modify({'cmd':'modify','id':5,'calitime':'2019-03-01 08:33:33','left_bot_x':100,'left_bot_y':200,'right_up_x':400,'right_up_y':800}))
 #     print(cls.cebs_object_profile_Modify({'cmd':'modify','objid':5,'objname':'prototype','dir_origin':'test'}))
