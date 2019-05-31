@@ -1,0 +1,922 @@
+.indexbutton{
+    background-color: rgba(255,255,255,0);
+    border-color:rgba(255,255,255,0);
+    font-weight:100;
+    color:#999999
+}
+.indexbutton:hover{
+    background-color: rgba(255,255,255,0);
+    border-color:rgba(255,255,255,0);
+    font-weight:100;
+    color:#999999;
+    text-decoration:underline
+}
+.indexbutton:active{
+    box-shadow: none;
+}
+.indexbutton:focus,.indexbutton:active.focus, .indexbutton:active:focus {
+    outline: 0px ;
+    outline-offset: 0px;
+}
+.indexbutton-selected{
+    background-color: rgba(255,255,255,0);
+    border-color:rgba(255,255,255,0);
+    font-weight:800;
+    color:#000000
+}
+.indexbutton-selected:hover{
+    background-color: rgba(255,255,255,0);
+    border-color:rgba(255,255,255,0);
+    font-weight:800;
+    color:#000000;
+    text-decoration:underline
+}
+.indexbutton-selected:focus,.indexbutton-selected:active.focus, .indexbutton-selected:active:focus {
+    outline: 0px ;
+    outline-offset: 0px;
+}
+.indexbutton-selected:active{
+    box-shadow: none;
+}
+.holebutton{
+    background-color: #ffffff;
+    border-color:#999999;
+    font-weight:100;
+    color:#999999
+}
+.holebutton:hover{
+    background-color: #eeeeee;
+    border-color:#999999;
+    font-weight:100;
+    color:#999999
+}
+.holebutton:focus,.holebutton:active.focus, .holebutton:active:focus {
+    outline: 0px ;
+    outline-offset: 0px;
+}
+.holebutton-selected{
+    background-color: #999999;
+    border-color:#999999;
+    font-weight:800;
+    color:#ffffff
+}
+.holebutton-selected:hover{
+    background-color: #444444;
+    border-color:#999999;
+    font-weight:800;
+    color:#ffffff
+}
+.holebutton-selected:focus,.holebutton-selected:active.focus, .holebutton-selected:active:focus {
+    outline: 0px ;
+    outline-offset: 0px;
+}
+
+
+.green-button{
+    background-color: #6f6;
+    border-color:#999999;
+    font-weight:800;
+    color:#444444
+}
+.green-button:hover{
+    background-color: #393;
+    border-color:#999999;
+    font-weight:800;
+    color:#444444
+}
+.orange-button{
+    background-color: #FFD1A4;
+    border-color:#999999;
+    font-weight:800;
+    color:#444444
+}
+.orange-button:hover{
+    background-color: #FF8000;
+    border-color:#999999;
+    font-weight:800;
+    color:#444444
+}
+.blue-button{
+     background-color: #0000ff;
+     border-color:#999999;
+     font-weight:800;
+     color:#ffffff
+ }
+.blue-button:hover{
+    background-color: #000093;
+    border-color:#999999;
+    font-weight:800;
+    color:#ffffff
+}
+.blingbling-GREEN {
+    -webkit-animation: glow-GREEN 800ms ease-out infinite alternate;
+    -moz-animation: glow-GREEN 800ms ease-out infinite alternate;
+    -o-animation: glow-GREEN 800ms ease-out infinite alternate;
+    -ms-animation: glow-GREEN 800ms ease-out infinite alternate;
+    /*这里使用了呼吸动画*/
+    animation: glow-GREEN 800ms ease-out infinite alternate;
+    font-weight:bold}
+
+
+/*以下定义动画帧*/
+@-webkit-keyframes glow-GREEN {
+    0% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #6f6;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,255,0,.6), inset 0 0 10px rgba(0,255,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-moz-keyframes glow-GREEN {
+    0% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #6f6;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 40px rgba(0,255,0,.6), inset 0 0 20px rgba(0,255,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-o-keyframes glow-GREEN {
+    0% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #6f6;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 40px rgba(0,255,0,.6), inset 0 0 20px rgba(0,255,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-ms-keyframes glow-GREEN {
+    0% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #6f6;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 40px rgba(0,255,0,.6), inset 0 0 20px rgba(0,255,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@keyframes glow-GREEN {
+    0% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #6f6;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 40px rgba(0,255,0,.6), inset 0 0 20px rgba(0,255,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+}
+.blingbling-LGREEN {
+    -webkit-animation: glow-LGREEN 800ms ease-out infinite alternate;
+    -moz-animation: glow-LGREEN 800ms ease-out infinite alternate;
+    -o-animation: glow-LGREEN 800ms ease-out infinite alternate;
+    -ms-animation: glow-LGREEN 800ms ease-out infinite alternate;
+    /*这里使用了呼吸动画*/
+    animation: glow-LGREEN 800ms ease-out infinite alternate;
+    font-weight:bold}
+
+
+/*以下定义动画帧*/
+@-webkit-keyframes glow-LGREEN {
+    0% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #6f6;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,255,0,.6), inset 0 0 10px rgba(0,255,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-moz-keyframes glow-LGREEN {
+    0% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #6f6;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 40px rgba(0,255,0,.6), inset 0 0 20px rgba(0,255,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-o-keyframes glow-LGREEN {
+    0% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #6f6;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 40px rgba(0,255,0,.6), inset 0 0 20px rgba(0,255,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-ms-keyframes glow-LGREEN {
+    0% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #6f6;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 40px rgba(0,255,0,.6), inset 0 0 20px rgba(0,255,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@keyframes glow-LGREEN {
+    0% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #6f6;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 40px rgba(0,255,0,.6), inset 0 0 20px rgba(0,255,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #393;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #fff;
+    }
+}
+
+.blingbling-RED {
+    -webkit-animation: glow-RED 800ms ease-out infinite alternate;
+    -moz-animation: glow-RED 800ms ease-out infinite alternate;
+    -o-animation: glow-RED 800ms ease-out infinite alternate;
+    -ms-animation: glow-RED 800ms ease-out infinite alternate;
+    /*这里使用了呼吸动画*/
+    animation: glow-RED 800ms ease-out infinite alternate;
+    font-weight:bold}
+
+
+/*以下定义动画帧*/
+@-webkit-keyframes glow-RED {
+    0% {
+        border-color: #990000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,0,0,.2), inset 0 0 5px rgba(255,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #ef0000;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(255,0,0,.6), inset 0 0 10px rgba(255,0,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #990000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,0,0,.2), inset 0 0 5px rgba(255,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-moz-keyframes glow-RED {
+    0% {
+        border-color: #990000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,0,0,.2), inset 0 0 5px rgba(255,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #ef0000;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(255,0,0,.6), inset 0 0 10px rgba(255,0,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #990000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,0,0,.2), inset 0 0 5px rgba(255,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-o-keyframes glow-RED {
+    0% {
+        border-color: #990000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,0,0,.2), inset 0 0 5px rgba(255,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #ef0000;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(255,0,0,.6), inset 0 0 10px rgba(255,0,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #990000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,0,0,.2), inset 0 0 5px rgba(255,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-ms-keyframes glow-RED {
+    0% {
+        border-color: #990000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,0,0,.2), inset 0 0 5px rgba(255,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #ef0000;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(255,0,0,.6), inset 0 0 10px rgba(255,0,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #990000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,0,0,.2), inset 0 0 5px rgba(255,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@keyframes glow-RED {
+    0% {
+        border-color: #990000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,0,0,.2), inset 0 0 5px rgba(255,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #ef0000;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(255,0,0,.6), inset 0 0 10px rgba(255,0,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #990000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,0,0,.2), inset 0 0 5px rgba(255,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+.blingbling-GRAY {
+    -webkit-animation: glow-GRAY 800ms ease-out infinite alternate;
+    -moz-animation: glow-GRAY 800ms ease-out infinite alternate;
+    -o-animation: glow-GRAY 800ms ease-out infinite alternate;
+    -ms-animation: glow-GRAY 800ms ease-out infinite alternate;
+    /*这里使用了呼吸动画*/
+    animation: glow-GRAY 800ms ease-out infinite alternate;
+    font-weight:bold}
+
+
+/*以下定义动画帧*/
+@-webkit-keyframes glow-GRAY {
+    0% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #afafaf;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,0,0,.6), inset 0 0 10px rgba(0,0,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-moz-keyframes glow-GRAY {
+    0% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #afafaf;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,0,0,.6), inset 0 0 10px rgba(0,0,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-o-keyframes glow-GRAY {
+    0% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #afafaf;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,0,0,.6), inset 0 0 10px rgba(0,0,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-ms-keyframes glow-GRAY {
+    0% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #afafaf;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,0,0,.6), inset 0 0 10px rgba(0,0,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@keyframes glow-GRAY {
+    0% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #afafaf;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,0,0,.6), inset 0 0 10px rgba(0,0,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+.blingbling-LGRAY {
+    -webkit-animation: glow-LGRAY 800ms ease-out infinite alternate;
+    -moz-animation: glow-LGRAY 800ms ease-out infinite alternate;
+    -o-animation: glow-LGRAY 800ms ease-out infinite alternate;
+    -ms-animation: glow-LGRAY 800ms ease-out infinite alternate;
+    /*这里使用了呼吸动画*/
+    animation: glow-LGRAY 800ms ease-out infinite alternate;
+    font-weight:bold}
+
+
+/*以下定义动画帧*/
+@-webkit-keyframes glow-LGRAY {
+    0% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #afafaf;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,0,0,.6), inset 0 0 10px rgba(0,0,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-moz-keyframes glow-LGRAY {
+    0% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #afafaf;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,0,0,.6), inset 0 0 10px rgba(0,0,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-o-keyframes glow-LGRAY {
+    0% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #afafaf;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,0,0,.6), inset 0 0 10px rgba(0,0,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-ms-keyframes glow-LGRAY {
+    0% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #afafaf;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,0,0,.6), inset 0 0 10px rgba(0,0,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@keyframes glow-LGRAY {
+    0% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #afafaf;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,0,0,.6), inset 0 0 10px rgba(0,0,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #595959;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,0,0,.1), 0 2px 0 #fff;
+    }
+}
+
+.blingbling-ORANGE {
+    -webkit-animation: glow-ORANGE 800ms ease-out infinite alternate;
+    -moz-animation: glow-ORANGE 800ms ease-out infinite alternate;
+    -o-animation: glow-ORANGE 800ms ease-out infinite alternate;
+    -ms-animation: glow-ORANGE 800ms ease-out infinite alternate;
+    /*这里使用了呼吸动画*/
+    animation: glow-ORANGE 800ms ease-out infinite alternate;
+    font-weight:bold}
+
+
+/*以下定义动画帧*/
+@-webkit-keyframes glow-ORANGE {
+    0% {
+        border-color: #FF8000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,128,0,.2), inset 0 0 5px rgba(255,128,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #FFD1A4;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(255,128,0,.6), inset 0 0 10px rgba(255,128,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #FF8000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,128,0,.2), inset 0 0 5px rgba(255,128,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-moz-keyframes glow-ORANGE {
+    0% {
+        border-color: #FF8000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,128,0,.2), inset 0 0 5px rgba(255,128,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #FFD1A4;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(255,128,0,.6), inset 0 0 10px rgba(255,128,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #FF8000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,128,0,.2), inset 0 0 5px rgba(255,128,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-o-keyframes glow-ORANGE {
+    0% {
+        border-color: #FF8000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,128,0,.2), inset 0 0 5px rgba(255,128,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #FFD1A4;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(255,128,0,.6), inset 0 0 10px rgba(255,128,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #FF8000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,128,0,.2), inset 0 0 5px rgba(255,128,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@-ms-keyframes glow-ORANGE {
+    0% {
+        border-color: #FF8000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,128,0,.2), inset 0 0 5px rgba(255,128,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #FFD1A4;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(255,128,0,.6), inset 0 0 10px rgba(255,128,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #FF8000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,128,0,.2), inset 0 0 5px rgba(255,128,0,.1), 0 2px 0 #fff;
+    }
+}
+
+@keyframes glow-ORANGE {
+    0% {
+        border-color: #FF8000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,128,0,.2), inset 0 0 5px rgba(255,128,0,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #FFD1A4;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(255,128,0,.6), inset 0 0 10px rgba(255,128,0,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #FF8000;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(255,128,0,.2), inset 0 0 5px rgba(255,128,0,.1), 0 2px 0 #fff;
+    }
+}
+
+.blingbling-PURPLE {
+    -webkit-animation: glow-PURPLE 800ms ease-out infinite alternate;
+    -moz-animation: glow-PURPLE 800ms ease-out infinite alternate;
+    -o-animation: glow-PURPLE 800ms ease-out infinite alternate;
+    -ms-animation: glow-PURPLE 800ms ease-out infinite alternate;
+    /*这里使用了呼吸动画*/
+    animation: glow-PURPLE 800ms ease-out infinite alternate;
+    font-weight:bold}
+
+
+/*以下定义动画帧*/
+@-webkit-keyframes glow-PURPLE {
+    0% {
+        border-color: #9B59B6;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(155,89,182,.2), inset 0 0 5px rgba(155,89,182,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #EBD3E8;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(155,89,182,.6), inset 0 0 5px rgba(155,89,182,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #9B59B6;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(155,89,182,.2), inset 0 0 5px rgba(155,89,182,.1), 0 2px 0 #fff;
+    }
+}
+
+@-moz-keyframes glow-PURPLE {
+    0% {
+        border-color: #9B59B6;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(155,89,182,.2), inset 0 0 5px rgba(155,89,182,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #EBD3E8;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(155,89,182,.6), inset 0 0 5px rgba(155,89,182,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #9B59B6;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(155,89,182,.2), inset 0 0 5px rgba(155,89,182,.1), 0 2px 0 #fff;
+    }
+}
+
+@-o-keyframes glow-PURPLE {
+    0% {
+        border-color: #9B59B6;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(155,89,182,.2), inset 0 0 5px rgba(155,89,182,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #EBD3E8;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(155,89,182,.6), inset 0 0 5px rgba(155,89,182,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #9B59B6;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(155,89,182,.2), inset 0 0 5px rgba(155,89,182,.1), 0 2px 0 #fff;
+    }
+}
+
+@-ms-keyframes glow-PURPLE {
+    0% {
+        border-color: #9B59B6;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(155,89,182,.2), inset 0 0 5px rgba(155,89,182,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #EBD3E8;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(155,89,182,.6), inset 0 0 5px rgba(155,89,182,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #9B59B6;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(155,89,182,.2), inset 0 0 5px rgba(155,89,182,.1), 0 2px 0 #fff;
+    }
+}
+
+@keyframes glow-PURPLE {
+    0% {
+        border-color: #9B59B6;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(155,89,182,.2), inset 0 0 5px rgba(155,89,182,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #EBD3E8;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(155,89,182,.6), inset 0 0 5px rgba(155,89,182,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #9B59B6;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(155,89,182,.2), inset 0 0 5px rgba(155,89,182,.1), 0 2px 0 #fff;
+    }
+}
+.blingbling-BLUE,.blingbling-DBLUE,.blingbling-LBLUE {
+    -webkit-animation: glow-BLUE 800ms ease-out infinite alternate;
+    -moz-animation: glow-BLUE 800ms ease-out infinite alternate;
+    -o-animation: glow-BLUE 800ms ease-out infinite alternate;
+    -ms-animation: glow-BLUE 800ms ease-out infinite alternate;
+    /*这里使用了呼吸动画*/
+    animation: glow-BLUE 800ms ease-out infinite alternate;
+    font-weight:bold}
+
+
+/*以下定义动画帧*/
+@-webkit-keyframes glow-BLUE {
+    0% {
+        border-color: #000093;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,255,.2), inset 0 0 5px rgba(0,0,255,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #D2E9FF;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,0,255,.6), inset 0 0 5px rgba(0,0,255,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #000093;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,255,.2), inset 0 0 5px rgba(0,0,255,.1), 0 2px 0 #fff;
+    }
+}
+
+@-moz-keyframes glow-BLUE {
+    0% {
+        border-color: #000093;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,255,.2), inset 0 0 5px rgba(0,0,255,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #D2E9FF;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,0,255,.6), inset 0 0 5px rgba(0,0,255,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #000093;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,255,.2), inset 0 0 5px rgba(0,0,255,.1), 0 2px 0 #fff;
+    }
+}
+
+@-o-keyframes glow-BLUE {
+    0% {
+        border-color: #000093;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,255,.2), inset 0 0 5px rgba(0,0,255,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #D2E9FF;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,0,255,.6), inset 0 0 5px rgba(0,0,255,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #000093;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,255,.2), inset 0 0 5px rgba(0,0,255,.1), 0 2px 0 #fff;
+    }
+}
+
+@-ms-keyframes glow-BLUE {
+    0% {
+        border-color: #000093;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,255,.2), inset 0 0 5px rgba(0,0,255,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #D2E9FF;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,0,255,.6), inset 0 0 5px rgba(0,0,255,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #000093;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,255,.2), inset 0 0 5px rgba(0,0,255,.1), 0 2px 0 #fff;
+    }
+}
+
+@keyframes glow-BLUE {
+    0% {
+        border-color: #000093;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,255,.2), inset 0 0 5px rgba(0,0,255,.1), 0 2px 0 #fff;
+    }
+    50% {
+        border-color: #D2E9FF;
+        text-shadow:0 0 4px;
+        box-shadow: 0 0 20px rgba(0,0,255,.6), inset 0 0 5px rgba(0,0,255,.4), 0 2px 0 #fff;
+    }
+    100% {
+        border-color: #000093;
+        text-shadow: 0 0 4px;
+        box-shadow: 0 0 5px rgba(0,0,255,.2), inset 0 0 5px rgba(0,0,255,.1), 0 2px 0 #fff;
+    }
+}
+p{
+    color:#000000;
+}
+h3 {
+    margin-top: 0px;
+    margin-bottom: 10px;
+}

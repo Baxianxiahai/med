@@ -1,0 +1,28 @@
+'''
+Created on 2019年5月31日
+
+@author: Administrator
+'''
+
+#HUICOBUS CMDID公共定义: HEAD DEFINATION
+TUP_HHD_CMDID_SYS_GET_CONFIG_REQ        = 0x0A00
+TUP_HHD_CMDID_SYS_GET_CONFIG_RESP       = 0x0A80
+TUP_HHD_CMDID_SYS_SET_CONFIG_REQ        = 0x0A01
+TUP_HHD_CMDID_SYS_SET_CONFIG_RESP       = 0x0A81
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

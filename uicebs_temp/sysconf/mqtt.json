@@ -1,0 +1,7 @@
+{
+  "server":"ws://127.0.0.1:3000/mqtt",
+  "username":"username",
+  "password":"password",
+  "clientId":"MQTT_ZH_Medicine_UI",
+  "subscribe":"MQTT_ZH_Medicine_UI"
+}

@@ -1,0 +1,42 @@
+{
+  "name": "supportlanguage",
+  "owner": "system",
+  "default":"ch",
+  "national":[
+    {
+      "name":"CHINESE",
+      "icon":"China.svg",
+      "abbreviation":"ch"
+    },
+    {
+      "name":"ENGLISH",
+      "icon":"UK.svg",
+      "abbreviation":"en"
+    },
+    {
+      "name":"FRENCH",
+      "icon":"France.svg",
+      "abbreviation":"fr"
+    },
+    {
+      "name":"JAPANESE",
+      "icon":"Japan.svg",
+      "abbreviation":"jp"
+    },
+    {
+      "name":"GERMAN",
+      "icon":"Germany.svg",
+      "abbreviation":"de"
+    },
+    {
+      "name":"ARABIC",
+      "icon":"Arabia.svg",
+      "abbreviation":"ar"
+    },
+    {
+      "name":"THAI",
+      "icon":"Thailand.svg",
+      "abbreviation":"th"
+    }
+  ]
+}
