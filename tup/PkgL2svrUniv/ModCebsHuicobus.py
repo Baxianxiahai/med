@@ -57,7 +57,8 @@ class TupClsCebsHuicobusItf(TupClsHuicobusBasic, clsL1_ConfigOpr):
     def fsm_msg_ul_get_cfg_resp_rcv_handler(self, msgContent):
         mbuf={}
         mbuf['hlContent'] = msgContent
-        return self.func_huicobus_msg_snd(TUP_HHD_CMDID_SYS_GET_CONFIG_RESP, msgContent['cmdValue'], mbuf)
+        ret = self.func_huicobus_msg_snd(TUP_HHD_CMDID_SYS_GET_CONFIG_RESP, msgContent['cmdValue'], mbuf)
+        return ret
 
     def fsm_msg_dl_set_cfg_req_rcv_handler(self, msgContent):
         return TUP_SUCCESS        

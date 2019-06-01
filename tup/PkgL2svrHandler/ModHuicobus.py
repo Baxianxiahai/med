@@ -6,6 +6,7 @@ Created on 2019/2/14
 import json
 import sys
 import paho.mqtt.client as mqtt
+import paho.mqtt.publish as publish
 from PkgL1vmHandler.ModSysConfig import *
 from PkgL1vmHandler.ModVmCfg import *
 from PkgL1vmHandler.ModVmLayer import *
@@ -23,6 +24,7 @@ class TupClsHuicobusBasic(tupTaskTemplate):
     '''
     _STM_ACTIVE = 3
     _STM_DEACT  = 4
+    
     _TUP_MQTT_SVR = 0
     _TUP_MQTT_HOST = 0
     _TUP_MQTT_PORT = 0
@@ -31,13 +33,13 @@ class TupClsHuicobusBasic(tupTaskTemplate):
 
     #固定定义-节点
     _HUICOBUS_MQTT_NBID_MIN = 0
-    _HUICOBUS_MQTT_NBID_LOCALHOST = 1       #本机
-    _HUICOBUS_MQTT_NBID_ECCSERVER = 2        #ECC服务器
-    _HUICOBUS_MQTT_NBID_FACSERVER = 3        #本地服务器
-    _HUICOBUS_MQTT_NBID_REMSERVER = 4        #远程服务器
-    _HUICOBUS_MQTT_NBID_MATINC = 5            #进料控制机
-    _HUICOBUS_MQTT_NBID_TUPSVR = 6            #TUP服务节点
-    _HUICOBUS_MQTT_NBID_TUPCLT = 7            #TUP控制客户节点
+    _HUICOBUS_MQTT_NBID_LOCALHOST = 1           #本机
+    _HUICOBUS_MQTT_NBID_ECCSERVER = 2           #ECC服务器
+    _HUICOBUS_MQTT_NBID_FACSERVER = 3           #本地服务器
+    _HUICOBUS_MQTT_NBID_REMSERVER = 4           #远程服务器
+    _HUICOBUS_MQTT_NBID_MATINC = 5              #进料控制机
+    _HUICOBUS_MQTT_NBID_TUPSVR = 6              #TUP服务节点
+    _HUICOBUS_MQTT_NBID_TUPCLT = 7              #TUP控制客户节点
     _HUICOBUS_MQTT_NBID_MAX = 8
     _HUICOBUS_MQTT_NBID_INVALID = 0xFFFFFFFF
     _HUICOBUS_MQTT_NBID = ('HUICOBUS_MQTT_NODEID_MIN',\
@@ -146,7 +148,6 @@ class TupClsHuicobusBasic(tupTaskTemplate):
         {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A94, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_calib_report', 'msgId':TUP_MSGID_HUICOBUS_CALIB_REPORT, 'comments':''},\
         {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A95, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_test_cmd_report', 'msgId':TUP_MSGID_HUICOBUS_TEST_CMD_REPORT, 'comments':''},\
         {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A96, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_cfy_report', 'msgId':TUP_MSGID_HUICOBUS_CFY_REPORT, 'comments':''},\
-
         ]
 
 
@@ -161,8 +162,7 @@ class TupClsHuicobusBasic(tupTaskTemplate):
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_EXIT, self.fsm_com_msg_exit_rcv_handler)
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TEST, self.fsm_com_msg_test_rcv_handler)
         #业务处理部分
-        #self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_HUICOBUS_CTRL_REQ, self.fsm_msg_ctrl_req_rcv_handler)
-        #self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_HUICOBUS_CTRL_CONFIRM, self.fsm_msg_ctrl_confirm_rcv_handler)
+        #Nothing
     
     '''
     #
@@ -175,13 +175,31 @@ class TupClsHuicobusBasic(tupTaskTemplate):
         self._TUP_UP_LAYER = msgContent['uplayer']
         self.fsm_set(self._STM_ACTIVE)
         return TUP_SUCCESS;
-    
+
+
+    '''
+    #
+    #发送接收基础函数
+    #
+    '''    
     #基础调用函数
     def func_data_send(self, jsonInput):
         client = mqtt.Client()
         client.connect(self._TUP_MQTT_HOST, self._TUP_MQTT_PORT, 60)
         client.publish(self._HUICOBUS_MQTT_TPID[self._HUICOBUS_MQTT_TPID_TUP2UIP], json.dumps(jsonInput), 0)
+    
+    #第二种single的publish方法
+    def func_data_send2(self, jsonInput):
+        tmpClientId = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
+        publish.single(self._HUICOBUS_MQTT_TPID_TUP2UIP, \
+                       json.dumps(jsonInput),\
+                       qos = 1,\
+                       hostname = self._TUP_MQTT_HOST,\
+                       port = self._TUP_MQTT_PORT,\
+                       client_id = tmpClientId,\
+                       auth = {'username':"admin", 'password':"123456"})
 
+    #消息发送通用函数
     def func_huicobus_msg_snd(self, cmdId, cmdValue, hlContent):
         jsonInput = {}
         jsonInput['srcNode'] = 'HUICOBUS_MQTT_NODEID_TUPSVR'
@@ -195,15 +213,17 @@ class TupClsHuicobusBasic(tupTaskTemplate):
             if (element['topic'] == jsonInput['topicId']) and (element['cmdId'] == cmdId):
                 jsonInput['cmdId'] = element['cmdId']
         if (jsonInput['cmdId'] == 0):
+            print("HUICOBUS: Not set cmdId correctly!")
             return TUP_FAILURE
         jsonInput['hlContent'] = hlContent
+        #print("HUICOBUS: Sending message = ", jsonInput)
         self.func_data_send(jsonInput)
+        return TUP_SUCCESS
 
         
     #函数原型，等待被业务层所重载
     #UIP send to TUP HUICOBUS message
     def func_data_rcv(self, cmdId, cmdValue, hlContent):
-        #print("I receive cmdId = ", cmdId, 'cmdValue = ', cmdValue, 'ParContent = ', str(hlContent))
         mbuf = {}
         mbuf['cmdValue'] = cmdValue
         mbuf['hlContent'] = hlContent
@@ -216,49 +236,11 @@ class TupClsHuicobusBasic(tupTaskTemplate):
             self.msg_send(msgId, self._TUP_UP_LAYER, mbuf)
         return TUP_SUCCESS
 
-    '''
-    #
-    #SERVICE PROCESSING
-    #
-    '''
-#     def fsm_msg_ctrl_req_rcv_handler(self, msgContent):
-#         jsonInput = {}
-#         jsonInput['srcNode'] = 'HUICOBUS_MQTT_NODEID_TUPSVR'
-#         jsonInput['destNode'] = 'HUICOBUS_MQTT_NODEID_TUPSVR'
-#         jsonInput['srcId'] = 'HUICOBUS_MQTT_CLIENTID_TUPENTRY'
-#         jsonInput['destId'] = 'HUICOBUS_MQTT_CLIENTID_TUPROUTER'
-#         jsonInput['topicId'] = 'HUICOBUS_MQTT_TOPIC_TUP2UIP'
-#         jsonInput['cmdId'] = 0
-#         for element in self._TUP_HUICOBUS_MSG_MATRIX:
-#             if (element['topic'] == jsonInput['topicId']) and (element['cmdName'] == 'HUICOBUS_CMDID_cui_tup2uip_ctrl_req'):
-#                 jsonInput['cmdId'] = element['cmdId']
-#         jsonInput['cmdValue'] = msgContent['cmdValue']
-#         jsonInput['hlContent'] = msgContent['hlContent']
-#         self.func_data_send(jsonInput)
-#         return TUP_SUCCESS
-# 
-#     def fsm_msg_ctrl_confirm_rcv_handler(self, msgContent):
-#         jsonInput = {}
-#         jsonInput['srcNode'] = 'HUICOBUS_MQTT_NODEID_TUPSVR'
-#         jsonInput['destNode'] = 'HUICOBUS_MQTT_NODEID_TUPSVR'
-#         jsonInput['srcId'] = 'HUICOBUS_MQTT_CLIENTID_TUPENTRY'
-#         jsonInput['destId'] = 'HUICOBUS_MQTT_CLIENTID_TUPROUTER'
-#         jsonInput['topicId'] = 'HUICOBUS_MQTT_TOPIC_TUP2UIP'
-#         jsonInput['cmdId'] = 0
-#         for element in self._TUP_HUICOBUS_MSG_MATRIX:
-#             if (element['topic'] == jsonInput['topicId']) and (element['cmdName'] == 'HUICOBUS_CMDID_cui_tup2uip_ctrl_confirm'):
-#                 jsonInput['cmdId'] = element['cmdId']
-#         jsonInput['cmdValue'] = msgContent['cmdValue']
-#         jsonInput['hlContent'] = msgContent['hlContent']
-#         self.func_data_send(jsonInput)
-#         return TUP_SUCCESS
-
     #客户端测试 - 这个是模拟H5UI发送到TUP实体的      
-    def client_test(self, jsonInput):
+    def client_publish_test(self, jsonInput):
         client = mqtt.Client()
         client.connect(self._TUP_MQTT_HOST, self._TUP_MQTT_PORT, 60)
         client.publish("HUICOBUS_MQTT_TOPIC_UIP2TUP", json.dumps(jsonInput), 2)
-
 
 
 #MQTT服务任务
@@ -294,7 +276,6 @@ class TupClsMqttThread(TupClsHuicobusBasic):
     #连接事件    
     def func_on_connect(self, client, userdata, flags, rc):
         client.subscribe(self._HUICOBUS_MQTT_TPID[self._HUICOBUS_MQTT_TPID_UIP2TUP])
-        #print("Connected with result code " + str(rc))
 
     def func_on_disconnect(self,client, userdata,rc=0):
         logging.debug("DisConnected result code "+str(rc))
@@ -348,7 +329,6 @@ class TupClsMqttThread(TupClsHuicobusBasic):
         self.father.func_data_rcv(cmdId, cmdValue, hlContent)
         return 1
 
-        
     
 if __name__ == '__main__':
     #创建并初始化
@@ -362,8 +342,7 @@ if __name__ == '__main__':
     cls.msg_send_in(initMsg)
     cls.tup_dbg_print("Create HUICOBUS task success!")
     cls.func_data_send({'test':1})
-    time.sleep(1)
-    cls.client_test({'srcNode':'HUICOBUS_MQTT_NODEID_TUPSVR', 'destNode':'HUICOBUS_MQTT_NODEID_TUPSVR', 'srcId':'HUICOBUS_MQTT_CLIENTID_TUPROUTER', 'destId':'HUICOBUS_MQTT_CLIENTID_TUPENTRY', 'topicId':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':2689, 'cmdValue':123, 'hlContent':{'a':1, 'b':2}})
+    cls.client_publish_test({'srcNode':'HUICOBUS_MQTT_NODEID_TUPSVR', 'destNode':'HUICOBUS_MQTT_NODEID_TUPSVR', 'srcId':'HUICOBUS_MQTT_CLIENTID_TUPROUTER', 'destId':'HUICOBUS_MQTT_CLIENTID_TUPENTRY', 'topicId':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':2689, 'cmdValue':123, 'hlContent':{'a':1, 'b':2}})
 
 
 

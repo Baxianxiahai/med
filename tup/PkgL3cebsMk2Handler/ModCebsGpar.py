@@ -9,11 +9,11 @@ import time
 from multiprocessing import Queue, Process
 from PkgL1vmHandler.ModVmCfg import *
 from PkgL1vmHandler.ModVmLayer import *
+from PkgL1vmHandler.ModVmConsole import *
 from PkgL3cebsMk2Handler.ModCebsCom import *
 from PkgL3cebsMk2Handler.ModCebsCfg import *
-from PkgL1vmHandler.ModVmConsole import *
 
-from PyQt5 import QtGui
+
 
 class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
     _STM_ACTIVE = 3
@@ -120,21 +120,11 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['cmdValue'] = 0
         mbuf['par1'] = 0
         mbuf['par2'] = 0
-        print("111111111111111111111111")
         self.msg_send(TUP_MSGID_HUICOBUS_GET_CFG_RESP, TUP_TASK_ID_HUICOBUS, mbuf)
         return TUP_SUCCESS
  
     def fsm_msg_set_cfg_req_handler(self, msgContent):
         pass
- 
- 
- 
- 
- 
- 
- 
- 
- 
  
  
     def fsm_msg_pic_train_req_rcv_handler(self, msgContent):

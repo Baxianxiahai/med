@@ -11,7 +11,7 @@ from PkgUt import ModTestSuitComFunc
 def cebs_testsuite_huicobus():
     print ("cebs_testsuite_huicobus 运行")
     suiteTest = unittest.TestSuite()
-    suiteTest.addTest(ClassUtHuicobus("tc_huicobus_001"))
+    #suiteTest.addTest(ClassUtHuicobus("tc_huicobus_001"))
     suiteTest.addTest(ClassUtHuicobus("tc_huicobus_002"))
     return suiteTest
 
@@ -44,7 +44,7 @@ class ClassUtHuicobus(unittest.TestCase):
                         'srcId':'HUICOBUS_MQTT_CLIENTID_TUPROUTER',\
                         'destId':'HUICOBUS_MQTT_CLIENTID_TUPENTRY',\
                         'topicId':'HUICOBUS_MQTT_TOPIC_UIP2TUP',\
-                        'cmdId':2689,\
+                        'cmdId':2560,\
                         'cmdValue':123,\
                         'hlContent':{'a':1, 'b':2}\
                         }
