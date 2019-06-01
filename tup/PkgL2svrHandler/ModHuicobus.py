@@ -186,14 +186,14 @@ class TupClsHuicobusBasic(tupTaskTemplate):
     def func_data_send(self, jsonInput):
         client = mqtt.Client()
         client.connect(self._TUP_MQTT_HOST, self._TUP_MQTT_PORT, 60)
-        client.publish(self._HUICOBUS_MQTT_TPID[self._HUICOBUS_MQTT_TPID_TUP2UIP], json.dumps(jsonInput), 0)
+        client.publish(self._HUICOBUS_MQTT_TPID[self._HUICOBUS_MQTT_TPID_TUP2UIP], json.dumps(jsonInput), 2)
     
     #第二种single的publish方法
     def func_data_send2(self, jsonInput):
         tmpClientId = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
         publish.single(self._HUICOBUS_MQTT_TPID_TUP2UIP, \
                        json.dumps(jsonInput),\
-                       qos = 1,\
+                       qos = 2,\
                        hostname = self._TUP_MQTT_HOST,\
                        port = self._TUP_MQTT_PORT,\
                        client_id = tmpClientId,\
@@ -218,6 +218,7 @@ class TupClsHuicobusBasic(tupTaskTemplate):
         jsonInput['hlContent'] = hlContent
         #print("HUICOBUS: Sending message = ", jsonInput)
         self.func_data_send(jsonInput)
+        print("11111111111111")
         return TUP_SUCCESS
 
         
@@ -264,7 +265,7 @@ class TupClsMqttThread(TupClsHuicobusBasic):
         logger = logging.getLogger(__name__)
         self.client.enable_logger(logger)
         self.client.connect(self.svrAddr, port = self.svrPort, keepalive = 60)
-        self.client.subscribe(self._HUICOBUS_MQTT_TPID[self._HUICOBUS_MQTT_TPID_UIP2TUP], qos=0)
+        self.client.subscribe(self._HUICOBUS_MQTT_TPID[self._HUICOBUS_MQTT_TPID_UIP2TUP], qos=2)
         self.client.loop_forever()
     
     def func_get_mqtt_client(self):
@@ -275,7 +276,7 @@ class TupClsMqttThread(TupClsHuicobusBasic):
     
     #连接事件    
     def func_on_connect(self, client, userdata, flags, rc):
-        client.subscribe(self._HUICOBUS_MQTT_TPID[self._HUICOBUS_MQTT_TPID_UIP2TUP])
+        client.subscribe(self._HUICOBUS_MQTT_TPID[self._HUICOBUS_MQTT_TPID_UIP2TUP], qos=2)
 
     def func_on_disconnect(self,client, userdata,rc=0):
         logging.debug("DisConnected result code "+str(rc))
