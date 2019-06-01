@@ -48,12 +48,8 @@ class ClassUtHuicobus(unittest.TestCase):
                         'cmdValue':123,\
                         'hlContent':{'a':1, 'b':2}\
                         }
-        #jsonInputData = {'srcNode':'','destNode':'','srcId':'','destId':'','topicId':'HUICOBUS_MQTT_TOPIC_UIP2TUP','cmdId':2689,'cmdValue':123,'hlContent':{'a':1,'b':2}}
         ModTestSuitComFunc.cebs_huicobus_msg_send(jsonInputData)
-        
-        
-        
-        
+    
         
         
         

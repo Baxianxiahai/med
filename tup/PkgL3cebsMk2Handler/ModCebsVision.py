@@ -251,7 +251,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         self.funcVisionLogTrace(str(res))
         #INIT
         if (self.camera_nbr < 0):
-            self.funcVisionErrTrace("L2VISCAP: Camera not yet installed, init error!");
+            #self.funcVisionErrTrace("L2VISCAP: Camera not yet installed, init error!");
             return TUP_FAILURE;
         #正确的情况
         try:
@@ -259,9 +259,9 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             #LC:mshot camera   linux 
             #mshot 摄像头完全可以用了，后续就是根据要求修改一下曝光之类的参数就行
             strDllPath = sys.path[0] + str(os.sep) + "libcreate_so_mshot.so"
-            print(strDllPath)
+            #print(strDllPath)
             objDll = cdll.LoadLibrary(strDllPath)
-            print("objDll",objDll)
+            #print("objDll",objDll)
 #             objDll.test(1,2)    #这里第一个参数代表的是batch的值，第二个代表的是空号
 #             for i in range(1,97):
 #                 objDll.test(2,i) 
@@ -374,9 +374,11 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
                 self.capInit.release()
         except Exception:
             cv.destroyAllWindows()
-            self.funcVisionErrTrace("L2VISCAP: Camera not installed, but open error!");
+            #待完善
+            #self.funcVisionErrTrace("L2VISCAP: Camera not installed, but open error!");
             return TUP_FAILURE;
-        self.funcVisionLogTrace("L2VISCAP: Camera open successful!");
+        #待完善
+        #self.funcVisionLogTrace("L2VISCAP: Camera open successful!");
         return TUP_SUCCESS;
 
     def fsm_msg_restart_rcv_handler(self, msgContent):

@@ -30,6 +30,9 @@ def cebs_huicobus_msg_send(jsonInput):
     tmpClientId = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
     publish.single("HUICOBUS_MQTT_TOPIC_UIP2TUP", json.dumps(jsonInput), qos = 2, keepalive=1, hostname="127.0.0.1", port=1883, client_id=tmpClientId, auth = {'username':"admin", 'password':"123456"})
 
+def cebs_huicobus_msg_get(jsonInput):
+    tmpClientId = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
+    publish.single("HUICOBUS_MQTT_TOPIC_TUP2UIP", json.dumps(jsonInput), qos = 2, keepalive=1, hostname="127.0.0.1", port=1883, client_id=tmpClientId, auth = {'username':"admin", 'password':"123456"})
     
     
     

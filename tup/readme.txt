@@ -3,11 +3,46 @@
 1. 荧光识别算法：待定
 3. 定时器无法自动及时结束
 
-
 【BUG LIST】
 1. Timer.cancel()没有真正起到作用，未来考虑使用terminate过程来强行终止线程的方法
 2. def func_vision_worm_binvalue_proc(self, img):  new = np.zeros(img.shape, np.uint8)
 3. 处于子菜单时，密码检查失败后的退出程序，没有真的起作用
+
+
+[WINDOWS MOSQUITTO]
+cd "c:\Program Files\mosquitto"
+启动服务： mosquitto -c mosquitto.conf -d
+启动两个客户端: 
+  mosquitto_sub -v -t HUICOBUS_MQTT_TOPIC_UIP2TUP
+  mosquitto_sub -v -t HUICOBUS_MQTT_TOPIC_TUP2UIP
+发送太长，需要通过a.bat，将以下内容拷贝到a.bat中，直接执行a.bat
+  mosquitto_pub -t HUICOBUS_MQTT_TOPIC_UIP2TUP -m {\"srcNode\":\"HUICOBUS_MQTT_NODEID_TUPSVR\",\"destNode\":\"HUICOBUS_MQTT_NODEID_TUPSVR\",\"srcId\":\"HUICOBUS_MQTT_CLIENTID_TUPROUTER\",\"destId\":\"HUICOBUS_MQTT_CLIENTID_TUPENTRY\",\"topicId\":\"HUICOBUS_MQTT_TOPIC_UIP2TUP\",\"cmdId\":2560,\"cmdValue\":123,\"hlContent\":{\"a\":1,\"b\":2}}
+=> 接收一直没问题，发送出现问题，有两种发送方式，其中single方式是比较稳定可靠的
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 【将QT工具生成的ui文件转化为py文件】
   cd form_qt, 

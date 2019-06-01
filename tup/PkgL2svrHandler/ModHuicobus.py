@@ -185,19 +185,22 @@ class TupClsHuicobusBasic(tupTaskTemplate):
     #基础调用函数
     def func_data_send(self, jsonInput):
         client = mqtt.Client()
-        client.connect(self._TUP_MQTT_HOST, self._TUP_MQTT_PORT, 60)
-        client.publish(self._HUICOBUS_MQTT_TPID[self._HUICOBUS_MQTT_TPID_TUP2UIP], json.dumps(jsonInput), 2)
+        client.connect(self._TUP_MQTT_HOST, self._TUP_MQTT_PORT, TUP_HUICOBUS_MQTT_KEEPALIVE)
+        client.publish(self._HUICOBUS_MQTT_TPID[self._HUICOBUS_MQTT_TPID_TUP2UIP], json.dumps(jsonInput), TUP_HUICOBUS_MQTT_QOS)
+        return TUP_SUCCESS
     
     #第二种single的publish方法
     def func_data_send2(self, jsonInput):
         tmpClientId = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        publish.single(self._HUICOBUS_MQTT_TPID_TUP2UIP, \
+        publish.single(self._HUICOBUS_MQTT_TPID[self._HUICOBUS_MQTT_TPID_TUP2UIP],\
                        json.dumps(jsonInput),\
-                       qos = 2,\
+                       qos = TUP_HUICOBUS_MQTT_QOS,\
+                       keepalive = 1,\
                        hostname = self._TUP_MQTT_HOST,\
                        port = self._TUP_MQTT_PORT,\
                        client_id = tmpClientId,\
                        auth = {'username':"admin", 'password':"123456"})
+        return TUP_SUCCESS
 
     #消息发送通用函数
     def func_huicobus_msg_snd(self, cmdId, cmdValue, hlContent):
@@ -216,8 +219,7 @@ class TupClsHuicobusBasic(tupTaskTemplate):
             print("HUICOBUS: Not set cmdId correctly!")
             return TUP_FAILURE
         jsonInput['hlContent'] = hlContent
-        #print("HUICOBUS: Sending message = ", jsonInput)
-        self.func_data_send(jsonInput)
+        self.func_data_send2(jsonInput)
         print("HUOCOBUS: Send accomplished! Content = ", jsonInput)
         return TUP_SUCCESS
 
@@ -240,8 +242,8 @@ class TupClsHuicobusBasic(tupTaskTemplate):
     #客户端测试 - 这个是模拟H5UI发送到TUP实体的      
     def client_publish_test(self, jsonInput):
         client = mqtt.Client()
-        client.connect(self._TUP_MQTT_HOST, self._TUP_MQTT_PORT, 60)
-        client.publish("HUICOBUS_MQTT_TOPIC_UIP2TUP", json.dumps(jsonInput), 2)
+        client.connect(self._TUP_MQTT_HOST, self._TUP_MQTT_PORT, TUP_HUICOBUS_MQTT_KEEPALIVE)
+        client.publish("HUICOBUS_MQTT_TOPIC_UIP2TUP", json.dumps(jsonInput), TUP_HUICOBUS_MQTT_QOS)
 
 
 #MQTT服务任务
@@ -264,8 +266,8 @@ class TupClsMqttThread(TupClsHuicobusBasic):
         self.client.on_disconnect=self.func_on_disconnect
         logger = logging.getLogger(__name__)
         self.client.enable_logger(logger)
-        self.client.connect(self.svrAddr, port = self.svrPort, keepalive = 60)
-        self.client.subscribe(self._HUICOBUS_MQTT_TPID[self._HUICOBUS_MQTT_TPID_UIP2TUP], qos=2)
+        self.client.connect(self.svrAddr, port = self.svrPort, keepalive = TUP_HUICOBUS_MQTT_KEEPALIVE)
+        self.client.subscribe(self._HUICOBUS_MQTT_TPID[self._HUICOBUS_MQTT_TPID_UIP2TUP], qos = TUP_HUICOBUS_MQTT_QOS)
         self.client.loop_forever()
     
     def func_get_mqtt_client(self):
@@ -276,7 +278,7 @@ class TupClsMqttThread(TupClsHuicobusBasic):
     
     #连接事件    
     def func_on_connect(self, client, userdata, flags, rc):
-        client.subscribe(self._HUICOBUS_MQTT_TPID[self._HUICOBUS_MQTT_TPID_UIP2TUP], qos=2)
+        client.subscribe(self._HUICOBUS_MQTT_TPID[self._HUICOBUS_MQTT_TPID_UIP2TUP], qos = TUP_HUICOBUS_MQTT_QOS)
 
     def func_on_disconnect(self,client, userdata,rc=0):
         logging.debug("DisConnected result code "+str(rc))

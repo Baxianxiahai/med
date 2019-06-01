@@ -121,7 +121,7 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
         self.msg_send(TUP_MSGID_CRTS_MDC_CHK_PSWD_REQ, TUP_TASK_ID_MOTO, "")
         
         #TEST测试区域
-
+        print("CTRL_SCDL: Init system accomplished, everything get start!")
         return TUP_SUCCESS;
 
     def fsm_msg_trace_inc_rcv_handler(self, msgContent):
@@ -132,7 +132,6 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_mdc_pswd_chk_resp_rcv_handler(self, msgContent):
         res = msgContent['res']
         pswd = msgContent['pswd']
-        
         #start timer
         if (res < 0) or (self.func_pswd_check(pswd) != True):
             self.timerMdcPswdChk = self.tup_timer_start(self.TIMER_DUR_MDC_PSWD_CHK, self.func_timer_start_after_check_pswd_failure)        
@@ -175,7 +174,8 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     
     #通知界面，退出程序
     def func_timer_start_after_check_pswd_failure(self):
-        self.msg_send(TUP_MSGID_CRTS_MDC_CHK_PSWD_RESP, TUP_TASK_ID_UI_MAIN, "")
+        #暂时关闭通知主界面，待完善
+        #self.msg_send(TUP_MSGID_CRTS_MDC_CHK_PSWD_RESP, TUP_TASK_ID_UI_MAIN, "")
         return
     
     #检查PSWD

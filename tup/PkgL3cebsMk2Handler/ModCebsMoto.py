@@ -101,7 +101,8 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
     def fsm_msg_init_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
         if (self.funcInitSps() < 0):
-            self.funcMotoErrTrace("Init sps port error!")
+            #待完善
+            #self.funcMotoErrTrace("Init sps port error!")
             return TUP_FAILURE;
         self.funcBatInitPar();
         return TUP_SUCCESS;
@@ -325,6 +326,7 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
         if (self.IsSerialOpenOk == False) or (self.serialFd == ''):
             mbuf['res'] = -1;
             self.msg_send(TUP_MSGID_CRTS_MDC_CHK_PSWD_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+            return TUP_FAILURE;
         #Get pswd
         pswd = self.funcMdcReadPswd()
         #print("pass:",pswd)

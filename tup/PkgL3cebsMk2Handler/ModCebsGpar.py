@@ -81,7 +81,6 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         self.timerTrain = ''
         self.timerTrainCnt = 0
         self.fsm_set(self._STM_ACTIVE)
-        print("GPAR init accomplished! Status = ", self.fsm_get())
         return TUP_SUCCESS;
 
     def fsm_msg_trace_inc_rcv_handler(self, msgContent):
