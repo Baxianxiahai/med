@@ -218,7 +218,7 @@ class TupClsHuicobusBasic(tupTaskTemplate):
         jsonInput['hlContent'] = hlContent
         #print("HUICOBUS: Sending message = ", jsonInput)
         self.func_data_send(jsonInput)
-        print("11111111111111")
+        print("HUOCOBUS: Send accomplished! Content = ", jsonInput)
         return TUP_SUCCESS
 
         

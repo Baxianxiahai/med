@@ -28,8 +28,8 @@ from ctypes import *
 #from win32com.client import GetObject
 #import usb.core
 #from   cv2 import waitKey
-from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtCore import pyqtSlot
+#from PyQt5 import QtWidgets, QtCore, QtGui
+#from PyQt5.QtCore import pyqtSlot
 from multiprocessing import Queue, Process
 #from _overlapped import NULL
 
@@ -44,7 +44,7 @@ from PkgL3cebsMk2Handler.ModCebsCfg import *
 from PkgL1vmHandler import ModVmLayer
 
 
-from PyQt5 import QtGui
+#from PyQt5 import QtGui
 
 class tupTaskFspc(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
     _STM_ACTIVE = 3

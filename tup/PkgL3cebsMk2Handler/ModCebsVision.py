@@ -30,8 +30,8 @@ from ctypes import cdll
 #from win32com.client import GetObject
 #import usb.core
 #from   cv2 import waitKey
-from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtCore import pyqtSlot
+#from PyQt5 import QtWidgets, QtCore, QtGui
+#from PyQt5.QtCore import pyqtSlot
 from multiprocessing import Queue, Process
 #from _overlapped import NULL
 
