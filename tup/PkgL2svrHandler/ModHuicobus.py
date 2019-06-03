@@ -127,28 +127,28 @@ class TupClsHuicobusBasic(tupTaskTemplate):
                         'HUICOBUS_MQTT_TOPIC_MAX',\
                         )
     
-    _TUP_HUICOBUS_MSG_MATRIX = [\
-        {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':TUP_HHD_CMDID_SYS_GET_CONFIG_REQ, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_get_cfg_req', 'msgId':TUP_MSGID_HUICOBUS_GET_CFG_REQ, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':TUP_HHD_CMDID_SYS_GET_CONFIG_RESP, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_get_cfg_resp', 'msgId':TUP_MSGID_HUICOBUS_GET_CFG_RESP, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':TUP_HHD_CMDID_SYS_SET_CONFIG_REQ, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_set_cfg_req', 'msgId':TUP_MSGID_HUICOBUS_SET_CFG_REQ, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':TUP_HHD_CMDID_SYS_SET_CONFIG_RESP, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_set_cfg_resp', 'msgId':TUP_MSGID_HUICOBUS_SET_CFG_RESP, 'comments':''},\
-
-        {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':0x0A10, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_ctrl_req', 'msgId':TUP_MSGID_HUICOBUS_CTRL_REQ, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':0x0A11, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_ctrl_confirm', 'msgId':TUP_MSGID_HUICOBUS_CTRL_CONFIRM, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':0x0A12, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_moto_confirm', 'msgId':TUP_MSGID_HUICOBUS_MOTO_CONFIRM, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':0x0A13, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_cam_confirm', 'msgId':TUP_MSGID_HUICOBUS_CAM_CONFIRM, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':0x0A14, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_calib_confirm', 'msgId':TUP_MSGID_HUICOBUS_CALIB_CONFIRM, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':0x0A15, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_test_cmd_confirm', 'msgId':TUP_MSGID_HUICOBUS_TEST_CMD_CONFIRM, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':0x0A16, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_cfy_confirm', 'msgId':TUP_MSGID_HUICOBUS_CFY_CONFIRM, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':0x0A17, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_notify', 'msgId':TUP_MSGID_HUICOBUS_NOTIFY, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A90, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_ctrl_resp', 'msgId':TUP_MSGID_HUICOBUS_CTRL_RESP, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A91, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_ctrl_report', 'msgId':TUP_MSGID_HUICOBUS_CTRL_REPORT, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A92, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_moto_report', 'msgId':TUP_MSGID_HUICOBUS_MOTO_REPORT, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A93, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_cam_report', 'msgId':TUP_MSGID_HUICOBUS_CAM_REPORT, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A94, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_calib_report', 'msgId':TUP_MSGID_HUICOBUS_CALIB_REPORT, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A95, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_test_cmd_report', 'msgId':TUP_MSGID_HUICOBUS_TEST_CMD_REPORT, 'comments':''},\
-        {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A96, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_cfy_report', 'msgId':TUP_MSGID_HUICOBUS_CFY_REPORT, 'comments':''},\
-        ]
+#     _TUP_HUICOBUS_MSG_MATRIX = [\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':TUP_HHD_CMDID_SYS_GET_CONFIG_REQ, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_get_cfg_req', 'msgId':TUP_MSGID_HUICOBUS_GET_CFG_REQ, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':TUP_HHD_CMDID_SYS_GET_CONFIG_RESP, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_get_cfg_resp', 'msgId':TUP_MSGID_HUICOBUS_GET_CFG_RESP, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':TUP_HHD_CMDID_SYS_SET_CONFIG_REQ, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_set_cfg_req', 'msgId':TUP_MSGID_HUICOBUS_SET_CFG_REQ, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':TUP_HHD_CMDID_SYS_SET_CONFIG_RESP, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_set_cfg_resp', 'msgId':TUP_MSGID_HUICOBUS_SET_CFG_RESP, 'comments':''},\
+# 
+#         {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':0x0A10, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_ctrl_req', 'msgId':TUP_MSGID_HUICOBUS_CTRL_REQ, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':0x0A11, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_ctrl_confirm', 'msgId':TUP_MSGID_HUICOBUS_CTRL_CONFIRM, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':0x0A12, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_moto_confirm', 'msgId':TUP_MSGID_HUICOBUS_MOTO_CONFIRM, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':0x0A13, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_cam_confirm', 'msgId':TUP_MSGID_HUICOBUS_CAM_CONFIRM, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':0x0A14, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_calib_confirm', 'msgId':TUP_MSGID_HUICOBUS_CALIB_CONFIRM, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':0x0A15, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_test_cmd_confirm', 'msgId':TUP_MSGID_HUICOBUS_TEST_CMD_CONFIRM, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':0x0A16, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_cfy_confirm', 'msgId':TUP_MSGID_HUICOBUS_CFY_CONFIRM, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_TUP2UIP', 'cmdId':0x0A17, 'cmdName':'HUICOBUS_CMDID_cui_tup2uip_notify', 'msgId':TUP_MSGID_HUICOBUS_NOTIFY, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A90, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_ctrl_resp', 'msgId':TUP_MSGID_HUICOBUS_CTRL_RESP, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A91, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_ctrl_report', 'msgId':TUP_MSGID_HUICOBUS_CTRL_REPORT, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A92, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_moto_report', 'msgId':TUP_MSGID_HUICOBUS_MOTO_REPORT, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A93, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_cam_report', 'msgId':TUP_MSGID_HUICOBUS_CAM_REPORT, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A94, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_calib_report', 'msgId':TUP_MSGID_HUICOBUS_CALIB_REPORT, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A95, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_test_cmd_report', 'msgId':TUP_MSGID_HUICOBUS_TEST_CMD_REPORT, 'comments':''},\
+#         {'topic':'HUICOBUS_MQTT_TOPIC_UIP2TUP', 'cmdId':0x0A96, 'cmdName':'HUICOBUS_CMDID_cui_uip2tup_cfy_report', 'msgId':TUP_MSGID_HUICOBUS_CFY_REPORT, 'comments':''},\
+#         ]
 
 
     def __init__(self, taskidUb, taskNameUb, glParUb):
@@ -210,14 +210,14 @@ class TupClsHuicobusBasic(tupTaskTemplate):
         jsonInput['srcId'] = 'HUICOBUS_MQTT_CLIENTID_TUPENTRY'
         jsonInput['destId'] = 'HUICOBUS_MQTT_CLIENTID_TUPROUTER'
         jsonInput['topicId'] = 'HUICOBUS_MQTT_TOPIC_TUP2UIP'
-        jsonInput['cmdId'] = 0
+        jsonInput['cmdId'] = cmdId
         jsonInput['cmdValue'] = cmdValue
-        for element in self._TUP_HUICOBUS_MSG_MATRIX:
-            if (element['topic'] == jsonInput['topicId']) and (element['cmdId'] == cmdId):
-                jsonInput['cmdId'] = element['cmdId']
-        if (jsonInput['cmdId'] == 0):
-            print("HUICOBUS: Not set cmdId correctly!")
-            return TUP_FAILURE
+#         for element in self._TUP_HUICOBUS_MSG_MATRIX:
+#             if (element['topic'] == jsonInput['topicId']) and (element['cmdId'] == cmdId):
+#                 jsonInput['cmdId'] = element['cmdId']
+#         if (jsonInput['cmdId'] == 0):
+#             print("HUICOBUS: Not set cmdId correctly!")
+#             return TUP_FAILURE
         jsonInput['hlContent'] = hlContent
         self.func_data_send2(jsonInput)
         print("HUOCOBUS: Send accomplished! Content = ", jsonInput)
@@ -227,14 +227,15 @@ class TupClsHuicobusBasic(tupTaskTemplate):
     #函数原型，等待被业务层所重载
     #UIP send to TUP HUICOBUS message
     def func_data_rcv(self, cmdId, cmdValue, hlContent):
+        msgId = TUP_MSGID_HUICOBUS_L2FRAME_RCV
         mbuf = {}
+        mbuf['cmdId'] = cmdId
         mbuf['cmdValue'] = cmdValue
         mbuf['hlContent'] = hlContent
-        msgId = 0
-        for element in self._TUP_HUICOBUS_MSG_MATRIX:
-            if (element['topic'] == 'HUICOBUS_MQTT_TOPIC_UIP2TUP') and (element['cmdId'] == cmdId):
-                msgId = element['msgId']
-                continue
+#         for element in self._TUP_HUICOBUS_MSG_MATRIX:
+#             if (element['topic'] == 'HUICOBUS_MQTT_TOPIC_UIP2TUP') and (element['cmdId'] == cmdId):
+#                 msgId = element['msgId']
+#                 continue
         if (self._TUP_UP_LAYER != 0):
             self.msg_send(msgId, self._TUP_UP_LAYER, mbuf)
         return TUP_SUCCESS
@@ -320,13 +321,13 @@ class TupClsMqttThread(TupClsHuicobusBasic):
             print("Error -6, topicid=", topicId)
             return -6
         cmdId = r['cmdId']
-        cmdFlag = False
-        for element in self._TUP_HUICOBUS_MSG_MATRIX:
-            if (element['cmdId'] == cmdId) and (element['topic'] == topicId):
-                cmdFlag = True
-        if (cmdFlag == False):
-            print("Error -7")
-            return -7
+#         cmdFlag = False
+#         for element in self._TUP_HUICOBUS_MSG_MATRIX:
+#             if (element['cmdId'] == cmdId) and (element['topic'] == topicId):
+#                 cmdFlag = True
+#         if (cmdFlag == False):
+#             print("Error -7")
+#             return -7
         cmdValue = r['cmdValue']
         hlContent = r['hlContent']
         self.father.func_data_rcv(cmdId, cmdValue, hlContent)

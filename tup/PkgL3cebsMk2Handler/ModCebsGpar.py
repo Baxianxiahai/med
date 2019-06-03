@@ -44,8 +44,8 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         #业务处理部分
         self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_GPAR_CLOSE_REQ, self.fsm_msg_close_req_rcv_handler)
         #参数配置处理
-        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_HUICOBUS_GET_CFG_REQ, self.fsm_msg_get_cfg_req_handler)
-        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_HUICOBUS_SET_CFG_REQ, self.fsm_msg_set_cfg_req_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GPAR_GET_CFG_REQ, self.fsm_msg_get_cfg_req_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GPAR_SET_CFG_REQ, self.fsm_msg_set_cfg_req_handler)
         
         
         '''
@@ -119,7 +119,7 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
         mbuf['cmdValue'] = 0
         mbuf['par1'] = 0
         mbuf['par2'] = 0
-        self.msg_send(TUP_MSGID_HUICOBUS_GET_CFG_RESP, TUP_TASK_ID_HUICOBUS, mbuf)
+        self.msg_send(TUP_MSGID_GPAR_GET_CFG_RESP, TUP_TASK_ID_HUICOBUS, mbuf)
         return TUP_SUCCESS
  
     def fsm_msg_set_cfg_req_handler(self, msgContent):
