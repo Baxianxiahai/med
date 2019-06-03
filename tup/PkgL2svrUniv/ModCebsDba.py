@@ -6,7 +6,6 @@ Created on 2019年2月13日
 
 from PkgL2svrHandler.ModHstapi import *
 from _tkinter import create
-#from pip._vendor.packaging.requirements import EXTRA
 
 
 #业务处理类，继承基类的属性
@@ -25,111 +24,152 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # file是多条记录，随着拍摄动态生成的，按照批次+孔位序号进行双索引
     #
     '''
-    _TUP_HST_MSG_MATRIX = [\
-        {'restTag':'dba', 'actionId':0X0ED7, 'actionName':'cebs_user_sheet', 'comments':''},\
-        {'restTag':'dba', 'actionId':0X0ED8, 'actionName':'cebs_product_profile', 'comments':''},\
-        {'restTag':'dba', 'actionId':0X0ED9, 'actionName':'cebs_cali_profile', 'comments':''},\
-        {'restTag':'dba', 'actionId':0X0EDA, 'actionName':'cebs_object_profile', 'comments':''},\
-        {'restTag':'dba', 'actionId':0X0EDB, 'actionName':'cebs_config_eleg', 'comments':''},\
-        {'restTag':'dba', 'actionId':0X0EDC, 'actionName':'cebs_config_stackcell', 'comments':''},\
-        {'restTag':'dba', 'actionId':0X0EDD, 'actionName':'cebs_result_eleg', 'comments':''},\
-        {'restTag':'dba', 'actionId':0X0EDE, 'actionName':'cebs_result_stackcell', 'comments':''},\
- 
-        ]
+    _TUP_HST_MSG_ACTION_ID_CEBS = 8500
+#     _TUP_HST_MSG_MATRIX = [\
+#         {'restTag':'dba', 'actionId':8500, 'actionName':'cebs_user_sheet', 'comments':''},\
+#         ]
     
     def __init__(self):
         '''
         Constructor
         '''
+        
+    '''
+    #
+    # 通用统一的操作函数
+    #
+    '''
+    def cebs_dba_general_operation(self, inputData):
+        inputJson = self.hstapiEncode('dba', self._TUP_HST_MSG_ACTION_ID_CEBS, True, inputData)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != self._TUP_HST_MSG_ACTION_ID_CEBS):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent    
+    
+    '''
+    #
+    #预期的数据操作
+    # - 取存储参数
+    # - 设置存储参数
+    # - 更新板控参数
+    # - 更新识别参数
+    #
+    #
+    #
+    #
+    #
+    #
+    '''
+    
     
     
     '''
     #
-    #cebs_user_sheet部分
+    # get_config部分
     #
+    # {"restTag": "dba","actionId": 0X0ED9,"parFlag": 7,'parContent': {'cmd': 'add', 'platetype': 1, 'left_bot_x': 19, 'left_bot_y': 19, 'right_up_x': 19, 'right_up_y': 19}}
     #
     '''
     #创建表单， 在创建表单的时候把表所有字段参数全部传入
-    def cebs_user_sheet_Create(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_user_sheet':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData)
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-
-    def cebs_user_sheet_Delete(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_user_sheet':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
+    def cebs_get_config(self, par1, par2):
+        mbuf = {}
+        mbuf['cmd'] = 'confing_get'
+        mbuf['par1'] = par1
+        mbuf['par2'] = par2
+        return self.cebs_dba_general_operation(mbuf)
     
-    def cebs_user_sheet_Modify(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_user_sheet':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent  
-     
+    '''
+    #
+    #
+    #
+    #
+    '''
     
-    def cebs_user_sheet_Read(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_user_sheet':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
+#     def cebs_user_sheet_Create(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_user_sheet':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData)
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+# 
+#     def cebs_user_sheet_Delete(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_user_sheet':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True,inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+#     
+#     def cebs_user_sheet_Modify(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_user_sheet':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True,inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent  
+#      
+#     
+#     def cebs_user_sheet_Read(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_user_sheet':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True,inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
     
     '''
     #
@@ -725,7 +765,27 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
         if (parFlag <= 0):
             return -4, ''
         return 1, parContent  
-     
+
+    def cebs_result_init_conf_Read(self, inputData):
+        searchFlag = False
+        for element in self._TUP_HST_MSG_MATRIX:
+            if element['actionName'] == 'cebs_result_init_conf':
+                searchFlag = True
+                actionId = element['actionId']
+        if (searchFlag == False):
+            return -1, ''
+        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+        print("outputJson",inputJson)
+        res = self.hstCurlPost(inputJson)
+        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+        if (restTag != 'dba'):
+            return -2, ''
+        if (newActionId != actionId):
+            return -3, ''
+        if (parFlag <= 0):
+            return -4, ''
+        return 1, parContent 
+
 if __name__ == '__main__':
     cls = TupClsCebsDbaItf()
     #res = hst.hstCurlPost({"restTag": "dba", "actionId": 3800, "parFlag": 1, "parContent":{"cmd":"add","user":"test222"}})
@@ -748,6 +808,7 @@ if __name__ == '__main__':
     #modify operation 
 #     print("modify operation")
     print(cls.cebs_user_sheet_Modify({'cmd':'modify','uid':250,'pass_word':54321,'reg_date':'2019-03-01 08:33:33'}))
+    print(cls.cebs_result_init_conf_Read({'cmd':'read'}))
 #     print(cls.cebs_product_profile_Modify({'cmd':'modify','id':4,'hw_ver':250,'mfd':'2019-03-01 08:33:33'}))
 #     print(cls.cebs_cali_profile_Modify({'cmd':'modify','id':5,'calitime':'2019-03-01 08:33:33','left_bot_x':100,'left_bot_y':200,'right_up_x':400,'right_up_y':800}))
 #     print(cls.cebs_object_profile_Modify({'cmd':'modify','objid':5,'objname':'prototype','dir_origin':'test'}))

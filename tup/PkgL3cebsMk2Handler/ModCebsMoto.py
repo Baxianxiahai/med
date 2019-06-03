@@ -1,0 +1,826 @@
+'''
+Created on 2018年12月8日
+
+@author: Administrator
+'''
+
+import random
+import sys
+import time
+import json
+import os
+import re
+import urllib
+import http
+import socket
+import serial
+import serial.tools.list_ports
+import struct
+
+from multiprocessing import Queue, Process
+from PkgL1vmHandler.ModVmCfg import *
+from PkgL1vmHandler.ModVmLayer import *
+from PkgL3cebsMk2Handler.ModCebsCom import *
+from PkgL3cebsMk2Handler.ModCebsCfg import *
+from PkgL1vmHandler.ModVmConsole import *
+
+
+#采样间隔
+_TUP_MOTO_SAMPING_CYCLE = 0.2
+
+#主任务入口
+class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
+    IsSerialOpenOk = ''
+
+    _STM_ACTIVE = 3
+    #主界面，干活拍照
+    _STM_MAIN_UI_ACT = 4
+    _STM_MAIN_UI_EXEC = 5
+    #校准界面，校准移动马达
+    _STM_CALIB_UI_ACT = 6
+    _STM_CALIB_UI_EXEC = 7
+    #工程模式，操控马达配置
+    _STM_MENG_UI_ACT = 8
+    _STM_MENG_UI_EXEC = 9
+    #自测模式
+    _STM_STEST_UI_ACT = 10
+    
+    def __init__(self, glPar):
+        tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_MOTO, taskName="TASK_MOTO", glTabEntry=glPar)
+        #ModVmLayer.TUP_GL_CFG.save_task_by_id(TUP_TASK_ID_MOTO, self)
+        self.fsm_set(TUP_STM_NULL)
+        self.IsSerialOpenOk = False
+        self.serialFd = ''
+        #STM MATRIX
+        self.add_stm_combine(TUP_STM_INIT, TUP_MSGID_INIT, self.fsm_msg_init_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_RESTART, self.fsm_com_msg_restart_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_EXIT, self.fsm_com_msg_exit_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TEST, self.fsm_com_msg_test_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_HW_REL, self.fsm_msg_moto_hw_release_rcv_handler)
+
+        #通知界面切换
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MAIN_UI_SWITCH, self.fsm_msg_main_ui_switch_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CALIB_UI_SWITCH, self.fsm_msg_calib_ui_switch_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_MENG_UI_SWITCH, self.fsm_msg_meng_ui_switch_rcv_handler)
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_STEST_UI_SWITCH, self.fsm_msg_stest_ui_switch_rcv_handler)
+        
+        #测试功能
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_TRACE, self.fsm_msg_trace_msg_rcv_handler)
+        self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_TEST, self.fsm_msg_test_msg_rcv_handler)
+
+        #通用功能
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CTRS_MOTO_STOP, self.fsm_msg_moto_stop_rcv_handler)
+
+        #MAIN主界面模式的移动命令
+        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_CTRS_MOTO_ZERO_REQ, self.fsm_msg_main_back_zero_rcv_handler)
+        self.add_stm_combine(self._STM_MAIN_UI_ACT, TUP_MSGID_CTRS_MOTO_MV_HN_REQ, self.fsm_msg_ctrs_moto_mv_hn_rcv_handler)
+
+        #CALIB校准模式下的移动命令
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOMV_DIR_REQ, self.fsm_msg_calib_moto_move_dir_req_rcv_handler)
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOFM_DIR_REQ, self.fsm_msg_calib_moto_force_move_req_rcv_handler)
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOMV_START, self.fsm_msg_calib_move_start_rcv_handler)
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_MOMV_HOLEN, self.fsm_msg_calib_move_holen_rcv_handler)
+        
+        #CALIB校准模式的
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_PILOT_MV_HN_REQ, self.fsm_msg_calib_pilot_move_holen_rcv_handler)
+        self.add_stm_combine(self._STM_CALIB_UI_ACT, TUP_MSGID_CALIB_PILOT_STOP, self.fsm_msg_calib_pilot_stop_rcv_handler)
+        
+        #MENG马达工程模式下的命令
+        self.add_stm_combine(self._STM_MENG_UI_ACT, TUP_MSGID_MENG_MOTO_COMMAND, self.fsm_msg_meng_command_rcv_handler)
+        
+        #STEST状态下的命令
+        self.add_stm_combine(self._STM_STEST_UI_ACT, TUP_MSGID_STEST_MOTO_INQ, self.fsm_msg_stest_moto_inq_rcv_handler)
+        
+        #CHECK PSWD
+        self.add_stm_combine(TUP_STM_COMN, TUP_MSGID_CRTS_MDC_CHK_PSWD_REQ, self.fsm_msg_ctrs_chk_pswd_rcv_handler)
+        
+        #START TASK
+        self.fsm_set(TUP_STM_INIT)
+        self.task_run()
+
+    def fsm_msg_init_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_ACTIVE)
+        if (self.funcInitSps() < 0):
+            #待完善
+            #self.funcMotoErrTrace("Init sps port error!")
+            return TUP_FAILURE;
+        self.funcBatInitPar();
+        return TUP_SUCCESS;
+    
+    #释放所有的硬件资源
+    def fsm_msg_moto_hw_release_rcv_handler(self, msgContent):
+        if (self.IsSerialOpenOk != False) and (self.serialFd != ''):
+            try:
+                self.serialFd.close()
+            except Exception:
+                pass
+        return TUP_SUCCESS;
+
+    def fsm_msg_trace_msg_rcv_handler(self, msgContent):
+        self.funcMotoLogTrace(msgContent);
+        return TUP_SUCCESS;
+
+    def fsm_msg_test_msg_rcv_handler(self, msgContent):
+        self.msg_send(TUP_MSGID_TEST, TUP_TASK_ID_UI_MAIN, msgContent)
+        return TUP_SUCCESS;
+
+    def fsm_msg_moto_stop_rcv_handler(self, msgContent):
+        self.funcMotoStop()
+        return TUP_SUCCESS;
+
+    def fsm_msg_main_ui_switch_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_MAIN_UI_ACT)
+        return TUP_SUCCESS;
+
+    def fsm_msg_calib_ui_switch_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_CALIB_UI_ACT)
+        return TUP_SUCCESS;
+
+    def fsm_msg_meng_ui_switch_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_MENG_UI_ACT)
+        return TUP_SUCCESS;
+
+    def fsm_msg_stest_ui_switch_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_STEST_UI_ACT)
+        return TUP_SUCCESS;
+    
+    #复合TRACE       
+    def funcMotoLogTrace(self, myString):
+        if (self.state == self._STM_MAIN_UI_ACT) or (self.state == self._STM_MAIN_UI_EXEC):
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)
+        elif (self.state == self._STM_CALIB_UI_ACT) or (self.state == self._STM_CALIB_UI_EXEC):
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, myString)
+        elif (self.state == self._STM_MENG_UI_ACT) or (self.state == self._STM_MENG_UI_EXEC):
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MENG, myString)
+        else:
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)
+        #SAVE INTO MED FILE
+        self.medCmdLog(str(myString));
+        #PRINT to local
+        self.tup_dbg_print(str(myString))
+        return
+
+    #复合TRACE       
+    def funcMotoErrTrace(self, myString):
+        if (self.state == self._STM_MAIN_UI_ACT) or (self.state == self._STM_MAIN_UI_EXEC):
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)
+        elif (self.state == self._STM_CALIB_UI_ACT) or (self.state == self._STM_CALIB_UI_EXEC):
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_CALIB, myString)
+        elif (self.state == self._STM_MENG_UI_ACT) or (self.state == self._STM_MENG_UI_EXEC):
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MENG, myString)
+        else:
+            self.msg_send(TUP_MSGID_TRACE, TUP_TASK_ID_UI_MAIN, myString)
+        #SAVE INTO MED FILE
+        self.medErrorLog(str(myString));
+        #PRINT to local
+        self.tup_err_print(str(myString))
+        return
+    
+    #主界面模式下的归零
+    def fsm_msg_main_back_zero_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_MAIN_UI_EXEC)
+        maxTry = msgContent['maxTry']
+        res = self.funcMotoBackZero(maxTry)
+        self.fsm_set(self._STM_MAIN_UI_ACT)
+        mbuf = {}
+        mbuf['res'] = res
+        self.msg_send(TUP_MSGID_CTRS_MOTO_ZERO_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+        return TUP_SUCCESS;
+
+    #主界面模式下的移动到某个孔位
+    def fsm_msg_ctrs_moto_mv_hn_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_MAIN_UI_EXEC)
+        holeNbr = int(msgContent['holeNbr'])
+        maxTry = msgContent['maxTry']
+        res = self.funcMotoMove2HoleNbr(holeNbr, maxTry)
+        self.fsm_set(self._STM_MAIN_UI_ACT)
+        mbuf={}
+        if (res < 0):
+            outputStr = "L2MOTO: CRTS move to Hole#%d point error!" % (holeNbr)
+            self.funcMotoErrTrace(outputStr)
+            mbuf['res'] = -1
+            self.msg_send(TUP_MSGID_CTRS_MOTO_MV_HN_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+            return TUP_FAILURE;
+        else:
+            outputStr = "L2MOTO: CRTS move to Hole#%d point success!" % (holeNbr)
+            self.funcMotoLogTrace(outputStr)
+            mbuf['res'] = 1
+            self.msg_send(TUP_MSGID_CTRS_MOTO_MV_HN_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+            return TUP_SUCCESS;
+
+    #校准模式下的移动到第一个孔
+    def fsm_msg_calib_move_start_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_CALIB_UI_EXEC)
+        maxTry = msgContent['maxTry']
+        res, string = self.funcMotoMove2Start(maxTry)
+        self.fsm_set(self._STM_CALIB_UI_ACT)
+        if (res < 0):
+            self.funcMotoErrTrace("L2MOTO: Moving to start point error!")
+            return TUP_FAILURE;
+        else:
+            self.funcMotoLogTrace("L2MOTO: " + string)
+            return TUP_SUCCESS;
+    
+    #CALIB校准模式下的移动到孔N
+    def fsm_msg_calib_move_holen_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_CALIB_UI_EXEC)
+        holeNbr = int(msgContent['holeNbr'])
+        maxTry = msgContent['maxTry']
+        res = self.funcMotoMove2HoleNbr(holeNbr, maxTry)
+        self.fsm_set(self._STM_CALIB_UI_ACT)
+        if (res < 0):
+            outputStr = "L2MOTO: Move to Hole#%d point error!" % (holeNbr)
+            self.funcMotoErrTrace(outputStr)
+            return TUP_FAILURE;
+        else:
+            outputStr = "L2MOTO: Move to Hole#%d point success!" % (holeNbr)
+            self.funcMotoLogTrace(outputStr)
+            return TUP_SUCCESS;
+    
+    #CALIB: 正常移动
+    def fsm_msg_calib_moto_move_dir_req_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_CALIB_UI_EXEC)
+        scale = int(msgContent['scale'])
+        dir = msgContent['dir']
+        maxTry = msgContent['maxTry']
+        self.funcMotoMoveOneStep(scale, dir, maxTry)
+        self.fsm_set(self._STM_CALIB_UI_ACT)
+        self.msg_send(TUP_MSGID_CALIB_MOMV_DIR_RESP, TUP_TASK_ID_CALIB, msgContent)
+        return TUP_SUCCESS;
+
+    #CALIB: 强制移动
+    def fsm_msg_calib_moto_force_move_req_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_CALIB_UI_EXEC)
+        dir = msgContent['dir']
+        maxTry = msgContent['maxTry']
+        self.funcMotoForceMoveOneStep(dir, maxTry)
+        self.fsm_set(self._STM_CALIB_UI_ACT)
+        self.msg_send(TUP_MSGID_CALIB_MOFM_DIR_RESP, TUP_TASK_ID_CALIB, msgContent)
+        return TUP_SUCCESS;
+
+    #MENG: 工程模式下的控制命令
+    #因为要取出数据，字符串必须使用标准字符串格式
+    #msgContent = ("{\"res\":%d}" %(res))
+    def fsm_msg_meng_command_rcv_handler(self, msgContent):
+        self.fsm_set(self._STM_MENG_UI_EXEC)
+        cmdid = int(msgContent['cmdid'])
+        par1 = int(msgContent['par1'])
+        par2 = int(msgContent['par2'])
+        par3 = int(msgContent['par3'])
+        par4 = int(msgContent['par4'])
+        res = self.funcSendCmdPack(cmdid, par1, par2, par3, par4)
+        mbuf={}
+        mbuf['res'] = res
+        self.msg_send(TUP_MSGID_MENG_MOTO_CMD_FB, TUP_TASK_ID_MENG, mbuf)
+        self.fsm_set(self._STM_MENG_UI_ACT)
+        return TUP_SUCCESS;
+
+    #校准巡游模式下的移动
+    def fsm_msg_calib_pilot_move_holen_rcv_handler(self, msgContent):
+        mbuf={}
+        self.fsm_set(self._STM_CALIB_UI_EXEC)
+        holeNbr = int(msgContent['holeNbr'])
+        maxTry = msgContent['maxTry']
+        res = self.funcMotoMove2HoleNbr(holeNbr, maxTry)
+        self.fsm_set(self._STM_CALIB_UI_ACT)
+        if (res < 0):
+            outputStr = "L2MOTO: Move to Hole#%d point error!" % (holeNbr)
+            self.funcMotoErrTrace(outputStr)
+            mbuf['res'] = -1
+            self.msg_send(TUP_MSGID_CALIB_PILOT_MV_HN_RESP, TUP_TASK_ID_CALIB, mbuf)
+            return TUP_FAILURE;
+        else:
+            outputStr = "L2MOTO: Move to Hole#%d point success!" % (holeNbr)
+            self.funcMotoLogTrace(outputStr)
+            mbuf['res'] = 1
+            self.msg_send(TUP_MSGID_CALIB_PILOT_MV_HN_RESP, TUP_TASK_ID_CALIB, mbuf)
+            return TUP_SUCCESS;
+
+    def fsm_msg_calib_pilot_stop_rcv_handler(self, msgContent):
+        self.funcMotoStop()
+        return TUP_SUCCESS;
+    
+    #STEST业务
+    def fsm_msg_stest_moto_inq_rcv_handler(self, msgContent):
+        mbuf={}
+        if (self.IsSerialOpenOk == False):
+            mbuf['spsOpen'] = -1
+        else:
+            mbuf['spsOpen'] = 1
+            if (self.funcMotoMoveOneStep(5, "RIGHT", 30) == 1):
+                mbuf['motoX'] = 1
+            else:
+                mbuf['motoX'] = -1
+            if (self.funcMotoMoveOneStep(5, "UP", 30) == 1):
+                mbuf['motoY'] = 1
+            else:
+                mbuf['motoY'] = -1
+        self.msg_send(TUP_MSGID_STEST_MOTO_FDB, TUP_TASK_ID_STEST, mbuf)
+        return TUP_SUCCESS;
+    
+    #检查PSWD
+    def fsm_msg_ctrs_chk_pswd_rcv_handler(self, msgContent):
+        mbuf={}
+        mbuf['res'] = 1;
+        mbuf['pswd'] = -1;
+        if (self.IsSerialOpenOk == False) or (self.serialFd == ''):
+            mbuf['res'] = -1;
+            self.msg_send(TUP_MSGID_CRTS_MDC_CHK_PSWD_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+            return TUP_FAILURE;
+        #Get pswd
+        pswd = self.funcMdcReadPswd()
+        #print("pass:",pswd)
+        try:
+            mbuf['pswd'] = int(pswd)
+        except Exception:
+            mbuf['pswd'] = -1;        
+        #print(mbuf['pswd'])
+        self.msg_send(TUP_MSGID_CRTS_MDC_CHK_PSWD_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
+        return TUP_SUCCESS;
+    
+    
+    '''
+    SERVICE PART: 业务部分的函数，功能处理函数
+    '''
+    def funcMotoBackZero(self, maxTry):
+        self.funcMotoLogTrace("L2MOTO: Running Zero Position!")
+        return self.funcExecMoveZero(maxTry)
+        
+    #Normal moving with limitation    
+    def funcMotoMoveOneStep(self, scale, dir, maxTry):
+        #10um
+        if (scale == 1):
+            actualScale = 10;
+        #100um
+        elif (scale == 2):
+            actualScale = 100;
+        #200um
+        elif (scale == 3):
+            actualScale = 200;
+        #500um
+        elif (scale == 4):
+            actualScale = 500;
+        #1mm
+        elif (scale == 5):
+            actualScale = 1000;
+        #2mm
+        elif (scale == 6):
+            actualScale = 2000;
+        #5mm
+        elif (scale == 7):
+            actualScale = 5000;
+        #1cm
+        elif (scale == 8):
+            actualScale = 10000;
+        #2cm
+        elif (scale == 9):
+            actualScale = 20000;
+        #5cm
+        elif (scale == 10):
+            actualScale = 50000;
+        #radioCalaH96l: 99000
+        elif (scale == 11):
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_96_SD_XDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_96_SD_HOLE_DIS)
+        #radioCalaH96s: 63000
+        elif (scale == 12):
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_96_SD_YDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_96_SD_HOLE_DIS)
+        #radioCalaH48l
+        elif (scale == 13):
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_48_SD_XDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_48_SD_HOLE_DIS)
+        #radioCalaH48s
+        elif (scale == 14):
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_48_SD_YDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_48_SD_HOLE_DIS)
+        #radioCalaH24l: 19.3*5 = 96.5mm
+        elif (scale == 15):
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_24_SD_XDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_24_SD_HOLE_DIS)
+        #radioCalaH24s: 85.25 - 13.67*2 = 57.91
+        elif (scale == 16):
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_24_SD_YDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_24_SD_HOLE_DIS)
+        #radioCalaH12l
+        elif (scale == 17):
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_12_SD_XDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_12_SD_HOLE_DIS)
+        #radioCalaH12s
+        elif (scale == 18):
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_12_SD_YDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_12_SD_HOLE_DIS)
+        #radioCalaH6l: 127.5-24.5*2 = 78.4mm
+        elif (scale == 19):
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_6_SD_XDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_6_SD_HOLE_DIS)
+        #radioCalaH6s: 85.3-23.05*2 = 39.2mm
+        elif (scale == 20):
+            actualScale = (GLPLT_PAR_OFC.HB_TARGET_6_SD_YDIR_NBR-1) * (GLPLT_PAR_OFC.HB_TARGET_6_SD_HOLE_DIS)
+        else:
+            actualScale = 10;
+        Old_Px = GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] #X-Axis
+        Old_Py = GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] #Y-Axis
+        #Not specify this action to each real plastic board, but addiction to mechanical platform.
+        #UP DIRECTION - Y add
+        if (dir == "UP"):
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] += actualScale;
+            if (GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] > GLPLT_PAR_OFC.HB_MECHNICAL_PLATFORM_Y_MAX):
+                GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] = GLPLT_PAR_OFC.HB_MECHNICAL_PLATFORM_Y_MAX;
+                
+        #DOWN DIRECTION - Y sub
+        elif (dir == "DOWN"):
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] -= actualScale;
+            if (GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] < 0):
+                GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] = 0;
+                
+        #LEFT DIRECTION - X sub
+        elif (dir == "LEFT"):
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] -= actualScale;
+            if (GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] < 0):
+                GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] = 0;
+                
+        #RIGHT DIRECTION - X add
+        elif (dir == "RIGHT"):
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] += actualScale;
+            if (GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] > GLPLT_PAR_OFC.HB_MECHNICAL_PLATFORM_X_MAX):
+                GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] = GLPLT_PAR_OFC.HB_MECHNICAL_PLATFORM_X_MAX;
+        
+        #Error case
+        else:
+            pass
+        self.funcMotoLogTrace("L2MOTO: Moving one step! Scale=%d, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (scale, dir, Old_Px, Old_Py, GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]));
+        if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1], maxTry) > 0):
+            return 1;
+        else:
+            self.funcMotoErrTrace("L2MOTO: funcMotoMoveOneStep error!")
+            return -2;
+
+    #Force Moving function, with scale = 1cm=10mm=10000um
+    def funcMotoForceMoveOneStep(self, dir, maxTry):
+        actualScale = 10000;
+        Old_Px = GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] #X-Axis
+        Old_Py = GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] #Y-Axis
+
+        #Not specify this action to each real plastic board, but addiction to mechanical platform.
+        #UP DIRECTION - Y add
+        if (dir == "UP"):
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] += actualScale;
+                
+        #DOWN DIRECTION - Y sub
+        elif (dir == "DOWN"):
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] -= actualScale;
+                
+        #LEFT DIRECTION - X sub
+        elif (dir == "LEFT"):
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] -= actualScale;
+                
+        #RIGHT DIRECTION - X add
+        elif (dir == "RIGHT"):
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] += actualScale;
+        
+        #Error case
+        else:
+            pass
+        self.funcMotoLogTrace("L2MOTO: Moving one step! Scale=1cm, Dir=%s. Old pos X/Y=%d/%d, New pos X/Y=%d/%d" % (dir, Old_Px, Old_Py, GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1]));
+        if (self.funcMotoMove2AxisPos(Old_Px, Old_Py, GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1], maxTry) > 0):
+            return 1;
+        else:
+            self.funcMotoErrTrace("L2MOTO: funcMotoForceMoveOneStep error!")
+            return -2;
+    
+    #运动到起点
+    def funcMotoMove2Start(self, maxTry):
+        self.funcMotoLogTrace("L2MOTO: Move to start position - Left/up!")
+        xWidth = GLPLT_PAR_OFC.HB_POS_IN_UM[0] - GLPLT_PAR_OFC.HB_POS_IN_UM[2];
+        yHeight = GLPLT_PAR_OFC.HB_POS_IN_UM[1] - GLPLT_PAR_OFC.HB_POS_IN_UM[3];
+        if (xWidth <= 0 or yHeight <= 0):
+            string = str("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight))
+            self.tup_dbg_print(string)
+            return -1, str("L2MOTO: Error set of calibration, xWidth/yHeight=%d/%d!" %(xWidth, yHeight));
+        res = self.funcMotoMove2HoleNbr(1, maxTry)
+        self.tup_dbg_print(str("L2MOTO: Feedback get from funcMotoMove2HoleNbr = ", res))
+        if (res > 0):
+            return res, "L2MOTO: Success!"
+        else:
+            self.medErrorLog("L2MOTO: funcMotoMove2Start Failure!")
+            return res, "L2MOTO: Failure!"
+
+    '''
+          左下角的坐标，存在X1/Y1上， 右上角的坐标，存在X2/Y2上 
+          这种方式，符合坐标系的习惯：小值在X1/Y1中，大值在X2/Y2中
+    LEFT-BOTTOM for X1/Y1 save in [0/1], RIGHT-UP for X2/Y2 save in [2/3]
+    '''    
+    '这个移动算法跟显微镜的放置方式息息相关'
+    def funcMotoMove2HoleNbr(self, holeIndex, maxTry):
+        if (holeIndex == 0):
+            xTargetHoleNbr = 0;
+            yTargetHoleNbr = 0;
+            newPosX = 0;
+            newPosY = 0;
+        else:
+            xTargetHoleNbr = ((holeIndex-1) % GLPLT_PAR_OFC.HB_HOLE_X_NUM) + 1;
+            yTargetHoleNbr = ((holeIndex-1) // GLPLT_PAR_OFC.HB_HOLE_X_NUM) + 1;
+            newPosX = int(GLPLT_PAR_OFC.HB_POS_IN_UM[0] + (xTargetHoleNbr-1)*GLPLT_PAR_OFC.HB_WIDTH_X_SCALE);
+            newPosY = int(GLPLT_PAR_OFC.HB_POS_IN_UM[3] - (yTargetHoleNbr-1)*GLPLT_PAR_OFC.HB_HEIGHT_Y_SCALE);
+        self.tup_dbg_print(str("L2MOTO: Moving to working hole=%d, newPosX/Y=%d/%d." % (holeIndex, newPosX, newPosY)))
+        if (self.funcMotoMove2AxisPos(GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0], GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1], newPosX, newPosY, maxTry) > 0):
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] = newPosX;
+            GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] = newPosY;
+            self.tup_dbg_print("L2MOTO: Finished once!")
+            return 1;
+        else:
+            self.tup_dbg_print("L2MOTO: funcMotoMove2HoleNbr() error get feedback from funcMotoMove2AxisPos.")
+            self.medErrorLog("L2MOTO: Error get feedback from funcMotoMove2AxisPos")
+            return -2;
+    
+    #===========================================================================
+    # #试图在X轴上移动1个PULES，测试X轴是否可用
+    # def funcMotoMoveX1Pules(self, dir):
+    #     return 1
+    # 
+    # #试图在Y轴上移动1个PULES，测试X轴是否可用
+    # def funcMotoMoveY1Pules(self, dir):
+    #     return 1
+    #===========================================================================
+    
+    #跟下位机握手，取得PSWD
+    def funcMdcReadPswd(self):
+        res = self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_CHECK_PSWD_CMID, random.randint(0,256), 0, 0, 0)
+        return res;
+
+    def funcMotoMove2AxisPos(self, curPx, curPy, newPx, newPy, maxTry):
+        self.tup_dbg_print(str("L2MOTO: funcMotoMove2AxisPos. Current XY=%d/%d, New=%d/%d" %(curPx, curPy, newPx, newPy)))
+        return self.funcExecMoveDistance((newPx-curPx)*GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM, (newPy-curPy)*GLSPS_PAR_OFC.MOTOR_STEPS_PER_DISTANCE_UM, maxTry);
+    
+    
+    
+    
+    
+    '''
+    HW: 硬件相关的处理命令
+    '''
+    #计算CRC
+    def funcCacCrc(self, buf, length):
+        wCRC = 0xFFFF;
+        index=0
+        while index < length:
+            wCRCOut = self.funcCrcOneChar(buf[index], wCRC)
+            wCRC = wCRCOut
+            index += 1
+        wHi = wCRC // 256;
+        wLo = wCRC % 256;
+        wCRC = (wHi << 8) | wLo;
+        return wCRC;
+
+    #计算CRC支持功能
+    def funcCrcOneChar(self, cDataIn, wCRCIn):
+        wCheck = 0;
+        wCRCIn = wCRCIn ^ cDataIn;
+        i=0;
+        while i<8:
+            wCheck = wCRCIn & 1;
+            wCRCIn = wCRCIn >> 1;
+            wCRCIn = wCRCIn & 0x7fff;
+            if (wCheck == 1):
+                wCRCIn = wCRCIn ^ 0xa001;
+            wCRCIn = wCRCIn & 0xffff;
+            i += 1
+        return wCRCIn;        
+        
+    #初始化串口
+    #注意两种串口设备，描述符是不一样的，需要通过描述符来锁定设备端口
+    def funcInitSps(self):
+        #LC：ubuntu环境下，之前使用的那一套搜索设备符需要修改
+        #现在使用的方案是创建udev rules文件来处理的
+        try:
+            self.serialFd = serial.Serial('/dev/cebsusb', 9600, timeout = 0.2)
+        except Exception:
+            self.IsSerialOpenOk = False
+            self.funcMotoErrTrace("L2MOTO: Serial exist, but can't open!")
+            return -1
+        self.IsSerialOpenOk = True
+        self.funcMotoLogTrace("L2MOTO: Success open serial port!")
+        return 1
+        
+        #windows下
+        
+#         plist = list(serial.tools.list_ports.comports())
+#         self.targetComPortString = GLSPS_PAR_OFC.SPS_USB_CARD_SET
+#         self.drvVerNbr = -1
+#         if len(plist) <= 0:
+#             self.funcMotoErrTrace("L2MOTO: Not serial device installed!")
+#             return -2
+#         else:
+#             maxList = len(plist)
+#             searchComPartString = ''
+#             for index in range(0, maxList):
+#                 self.medErrorLog("L2MOTO: " + str(plist[index]))
+#                 plistIndex =list(plist[index])
+#                 string = ("L2MOTO: Sps Init = ", plistIndex)
+#                 self.tup_dbg_print(string)
+#                 #Find right COM#
+#                 for comPortStr in plistIndex:
+#                     indexStart = comPortStr.find(self.targetComPortString)
+#                     indexEnd = comPortStr.find(')')
+#                     if (indexStart >= 0) and (indexEnd >=0) and (indexEnd > len(self.targetComPortString)):
+#                         searchComPartString = comPortStr[len(self.targetComPortString):indexEnd]
+#             if searchComPartString == '':
+#                 self.funcMotoErrTrace("L2MOTO: Can not find right serial port!")
+#                 return -1
+#             else:
+#                 self.funcMotoLogTrace("L2MOTO: Serial port is to open = " + str(searchComPartString))
+#                 serialName = searchComPartString
+#             try:
+#                 self.serialFd = serial.Serial(serialName, 9600, timeout = 0.2)
+#             except Exception:
+#                 self.IsSerialOpenOk = False
+#                 self.funcMotoErrTrace("L2MOTO: Serial exist, but can't open!")
+#                 return -1
+#             self.IsSerialOpenOk = True
+#             self.funcMotoLogTrace("L2MOTO: Success open serial port!")
+#             return 1
+        
+    #命令打包
+    def funcSendCmdPack(self, cmdId, par1, par2, par3, par4):
+        #Build MODBUS COMMAND:系列化
+        #add for test pules  command ID 0x38   
+        if (cmdId == GLSPS_PAR_OFC.SPS_TEST_PULES_CMID):
+            for i in range(1, par1+1, 500):
+                fmt = ">BBiiii";
+                byteDataBuf = struct.pack(fmt, GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, i, par2, par3, par4)
+                crc = self.funcCacCrc(byteDataBuf, GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
+                fmt = "<H";
+                byteCrc = struct.pack(fmt, crc)
+                byteDataBuf += byteCrc
+                #打印完整的BYTE系列
+                index=0
+                outBuf=''
+                while index < (GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
+                    outBuf += str("%02X " % (byteDataBuf[index]))
+                    index+=1
+                #self.funcMotoLogTrace("L2MOTO: SND CMD = " + outBuf)
+                res, Buf = self.funcCmdSend(byteDataBuf)
+            return 1    
+        else:
+            fmt = ">BBiiii";    
+            byteDataBuf = struct.pack(fmt, GLSPS_PAR_OFC.SPS_MENGPAR_ADDR, cmdId, par1, par2, par3, par4)
+            crc = self.funcCacCrc(byteDataBuf, GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN)
+            fmt = "<H";
+            byteCrc = struct.pack(fmt, crc)
+            byteDataBuf += byteCrc
+            #打印完整的BYTE系列
+            index=0
+            outBuf=''
+            while index < (GLSPS_PAR_OFC.SPS_MENGPAR_CMD_LEN+2):
+                outBuf += str("%02X " % (byteDataBuf[index]))
+                index+=1
+            #self.funcMotoLogTrace("L2MOTO: SND CMD = " + outBuf)
+            res, Buf = self.funcCmdSend(byteDataBuf)
+            if (res > 0):
+                return Buf
+            else:
+                return res
+    #单条命令的执行
+    def funcCmdSend(self, cmd):
+        #正常状态
+        if(self.IsSerialOpenOk == False):
+            self.funcMotoErrTrace("L2MOTO: Serial not opened, cant not send command!")
+            return -2,0
+        #串口的确已经被打开了
+        self.serialFd.readline()
+        self.serialFd.write(cmd)
+        rcvBuf = self.serialFd.readline()
+        if (len(rcvBuf) > 1):
+            while (rcvBuf[len(rcvBuf)-1] == 0x0A):
+                rcvBuf2 = self.serialFd.readline()
+                rcvBuf += rcvBuf2
+        length = len(rcvBuf)
+        if (length <=0):
+            self.funcMotoErrTrace("L2MOTO: Nothing received. RCV BUF = " + str(rcvBuf))
+            return -3,0
+        outBuf = ''
+        for i in range(length):
+            outBuf += ("%02X "%(rcvBuf[i]))
+        self.funcMotoLogTrace("L2MOTO: RCV BUF = " + outBuf)
+        #Check CRC
+        targetCrc = rcvBuf[length-2] + (rcvBuf[length-1]<<8)
+        rcvCrc = self.funcCacCrc(rcvBuf, length-2)
+        if (rcvCrc != targetCrc):
+            self.funcMotoErrTrace("L2MOTO: Receive CRC Error!")
+            return -4,0
+        if (rcvBuf[0] != cmd[0]):
+            self.funcMotoErrTrace("L2MOTO: Receive EquId Error!")
+            return -5,0
+        fmt = ">i";
+        upBuf = rcvBuf[3:7]
+        outPar = struct.unpack(fmt, upBuf)
+        return 1, outPar[0]
+    
+    #批量处理时的初始化
+    def funcBatInitPar(self):
+        #设置一圈步伐
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_SET_PPC_CMID, GLSPS_PAR_OFC.MOTOR_STEPS_PER_ROUND, 0, 0, 0)
+        #设置激活
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_SET_WK_MODE_CMID, 1, 1, 0, 0)
+        #设置速度
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_SET_MV_SPD_CMID, GLSPS_PAR_OFC.MOTOR_MAX_SPD, GLSPS_PAR_OFC.MOTOR_MAX_SPD, 0, 0)
+        #设置加速度
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_SET_ACC_CMID, GLSPS_PAR_OFC.MOTOR_MAX_ACC, GLSPS_PAR_OFC.MOTOR_MAX_ACC, 0, 0)
+        #设置加速度
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_SET_DEACC_CMID, GLSPS_PAR_OFC.MOTOR_MAX_DEACC, GLSPS_PAR_OFC.MOTOR_MAX_DEACC, 0, 0)
+        #设置归零速度
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_SET_ZO_SPD_CMID, GLSPS_PAR_OFC.MOTOR_ZERO_SPD, GLSPS_PAR_OFC.MOTOR_ZERO_SPD, 0, 0)
+        #设置归零加速度
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_SET_ZO_ACC_CMID, GLSPS_PAR_OFC.MOTOR_ZERO_ACC, GLSPS_PAR_OFC.MOTOR_ZERO_ACC, 0, 0)
+        #全部停止
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_STP_IMD_CMID, 1, 1, 0, 0)
+        return 1;
+        
+    #Fetch moto actual status, especially the moto is still under running
+    #To be finished function!
+    def funcMotoRunningStatusInquery(self):
+        return False;
+
+    #停止命令
+    def funcMotoStop(self):
+        self.funcMotoLogTrace("L2MOTO: Send full stop command to moto!")
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_STP_NOR_CMID, 1, 1, 0, 0)
+        self.fsm_set(self._STM_MAIN_UI_ACT)
+        return 1
+    
+    def funcMotoResume(self):
+        self.tup_dbg_print("L2MOTO: Resume action running...")
+        return 1;
+        
+    #连续带监控的命令执行
+    def funcExecMoveZero(self, maxTry):
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_MV_ZERO_CMID, (-1)*GLSPS_PAR_OFC.MOTOR_ZERO_SPD, (-1)*GLSPS_PAR_OFC.MOTOR_ZERO_SPD, 0, 0)
+        #LC:you need to clear the par when exc back to zero
+        GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[0] = 0
+        GLPLT_PAR_OFC.HB_CUR_POS_IN_UM[1] = 0
+        #退出当前状态机
+        cnt = maxTry
+        while (1):
+            if (self.funcInqueryRunningStatus() == True):
+                return 1
+            time.sleep(_TUP_MOTO_SAMPING_CYCLE)
+            cnt -= 1
+            self.tup_dbg_print(str("L2MOTO: Wait back zero progress, Counter = " + str(cnt)))
+            if cnt <=0:
+                self.tup_err_print(str("L2MOTO: Time out on waiting for moto feedback."))
+                return -1;
+
+    #连续带监控的命令执行：速度模式
+    def funcExecMoveSpeed(self, par1, par2, maxTry):
+        #定标10
+        input1 = int(par1)
+        input2 = int(par2)
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_MV_SPD_CMID, input1, input2, 0, 0)
+        cnt = maxTry
+        while (1):
+            if (self.funcInqueryRunningStatus() == True):
+                return 1
+            time.sleep(_TUP_MOTO_SAMPING_CYCLE)
+            cnt -= 1
+            self.tup_dbg_print(str("L2MOTO: Wait move speed progress, Counter = ", cnt))
+            if cnt <=0:
+                self.tup_err_print("L2MOTO: Time out on waiting for moto feedback.")
+                return -1;
+
+    #连续带监控的命令执行：距离模式
+    def funcExecMoveDistance(self, par1, par2, maxTry):
+        #定标NF0
+        input1 = int(par1)
+        input2 = int(par2)
+        self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_MV_PULS_CMID, input1, input2, 0, 0)
+        cnt = maxTry
+        while (1):
+            if (self.funcInqueryRunningStatus() == True):
+                return 1
+            time.sleep(_TUP_MOTO_SAMPING_CYCLE)
+            cnt -= 1
+            self.tup_dbg_print(str("L2MOTO: Wait move distance progress, Counter = " + str(cnt)))
+            if cnt <=0:
+                self.tup_err_print("L2MOTO: Time out on waiting for moto feedback.")
+                return -1;
+    
+    #标准指令
+    def funcInqueryRunningStatus(self):
+        res = self.funcSendCmdPack(GLSPS_PAR_OFC.SPS_INQ_RUN_CMID, 1, 1, 1, 1)
+        self.tup_dbg_print("L2MOTO: Inquiry Res = " + str(res))
+        if res == 0:
+            return True
+        else:
+            return False
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
