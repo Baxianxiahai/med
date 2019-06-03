@@ -1,30 +1,7 @@
-09:04:35 **** Build of configuration Debug for project mshot ****
-make all 
-Building file: ../src/mshot.cpp
-Invoking: GCC C++ Compiler
-g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/mshot.d" -MT"src/mshot.o" -o "src/mshot.o" "../src/mshot.cpp"
-../src/mshot.cpp: In function ‘int main(int, char**)’:
-../src/mshot.cpp:131:29: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 2 has type ‘dvpUint64 {aka long unsigned int}’ [-Wformat=]
-                 frame.format);
-                             ^
-../src/mshot.cpp:131:29: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 3 has type ‘dvpUint64 {aka long unsigned int}’ [-Wformat=]
-../src/mshot.cpp:84:14: warning: unused variable ‘v’ [-Wunused-variable]
-     uint32_t v;
-              ^
-Finished building: ../src/mshot.cpp
+11:06:08 **** Clean-only build of configuration Debug for project Mshot ****
+make clean 
+rm -rf  ./src/Mshot.o  ./src/Mshot.d  Mshot
  
-Building target: mshot
-Invoking: GCC C++ Linker
-g++ -L. -o "mshot"  ./src/mshot.o   -ldvp -lhzd
-/usr/bin/ld: skipping incompatible /lib/../lib/libdvp.so when searching for -ldvp
-makefile:45: recipe for target 'mshot' failed
-/usr/bin/ld: skipping incompatible //lib/libdvp.so when searching for -ldvp
-/usr/bin/ld: cannot find -ldvp
-/usr/bin/ld: skipping incompatible /lib/../lib/libhzd.so when searching for -lhzd
-/usr/bin/ld: skipping incompatible //lib/libhzd.so when searching for -lhzd
-/usr/bin/ld: cannot find -lhzd
-collect2: error: ld returned 1 exit status
-make: *** [mshot] Error 1
 
-09:04:36 Build Finished (took 620ms)
+11:06:09 Build Finished (took 435ms)
 
