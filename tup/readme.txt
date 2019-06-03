@@ -8,7 +8,6 @@
 2. def func_vision_worm_binvalue_proc(self, img):  new = np.zeros(img.shape, np.uint8)
 3. 处于子菜单时，密码检查失败后的退出程序，没有真的起作用
 
-
 [WINDOWS MOSQUITTO]
 cd "c:\Program Files\mosquitto"
 启动服务： mosquitto -c mosquitto.conf -d
@@ -18,31 +17,6 @@ cd "c:\Program Files\mosquitto"
 发送太长，需要通过a.bat，将以下内容拷贝到a.bat中，直接执行a.bat
   mosquitto_pub -t HUICOBUS_MQTT_TOPIC_UIP2TUP -m {\"srcNode\":\"HUICOBUS_MQTT_NODEID_TUPSVR\",\"destNode\":\"HUICOBUS_MQTT_NODEID_TUPSVR\",\"srcId\":\"HUICOBUS_MQTT_CLIENTID_TUPROUTER\",\"destId\":\"HUICOBUS_MQTT_CLIENTID_TUPENTRY\",\"topicId\":\"HUICOBUS_MQTT_TOPIC_UIP2TUP\",\"cmdId\":2560,\"cmdValue\":123,\"hlContent\":{\"a\":1,\"b\":2}}
 => 接收一直没问题，发送出现问题，有两种发送方式，其中single方式是比较稳定可靠的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 【将QT工具生成的ui文件转化为py文件】
   cd form_qt, 
@@ -62,6 +36,26 @@ cd "c:\Program Files\mosquitto"
 2.执行：pyinstaller -F -w cebsMain.py 进行打包
 3.注意：pyinstaller打包多进程程序出错解决办法
 https://blog.csdn.net/zyc121561/article/details/82941056
+
+
+
+
+
+
+
+//=ZJL, 2019/6/3, CURRENT_SW_DELIVERY R1.67 =>CEBS
+= 完善HUICOBUS处理框架
+= 定义HUICOBUS头文件
+
+
+
+
+
+
+
+
+
+
 
 //=LC, 2019/4/8, CURRENT_SW_DELIVERY R1.67 =>CEBS
 =将生成的相关的几个摄像头驱动工程进行了git
