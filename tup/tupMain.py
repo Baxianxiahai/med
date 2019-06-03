@@ -44,7 +44,6 @@ from multiprocessing import freeze_support
                 -> L3CFG: clsL1_ConfigOpr
                 -> L2Service: TupClsPicProc
                 -> L1VMLayer: tupTaskTemplate
-            
 '''
 
 
