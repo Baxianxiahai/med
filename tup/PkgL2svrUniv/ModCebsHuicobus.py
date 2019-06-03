@@ -25,13 +25,6 @@ class TupClsCebsHuicobusItf(TupClsHuicobusBasic, clsL1_ConfigOpr):
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GPAR_GET_CFG_RESP, self.fsm_huicobus_gpar_get_cfg_resp_rcv_handler)
         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_GPAR_SET_CFG_RESP, self.fsm_huicobus_gpar_set_cfg_resp_handler)
         
-        
-#         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_HUICOBUS_GET_CFG_REQ, self.fsm_msg_dl_get_cfg_req_rcv_handler)
-#         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_HUICOBUS_GET_CFG_RESP, self.fsm_msg_ul_get_cfg_resp_rcv_handler)
-#         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_HUICOBUS_SET_CFG_REQ, self.fsm_msg_dl_set_cfg_req_rcv_handler)
-#         self.add_stm_combine(self._STM_ACTIVE, TUP_MSGID_HUICOBUS_SET_CFG_RESP, self.fsm_msg_ul_set_cfg_resp_rcv_handler)
-
-        
         #START TASK
         self.fsm_set(TUP_STM_INIT)
         self.task_run()
@@ -92,23 +85,17 @@ if __name__ == '__main__':
     initMsg['dst'] = TUP_TASK_ID_HUICOBUS
     cls.msg_send_in(initMsg)
     cls.tup_dbg_print("Create HUICOBUS task success!")
-    #注册上层应用模块
-#     initMsg['mid'] = TUP_MSGID_HUICOBUS_REG_UP_USER
-#     mbuf = {}
-#     mbuf['userTaskId'] = TUP_TASK_ID_UI_GPAR
-#     initMsg['content'] = mbuf
-#     cls.msg_send_in(initMsg)
-#     cls.func_data_send({'test':1})
-#     time.sleep(1)
-#     cls.client_test({'srcNode':'HUICOBUS_MQTT_NODEID_TUPSVR', \
-#                 'destNode':'HUICOBUS_MQTT_NODEID_TUPSVR', \
-#                 'srcId':'HUICOBUS_MQTT_CLIENTID_TUPROUTER', \
-#                 'destId':'HUICOBUS_MQTT_CLIENTID_TUPENTRY', \
-#                 'topicId':'HUICOBUS_MQTT_TOPIC_UIR2TUP', \
-#                 'cmdId':2689, \
-#                 'cmdValue':123, \
-#                 'hlContent':{'a':1, 'b':2}\
-#                 })
+    cls.func_data_send({'test':1})
+    time.sleep(1)
+    cls.client_test({'srcNode':'HUICOBUS_MQTT_NODEID_TUPSVR', \
+                'destNode':'HUICOBUS_MQTT_NODEID_TUPSVR', \
+                'srcId':'HUICOBUS_MQTT_CLIENTID_TUPROUTER', \
+                'destId':'HUICOBUS_MQTT_CLIENTID_TUPENTRY', \
+                'topicId':'HUICOBUS_MQTT_TOPIC_UIR2TUP', \
+                'cmdId':2689, \
+                'cmdValue':123, \
+                'hlContent':{'a':1, 'b':2}\
+                })
 
 
 

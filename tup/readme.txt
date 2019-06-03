@@ -46,7 +46,7 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 //=ZJL, 2019/6/3, CURRENT_SW_DELIVERY R1.67 =>CEBS
 = 完善HUICOBUS处理框架
 = 定义HUICOBUS头文件
-
+= 将HUICOBUS中MSG_MATRIX处理去掉，处理过程变成标准的帧结构处理，接收到的消息ID交给业务上层HuicobusCebs模块去完成，而发送则采用API调用形式完成
 
 
 
