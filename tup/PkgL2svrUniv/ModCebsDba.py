@@ -5,6 +5,7 @@ Created on 2019年2月13日
 '''
 
 from PkgL2svrHandler.ModHstapi import *
+from PkgL2svrHandler.headHstapi import *
 from _tkinter import create
 
 
@@ -79,20 +80,154 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # {"restTag": "dba","actionId": 0X0ED9,"parFlag": 7,'parContent': {'cmd': 'add', 'platetype': 1, 'left_bot_x': 19, 'left_bot_y': 19, 'right_up_x': 19, 'right_up_y': 19}}
     #
     '''
-    #创建表单， 在创建表单的时候把表所有字段参数全部传入
-    def cebs_get_config(self, par1, par2):
-        mbuf = {}
-        mbuf['cmd'] = 'confing_get'
+    def tup_hstDba_GetConfig(self, par1, par2):
+        mbuf = TUP_HST_PCT_GET_CONFIG_IN;
         mbuf['par1'] = par1
         mbuf['par2'] = par2
-        return self.cebs_dba_general_operation(mbuf)
+        oprFlag, res = self.cebs_dba_general_operation(mbuf)
+        if oprFlag < 0:
+            return oprFlag, res
+        #check with TUP_HST_PCT_GET_CONFIG_OUT
+        return 1, res
     
-    '''
     #
-    #
-    #
-    #
-    '''
+    def tup_hstDba_ReadUncfyPar(self, par1, par2):
+        mbuf = TUP_HST_PCT_READ_UNCLFY_PAR_IN;
+        mbuf['par1'] = par1
+        mbuf['par2'] = par2
+        oprFlag, res  = self.cebs_dba_general_operation(mbuf)
+        if oprFlag < 0:
+            return oprFlag, res
+        #check with TUP_HST_PCT_READ_UNCLFY_PAR_OUT
+        return 1, res
+
+    def tup_hstDba_SetConfig(self, par1, par2):
+        mbuf = TUP_HST_PCT_SET_CONFIG_IN;
+        mbuf['par1'] = par1
+        mbuf['par2'] = par2
+        oprFlag, res  = self.cebs_dba_general_operation(mbuf)
+        if oprFlag < 0:
+            return oprFlag, res
+        #check with TUP_HST_PCT_SET_CONFIG_OUT
+        return 1, res    
+
+    def tup_hstDba_UpdateCaliPar(self, par1, par2):
+        mbuf = TUP_HST_PCT_UPDATE_CALI_PAR_IN;
+        mbuf['par1'] = par1
+        mbuf['par2'] = par2
+        oprFlag, res  = self.cebs_dba_general_operation(mbuf)
+        if oprFlag < 0:
+            return oprFlag, res
+        #check with TUP_HST_PCT_UPDATE_CALI_PAR_OUT
+        return 1, res    
+
+    def tup_hstDba_AddBatchNbr(self, par1, par2):
+        mbuf = TUP_HST_PCT_ADD_BATCH_NBR_IN;
+        mbuf['par1'] = par1
+        mbuf['par2'] = par2
+        oprFlag, res  = self.cebs_dba_general_operation(mbuf)
+        if oprFlag < 0:
+            return oprFlag, res
+        #check with TUP_HST_PCT_ADD_BATCH_NBR_OUT
+        return 1, res     
+
+    def tup_hstDba_AddPicCap(self, par1, par2):
+        mbuf = TUP_HST_PCT_ADD_PIC_CAP_IN;
+        mbuf['par1'] = par1
+        mbuf['par2'] = par2
+        oprFlag, res  = self.cebs_dba_general_operation(mbuf)
+        if oprFlag < 0:
+            return oprFlag, res
+        #check with TUP_HST_PCT_ADD_PIC_CAP_OUT
+        return 1, res         
+
+    def tup_hstDba_AddFluCap(self, par1, par2):
+        mbuf = TUP_HST_PCT_ADD_FLU_CAP_IN;
+        mbuf['par1'] = par1
+        mbuf['par2'] = par2
+        oprFlag, res  = self.cebs_dba_general_operation(mbuf)
+        if oprFlag < 0:
+            return oprFlag, res
+        #check with TUP_HST_PCT_ADD_FLU_CAP_OUT
+        return 1, res         
+
+    def tup_hstDba_UpdatePicCfy(self, par1, par2):
+        mbuf = TUP_HST_PCT_UPDATE_PIC_CFY_IN;
+        mbuf['par1'] = par1
+        mbuf['par2'] = par2
+        oprFlag, res  = self.cebs_dba_general_operation(mbuf)
+        if oprFlag < 0:
+            return oprFlag, res
+        #check with TUP_HST_PCT_UPDATE_PIC_CFY_OUT
+        return 1, res
+
+    def tup_hstDba_UpdateFluCfy(self, par1, par2):
+        mbuf = TUP_HST_PCT_UPDATE_FLU_CFY_IN;
+        mbuf['par1'] = par1
+        mbuf['par2'] = par2
+        oprFlag, res  = self.cebs_dba_general_operation(mbuf)
+        if oprFlag < 0:
+            return oprFlag, res
+        #check with TUP_HST_PCT_UPDATE_FLU_CFY_OUT
+        return 1, res
+
+    def tup_hstDba_ReadPic(self, par1, par2):
+        mbuf = TUP_HST_PCT_READ_PIC_IN;
+        mbuf['par1'] = par1
+        mbuf['par2'] = par2
+        oprFlag, res  = self.cebs_dba_general_operation(mbuf)
+        if oprFlag < 0:
+            return oprFlag, res
+        #check with TUP_HST_PCT_READ_PIC_OUT
+        return 1, res
+
+    def tup_hstDba_ReadFlu(self, par1, par2):
+        mbuf = TUP_HST_PCT_READ_FLU_IN;
+        mbuf['par1'] = par1
+        mbuf['par2'] = par2
+        oprFlag, res  = self.cebs_dba_general_operation(mbuf)
+        if oprFlag < 0:
+            return oprFlag, res
+        #check with TUP_HST_PCT_READ_FLU_OUT
+        return 1, res
+
+    def tup_hstDba_UpdateStatis(self, par1, par2):
+        mbuf = TUP_HST_PCT_UPDATE_STATIS_IN;
+        mbuf['par1'] = par1
+        mbuf['par2'] = par2
+        oprFlag, res  = self.cebs_dba_general_operation(mbuf)
+        if oprFlag < 0:
+            return oprFlag, res
+        #check with TUP_HST_PCT_UPDATE_STATIS_OUT
+        return 1, res
+
+    def tup_hstDba_UpdateUserLog(self, par1, par2):
+        mbuf = TUP_HST_PCT_UPDATE_USER_LOG_IN;
+        mbuf['par1'] = par1
+        mbuf['par2'] = par2
+        oprFlag, res  = self.cebs_dba_general_operation(mbuf)
+        if oprFlag < 0:
+            return oprFlag, res
+        #check with TUP_HST_PCT_UPDATE_USER_LOG_OUT
+        return 1, res
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 #     def cebs_user_sheet_Create(self, inputData):
 #         searchFlag = False
@@ -174,621 +309,621 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
 #         if (parFlag <= 0):
 #             return -4, ''
 #         return 1, parContent
-    
-    '''
-    #
-    #cebs_product_profile部分
-    #
-    #
-    '''
-    def cebs_product_profile_Create(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_product_profile':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    def cebs_product_profile_Delete(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_product_profile':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    def cebs_product_profile_Modify(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_product_profile':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-
-    def cebs_product_profile_Read(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_product_profile':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    '''
-    #
-    #cebs_cali_profile部分
-    #
-    #
-    '''    
-    def cebs_cali_profile_Create(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_cali_profile':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent    
-    
-    def cebs_cali_profile_Delete(self, inputData):
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_cali_profile':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent 
-    
-    def cebs_cali_profile_Modify(self, inputData):
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_cali_profile':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-
-    def cebs_cali_profile_Read(self, inputData):
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_cali_profile':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    '''
-    #
-    #cebs_object_profile部分
-    #
-    #
-    '''    
-    def cebs_object_profile_Create(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_object_profile':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent    
-
-    def cebs_object_profile_Delete(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_object_profile':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-
-    def cebs_object_profile_Modify(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_object_profile':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    def cebs_object_profile_Read(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_object_profile':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    '''
-    #
-    #cebs_config_eleg部分
-    #
-    #
-    '''    
-    def cebs_config_eleg_Create(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_config_eleg':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData)
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent   
-    
-    def cebs_config_eleg_Delete(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_config_eleg':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData)
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent  
-
-    def cebs_config_eleg_Modify(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_config_eleg':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData)
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    def cebs_config_eleg_Read(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_config_eleg':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent 
-    '''
-    #
-    #cebs_config_stackcell部分
-    #
-    #
-    '''    
-    def cebs_config_stackcell_Create(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_config_stackcell':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent    
-
-    def cebs_config_stackcell_Delete(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_config_stackcell':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    def cebs_config_stackcell_Modify(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_config_stackcell':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    def cebs_config_stackcell_Read(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_config_stackcell':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData)
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    '''
-    #
-    #cebs_result_eleg部分
-    #
-    #
-    '''    
-
-    def cebs_result_eleg_Create(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_result_eleg':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-
-    def cebs_result_eleg_Delete(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_result_eleg':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-
-    def cebs_result_eleg_Modify(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_result_eleg':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    def cebs_result_eleg_Read(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_result_eleg':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    '''
-    #
-    #cebs_result_stackcell部分
-    #
-    #
-    '''    
-    def cebs_result_stackcell_Create(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_result_stackcell':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData)
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent 
-    
-    def cebs_result_stackcell_Delete(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_result_stackcell':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True, inputData )
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
-    
-    def cebs_result_stackcell_Modify(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_result_stackcell':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent
- 
-    def cebs_result_stackcell_Read(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_result_stackcell':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent  
-
-    def cebs_result_init_conf_Read(self, inputData):
-        searchFlag = False
-        for element in self._TUP_HST_MSG_MATRIX:
-            if element['actionName'] == 'cebs_result_init_conf':
-                searchFlag = True
-                actionId = element['actionId']
-        if (searchFlag == False):
-            return -1, ''
-        inputJson = self.hstapiEncode('dba', actionId, True,inputData)
-        print("outputJson",inputJson)
-        res = self.hstCurlPost(inputJson)
-        restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
-        if (restTag != 'dba'):
-            return -2, ''
-        if (newActionId != actionId):
-            return -3, ''
-        if (parFlag <= 0):
-            return -4, ''
-        return 1, parContent 
+#     
+#     '''
+#     #
+#     #cebs_product_profile部分
+#     #
+#     #
+#     '''
+#     def cebs_product_profile_Create(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_product_profile':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True,inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+#     
+#     def cebs_product_profile_Delete(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_product_profile':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+#     
+#     def cebs_product_profile_Modify(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_product_profile':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+# 
+#     def cebs_product_profile_Read(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_product_profile':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True,inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+#     
+#     '''
+#     #
+#     #cebs_cali_profile部分
+#     #
+#     #
+#     '''    
+#     def cebs_cali_profile_Create(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_cali_profile':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent    
+#     
+#     def cebs_cali_profile_Delete(self, inputData):
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_cali_profile':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True,inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent 
+#     
+#     def cebs_cali_profile_Modify(self, inputData):
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_cali_profile':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+# 
+#     def cebs_cali_profile_Read(self, inputData):
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_cali_profile':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+#     '''
+#     #
+#     #cebs_object_profile部分
+#     #
+#     #
+#     '''    
+#     def cebs_object_profile_Create(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_object_profile':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent    
+# 
+#     def cebs_object_profile_Delete(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_object_profile':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+# 
+#     def cebs_object_profile_Modify(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_object_profile':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+#     
+#     def cebs_object_profile_Read(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_object_profile':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+#     '''
+#     #
+#     #cebs_config_eleg部分
+#     #
+#     #
+#     '''    
+#     def cebs_config_eleg_Create(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_config_eleg':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData)
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent   
+#     
+#     def cebs_config_eleg_Delete(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_config_eleg':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData)
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent  
+# 
+#     def cebs_config_eleg_Modify(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_config_eleg':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData)
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+#     
+#     def cebs_config_eleg_Read(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_config_eleg':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent 
+#     '''
+#     #
+#     #cebs_config_stackcell部分
+#     #
+#     #
+#     '''    
+#     def cebs_config_stackcell_Create(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_config_stackcell':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent    
+# 
+#     def cebs_config_stackcell_Delete(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_config_stackcell':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+#     
+#     def cebs_config_stackcell_Modify(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_config_stackcell':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+#     
+#     def cebs_config_stackcell_Read(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_config_stackcell':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData)
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+#     '''
+#     #
+#     #cebs_result_eleg部分
+#     #
+#     #
+#     '''    
+# 
+#     def cebs_result_eleg_Create(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_result_eleg':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+# 
+#     def cebs_result_eleg_Delete(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_result_eleg':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+# 
+#     def cebs_result_eleg_Modify(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_result_eleg':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+#     
+#     def cebs_result_eleg_Read(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_result_eleg':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+#     '''
+#     #
+#     #cebs_result_stackcell部分
+#     #
+#     #
+#     '''    
+#     def cebs_result_stackcell_Create(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_result_stackcell':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData)
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent 
+#     
+#     def cebs_result_stackcell_Delete(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_result_stackcell':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True, inputData )
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+#     
+#     def cebs_result_stackcell_Modify(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_result_stackcell':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent
+#  
+#     def cebs_result_stackcell_Read(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_result_stackcell':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent  
+# 
+#     def cebs_result_init_conf_Read(self, inputData):
+#         searchFlag = False
+#         for element in self._TUP_HST_MSG_MATRIX:
+#             if element['actionName'] == 'cebs_result_init_conf':
+#                 searchFlag = True
+#                 actionId = element['actionId']
+#         if (searchFlag == False):
+#             return -1, ''
+#         inputJson = self.hstapiEncode('dba', actionId, True,inputData)
+#         print("outputJson",inputJson)
+#         res = self.hstCurlPost(inputJson)
+#         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
+#         if (restTag != 'dba'):
+#             return -2, ''
+#         if (newActionId != actionId):
+#             return -3, ''
+#         if (parFlag <= 0):
+#             return -4, ''
+#         return 1, parContent 
 
 if __name__ == '__main__':
     cls = TupClsCebsDbaItf()

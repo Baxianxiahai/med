@@ -45,66 +45,97 @@ class TupClsCebsHuicobusItf(TupClsHuicobusBasic, clsL1_ConfigOpr):
         mbuf['hlContent'] = msgContent['hlContent']
         if (cmdId == TUP_HHD_CMDID_SYS_GET_CONFIG_REQ):
             self.msg_send(TUP_MSGID_GPAR_GET_CFG_REQ, TUP_TASK_ID_GPAR, mbuf)
+            
         elif (cmdId == TUP_HHD_CMDID_SYS_SET_CONFIG_REQ):
             self.msg_send(TUP_MSGID_GPAR_SET_CFG_REQ, TUP_TASK_ID_GPAR, mbuf)
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_UI_START_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_GPAR_START_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_GPAR_SAVE_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_GPAR_EXIT_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_GPAR_PIC_TRAIN_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_GPAR_PIC_FCC_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CALI_START_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CALI_MOMV_DIR_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CALI_EXIT_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CALI_MOFM_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CALI_MOMV_START_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CALI_MOMV_HOLEN_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CALI_PILOT_START_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CALI_PILOT_STOP_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CALI_RIGHT_UP_SET_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CALI_LEFT_BOT_SET_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CALI_PIC_CAP_HOLEN_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CAP_START_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CAP_STOP_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CFY_START_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CFY_STOP_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CTRL_SCHD_MV_ZERO_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CAP_START_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CAP_STOP_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CFY_START_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CFY_STOP_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_MENG_START_REQ):
             pass
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_MENG_EXIT_REQ):
             pass        
+        
         elif (cmdId == TUP_HHD_CMDID_SYS_MENG_COMMAND_REQ):
             pass        
+        
         else:
             print("CEBSHUICOBUS: Received un-specific command from UI!")
             return TUP_FAILURE
