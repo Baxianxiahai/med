@@ -68,9 +68,6 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # - 更新图片统计 hstUpdateStatis
     # - 更新用户日志 hstUpdateUserLog
     #
-    #
-    #
-    #
     '''
     
     

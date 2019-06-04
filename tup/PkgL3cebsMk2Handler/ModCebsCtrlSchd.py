@@ -286,7 +286,6 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
     #STEP2马达运动
     def fsm_msg_ctrs_moto_mv_hn_resp_rcv_handler(self, msgContent):
         #生成文件名字
-     
         fnPic = self.combineFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
         fnScale = self.combineScaleFileNameWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))
         fnVideo = self.combineFileNameVideoWithDir(GLCFG_PAR_OFC.PIC_PROC_BATCH_INDEX, self.func_cvt_index2hole(self.picSeqCnt))

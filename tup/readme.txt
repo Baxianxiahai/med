@@ -56,6 +56,7 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 //=ZJL, 2019/6/4, CURRENT_SW_DELIVERY R1.68 =>CEBS
 = 重新构造内部数据结构，包括对底层驱动的操作过程，构建了一整套DEVHANDLER类
+= 创建hst公共参数的框架
 
 //=ZJL, 2019/6/3, CURRENT_SW_DELIVERY R1.67 =>CEBS
 = 完善HUICOBUS处理框架

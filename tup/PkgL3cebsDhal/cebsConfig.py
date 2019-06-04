@@ -4,6 +4,9 @@ Created on 2019年6月3日
 @author: Administrator
 '''
 
+from PkgL1vmHandler.ModVmCfg import *
+
+
 #本模块将存储CEBS项目级的固定参数，不得使用工程参数、数据库表单等方式进行修改
 TUP_CEBS_ERR_LOG_FILE_NAME_SET = r"cebsErrLog.txt"
 TUP_CEBS_CMD_LOG_FILE_NAME_SET = r"cebsCmdLog.txt"
