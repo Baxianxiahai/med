@@ -54,12 +54,19 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     '''
     #
     #预期的数据操作
-    # - 取存储参数
-    # - 设置存储参数
-    # - 更新板控参数
-    # - 更新识别参数
-    #
-    #
+    # - 取存储参数 hstGetConfig
+    # - 读取未识别图像参数 hstUnclfyPar
+    # - 设置存储参数 hstSetConfig
+    # - 更新校准参数  hstUpdateCaliPar
+    # - 增加批次号 hstAddBatchNbr
+    # - 增加普通图像抓取 hstAddPicCap
+    # - 增加荧光图像抓取 hstAddFluCap
+    # - 更新普通图像识别 hstUpdatePicCfy
+    # - 更新荧光图像识别 hstUpdateFluCfy
+    # - 读取普通图片 hstReadPic
+    # - 读取荧光图片 hstReadFlu
+    # - 更新图片统计 hstUpdateStatis
+    # - 更新用户日志 hstUpdateUserLog
     #
     #
     #

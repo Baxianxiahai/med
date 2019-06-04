@@ -43,19 +43,24 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+//=ZJL, 2019/6/4, CURRENT_SW_DELIVERY R1.68 =>CEBS
+= 重新构造内部数据结构，包括对底层驱动的操作过程，构建了一整套DEVHANDLER类
+
 //=ZJL, 2019/6/3, CURRENT_SW_DELIVERY R1.67 =>CEBS
 = 完善HUICOBUS处理框架
 = 定义HUICOBUS头文件
 = 将HUICOBUS中MSG_MATRIX处理去掉，处理过程变成标准的帧结构处理，接收到的消息ID交给业务上层HuicobusCebs模块去完成，而发送则采用API调用形式完成
-
-
-
-
-
-
-
-
-
 
 //=LC, 2019/4/8, CURRENT_SW_DELIVERY R1.67 =>CEBS
 =将生成的相关的几个摄像头驱动工程进行了git

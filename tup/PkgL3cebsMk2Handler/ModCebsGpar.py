@@ -28,7 +28,12 @@ class tupTaskGpar(tupTaskTemplate, clsL1_ConfigOpr):
     cfyPicHeight = 0
     timerTrain = ''
     timerTrainCnt = 0
-
+    
+    #全局参数
+    zGparContext = {
+        "aaa":1,
+        }
+    
     def __init__(self, glPar):
         tupTaskTemplate.__init__(self, taskid=TUP_TASK_ID_GPAR, taskName="TASK_GPAR", glTabEntry=glPar)
         #ModVmLayer.TUP_GL_CFG.save_task_by_id(ModVmCfg.TUP_TASK_ID_GPAR, self)

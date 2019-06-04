@@ -38,23 +38,23 @@ class ClassUtHuicobus(unittest.TestCase):
     def tc_huicobus_002(self):
         ticks = time.time();
         print("tc_huicobus_002, time in second = ", ticks);
-        jsonInputData = {'srcNode':'HUICOBUS_MQTT_NODEID_TUPSVR',
-                        'destNode':'HUICOBUS_MQTT_NODEID_TUPSVR',
-                        'srcId':'HUICOBUS_MQTT_CLIENTID_TUPROUTER',
-                        'destId':'HUICOBUS_MQTT_CLIENTID_TUPENTRY',
-                        'topicId':'HUICOBUS_MQTT_TOPIC_UIP2TUP',
-                        'cmdId':2560,
-                        'cmdValue':123,
-                        'hlContent':
-                            {
-                                'action':'ZH_Medicine_sys_config',
-                                'src': 'ZH_Medicine_sys_config_save',
-                                'type':'query',
-                                'lang':'ch',
-                                'user':'null',
-                                'ts':1559381384274,
-                                }
-                        }
+        jsonInputData = {
+            'srcNode':'HUICOBUS_MQTT_NODEID_TUPSVR',
+            'destNode':'HUICOBUS_MQTT_NODEID_TUPSVR',
+            'srcId':'HUICOBUS_MQTT_CLIENTID_TUPROUTER',
+            'destId':'HUICOBUS_MQTT_CLIENTID_TUPENTRY',
+            'topicId':'HUICOBUS_MQTT_TOPIC_UIP2TUP',
+            'cmdId':2560,
+            'cmdValue':123,
+            'hlContent':{
+                'action':'ZH_Medicine_sys_config',
+                'src': 'ZH_Medicine_sys_config_save',
+                'type':'query',
+                'lang':'ch',
+                'user':'null',
+                'ts':1559381384274,
+            }
+        }
         ModTestSuitComFunc.cebs_huicobus_msg_send(jsonInputData)
     
 
