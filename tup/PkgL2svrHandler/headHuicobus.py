@@ -117,7 +117,7 @@ TUP_HHD_HLC_SYS_GET_CONFIG_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'groups': [
             {
@@ -264,7 +264,7 @@ TUP_HHD_HLC_SYS_SET_CONFIG_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'groups': [
             {
@@ -351,7 +351,7 @@ TUP_HHD_HLC_SYS_UI_START_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'motor_x_status': 1,   #0:NOK, 1:OK
         'motor_y_status': 1,   #0:NOK, 1:OK
@@ -385,7 +385,7 @@ TUP_HHD_HLC_SYS_GPAR_START_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'spare1': 1,
         'spare2': 2,
@@ -417,7 +417,7 @@ TUP_HHD_HLC_SYS_GPAR_EXIT_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'spare1': 1,
         'spare2': 2,
@@ -453,7 +453,7 @@ TUP_HHD_HLC_SYS_CALI_START_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'spare1': 1,
         'spare2': 2,
@@ -485,7 +485,7 @@ TUP_HHD_HLC_SYS_CALI_EXIT_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'spare1': 1,
         'spare2': 2,
@@ -518,7 +518,7 @@ TUP_HHD_HLC_SYS_CALI_MOMV_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'actual_delta_x_um': 10,
         'actual_delta_y_um': -10,
@@ -562,7 +562,7 @@ TUP_HHD_HLC_SYS_CALI_MOMV_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'actual_delta_x_um': 10,
         'actual_delta_y_um': -10,
@@ -604,7 +604,7 @@ TUP_HHD_HLC_SYS_CALI_MOMV_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'target_hole_n': 1,
         'actual_delta_x_um': 10,
@@ -646,7 +646,7 @@ TUP_HHD_HLC_SYS_CALI_PILOT_START_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'spare1': 1,
         'spare2': 2,
@@ -675,7 +675,7 @@ TUP_HHD_HLC_SYS_CALI_PILOT_STOP_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'spare1': 1,
         'spare2': 2,
@@ -704,7 +704,7 @@ TUP_HHD_HLC_SYS_CALI_RIGHT_UP_SET_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'spare1': 1,
         'spare2': 2,
@@ -733,7 +733,7 @@ TUP_HHD_HLC_SYS_CALI_LEFT_BOT_SET_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'spare1': 1,
         'spare2': 2,
@@ -768,7 +768,7 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_START_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'batch_number': 10,
         'spare1': 1,
@@ -784,7 +784,7 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_TRIG = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'batch_number': 10,
         'hole_index_complete':15,
@@ -817,7 +817,7 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_STOP_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'batch_number': 10,
         'hole_index_complete':15,
@@ -854,7 +854,7 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_START_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'capture_or_not': 0, #0:NO, 1:YES        
         'batch_number': 10,
@@ -871,7 +871,7 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_TRIG = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'batch_number': 10,
         'hole_index_complete':15,
@@ -888,10 +888,10 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_TRIG = {
         'cfy_result_middead':20,
         'cfy_result_smalive':10,
         'cfy_result_smdead':5,
-        'cfy_result_totalalive',100,
-        'cfy_result_totaldead',50,
-        'cfy_result_totalsum',300,
-        'cfy_result_doneflag',1,
+        'cfy_result_totalalive':100,
+        'cfy_result_totaldead':50,
+        'cfy_result_totalsum':300,
+        'cfy_result_doneflag':1,
         'spare1': 1,
         'spare2': 2,
         'spare3': 3,
@@ -919,7 +919,7 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_STOP_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'batch_number': 10,
         'hole_index_complete':15,
@@ -952,7 +952,7 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_MV_ZERO_RESP = {
     'src': 'ZH_Medicine_sys_config',
     'name': 'configure',
     'owner': 'system',
-    'error_no': 'no_error' #parameter_error, time_out, etc
+    'error_no': 'no_error', #parameter_error, time_out, etc
     'parameter': {
         'spare1': 1,
         'spare2': 2,
