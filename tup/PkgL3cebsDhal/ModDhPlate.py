@@ -4,8 +4,8 @@ Created on 2019年6月3日
 @author: Administrator
 '''
 
+from PkgL1vmHandler.ModVmLayer import *
 from PkgL3cebsDhal.cebsConfig import *
-from PkgL1vmHandler.ModVmLayer import TUP_SUCCESS
     
 class clsCebsDhPlate():
     #
@@ -111,7 +111,7 @@ class clsCebsDhPlate():
     # - 托盘信息和其它物理设备是无关的，这样做，可以将这个模块做成一种比较好的泛化
     # - 本模块统一定标到um，未来如果需要，还可以进一步提高精度，定标到nm。考虑到python的特性，即便定标到um，也不见得一定是整数，使用float一样可以处理。
     # - 本模块的初始化，依赖于数据库读取的参数（托盘板型）。如果参数不合理，这里只做适当的保护，更完善的保护，将留给上层去处理
-    # - 托盘可以在使用的过程中进行更迭。如果调换，只需要按照顺序调用tup_dhal_update_plate_context(), tup_dhal_update_plate_calib()即可。
+    # - 托盘可以在使用的过程中进行更迭。如果调换，只需要按照顺序调用tup_dhal_plate_update_plate_context(), tup_dhal_plate_update_plate_calib()即可。
     # - 本模块将被所有业务模块进行继承。如果需要使用，一定要先传入上述两个核心参数，不然内部参数都是DEFAULT无效参数
     #   这意味着，两个核心参数被一个模块取得后，需要通过内部消息等方式传给其它模块，然后才可能使用。如果上层业务模块不需要使用到这些参量，也可以不初始化，并不影响其它功能的。
     # - 目前预期需要用到本模块的上层业务模块包括：0） GPAR，主控 1）CTRL_SCHD业务调度 2）MOTO控制马达  3）VISION图像识别
@@ -127,7 +127,7 @@ class clsCebsDhPlate():
     #
     '''
     #给上层提供服务的函数
-    def tup_dhal_update_plate_context(self, plateType):
+    def tup_dhal_plate_update_context(self, plateType):
         self.HB_TARGET_TYPE_CUR = plateType
         if (self.HB_TARGET_TYPE_CUR == self.HB_TARGET_96_STANDARD):
             self.HB_PIC_ONE_WHOLE_BATCH = self.HB_TARGET_96_SD_BATCH_MAX;
@@ -169,7 +169,8 @@ class clsCebsDhPlate():
     
     #calibAxis需要按照坐标系存入
     #calibAxis = [0, 0, 0, 0]
-    def tup_dhal_update_plate_calib(self, calibAxis):
+    #一旦坐标系确定以后，需要及时更新坐标旋转，待完善
+    def tup_dhal_plate_update_plate_calib(self, calibAxis):
         if (calibAxis[0] !=0 or calibAxis[1] !=0 or calibAxis[2] !=0 or calibAxis[3] !=0):
             self.HB_CALI_POS_IN_UM = calibAxis
             self.HB_WIDTH_X_SCALE = (self.HB_CALI_POS_IN_UM[2] - self.HB_CALI_POS_IN_UM[0]) / (self.HB_HOLE_X_NUM-1);
@@ -185,8 +186,60 @@ class clsCebsDhPlate():
     # 马达坐标处理过程
     #
     '''
-    def tup_dhal_move_dir_x(self):
+    def tup_dhal_plate_move_dir_x(self):
         pass
+
+
+
+    '''
+    #
+    # 孔位变换标签
+    #
+    '''
+    _DHAL_PLATE_CFG_HB96 = ['A0', 'A1', 'A2', 'A3', 'A4','A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12',\
+                           'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11', 'B12',\
+                           'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12',\
+                           'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12',\
+                           'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 'E10', 'E11', 'E12',\
+                           'F1', 'F2', 'F3','F4', 'F5', 'F6', 'F7', 'F8' ,'F9', 'F10', 'F11', 'F12',\
+                           'G1', 'G2', 'G3', 'G4','G5','G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12',\
+                           'H1', 'H2', 'H3','H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'H10', 'H11', 'H12',\
+                           ];
+                           
+    _DHAL_PLATE_CFG_HB48 = ['A0', 'A1', 'A2', 'A3', 'A4','A5', 'A6', 'A7', 'A8',\
+                           'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8',\
+                           'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8',\
+                           'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8',\
+                           'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8',\
+                           'F1', 'F2', 'F3','F4', 'F5', 'F6', 'F7', 'F8',\
+                           ];
+                           
+    _DHAL_PLATE_CFG_HB24 = ['A0', 'A1', 'A2', 'A3', 'A4','A5', 'A6',\
+                           'B1', 'B2', 'B3', 'B4', 'B5', 'B6',\
+                           'C1', 'C2', 'C3', 'C4', 'C5', 'C6',\
+                           'D1', 'D2', 'D3', 'D4', 'D5', 'D6',\
+                           ];
+    _DHAL_PLATE_CFG_HB12 = ['A0', 'A1', 'A2', 'A3', 'A4',\
+                           'B1', 'B2', 'B3', 'B4',\
+                           'C1', 'C2', 'C3', 'C4',\
+                           ];
+    _DHAL_PLATE_CFG_HB6 = ['A0', 'A1', 'A2', 'A3',\
+                         'B1', 'B2', 'B3',\
+                          ];   
+    #将index孔位转化为标签
+    def tup_dhal_plate_index_to_hole_lable(self, index):
+        if (self.HB_TARGET_TYPE == self.HB_TARGET_96_STANDARD):
+            return self._DHAL_PLATE_CFG_HB96[index];
+        if (self.HB_TARGET_TYPE == self.HB_TARGET_48_STANDARD):
+            return self._DHAL_PLATE_CFG_HB48[index];
+        if (self.HB_TARGET_TYPE == self.HB_TARGET_24_STANDARD):
+            return self._DHAL_PLATE_CFG_HB24[index];
+        if (self.HB_TARGET_TYPE == self.HB_TARGET_12_STANDARD):
+            return self._DHAL_PLATE_CFG_HB12[index];
+        if (self.HB_TARGET_TYPE == self.HB_TARGET_6_STANDARD):
+            return self._DHAL_PLATE_CFG_HB6[index];     
+        else:
+            return index;
 
     
     '''
@@ -197,7 +250,7 @@ class clsCebsDhPlate():
     '''
     #获取弧长的参考基准长度，使用us为单位
     #实际是一度条件下的定点连线长度，考虑到误差，1度条件下不再去区分直线与弧线的差异
-    def tup_dhal_get_std_one_degree_radians_len_in_us(self):
+    def tup_dhal_plate_get_std_one_degree_radians_len_in_us(self):
         pi = 3.1415926
         if (self.HB_TARGET_TYPE_CUR == self.HB_TARGET_96_STANDARD):
             return (self.HB_TARGET_96_SD_HOLE_RAD *pi)/360
@@ -213,7 +266,7 @@ class clsCebsDhPlate():
             return (self.HB_TARGET_96_SD_HOLE_RAD *pi)/360
     
     #半径
-    def tup_dhal_get_radians_len_in_us(self):
+    def tup_dhal_plate_get_radians_len_in_us(self):
         if (self.HB_TARGET_TYPE_CUR == self.HB_TARGET_96_STANDARD):
             return self.HB_TARGET_96_SD_HOLE_RAD/2
         elif (self.HB_TARGET_TYPE_CUR == self.HB_TARGET_48_STANDARD):

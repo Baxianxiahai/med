@@ -10,13 +10,10 @@ from PkgL1vmHandler.ModVmCfg import *
 #本模块将存储CEBS项目级的固定参数，不得使用工程参数、数据库表单等方式进行修改
 TUP_CEBS_ERR_LOG_FILE_NAME_SET = r"cebsErrLog.txt"
 TUP_CEBS_CMD_LOG_FILE_NAME_SET = r"cebsCmdLog.txt"
-TUP_CEBS_PIC_ORIGIN_PATH = r"pic_origin";
-TUP_CEBS_PIC_MIDDLE_PATH = r"pic_middle";
 #FILE ATTRIBUTE
 TUP_CEBS_FILE_ATT_NORMAL = 'normal';
 TUP_CEBS_FILE_ATT_FLUORESCEN = 'flu';  #荧光 Fluorescen
 TUP_CEBS_CFG_FILE_NAME = r"cebsConfig.ini";
-TUP_CEBS_PIC_WORK_DIR = ''
 
 #串口
 TUP_CEBS_SPS_USB_DBG_CARD1 = 'Prolific USB-to-Serial Comm Port ('

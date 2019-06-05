@@ -329,12 +329,10 @@ class tupTaskMoto(tupTaskTemplate, clsL1_ConfigOpr):
             return TUP_FAILURE;
         #Get pswd
         pswd = self.funcMdcReadPswd()
-        #print("pass:",pswd)
         try:
             mbuf['pswd'] = int(pswd)
         except Exception:
             mbuf['pswd'] = -1;        
-        #print(mbuf['pswd'])
         self.msg_send(TUP_MSGID_CRTS_MDC_CHK_PSWD_RESP, TUP_TASK_ID_CTRL_SCHD, mbuf)
         return TUP_SUCCESS;
     

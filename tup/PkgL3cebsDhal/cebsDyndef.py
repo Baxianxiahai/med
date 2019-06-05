@@ -45,6 +45,9 @@ strTupGlParPlate =\
 #图像参数
 strTupGlParPic =\
 {
+    #相对工作路径
+    'PIC_ORIGIN_PATH':'pic_origin',
+    'PIC_MIDDLE_PATH':'pic_middle',
     #定点拍照
     'PIC_TAKING_FIX_POINT_SET':False,
     #增加二次曝光功能试图解决图片模糊的问题
