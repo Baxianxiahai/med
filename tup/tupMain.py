@@ -32,7 +32,7 @@ from multiprocessing import freeze_support
         -> L3 Moto Task    （马达处理任务）
             -> L3 CebsUiBasic基类
                 -> L3CFG: clsL1_ConfigOpr
-                -> L2 Service: TupClsPicPro\=
+                -> L2 Service: TupClsPicPro
                 -> L1VMLayer: tupTaskTemplate
         -> L3 Vision Task    （摄像头处理任务）
             -> L3 CebsUiBasic基类

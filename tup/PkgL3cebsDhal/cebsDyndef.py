@@ -86,7 +86,28 @@ strTupGlParUnclfyPic =\
     'UNCLFY_VIDEO_ABS_FN':'',
 }
 
+#抓取图像视频的参数
+strTupGlParCapPic =\
+{
+    'CAP_FILE_ATTR':'normal',
+    'CAP_BATCH_NBR':123,
+    'CAP_HOLE_NBR':1,
+    'CAP_ORIGIN_ABS_FN':'',
+    'CAP_MID_ABS_FN':'',
+    'CAP_VIDEO_ABS_FN':'',
+    'CAP_BIG_ALIVE':0,
+    'CAP_BIG_DEAD':0,
+    'CAP_MID_ALIVE':0,
+    'CAP_MID_DEAD':0,
+    'CAP_SMALL_ALIVE':0,
+    'CAP_SMALL_DEAD':0,
+    'CAP_TOTAL_ALIVE':0,
+    'CAP_TOTAL_DEAD':0,
+    'CAP_TOTAL_SUM':0,
+    'CAP_DONE_FLAG':0,
+}
 
+        
 
 #FSPC参数
 strTupGlParFspc =\

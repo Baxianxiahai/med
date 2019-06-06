@@ -6,6 +6,9 @@ Created on 2019年6月3日
 
 from PkgL3cebsDhal.cebsConfig import *
 from PkgL1vmHandler.ModVmLayer import *
+from PkgL2svrHandler.headHstapi import *
+from PkgL2svrHandler.ModHstapi import *
+from PkgL2svrHandler.headHstapi import *
     
 class clsCebsDhPlate():
     #
@@ -19,6 +22,7 @@ class clsCebsDhPlate():
     _HB_MECHNICAL_PLATFORM_HWTYPE2_Y_MAX = 100000;
     _HB_MECHNICAL_PLATFORM_X_MAX = _HB_MECHNICAL_PLATFORM_HWTYPE1_X_MAX;
     _HB_MECHNICAL_PLATFORM_Y_MAX = _HB_MECHNICAL_PLATFORM_HWTYPE1_Y_MAX;
+
 #     if (_TUP_CEBS_HW_TYPE_CUR == _TUP_CEBS_HW_TYPE_1):
 #         _HB_MECHNICAL_PLATFORM_X_MAX = _HB_MECHNICAL_PLATFORM_HWTYPE1_X_MAX;
 #         _HB_MECHNICAL_PLATFORM_Y_MAX = _HB_MECHNICAL_PLATFORM_HWTYPE1_Y_MAX;
@@ -120,8 +124,9 @@ class clsCebsDhPlate():
     #
     '''
     #初始化
-    def __init__(self):    
+    def __init__(self):
         super(clsCebsDhPlate, self).__init__()
+
 
 
     '''

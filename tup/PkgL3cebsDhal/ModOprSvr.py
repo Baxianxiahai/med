@@ -4,11 +4,9 @@ Created on 2019年6月3日
 @author: Administrator
 '''
 
-import configparser
 import os
 import platform
 import time
-import urllib3
 import json
 
 #公共数据操作API
@@ -29,9 +27,7 @@ from PkgL3cebsDhal.ModDhPlate import *
 #正式服务API，给上层提供标准操作
 class clsCebsDhalOprSvr(TupClsCebsDbaItf, clsCebsDhCamera, clsCebsDhLogfile, clsCebsDhPicfile, clsCebsDhMotosps, clsCebsDhPlate):
     def __init__(self):
-        super(clsCebsDhalOprSvr, self).__init__()  
-    
-    
+        super(clsCebsDhalOprSvr, self).__init__()      
     
     
     '''
@@ -79,7 +75,7 @@ class clsCebsDhalOprSvr(TupClsCebsDbaItf, clsCebsDhCamera, clsCebsDhLogfile, cls
     #入参：失败成功标签
     #出参： 内部消息模板strTupGlParConfig
     def tup_dhal_oprSvr_GetConfig_and_update(self):
-        flag, res = self.tup_hstDba_GetConfig('aaa')
+        flag, res = self.tup_hstDba_GetConfig('null')
         if (flag > 0):
             outputData = self.func_dhal_oprSvr_translate_HstConfig_to_glParConfig(res)
             self.tup_dhal_oprSvr_UpdateConfigPar(outputData)
@@ -115,7 +111,7 @@ class clsCebsDhalOprSvr(TupClsCebsDbaItf, clsCebsDhCamera, clsCebsDhLogfile, cls
     #
     '''    
      #为了存储数据到数据库，将内部参数格式转化为全局hstApi格式，并存入数据库
-    def func_dhal_oprSvr_translate_glParConfig_to_SetConfig(self, inputData):
+    def func_dhal_oprSvr_translate_glParConfig_to_hstSetConfig(self, inputData):
         outputData = TUP_HST_PCT_SET_CONFIG_OUT
         outputData['cebs_object_profile']['dir_origin'] = inputData['PAR_FILE']['PIC_ORIGIN_PATH']
         outputData['cebs_object_profile']['dir_middle'] = inputData['PAR_FILE']['PIC_MIDDLE_PATH']
@@ -149,7 +145,7 @@ class clsCebsDhalOprSvr(TupClsCebsDbaItf, clsCebsDhCamera, clsCebsDhLogfile, cls
     #出参：成败
     #如果存入数据库失败，则放弃本次参数的更新，确保内存与数据库之间的一致性
     def tup_dhal_oprSvr_SetConfig_and_update(self, inputData):
-        outputData = self.func_dhal_oprSvr_translate_glParConfig_to_SetConfig(inputData)
+        outputData = self.func_dhal_oprSvr_translate_glParConfig_to_hstSetConfig(inputData)
         flag, res = self.tup_hstDba_SetConfig(outputData)
         if (flag > 0):
             self.tup_dhal_oprSvr_UpdateConfigPar(outputData)
@@ -204,6 +200,7 @@ class clsCebsDhalOprSvr(TupClsCebsDbaItf, clsCebsDhCamera, clsCebsDhLogfile, cls
     #出参：成败
     def tup_dhal_oprSvr_AddBatchNbr_and_update(self):
         inputData = TUP_HST_PCT_ADD_BATCH_NBR_IN
+        inputData['cebs_batch_info']['createtime'] = time(0) 
         flag, res = self.tup_hstDba_AddBatchNbr(inputData)
         if (flag > 0):
             batchNbr = res['cebs_batch_info']['snbatch']
@@ -219,7 +216,7 @@ class clsCebsDhalOprSvr(TupClsCebsDbaItf, clsCebsDhCamera, clsCebsDhLogfile, cls
     #
     # Procedure: Fetch un-classification parameters
     #
-    # - 注意：
+    # - 注意：后期可能会增加新的参量
     #
     '''
     #入参：fileAttr - 文件属性，是'normal'白光，还是'flu'荧光
@@ -249,16 +246,182 @@ class clsCebsDhalOprSvr(TupClsCebsDbaItf, clsCebsDhCamera, clsCebsDhLogfile, cls
             return TUP_FAILURE
         
     
+
+    '''
+    #
+    # Procedure: Add picture capture
+    #
+    # - 注意：
+    #
+    '''
+    #入参 - 内部参数strTupGlParCapPic
+    #出参 - hstAPI的数据结构 TUP_HST_PCT_ADD_PIC_CAP_IN
+    def tup_dhal_oprSvr_translate_glParCapPic_to_hstPicCap(self, inputData):
+        outputData = TUP_HST_PCT_ADD_PIC_CAP_IN
+        outputData['cebs_pvci_eleg']['snbatch'] = inputData['CAP_BATCH_NBR']
+        outputData['cebs_pvci_eleg']['snhole'] = inputData['CAP_HOLE_NBR']
+        outputData['cebs_pvci_eleg']['file_attr'] = inputData['CAP_FILE_ATTR']
+        outputData['cebs_pvci_eleg']['name_before'] = inputData['CAP_ORIGIN_ABS_FN']
+        outputData['cebs_pvci_eleg']['video_before'] = inputData['CAP_VIDEO_ABS_FN']
+        outputData['cebs_pvci_eleg']['cap_time'] = 0
+        outputData['cebs_pvci_eleg']['name_after'] = inputData['CAP_MID_ABS_FN']
+        outputData['cebs_pvci_eleg']['rec_time'] = 0
+        outputData['cebs_pvci_eleg']['bigalive'] = inputData['CAP_BIG_ALIVE']
+        outputData['cebs_pvci_eleg']['bigdead'] = inputData['CAP_BIG_DEAD']
+        outputData['cebs_pvci_eleg']['midalive'] = inputData['CAP_MID_ALIVE']
+        outputData['cebs_pvci_eleg']['middead'] = inputData['CAP_MID_DEAD']
+        outputData['cebs_pvci_eleg']['smalive'] = inputData['CAP_SMALL_ALIVE']
+        outputData['cebs_pvci_eleg']['smdead'] = inputData['CAP_SMALL_DEAD']
+        outputData['cebs_pvci_eleg']['totalalive'] = inputData['CAP_TOTAL_ALIVE']
+        outputData['cebs_pvci_eleg']['totaldead'] = inputData['CAP_TOTAL_DEAD']
+        outputData['cebs_pvci_eleg']['totalsum'] = inputData['CAP_TOTAL_SUM']
+        outputData['cebs_pvci_eleg']['doneflag'] = inputData['CAP_DONE_FLAG']
+        return outputData
+       
+    #入参 - 内部参数strTupGlParCapPic
+    #成功标识
+    def tup_dhal_oprSvr_hstAddPicCap(self, inputData):
+        outputData = self.tup_dhal_oprSvr_translate_glParCapPic_to_hstPicCap(inputData)
+        flag, res = self.tup_hstDba_AddPicCap(outputData)
+        if (flag > 0):
+            return TUP_SUCCESS
+        else:
+            return TUP_FAILURE
+
+
+    '''
+    #
+    # Procedure: Add flu capture
+    #
+    # - 注意：
+    #
+    '''
+    #入参 - 内部参数strTupGlParCapPic
+    #成功标识       
+    def tup_dhal_oprSvr_hstAddFluCap(self, inputData):
+        outputData = self.tup_dhal_oprSvr_translate_glParCapPic_to_hstPicCap(inputData)
+        flag, res = self.tup_hstDba_AddFluCap(outputData)
+        if (flag > 0):
+            return TUP_SUCCESS
+        else:
+            return TUP_FAILURE
+    
+    
+    
+    '''
+    #
+    # Procedure: Update capture picture
+    #
+    # - 注意：
+    #
+    '''
+    #入参 - 内部参数strTupGlParCapPic
+    #成功标识       
+    def tup_dhal_oprSvr_hstUpdatePicCfy(self, inputData):
+        outputData = self.tup_dhal_oprSvr_translate_glParCapPic_to_hstPicCap(inputData)
+        flag, res = self.tup_hstDba_UpdatePicCfy(outputData)
+        if (flag > 0):
+            return TUP_SUCCESS
+        else:
+            return TUP_FAILURE
     
 
-# - 增加普通图像抓取 hstAddPicCap
-# - 增加荧光图像抓取 hstAddFluCap
-# - 更新普通图像识别 hstUpdatePicCfy
-# - 更新荧光图像识别 hstUpdateFluCfy
-# - 读取普通图片 hstReadPic
-# - 读取荧光图片 hstReadFlu
-# - 更新图片统计 hstUpdateStatis
-# - 更新用户日志 hstUpdateUserLog
+    '''
+    #
+    # Procedure: Update capture picture
+    #
+    # - 注意：
+    #
+    '''
+    #入参 - 内部参数strTupGlParCapPic
+    #成功标识       
+    def tup_dhal_oprSvr_hstUpdateFluCfy(self, inputData):
+        outputData = self.tup_dhal_oprSvr_translate_glParCapPic_to_hstPicCap(inputData)
+        flag, res = self.tup_hstDba_UpdateFluCfy(outputData)
+        if (flag > 0):
+            return TUP_SUCCESS
+        else:
+            return TUP_FAILURE
+
+
+
+    '''
+    #
+    # Procedure: read picture
+    #
+    # - 注意：下面4个函数应该被UI界面直接使用，原则上TUP不会使用
+    #
+    '''
+    #入参 - hstAPI的数据结构 TUP_HST_PCT_ADD_PIC_CAP_IN
+    #出参 - 内部参数strTupGlParCapPic
+    def tup_dhal_oprSvr_translate_hstPicCap_to_glParCapPic(self, inputData):
+        outputData = strTupGlParCapPic
+        outputData['CAP_BATCH_NBR'] = inputData['cebs_pvci_eleg']['snbatch']
+        outputData['CAP_HOLE_NBR'] = inputData['cebs_pvci_eleg']['snhole']
+        outputData['CAP_FILE_ATTR'] = inputData['cebs_pvci_eleg']['file_attr']
+        outputData['CAP_ORIGIN_ABS_FN'] = inputData['cebs_pvci_eleg']['name_before']
+        outputData['CAP_VIDEO_ABS_FN'] = inputData['cebs_pvci_eleg']['video_before']
+        outputData['CAP_MID_ABS_FN'] = inputData['cebs_pvci_eleg']['name_after']
+        outputData['CAP_BIG_ALIVE'] = inputData['cebs_pvci_eleg']['bigalive']
+        outputData['CAP_BIG_DEAD'] = inputData['cebs_pvci_eleg']['bigdead']
+        outputData['CAP_MID_ALIVE'] = inputData['cebs_pvci_eleg']['midalive']
+        outputData['CAP_MID_DEAD'] = inputData['cebs_pvci_eleg']['middead']
+        outputData['CAP_SMALL_ALIVE'] = inputData['cebs_pvci_eleg']['smalive']
+        outputData['CAP_SMALL_DEAD'] = inputData['cebs_pvci_eleg']['smdead']
+        outputData['CAP_TOTAL_ALIVE'] = inputData['cebs_pvci_eleg']['totalalive']
+        outputData['CAP_TOTAL_DEAD'] = inputData['cebs_pvci_eleg']['totaldead']
+        outputData['CAP_TOTAL_SUM'] = inputData['cebs_pvci_eleg']['totalsum']
+        outputData['CAP_DONE_FLAG'] = inputData['cebs_pvci_eleg']['doneflag']
+        return outputData       
+       
+    #入参 - 内部参数strTupGlParCapPic
+    #成功标识       
+    def tup_dhal_oprSvr_hstReadPicture(self, batNbr, holeNbr):
+        inputData = TUP_HST_PCT_READ_PIC_IN
+        inputData['batch_number'] = batNbr
+        inputData['hole_number'] = holeNbr        
+        flag, res = self.tup_hstDba_ReadPic(inputData)
+        if (flag > 0):
+            return res
+        else:
+            return TUP_FAILURE
+
+    #入参 - 内部参数strTupGlParCapPic
+    #成功标识       
+    def tup_dhal_oprSvr_hstReadFlu(self, batNbr, holeNbr):
+        inputData = TUP_HST_PCT_READ_PIC_IN
+        inputData['batch_number'] = batNbr
+        inputData['hole_number'] = holeNbr        
+        flag, res = self.tup_hstDba_ReadFlu(inputData)
+        if (flag > 0):
+            return res
+        else:
+            return TUP_FAILURE
+
+
+        
+    '''
+    #
+    # Procedure: Update Statistic information
+    #
+    # - 注意：下面4个函数应该被UI界面直接使用，原则上TUP不会使用
+    #
+    '''    
+    def tup_dhal_oprSvr_hstUpdateStatis(self):
+        return TUP_SUCCESS
+    
+
+    '''
+    #
+    # Procedure: Update User logging information
+    #
+    # - 注意：下面4个函数应该被UI界面直接使用，原则上TUP不会使用
+    #
+    '''
+    def tup_dhal_oprSvr_hstUpdateUserLog(self):
+        return TUP_SUCCESS
+        
+
 
 
 

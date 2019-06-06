@@ -163,6 +163,19 @@ class clsCebsDhPicfile(clsCebsDhPlate):
     def tup_dhal_picFile_update_batch_nbr(self, batchNbr):
         self.dhalPicfileCapBatchIndex = batchNbr
     
+    #获取当前批次号+孔位号
+    def tup_dhal_picFile_get_batch_and_hole_nbr(self):
+        return self.dhalPicfileCapBatchIndex, self.dhalPicfileCapHoleIndex
+    
+    #判定是否还可以继续移动到下一个孔位
+    #孔位是从1-N计数的
+    def tup_dhal_picFile_move_to_next_hole(self):
+        if (self.dhalPicfileCapHoleIndex < self.dhalPlatePicOneWholeBatch):
+            self.dhalPicfileCapHoleIndex = self.dhalPicfileCapHoleIndex+1
+            return TUP_SUCCESS, self.dhalPicfileCapHoleIndex
+        else:
+            return TUP_FAILURE, 0
+    
     #更新批次号
     #入参：strTupGlParUnclfyPic
     def tup_dhal_picFile_update_unclfy_nbr(self, inputData):
@@ -180,21 +193,32 @@ class clsCebsDhPicfile(clsCebsDhPlate):
     #
     '''   
     def func_dhal_picFile_combinePicName(self, batch, fileNbr):
-        return str("batch#" + str(batch) + "FileName#" + str(self.tup_dhal_plate_index_to_hole_lable(fileNbr)))
+        return str("batch#" + str(batch) + "hole#" + str(self.tup_dhal_plate_index_to_hole_lable(fileNbr))) + "_org"
 
     def func_dhal_picFile_combineVideoName(self, batch, fileNbr):
-        return str("batch#" + str(batch) + "VideoName#" + str(self.tup_dhal_plate_index_to_hole_lable(fileNbr)))
+        return str("batch#" + str(batch) + "hole#" + str(self.tup_dhal_plate_index_to_hole_lable(fileNbr))) + "_video"
+
+    def func_dhal_picFile_combineMidName(self, batch, fileNbr):
+        return str("batch#" + str(batch) + "hole#" + str(self.tup_dhal_plate_index_to_hole_lable(fileNbr))) + "_cfy"
 
     def func_dhal_picFile_combinePicNameWithDir(self, batch, fileNbr):
-        fileName = str("batch#" + str(batch) + "FileName#" + str(self.tup_dhal_plate_index_to_hole_lable(fileNbr)))
+        fileName = self.func_dhal_picFile_combinePicName(batch, fileNbr)
         return str(self.dhalPicfileAbsOriginPath) + fileName + '.jpg'
 
     def func_dhal_picFile_combineVideoNameWithDir(self, batch, fileNbr):
-        fileName = str("batch#" + str(batch) + "FileName#" + str(self.tup_dhal_plate_index_to_hole_lable(fileNbr)))
+        fileName = self.func_dhal_picFile_combineMidName(batch, fileNbr)
         return str(self.dhalPicfileAbsOriginPath) + fileName + '.mp4'  #.mp4, .avi
 
-
-
+    def func_dhal_picFile_combineMidNameWithDir(self, batch, fileNbr):
+        fileName = self.func_dhal_picFile_combineMidName(batch, fileNbr)
+        return str(self.dhalPicfileAbsMiddlePath) + fileName + '.jpg'
+    
+    #向上提供的服务
+    def tup_dhal_picFile_GenFn_with_AbsDir(self):
+        picFn =  self.func_dhal_picFile_combinePicNameWithDir(self.dhalPicfileCapBatchIndex, self.dhalPicfileCapHoleIndex)
+        midFn =  self.func_dhal_picFile_combineOutputPicFnWithDir(self.dhalPicfileCapBatchIndex, self.dhalPicfileCapHoleIndex)
+        videoFn =  self.func_dhal_picFile_combineVideoNameWithDir(self.dhalPicfileCapBatchIndex, self.dhalPicfileCapHoleIndex)
+        return picFn, midFn, videoFn
 
 
 
