@@ -52,6 +52,9 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
+//=ZJL, 2019/6/6, CURRENT_SW_DELIVERY R1.69 =>CEBS
+= 做HST测试接口
+
 
 
 //=ZJL, 2019/6/4, CURRENT_SW_DELIVERY R1.68 =>CEBS

@@ -18,14 +18,14 @@ class clsCebsDhLogfile():
 
 
     #RECORD ERROR LOG FILE SAVING, WITH YMDHMS and basic information!
-    def medErrorLog(self, inputStr):
+    def tupErrorLog(self, inputStr):
         head = '\r[CEBS] ' + time.strftime("%Y/%m/%d %H:%M:%S") + ' [ERR] '
         outputStr = head + inputStr
         with open(TUP_CEBS_ERR_LOG_FILE_NAME_SET, 'a+') as f:
             f.write(outputStr)
 
     #RECORD COMMAND LOG FILE SAVING, WITH YMDHMS and basic information!
-    def medCmdLog(self, inputStr):
+    def tupCmdLog(self, inputStr):
         head = '\r[CEBS] ' + time.strftime("%Y/%m/%d %H:%M:%S") + ' [CMD] '
         outputStr = head + inputStr
         with open(TUP_CEBS_CMD_LOG_FILE_NAME_SET, 'a+') as f:
