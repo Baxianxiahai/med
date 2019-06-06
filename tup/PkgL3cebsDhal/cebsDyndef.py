@@ -45,8 +45,8 @@ strTupGlParPic =\
     #VISION CLASSIFICATION RESULT ADDUP (输出图像叠加标记)
     'CLAS_RES_ADDUP_SET':True,
     #VIDEO CAPTURE ENABLE OR NOT (视频录制参数)
-    'CAPTURE_ENABLE':True,
-    'CAPTURE_DUR_IN_SEC':3,
+    'VIDEO_CAPTURE_ENABLE':True,
+    'VIDEO_CAPTURE_DUR_IN_SEC':3,
     #图像识别中所用到的部分参数：将根据算法演进
     'CFY_THD_GENR_PAR1':0,
     'CFY_THD_GENR_PAR2':0,

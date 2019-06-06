@@ -6,6 +6,7 @@ Created on 2019年6月3日
 
 
 from PkgL3cebsDhal.cebsConfig import *
+from PkgL3cebsDhal.cebsDyndef import *
 
 import struct
 import serial
@@ -17,68 +18,62 @@ class clsCebsDhMotosps():
     #
     # 固定配置参数部分
     #
-    SPS_SHK_HAND = '设备握手（shake_hand）'
-    SPS_SET_WK_MODE = '设置工作模式（set_wk_mode）'
-    SPS_SET_ACC = '设置加速度（set_acc）'
-    SPS_SET_DEACC = '设置减速度（set_deacc）'
-    SPS_SET_PPC = '设置一圈步伐（set_pules_per_cycle）'
-    SPS_SET_MV_SPD = '设置移动速度（set_mv_spd）'
-    SPS_SET_ZO_SPD = '设置归零速度（set_zero_spd）'
-    SPS_SET_ZO_ACC = '设置归零加速度（set_zero_acc）'
-    SPS_SET_INT_SP = '设置靠边后退步伐（set_int_steps）'
-    SPS_MV_PULS = '移动步伐（mv_pules）'
-    SPS_MV_SPD = '移动速度（mv_spd）'
-    SPS_MV_ZERO = '归零（mv_zero）'
-    SPS_STP_IMD = '立即停止（stop_imd）'
-    SPS_STP_NOR = '缓慢停止（stop_nor)'
-    SPS_INQ_EN = '查询激活状态（inq_enable）'
-    SPS_INQ_RUN = '查询运行状态（inq_run）'
-    SPS_INQ_STATUS = '查询一般状态（inq_status）'
-    SPS_TEST_PULES = '测试脉冲数（test_pules）'
-    SPS_SET_EXTI_DELAY_TIME = '设置限位器触发迟滞（set_exti_delay_time）'
-    SPS_SHK_HAND_CMID = 0x20
-    SPS_SET_WK_MODE_CMID = 0x21
-    SPS_SET_ACC_CMID = 0x22
-    SPS_SET_DEACC_CMID = 0x23
-    SPS_SET_PPC_CMID = 0x24
-    SPS_SET_MV_SPD_CMID = 0x25
-    SPS_SET_ZO_SPD_CMID = 0x26
-    SPS_SET_ZO_ACC_CMID = 0x27
-    SPS_SET_INT_SP_CMID = 0x28
-    SPS_MV_PULS_CMID = 0x30
-    SPS_MV_SPD_CMID = 0x31
-    SPS_MV_ZERO_CMID = 0x32
-    SPS_STP_IMD_CMID = 0x33
-    SPS_STP_NOR_CMID = 0x34
-    SPS_INQ_EN_CMID = 0x35
-    SPS_INQ_RUN_CMID = 0x36
-    SPS_INQ_STATUS_CMID = 0x37
-    SPS_TEST_PULES_CMID = 0x38
-    SPS_SET_EXTI_DELAY_TIME_CMID = 0x39
-    SPS_CHECK_PSWD_CMID = 0x40
-<<<<<<< HEAD
+    _SPS_SHK_HAND = '设备握手（shake_hand）'
+    _SPS_SET_WK_MODE = '设置工作模式（set_wk_mode）'
+    _SPS_SET_ACC = '设置加速度（set_acc）'
+    _SPS_SET_DEACC = '设置减速度（set_deacc）'
+    _SPS_SET_PPC = '设置一圈步伐（set_pules_per_cycle）'
+    _SPS_SET_MV_SPD = '设置移动速度（set_mv_spd）'
+    _SPS_SET_ZO_SPD = '设置归零速度（set_zero_spd）'
+    _SPS_SET_ZO_ACC = '设置归零加速度（set_zero_acc）'
+    _SPS_SET_INT_SP = '设置靠边后退步伐（set_int_steps）'
+    _SPS_MV_PULS = '移动步伐（mv_pules）'
+    _SPS_MV_SPD = '移动速度（mv_spd）'
+    _SPS_MV_ZERO = '归零（mv_zero）'
+    _SPS_STP_IMD = '立即停止（stop_imd）'
+    _SPS_STP_NOR = '缓慢停止（stop_nor)'
+    _SPS_INQ_EN = '查询激活状态（inq_enable）'
+    _SPS_INQ_RUN = '查询运行状态（inq_run）'
+    _SPS_INQ_STATUS = '查询一般状态（inq_status）'
+    _SPS_TEST_PULES = '测试脉冲数（test_pules）'
+    _SPS_SET_EXTI_DELAY_TIME = '设置限位器触发迟滞（set_exti_delay_time）'
+    _SPS_SHK_HAND_CMID = 0x20
+    _SPS_SET_WK_MODE_CMID = 0x21
+    _SPS_SET_ACC_CMID = 0x22
+    _SPS_SET_DEACC_CMID = 0x23
+    _SPS_SET_PPC_CMID = 0x24
+    _SPS_SET_MV_SPD_CMID = 0x25
+    _SPS_SET_ZO_SPD_CMID = 0x26
+    _SPS_SET_ZO_ACC_CMID = 0x27
+    _SPS_SET_INT_SP_CMID = 0x28
+    _SPS_MV_PULS_CMID = 0x30
+    _SPS_MV_SPD_CMID = 0x31
+    _SPS_MV_ZERO_CMID = 0x32
+    _SPS_STP_IMD_CMID = 0x33
+    _SPS_STP_NOR_CMID = 0x34
+    _SPS_INQ_EN_CMID = 0x35
+    _SPS_INQ_RUN_CMID = 0x36
+    _SPS_INQ_STATUS_CMID = 0x37
+    _SPS_TEST_PULES_CMID = 0x38
+    _SPS_SET_EXTI_DELAY_TIME_CMID = 0x39
+    _SPS_CHECK_PSWD_CMID = 0x40
+    #参量定义
+    _SPS_MENGPAR_ADDR  = 0x77
+    _SPS_MENGPAR_CMD_LEN = 18
 
     #临时计算结果
-=======
-    
-    
-    SPS_MENGPAR_ADDR  = 0x77
-    SPS_MENGPAR_CMD_LEN = 18
-    
-    
->>>>>>> a8047cd3c13b7c66ca9f55e5865630a1e4ce2943
-    MOTOR_STEPS_PER_ROUND = 12800   #NF0
-    MOTOR_DIS_MM_PER_ROUND = 3.1415926*20*1.05
-    MOTOR_STEPS_PER_DISTANCE_MM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND
-    MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND / 1000    
+    _MOTOR_STEPS_PER_ROUND = 12800   #NF0
+    _MOTOR_DIS_MM_PER_ROUND = 3.1415926*20*1.05
+    _MOTOR_STEPS_PER_DISTANCE_MM = _MOTOR_STEPS_PER_ROUND / _MOTOR_DIS_MM_PER_ROUND
+    _MOTOR_STEPS_PER_DISTANCE_UM = _MOTOR_STEPS_PER_ROUND / _MOTOR_DIS_MM_PER_ROUND / 1000    
     
     #最大速度上限，防止损坏设备
-    MOTOR_MAX_SPD = 20,    #NF1 rad/s
-    MOTOR_MAX_ACC = 20,  #NF1 rad/s2
-    MOTOR_MAX_DEACC = 20,  #NF1 rad/s2
-    MOTOR_MAX_ZERO_SPD = 20, #NF1 rad/s
-    MOTOR_MAX_ZERO_ACC = 20, #NF1 rad/s2
-    MOTOR_MAX_BACK_STEPS = 200,
+    _MOTOR_MAX_SPD = 20,    #NF1 rad/s
+    _MOTOR_MAX_ACC = 20,  #NF1 rad/s2
+    _MOTOR_MAX_DEACC = 20,  #NF1 rad/s2
+    _MOTOR_MAX_ZERO_SPD = 20, #NF1 rad/s
+    _MOTOR_MAX_ZERO_ACC = 20, #NF1 rad/s2
+    _MOTOR_MAX_BACK_STEPS = 200,
     
     #当前配置速度
     MOTOR_CUR_SPD = 10,
@@ -92,26 +87,22 @@ class clsCebsDhMotosps():
         super(clsCebsDhMotosps, self).__init__()  
     
 
-<<<<<<< HEAD
+    
+    '''
+    #
+    # 串口参数的本地初始化过程
+    # In: PkgL3CebsDhal.cebsDyndef.strTupGlParMotosps
+    #
+    '''
     def tup_dhal_motosps_update_context(self, glParMotosps):
         pass
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
-    
+    '''
+    #
+    # 串口命令的操作过程
+    #
+    '''
     #给上层提供服务的函数
     def funcInitSps(self):
         #LC：ubuntu环境下，之前使用的那一套搜索设备符需要修改
@@ -164,7 +155,6 @@ class clsCebsDhMotosps():
                 self.IsSerialOpenOk = True
                 #self.funcMotoLogTrace("L2MOTO: Success open serial port!")
                 return 1
->>>>>>> a8047cd3c13b7c66ca9f55e5865630a1e4ce2943
 
     #命令打包
     def funcSendCmdPack(self, cmdId, par1, par2, par3, par4):
@@ -270,3 +260,24 @@ class clsCebsDhMotosps():
             wCRCIn = wCRCIn & 0xffff;
             i += 1
         return wCRCIn;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

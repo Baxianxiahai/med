@@ -77,8 +77,8 @@ TUP_HST_PCT_GET_CONFIG_OUT = {
         'objname': 'XianChong_001',
         'objtype': 5,
         'uid': 10,
-        'dir_origin': '/var/www/origin',
-        'dir_middle': '/var/www/middle',
+        'dir_origin': 'origin',
+        'dir_middle': 'middle',
         'memo': 'This is used for a memo record',        
         },
     'cebs_config_eleg': {
@@ -125,8 +125,8 @@ TUP_HST_PCT_SET_CONFIG_IN = {
         'objname': 'XianChong_001',
         'objtype': 5,
         'uid': 10,
-        'dir_origin': '/var/www/origin',
-        'dir_middle': '/var/www/middle',
+        'dir_origin': 'origin',
+        'dir_middle': 'middle',
         'memo': 'This is used for a memo record',        
         },
     'cebs_config_eleg': {
@@ -173,8 +173,8 @@ TUP_HST_PCT_SET_CONFIG_OUT = {
         'objname': 'XianChong_001',
         'objtype': 5,
         'uid': 10,
-        'dir_origin': '/var/www/origin',
-        'dir_middle': '/var/www/middle',
+        'dir_origin': 'origin',
+        'dir_middle': 'middle',
         'memo': 'This is used for a memo record',        
         },
     'cebs_config_eleg': {
