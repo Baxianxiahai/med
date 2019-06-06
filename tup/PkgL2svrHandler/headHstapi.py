@@ -62,7 +62,8 @@ TUP_HST_PCT_GET_CONFIG_OUT = {
     'cmdid':'hstGetConfig',
     'error_no': 'no_error',
     'cebs_cali_profile': {
-        'platetype': ['1','2','5','6','7','8','9','10','11','12','13','15'],
+        'plateoption': ['96_STANDARD','48_STANDARD','24_STANDARD','12_STANDARD','6_STANDARD'],
+        'platetype': '96_STANDARD',
         'calitime': '2010-05-06 20:00:00',
         'uid': 10,
         'left_bot_x': 100,
@@ -85,7 +86,9 @@ TUP_HST_PCT_GET_CONFIG_OUT = {
         'objid': 1234,
         'fixpoint': 1, #bool
         'autovideo': 1, #bool
-        'autodist': 1, #bool
+        'autoclfy': 0, #bool
+        'autowork': 0, #bool
+        'blurylimit':500,
         'addset': 1, #bool
         'autocap': 1, #bool
         'autoperiod': 10, #seconds
@@ -98,7 +101,7 @@ TUP_HST_PCT_GET_CONFIG_OUT = {
         'decspeed': 20,
         'movespeed': 30, 
         'zero_spd': 40,
-        'zero_dec': 50,
+        'zero_acc': 50,
         'back_step': 5,
         }
     }
@@ -107,7 +110,8 @@ TUP_HST_PCT_GET_CONFIG_OUT = {
 TUP_HST_PCT_SET_CONFIG_IN = {
     'cmdid':'hstSetConfig',
     'cebs_cali_profile': {
-        'platetype': ['1','2','5','6','7','8','9','10','11','12','13','15'],
+        'plateoption': ['96_STANDARD','48_STANDARD','24_STANDARD','12_STANDARD','6_STANDARD'],
+        'platetype': '96_STANDARD',
         'calitime': '2010-05-06 20:00:00',
         'uid': 10,
         'left_bot_x': 100,
@@ -130,7 +134,9 @@ TUP_HST_PCT_SET_CONFIG_IN = {
         'objid': 1234,
         'fixpoint': 1, #bool
         'autovideo': 1, #bool
-        'autodist': 1, #bool
+        'autoclfy': 0, #bool
+        'autowork': 0, #bool
+        'blurylimit':500,
         'addset': 1, #bool
         'autocap': 1, #bool
         'autoperiod': 10, #seconds
@@ -143,7 +149,7 @@ TUP_HST_PCT_SET_CONFIG_IN = {
         'decspeed': 20,
         'movespeed': 30, 
         'zero_spd': 40,
-        'zero_dec': 50,
+        'zero_acc': 50,
         'back_step': 5,
         }
     }
@@ -152,7 +158,8 @@ TUP_HST_PCT_SET_CONFIG_OUT = {
     'cmdid':'hstSetConfig',
     'error_no': 'no_error',
     'cebs_cali_profile': {
-        'platetype': ['1','2','5','6','7','8','9','10','11','12','13','15'],
+        'plateoption': ['96_STANDARD','48_STANDARD','24_STANDARD','12_STANDARD','6_STANDARD'],
+        'platetype': '96_STANDARD',
         'calitime': '2010-05-06 20:00:00',
         'uid': 10,
         'left_bot_x': 100,
@@ -175,7 +182,9 @@ TUP_HST_PCT_SET_CONFIG_OUT = {
         'objid': 1234,
         'fixpoint': 1, #bool
         'autovideo': 1, #bool
-        'autodist': 1, #bool
+        'autoclfy': 0, #bool
+        'autowork': 0, #bool
+        'blurylimit':500,
         'addset': 1, #bool
         'autocap': 1, #bool
         'autoperiod': 10, #seconds
@@ -188,7 +197,7 @@ TUP_HST_PCT_SET_CONFIG_OUT = {
         'decspeed': 20,
         'movespeed': 30, 
         'zero_spd': 40,
-        'zero_dec': 50,
+        'zero_acc': 50,
         'back_step': 5,
         }
 
@@ -209,7 +218,8 @@ TUP_HST_PCT_UPDATE_CALI_PAR_IN = {
     'par1':1,
     'par2':1,
     'cebs_cali_profile': {
-        'platetype': ['1','2','5','6','7','8','9','10','11','12','13','15'],
+        'plateoption': ['96_STANDARD','48_STANDARD','24_STANDARD','12_STANDARD','6_STANDARD'],
+        'platetype': '96_STANDARD',
         'calitime': '2010-05-06 20:00:00',
         'uid': 10,
         'left_bot_x': 100,
@@ -223,7 +233,8 @@ TUP_HST_PCT_UPDATE_CALI_PAR_OUT = {
     'cmdid':'hstUpdateCaliPar',
     'error_no': 'no_error',
     'cebs_cali_profile': {
-        'platetype': ['1','2','5','6','7','8','9','10','11','12','13','15'],
+        'plateoption': ['96_STANDARD','48_STANDARD','24_STANDARD','12_STANDARD','6_STANDARD'],
+        'platetype': '96_STANDARD',
         'calitime': '2010-05-06 20:00:00',
         'uid': 10,
         'left_bot_x': 100,

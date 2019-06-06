@@ -170,7 +170,7 @@ class clsCebsDhPlate():
     #calibAxis需要按照坐标系存入
     #calibAxis = [0, 0, 0, 0]
     #一旦坐标系确定以后，需要及时更新坐标旋转，待完善
-    def tup_dhal_plate_update_plate_calib(self, calibAxis):
+    def tup_dhal_plate_update_calib(self, calibAxis):
         if (calibAxis[0] !=0 or calibAxis[1] !=0 or calibAxis[2] !=0 or calibAxis[3] !=0):
             self.HB_CALI_POS_IN_UM = calibAxis
             self.HB_WIDTH_X_SCALE = (self.HB_CALI_POS_IN_UM[2] - self.HB_CALI_POS_IN_UM[0]) / (self.HB_HOLE_X_NUM-1);

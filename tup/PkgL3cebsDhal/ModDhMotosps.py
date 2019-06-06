@@ -49,15 +49,49 @@ class clsCebsDhMotosps():
     SPS_TEST_PULES_CMID = 0x38
     SPS_SET_EXTI_DELAY_TIME_CMID = 0x39
     SPS_CHECK_PSWD_CMID = 0x40
-    #
+
+    #临时计算结果
     MOTOR_STEPS_PER_ROUND = 12800   #NF0
     MOTOR_DIS_MM_PER_ROUND = 3.1415926*20*1.05
     MOTOR_STEPS_PER_DISTANCE_MM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND
     MOTOR_STEPS_PER_DISTANCE_UM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND / 1000    
     
+    #最大速度上限，防止损坏设备
+    MOTOR_MAX_SPD = 20,    #NF1 rad/s
+    MOTOR_MAX_ACC = 20,  #NF1 rad/s2
+    MOTOR_MAX_DEACC = 20,  #NF1 rad/s2
+    MOTOR_MAX_ZERO_SPD = 20, #NF1 rad/s
+    MOTOR_MAX_ZERO_ACC = 20, #NF1 rad/s2
+    MOTOR_MAX_BACK_STEPS = 200,
+    
+    #当前配置速度
+    MOTOR_CUR_SPD = 10,
+    MOTOR_CUR_ACC = 10,
+    MOTOR_CUR_DEACC = 10,
+    MOTOR_CUR_ZERO_SPD = 10,
+    MOTOR_CUR_ZERO_ACC = 10,
+    MOTOR_CUR_BACK_STEPS = 5,
+    
     def __init__(self):    
         super(clsCebsDhMotosps, self).__init__()  
     
+
+    def tup_dhal_motosps_update_context(self, glParMotosps):
+        pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

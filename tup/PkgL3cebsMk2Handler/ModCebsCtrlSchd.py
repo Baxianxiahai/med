@@ -9,12 +9,13 @@ import time
 from multiprocessing import Queue, Process
 from PkgL1vmHandler.ModVmCfg import *
 from PkgL1vmHandler.ModVmLayer import *
+from PkgL1vmHandler.ModVmConsole import *
 from PkgL3cebsMk2Handler.ModCebsCom import *
 from PkgL3cebsMk2Handler.ModCebsCfg import *
-from PkgL1vmHandler.ModVmConsole import *
+from PkgL3cebsDhal.ModOprSvr import *
 
 
-class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
+class tupTaskCtrlSchd(tupTaskTemplate, clsCebsDhalOprSvr, clsL1_ConfigOpr):
     _STM_ACTIVE = 3
     #拍照阶段
     _STM_PIC_CAP_EXEC = 4
@@ -105,6 +106,14 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsL1_ConfigOpr):
 
     def fsm_msg_init_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
+        #初始化系统参数
+        flag, res = self.tup_dhal_oprSvr_GetConfig()
+        if (flag > 0):
+            self.tup_dhal_oprSvr_InitConfigPar(res)
+            #self.msg_send(TUP_MSGID_INTERAL_CONFIG, TUP_TASK_ID_MOTO, res)
+            #self.msg_send(TUP_MSGID_INTERAL_CONFIG, TUP_TASK_ID_VISION, res)
+            #self.msg_send(TUP_MSGID_INTERAL_CONFIG, TUP_TASK_ID_MENG, res)
+        
         #控制图像工作的序号
         self.picSeqCnt = 0  #图像识别次序号
         

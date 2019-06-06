@@ -80,9 +80,9 @@ class clsCebsDhPicfile(clsCebsDhPlate):
     '''    
     #给上层提供服务的函数
     #以该参数为原型strTupGlParPic
-    def tup_dhal_picFile_update_context(self, glParPic):
-        self.PIC_ORIGIN_PATH = glParPic['PIC_ORIGIN_PATH']
-        self.PIC_MIDDLE_PATH = glParPic['PIC_MIDDLE_PATH']
+    def tup_dhal_picFile_update_context(self, glParFile, glParPic):
+        self.PIC_ORIGIN_PATH = glParFile['PIC_ORIGIN_PATH']
+        self.PIC_MIDDLE_PATH = glParFile['PIC_MIDDLE_PATH']
         if (glParPic['PIC_TAKING_FIX_POINT_SET'] == True):
             self.PIC_TAKING_FIX_POINT_SET = True
         else:

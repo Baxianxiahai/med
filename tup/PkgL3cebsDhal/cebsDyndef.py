@@ -4,50 +4,23 @@ Created on 2019年6月3日
 @author: Administrator
 '''
 
-#系统控制参数
-strTupGlParCtrlCfg =\
+#文件参数
+strTupGlParFile =\
 {
-    'ERR_LOG_FILE_NAME_SET':"cebsErrLog.txt",
-    'CMD_LOG_FILE_NAME_SET':"cebsCmdLog.txt",
-    #固定参数部分
     'PIC_ORIGIN_PATH':'pic_origin',
     'PIC_MIDDLE_PATH':'pic_middle',
-    #FILE ATTRIBUTE
-    'FILE_ATT_NORMAL':'normal',
-    'FILE_ATT_FLUORESCEN':'flu',    #荧光 Fluorescen
-    'CFG_FILE_NAME':'cebsConfig.ini',
-    #工作目录
-    'PIC_WORK_DIR':'',
-    #控制参数
-    'PIC_PROC_BATCH_INDEX':0,
-    'PIC_PROC_CLAS_INDEX':0,
-    'PIC_PROC_REMAIN_CNT':0,
-    'PIC_FLU_CLAS_INDEX':0, #指向FLU的指针起点
-    'PIC_FLU_REMAIN_CNT':0, #剩余的FLU数量
-    'PIC_ABS_ORIGIN_PATH':'',
-    'PIC_ABS_MIDDLE_PATH':'',
 }
 
 #托盘参数
 strTupGlParPlate =\
 {
     'HB_TARGET_TYPE':'',    #托盘类型
-    'LEN_UNIT':'um',
-    'HB_HOLE_X_NUM':0,      #HOW MANY BOARD HOLES，X DIRECTION
-    'HB_HOLE_Y_NUM':0,      #HOW MANY BOARD HOLES，Y DIRECTION
-    'HB_WIDTH_X_SCALE':0,   
-    'HB_HEIGHT_Y_SCALE':0,
     'HB_CALI_POS_IN_UM':[0, 0, 0, 0],#USING INT, um, 96 HOLES, POSITION OF = X1/Y1(LEFT-DOWN), X2/Y2(RIGHT-UP)
-    'HB_CUR_POS_IN_UM': [0, 0],  #USING INT, um, POSITION X/Y AXIS
 }
     
-
 #图像参数
 strTupGlParPic =\
 {
-    #相对工作路径
-    'PIC_ORIGIN_PATH':'pic_origin',
-    'PIC_MIDDLE_PATH':'pic_middle',
     #定点拍照
     'PIC_TAKING_FIX_POINT_SET':False,
     #增加二次曝光功能试图解决图片模糊的问题
@@ -74,8 +47,6 @@ strTupGlParPic =\
     #VIDEO CAPTURE ENABLE OR NOT (视频录制参数)
     'CAPTURE_ENABLE':True,
     'CAPTURE_DUR_IN_SEC':3,
-    #SCALE ENABLE SET
-    'PIC_SCALE_ENABLE_FLAG':False,
     #图像识别中所用到的部分参数：将根据算法演进
     'CFY_THD_GENR_PAR1':0,
     'CFY_THD_GENR_PAR2':0,
@@ -84,18 +55,25 @@ strTupGlParPic =\
 }
 
 #串口参数
-strTupGlParSps =\
+strTupGlParMotosps =\
 {
-    'SPS_MENGPAR_ADDR':0x77,
-    'SPS_MENGPAR_CMD_LEN':18,
-    'MOTOR_MAX_SPD':20,    #NF1 rad/s
-    'MOTOR_MAX_ACC':20,  #NF1 rad/s2
-    'MOTOR_MAX_DEACC':20,  #NF1 rad/s2
-    'MOTOR_ZERO_SPD':20, #NF1 rad/s
-    'MOTOR_ZERO_ACC':20, #NF1 rad/s2
-    'MOTOR_MAX_RETRY_TIMES':150, #正常需要放置150次数，
-    'PILOT_WOKING_ROUNDS_MAX':5,
+    'MOTOR_CUR_SPD':20,    #NF1 rad/s
+    'MOTOR_CUR_ACC':20,  #NF1 rad/s2
+    'MOTOR_CUR_DEACC':20,  #NF1 rad/s2
+    'MOTOR_CUR_ZERO_SPD':20, #NF1 rad/s
+    'MOTOR_CUR_ZERO_ACC':20, #NF1 rad/s2
+    'MOTOR_BACK_STEPS':5,
 }
+
+#配置参数
+strTupGlParConfig =\
+{
+    'PAR_FILE':strTupGlParFile,
+    'PAR_PLATE':strTupGlParPlate,
+    'PAR_PIC':strTupGlParPic,
+    'PAR_MOTO':strTupGlParMotosps,
+}
+
 
 
 #MOTOR_STEPS_PER_DISTANCE_MM = MOTOR_STEPS_PER_ROUND / MOTOR_DIS_MM_PER_ROUND
