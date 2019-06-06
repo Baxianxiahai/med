@@ -206,17 +206,22 @@ TUP_HST_PCT_SET_CONFIG_OUT = {
 #读取未识别图像参数 hstUnclfyPar
 TUP_HST_PCT_READ_UNCLFY_PAR_IN = {
     'cmdid':'hstReadUnclfyPar',
+    'file-attr':'normal', #'normal', 'flu'
     }
 
 TUP_HST_PCT_READ_UNCLFY_PAR_OUT = {
     'cmdid':'hstReadUnclfyPar',
+    'file-attr':'normal', #'normal', 'flu'
+    'batchNbr':123,
+    'holeNbr':25,
+    'fileAbsOrigin':'d:\abc\pic_origin\batch33#a5.jpg',
+    'fileAbsMiddle':'d:\abc\pic_mid\batch33#a5.jpg',
+    'fileAbsVideo':'d:\abc\pic_origin\batch33#a5.mp4',
     }
 
 #更新校准参数  hstUpdateCaliPar
 TUP_HST_PCT_UPDATE_CALI_PAR_IN = {
     'cmdid':'hstUpdateCaliPar',
-    'par1':1,
-    'par2':1,
     'cebs_cali_profile': {
         'plateoption': ['96_STANDARD','48_STANDARD','24_STANDARD','12_STANDARD','6_STANDARD'],
         'platetype': '96_STANDARD',

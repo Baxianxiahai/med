@@ -55,12 +55,18 @@ class clsCebsDhPicfile(clsCebsDhPlate):
     dhalPicfileWorkDir = ''
     dhalPicfileAbsOriginPath = "";
     dhalPicfileAbsMiddlePath = "";
-    #是否需要继续试用？待明确
-    dhalPicfileBatchIndex = 0;
-    dhalPicfileNormalClasIndex = 0;  #Pointer to the batch of not yet classified.
-    dhalPicfileNormalRemainCnt = 0;  #Pointer to remaining un-classified pictures
-    dhalPicfileFluCnt = 0           #指向FLU的指针起点
-    dhalPicfileFluRemainCnt = 0     #剩余的FLU数量
+    
+    #控制拍摄的参数
+    dhalPicfileCapBatchIndex = 0;
+    dhalPicfileCapHoleIndex = 0;
+    
+    #控制识别的参数
+    dhalPicfileFileAttr = 'normal'
+    dhalPicfileClfyBatchNbr = 0;
+    dhalPicfileClfyHoleNbr = 0;
+    dhalPicfileClfyOriginAbsFn = '';
+    dhalPicfileClfyMidAbsFn = '';
+    dhalPicfileClfyVideoAbsFn = '';
     
     
     '''
@@ -156,6 +162,21 @@ class clsCebsDhPicfile(clsCebsDhPlate):
             return '/'
         else:
             return '/'
+
+    #更新批次号
+    def tup_dhal_picFile_update_batch_nbr(self, batchNbr):
+        self.dhalPicfileCapBatchIndex = batchNbr
+    
+    #更新批次号
+    #入参：strTupGlParUnclfyPic
+    def tup_dhal_picFile_update_unclfy_nbr(self, inputData):
+        self.dhalPicfileFileAttr = inputData['UNCLFY_FILE_ATTR']
+        self.dhalPicfileClfyBatchNbr = inputData['UNCLFY_BATCH_NBR']
+        self.dhalPicfileClfyHoleNbr = inputData['UNCLFY_HOLE_NBR']
+        self.dhalPicfileClfyOriginAbsFn = inputData['UNCLFY_ORIGIN_ABS_FN']
+        self.dhalPicfileClfyMidAbsFn = inputData['UNCLFY_MID_ABS_FN']
+        self.dhalPicfileClfyVideoAbsFn = inputData['UNCLFY_VIDEO_ABS_FN']
+
 
     '''
     #

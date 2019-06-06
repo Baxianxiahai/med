@@ -4,9 +4,6 @@ Created on 2019年6月3日
 @author: Administrator
 '''
 
-from PkgL1vmHandler.ModVmCfg import *
-
-
 #本模块将存储CEBS项目级的固定参数，不得使用工程参数、数据库表单等方式进行修改
 _TUP_CEBS_ERR_LOG_FILE_NAME_SET = r"cebsErrLog.txt"
 _TUP_CEBS_CMD_LOG_FILE_NAME_SET = r"cebsCmdLog.txt"
@@ -35,8 +32,8 @@ _TUP_CEBS_HW_TYPE_CUR = _TUP_CEBS_HW_TYPE_1
 #Ubuntu下图片存储的绝对路径Prefix目录
 _TUP_CEBS_UBUNTU_FILE_STORAGE_DIR_PREFIX = '/var/www/'
 
-
-
+#玩意数据库批次号分配失败，则分配的批次号从这里开始
+_TUP_CEBS_FAIL_BATCH_START  = 1000000
 
 
 
