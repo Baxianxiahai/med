@@ -83,7 +83,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # Out: TUP_HST_PCT_GET_CONFIG_OUT
     #
     '''
-    def tup_hstDba_GetConfig(self, input):
+    def tup_hstDba_GetConfig(self, inputData):
         mbuf = TUP_HST_PCT_GET_CONFIG_IN;
         oprFlag, res = self.cebs_dba_general_operation(mbuf)
 
@@ -103,7 +103,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # Out: TUP_HST_PCT_READ_UNCLFY_PAR_OUT
     #
     '''
-    def tup_hstDba_ReadUncfyPar(self, input):
+    def tup_hstDba_ReadUncfyPar(self, inputData):
         mbuf = TUP_HST_PCT_READ_UNCLFY_PAR_IN;
         #分区域内容，检查每个域进行编码
         oprFlag, res  = self.cebs_dba_general_operation(mbuf)
@@ -124,7 +124,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # Out: TUP_HST_PCT_SET_CONFIG_OUT
     #
     '''
-    def tup_hstDba_SetConfig(self, input):
+    def tup_hstDba_SetConfig(self, inputData):
         mbuf = TUP_HST_PCT_SET_CONFIG_IN;
         oprFlag, res  = self.cebs_dba_general_operation(mbuf)
 
@@ -144,7 +144,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # Out: TUP_HST_PCT_UPDATE_CALI_PAR_OUT
     #
     '''
-    def tup_hstDba_UpdateCaliPar(self, input):
+    def tup_hstDba_UpdateCaliPar(self, inputData):
         mbuf = TUP_HST_PCT_UPDATE_CALI_PAR_IN;
         oprFlag, res  = self.cebs_dba_general_operation(mbuf)
 
@@ -164,7 +164,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # Out: TUP_HST_PCT_ADD_BATCH_NBR_OUT
     #
     '''
-    def tup_hstDba_AddBatchNbr(self, input):
+    def tup_hstDba_AddBatchNbr(self, inputData):
         mbuf = TUP_HST_PCT_ADD_BATCH_NBR_IN;
         oprFlag, res  = self.cebs_dba_general_operation(mbuf)
 
@@ -184,7 +184,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # Out: TUP_HST_PCT_ADD_PIC_CAP_OUT
     #
     '''
-    def tup_hstDba_AddPicCap(self, input):
+    def tup_hstDba_AddPicCap(self, inputData):
         mbuf = TUP_HST_PCT_ADD_PIC_CAP_IN;
         oprFlag, res  = self.cebs_dba_general_operation(mbuf)
 
@@ -204,7 +204,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # Out: TUP_HST_PCT_ADD_FLU_CAP_OUT
     #
     '''
-    def tup_hstDba_AddFluCap(self, input):
+    def tup_hstDba_AddFluCap(self, inputData):
         mbuf = TUP_HST_PCT_ADD_FLU_CAP_IN;
         oprFlag, res  = self.cebs_dba_general_operation(mbuf)
 
@@ -224,7 +224,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # Out: TUP_HST_PCT_UPDATE_PIC_CFY_OUT
     #
     '''
-    def tup_hstDba_UpdatePicCfy(self, input):
+    def tup_hstDba_UpdatePicCfy(self, inputData):
         mbuf = TUP_HST_PCT_UPDATE_PIC_CFY_IN;
         oprFlag, res  = self.cebs_dba_general_operation(mbuf)
 
@@ -244,7 +244,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # Out: TUP_HST_PCT_UPDATE_FLU_CFY_OUT
     #
     '''
-    def tup_hstDba_UpdateFluCfy(self, input):
+    def tup_hstDba_UpdateFluCfy(self, inputData):
         mbuf = TUP_HST_PCT_UPDATE_FLU_CFY_IN;
         oprFlag, res  = self.cebs_dba_general_operation(mbuf)
 
@@ -264,7 +264,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # Out: TUP_HST_PCT_READ_PIC_OUT
     #
     '''
-    def tup_hstDba_ReadPic(self, input):
+    def tup_hstDba_ReadPic(self, inputData):
         mbuf = TUP_HST_PCT_READ_PIC_IN;
         oprFlag, res  = self.cebs_dba_general_operation(mbuf)
 
@@ -284,7 +284,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # Out: TUP_HST_PCT_READ_FLU_OUT
     #
     '''
-    def tup_hstDba_ReadFlu(self, input):
+    def tup_hstDba_ReadFlu(self, inputData):
         mbuf = TUP_HST_PCT_READ_FLU_IN;
         oprFlag, res  = self.cebs_dba_general_operation(mbuf)
 
@@ -304,7 +304,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # Out: TUP_HST_PCT_UPDATE_STATIS_OUT
     #
     '''
-    def tup_hstDba_UpdateStatis(self, input):
+    def tup_hstDba_UpdateStatis(self, inputData):
         mbuf = TUP_HST_PCT_UPDATE_STATIS_IN;
         oprFlag, res  = self.cebs_dba_general_operation(mbuf)
 
@@ -324,7 +324,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # Out: TUP_HST_PCT_UPDATE_USER_LOG_OUT
     #
     '''
-    def tup_hstDba_UpdateUserLog(self, input):
+    def tup_hstDba_UpdateUserLog(self, inputData):
         mbuf = TUP_HST_PCT_UPDATE_USER_LOG_IN;
         oprFlag, res  = self.cebs_dba_general_operation(mbuf)
 

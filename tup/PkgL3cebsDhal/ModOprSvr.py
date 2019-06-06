@@ -27,7 +27,7 @@ from PkgL3cebsDhal.ModDhPlate import *
 
 
 #正式服务API，给上层提供标准操作
-class clsCebsDhalOprSvr(clsCebsDhCamera, clsCebsDhLogfile, clsCebsDhPicfile, clsCebsDhMotosps, clsCebsDhPlate):
+class clsCebsDhalOprSvr(TupClsCebsDbaItf, clsCebsDhCamera, clsCebsDhLogfile, clsCebsDhPicfile, clsCebsDhMotosps, clsCebsDhPlate):
     def __init__(self):
         super(clsCebsDhalOprSvr, self).__init__()  
     
@@ -71,7 +71,7 @@ class clsCebsDhalOprSvr(clsCebsDhCamera, clsCebsDhLogfile, clsCebsDhPicfile, cls
         outputData['PAR_MOTO']['MOTOR_CUR_ACC'] = inputData['cebs_config_eleg']['accspeed']
         outputData['PAR_MOTO']['MOTOR_CUR_DEACC'] = inputData['cebs_config_eleg']['decspeed']
         outputData['PAR_MOTO']['MOTOR_CUR_ZERO_SPD'] = inputData['cebs_config_eleg']['zero_spd']
-        outputData['PAR_MOTO']['MOTOR_CUR_ZERO_ACC'] = inputData['cebs_config_eleg']['zero_dec']
+        outputData['PAR_MOTO']['MOTOR_CUR_ZERO_ACC'] = inputData['cebs_config_eleg']['zero_acc']
         outputData['PAR_MOTO']['MOTOR_BACK_STEPS'] = inputData['cebs_config_eleg']['back_step']
         return outputData
 
@@ -79,7 +79,7 @@ class clsCebsDhalOprSvr(clsCebsDhCamera, clsCebsDhLogfile, clsCebsDhPicfile, cls
     #入参：失败成功标签
     #出参： 内部消息模板strTupGlParConfig
     def tup_dhal_oprSvr_GetConfig_and_update(self):
-        flag, res = TupClsCebsDbaItf.tup_hstDba_GetConfig('')
+        flag, res = self.tup_hstDba_GetConfig('aaa')
         if (flag > 0):
             outputData = self.func_dhal_oprSvr_translate_HstConfig_to_glParConfig(res)
             self.tup_dhal_oprSvr_UpdateConfigPar(outputData)

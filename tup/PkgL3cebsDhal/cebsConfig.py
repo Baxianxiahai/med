@@ -22,11 +22,11 @@ _TUP_CEBS_SPS_USB_CARD_SET = _TUP_CEBS_SPS_USB_DBG_CARD2
 #马达归零最大循环次数
 #确保归零的时间预算 = 30秒 = 次数 x 采样间隔（0.2s)
 _TUP_CEBS_MOTOR_MAX_RETRY_TIMES = 150 #正常需要放置150次数，
-_TUP_CEBS_PILOT_WOKING_ROUNDS_MAX = 5;   #ROUNDS of auto-pilot run
+_TUP_CEBS_PILOT_WOKING_ROUNDS_MAX = 5   #ROUNDS of auto-pilot run
 
 #产品型号及机械结构的固定长度部分
-_TUP_CEBS_HW_TYPE_1  = 'G3VCD_TYPE1';
-_TUP_CEBS_HW_TYPE_2  = 'G3VCD_TYPE2';
+_TUP_CEBS_HW_TYPE_1  = 'G3VCD_TYPE1'
+_TUP_CEBS_HW_TYPE_2  = 'G3VCD_TYPE2'
 _TUP_CEBS_HW_TYPE_CUR = _TUP_CEBS_HW_TYPE_1
 
 #Ubuntu下图片存储的绝对路径Prefix目录

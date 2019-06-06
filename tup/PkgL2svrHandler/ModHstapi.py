@@ -15,7 +15,7 @@ class TupClsHstapiBasic(object):
     '''
     classdocs
     '''
-    _TUP_HST_URL_SVR_ADDR = 'http://localhost:7999/post'
+    _TUP_HST_URL_SVR_ADDR = 'http://localhost:8000/post'
 
     def __init__(self):
         '''
@@ -77,7 +77,7 @@ class TupClsHstapiBasic(object):
     #试图使用pycurl方案，没成功    
     def hstPycurlPost(self):
         buffer = BytesIO()  #创建缓存对象
-        hstUrl = 'http://localhost:7999/'
+        hstUrl = 'http://localhost:8000/'
         post_data = {"restTag":"dba","actionId":3800,"parFlag":1,"parContent":{"cmd":"add","user":"test222"}}
         c = pycurl.Curl()
         #c.setopt(pycurl.VERBOSE, 1) #提示是否带完整的头部
@@ -110,7 +110,7 @@ class TupClsHstapiBasic(object):
     def hstPycurlSecurityPost(self):
         buffer = BytesIO()
         c = pycurl.Curl()
-        c.setopt(c.URL,'http://localhost:7999/')
+        c.setopt(c.URL,'http://localhost:8000/')
         c.setopt(c.WRITEDATA, buffer)
         c.setopt(c.CAINFO, certifi.where()) #设置指定证书验证包
         c.perform()

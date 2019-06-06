@@ -107,9 +107,9 @@ class tupTaskCtrlSchd(tupTaskTemplate, clsCebsDhalOprSvr, clsL1_ConfigOpr):
     def fsm_msg_init_rcv_handler(self, msgContent):
         self.fsm_set(self._STM_ACTIVE)
         #初始化系统参数
-        flag, res = self.tup_dhal_oprSvr_GetConfig()
+        flag, res = self.tup_dhal_oprSvr_GetConfig_and_update()
         if (flag > 0):
-            self.tup_dhal_oprSvr_InitConfigPar(res)
+            self.tup_dhal_oprSvr_UpdateConfigPar(res)
             #self.msg_send(TUP_MSGID_INTERAL_CONFIG, TUP_TASK_ID_MOTO, res)
             #self.msg_send(TUP_MSGID_INTERAL_CONFIG, TUP_TASK_ID_VISION, res)
             #self.msg_send(TUP_MSGID_INTERAL_CONFIG, TUP_TASK_ID_MENG, res)

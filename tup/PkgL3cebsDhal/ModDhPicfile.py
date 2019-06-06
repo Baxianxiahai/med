@@ -121,10 +121,6 @@ class clsCebsDhPicfile(clsCebsDhPlate):
         else:
             self.dhalPicfileVideoCapEnable = False
         self.dhalPicfileVideoDurInSec = glParPic['VIDEO_CAPTURE_DUR_IN_SEC']
-        if (glParPic['PIC_SCALE_ENABLE_SET'] == True):
-            self.dhalPicfileScaleEnableSet = True
-        else:
-            self.dhalPicfileScaleEnableSet = False
         self.dhalPicfileCfyThdGenrPar1 = glParPic['CFY_THD_GENR_PAR1']
         self.dhalPicfileCfyThdGenrPar2 = glParPic['CFY_THD_GENR_PAR2']
         self.dhalPicfileCfyThdGenrPar3 = glParPic['CFY_THD_GENR_PAR3']
