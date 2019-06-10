@@ -10,11 +10,11 @@ Created on 2019年6月4日
 ##http://www.aaa.com/printer/request.php?POST={json}
 # {
 #     'restTag':'dba',
-#     'actionId': 8700,
+#     'actionId': 8500,
 #     'parFlag':1,  ##FALSE-0, TRUE-1
 #     'parConent':
 #     {
-#         'command_id': 10, 
+#         'cmd': 10, 
 #         'weight': 12.33,
 #         'unit': 'kg',
 #         'operator': 'Íõ·Œ',
@@ -30,7 +30,7 @@ Created on 2019年6月4日
 # 
 # {
 #     'restTag':'dba',
-#     'actionId': 8700,
+#     'actionId': 8500,
 #     'parFlag':1,  ##FALSE-0, TRUE-1
 #     'parConent':
 #     {
@@ -55,11 +55,11 @@ Created on 2019年6月4日
 
 #取存储参数 hstGetConfig
 TUP_HST_PCT_GET_CONFIG_IN = {
-    'cmdid':'hstGetConfig',
+    'cmd':'hstGetConfig',
     }
 
 TUP_HST_PCT_GET_CONFIG_OUT = {
-    'cmdid':'hstGetConfig',
+    'cmd':'hstGetConfig',
     'error_no': 'no_error',
     'cebs_cali_profile': {
         'plateoption': ['96_STANDARD','48_STANDARD','24_STANDARD','12_STANDARD','6_STANDARD'],
@@ -108,7 +108,7 @@ TUP_HST_PCT_GET_CONFIG_OUT = {
 
 #设置存储参数 hstSetConfig
 TUP_HST_PCT_SET_CONFIG_IN = {
-    'cmdid':'hstSetConfig',
+    'cmd':'hstSetConfig',
     'cebs_cali_profile': {
         'plateoption': ['96_STANDARD','48_STANDARD','24_STANDARD','12_STANDARD','6_STANDARD'],
         'platetype': '96_STANDARD',
@@ -155,7 +155,7 @@ TUP_HST_PCT_SET_CONFIG_IN = {
     }
 
 TUP_HST_PCT_SET_CONFIG_OUT = {
-    'cmdid':'hstSetConfig',
+    'cmd':'hstSetConfig',
     'error_no': 'no_error',
     'cebs_cali_profile': {
         'plateoption': ['96_STANDARD','48_STANDARD','24_STANDARD','12_STANDARD','6_STANDARD'],
@@ -210,7 +210,7 @@ TUP_HST_PCT_READ_UNCLFY_PAR_IN = {
     }
 
 TUP_HST_PCT_READ_UNCLFY_PAR_OUT = {
-    'cmdid':'hstReadUnclfyPar',
+    'cmd':'hstReadUnclfyPar',
     'file-attr':'normal', #'normal', 'flu'
     'batchNbr':123,
     'holeNbr':25,
@@ -221,7 +221,7 @@ TUP_HST_PCT_READ_UNCLFY_PAR_OUT = {
 
 #更新校准参数  hstUpdateCaliPar
 TUP_HST_PCT_UPDATE_CALI_PAR_IN = {
-    'cmdid':'hstUpdateCaliPar',
+    'cmd':'hstUpdateCaliPar',
     'cebs_cali_profile': {
         'plateoption': ['96_STANDARD','48_STANDARD','24_STANDARD','12_STANDARD','6_STANDARD'],
         'platetype': '96_STANDARD',
@@ -235,7 +235,7 @@ TUP_HST_PCT_UPDATE_CALI_PAR_IN = {
     }
 
 TUP_HST_PCT_UPDATE_CALI_PAR_OUT = {
-    'cmdid':'hstUpdateCaliPar',
+    'cmd':'hstUpdateCaliPar',
     'error_no': 'no_error',
     'cebs_cali_profile': {
         'plateoption': ['96_STANDARD','48_STANDARD','24_STANDARD','12_STANDARD','6_STANDARD'],
@@ -251,7 +251,7 @@ TUP_HST_PCT_UPDATE_CALI_PAR_OUT = {
 
 #增加批次号 hstAddBatchNbr
 TUP_HST_PCT_ADD_BATCH_NBR_IN = {
-    'cmdid':'hstAddBatchNbr',
+    'cmd':'hstAddBatchNbr',
     'cebs_batch_info': {
         'user': 'NameOfTheTester',
         'createtime': '2010-05-06 20:00:00',
@@ -262,7 +262,7 @@ TUP_HST_PCT_ADD_BATCH_NBR_IN = {
     }
 
 TUP_HST_PCT_ADD_BATCH_NBR_OUT = {
-    'cmdid':'hstAddBatchNbr',
+    'cmd':'hstAddBatchNbr',
     'error_no': 'no_error',
     'cebs_batch_info': {
         'snbatch': 1000,
@@ -276,7 +276,7 @@ TUP_HST_PCT_ADD_BATCH_NBR_OUT = {
 
 #增加普通图像抓取 hstAddPicCap
 TUP_HST_PCT_ADD_PIC_CAP_IN = {
-    'cmdid':'hstAddPicCap',
+    'cmd':'hstAddPicCap',
     'cebs_pvci_eleg': {
         'sid': 2000,
         'confid': 10,
@@ -303,7 +303,7 @@ TUP_HST_PCT_ADD_PIC_CAP_IN = {
     }
 
 TUP_HST_PCT_ADD_PIC_CAP_OUT = {
-    'cmdid':'hstAddPicCap',
+    'cmd':'hstAddPicCap',
     'error_no': 'no_error',
     'cebs_pvci_eleg': {
         'sid': 2000,
@@ -331,16 +331,16 @@ TUP_HST_PCT_ADD_PIC_CAP_OUT = {
 
 #增加荧光图像抓取 hstAddFluCap
 TUP_HST_PCT_ADD_FLU_CAP_IN = {
-    'cmdid':'hstAddFluCap',
+    'cmd':'hstAddFluCap',
     }
 
 TUP_HST_PCT_ADD_FLU_CAP_OUT = {
-    'cmdid':'hstAddFluCap',
+    'cmd':'hstAddFluCap',
     }
 
 #更新普通图像识别 hstUpdatePicCfy
 TUP_HST_PCT_UPDATE_PIC_CFY_IN = {
-    'cmdid':'hstUpdatePicCfy',
+    'cmd':'hstUpdatePicCfy',
     'cebs_pvci_eleg': {
         'sid': 2000,
         'confid': 10,
@@ -367,7 +367,7 @@ TUP_HST_PCT_UPDATE_PIC_CFY_IN = {
     }
 
 TUP_HST_PCT_UPDATE_PIC_CFY_OUT = {
-    'cmdid':'hstUpdatePicCfy',
+    'cmd':'hstUpdatePicCfy',
     'error_no': 'no_error',
     'cebs_pvci_eleg': {
         'sid': 2000,
@@ -396,23 +396,23 @@ TUP_HST_PCT_UPDATE_PIC_CFY_OUT = {
 
 #更新荧光图像识别 hstUpdateFluCfy
 TUP_HST_PCT_UPDATE_FLU_CFY_IN = {
-    'cmdid':'hstUpdateFluCfy',
+    'cmd':'hstUpdateFluCfy',
     }
 
 TUP_HST_PCT_UPDATE_FLU_CFY_OUT = {
-    'cmdid':'hstUpdateFluCfy',
+    'cmd':'hstUpdateFluCfy',
     }
 
 
 #读取普通图片 hstReadPic
 TUP_HST_PCT_READ_PIC_IN = {
-    'cmdid':'hstReadPic',
+    'cmd':'hstReadPic',
     'batch_number': 100,
     'hole_number': 96,
     }
 
 TUP_HST_PCT_READ_PIC_OUT = {
-    'cmdid':'hstReadPic',
+    'cmd':'hstReadPic',
     'error_no': 'no_error',
     'cebs_pvci_eleg': {
         'sid': 2000,
@@ -440,29 +440,29 @@ TUP_HST_PCT_READ_PIC_OUT = {
 
 #读取荧光图片 hstReadFlu
 TUP_HST_PCT_READ_FLU_IN = {
-    'cmdid':'hstReadFlu',
+    'cmd':'hstReadFlu',
     }
 
 TUP_HST_PCT_READ_FLU_OUT = {
-    'cmdid':'hstReadFlu',
+    'cmd':'hstReadFlu',
     }
 
 #更新图片统计 hstUpdateStatis
 TUP_HST_PCT_UPDATE_STATIS_IN = {
-    'cmdid':'hstUpdateStatis',
+    'cmd':'hstUpdateStatis',
     }
 
 TUP_HST_PCT_UPDATE_STATIS_OUT = {
-    'cmdid':'hstUpdateStatis',
+    'cmd':'hstUpdateStatis',
     }
 
 #更新用户日志 hstUpdateUserLog
 TUP_HST_PCT_UPDATE_USER_LOG_IN = {
-    'cmdid':'hstUpdateUserLog',
+    'cmd':'hstUpdateUserLog',
     }
 
 TUP_HST_PCT_UPDATE_USER_LOG_OUT = {
-    'cmdid':'hstUpdateUserLog',
+    'cmd':'hstUpdateUserLog',
     }
 
 
@@ -483,7 +483,7 @@ TUP_HST_PCT_UPDATE_USER_LOG_OUT = {
 
 
 TUP_HST_VCEG_WHITE_PIC_CFY_IN = {
-    'cmdid':'hstWhitePicCfy',
+    'cmd':'hstWhitePicCfy',
     'snbatch': 100,
     'snhole': 96,
     'file_attr':'normal',
@@ -505,7 +505,7 @@ TUP_HST_VCEG_WHITE_PIC_CFY_IN = {
     }
 
 TUP_HST_VCEG_WHITE_PIC_CFY_OUT = {
-    'cmdid':'hstWhitePicCfy',
+    'cmd':'hstWhitePicCfy',
     'snbatch': 100,
     'snhole': 96,
     'file_attr':'normal',
@@ -527,7 +527,7 @@ TUP_HST_VCEG_WHITE_PIC_CFY_OUT = {
     }
 
 TUP_HST_VCEG_WHITE_VIDEO_CFY_IN = {
-    'cmdid':'hstWhitePicCfy',
+    'cmd':'hstWhitePicCfy',
     'snbatch': 100,
     'snhole': 96,
     'file_attr':'normal',
@@ -549,7 +549,7 @@ TUP_HST_VCEG_WHITE_VIDEO_CFY_IN = {
     }
 
 TUP_HST_VCEG_WHITE_VIDEO_CFY_OUT = {
-    'cmdid':'hstWhitePicCfy',
+    'cmd':'hstWhitePicCfy',
     'file-attr':'normal', #'normal', 'flu'
     'batchNbr':123,
     'holeNbr':25,    
