@@ -466,6 +466,116 @@ TUP_HST_PCT_UPDATE_USER_LOG_OUT = {
     }
 
 
+'''
+#CEWORM的图像处理部分，专门用于TUP相关的图像识别及处理算法
+
+预期支持的图像处理及识别算法包括
+ - 白光线虫图像模式识别算法
+ - 荧光线虫图像模式识别算法
+ - 线虫堆叠图像模式识别算法
+ - 细胞计数模式识别算法
+ - 菌落计数模式识别算法
+ - 线虫视频识别算法
+ - 线虫深度学习算法
+ - 菌落深度学习算法
+
+'''
+
+
+TUP_HST_VCEG_WHITE_PIC_CFY_IN = {
+    'cmdid':'hstWhitePicCfy',
+    'snbatch': 100,
+    'snhole': 96,
+    'file_attr':'normal',
+    'name_before':'d:\aa\origin\batch#20#hole#a5_org.jpg',
+    'cap_time':'2019-06-05 20:00:00',
+    'name_after':'d:\aa\mid\batch#20#hole#a5_cfy.jpg',
+    'rec_time':'2019-06-05 20:00:00',
+    'bigalive':20,
+    'bigdead':30,
+    'midalive':40,
+    'middead':20,
+    'smalive':10,
+    'smdead':5,
+    'totalalive':100,
+    'totaldead':50,
+    'totalsum':300,
+    'doneflag':1,
+    'memo': 'This is for user specific comments',
+    }
+
+TUP_HST_VCEG_WHITE_PIC_CFY_OUT = {
+    'cmdid':'hstWhitePicCfy',
+    'snbatch': 100,
+    'snhole': 96,
+    'file_attr':'normal',
+    'name_before':'d:\aa\origin\batch#20#hole#a5_org.jpg',
+    'cap_time':'2019-06-05 20:00:00',
+    'name_after':'d:\aa\mid\batch#20#hole#a5_cfy.jpg',
+    'rec_time':'2019-06-05 20:00:00',
+    'bigalive':20,
+    'bigdead':30,
+    'midalive':40,
+    'middead':20,
+    'smalive':10,
+    'smdead':5,
+    'totalalive':100,
+    'totaldead':50,
+    'totalsum':300,
+    'doneflag':1,
+    'memo': 'This is for user specific comments',
+    }
+
+TUP_HST_VCEG_WHITE_VIDEO_CFY_IN = {
+    'cmdid':'hstWhitePicCfy',
+    'snbatch': 100,
+    'snhole': 96,
+    'file_attr':'normal',
+    'video_before':'d:\aa\origin\batch#20#hole#a5_video_org.mp4',
+    'cap_time':'2019-06-05 20:00:00',
+    'video_before':'d:\aa\origin\batch#20#hole#a5_video_cfy.mp4',
+    'rec_time':'2019-06-05 20:00:00',
+    'bigalive':20,
+    'bigdead':30,
+    'midalive':40,
+    'middead':20,
+    'smalive':10,
+    'smdead':5,
+    'totalalive':100,
+    'totaldead':50,
+    'totalsum':300,
+    'doneflag':1,
+    'memo': 'This is for user specific comments',
+    }
+
+TUP_HST_VCEG_WHITE_VIDEO_CFY_OUT = {
+    'cmdid':'hstWhitePicCfy',
+    'file-attr':'normal', #'normal', 'flu'
+    'batchNbr':123,
+    'holeNbr':25,    
+    'video_before':'d:\aa\origin\batch#20#hole#a5_video_org.mp4',
+    'cap_time':'2019-06-05 20:00:00',
+    'video_before':'d:\aa\origin\batch#20#hole#a5_video_cfy.mp4',
+    'rec_time':'2019-06-05 20:00:00',
+    'cap_time':'2019-06-05 20:00:00',
+    'bigalive':20,
+    'bigdead':30,
+    'midalive':40,
+    'middead':20,
+    'smalive':10,
+    'smdead':5,
+    'totalalive':100,
+    'totaldead':50,
+    'totalsum':300,
+    }
+
+
+
+
+
+
+
+
 
 
 

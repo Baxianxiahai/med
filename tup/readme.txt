@@ -52,10 +52,11 @@ https://blog.csdn.net/zyc121561/article/details/82941056
 
 
 
+//=ZJL, 2019/6/10, CURRENT_SW_DELIVERY R1.70 =>CEBS
+= 新增CEWORM-VCEG图像识别函数接口
+
 //=ZJL, 2019/6/6, CURRENT_SW_DELIVERY R1.69 =>CEBS
 = 做HST测试接口
-
-
 
 //=ZJL, 2019/6/4, CURRENT_SW_DELIVERY R1.68 =>CEBS
 = 重新构造内部数据结构，包括对底层驱动的操作过程，构建了一整套DEVHANDLER类

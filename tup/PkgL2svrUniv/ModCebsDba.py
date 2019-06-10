@@ -26,10 +26,7 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     # file是多条记录，随着拍摄动态生成的，按照批次+孔位序号进行双索引
     #
     '''
-    _TUP_HST_MSG_ACTION_ID_CEBS = 8500
-#     _TUP_HST_MSG_MATRIX = [\
-#         {'restTag':'dba', 'actionId':8500, 'actionName':'cebs_user_sheet', 'comments':''},\
-#         ]
+    __HUIREST_ACTIONID_DBA_CEBS = 8500
     
     def __init__(self):
         '''
@@ -44,12 +41,12 @@ class TupClsCebsDbaItf(TupClsHstapiBasic):
     #
     '''
     def cebs_dba_general_operation(self, hlBuf):
-        inputJson = self.hstapiEncode('dba', self._TUP_HST_MSG_ACTION_ID_CEBS, True, hlBuf)
+        inputJson = self.hstapiEncode('dba', self.__HUIREST_ACTIONID_DBA_CEBS, True, hlBuf)
         res = self.hstCurlPost(inputJson)
         restTag, newActionId, parFlag, parContent = self.hstapiDecode(res)
         if (restTag != 'dba'):
             return -2, ''
-        if (newActionId != self._TUP_HST_MSG_ACTION_ID_CEBS):
+        if (newActionId != self.__HUIREST_ACTIONID_DBA_CEBS):
             return -3, ''
         if (parFlag <= 0):
             return -4, ''
