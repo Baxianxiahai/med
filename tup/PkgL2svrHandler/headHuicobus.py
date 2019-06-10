@@ -86,13 +86,13 @@ TUP_HHD_CMDID_SYS_MENG_COMMAND_REQ      = 0x0A42
 TUP_HHD_CMDID_SYS_MENG_COMMAND_RESP     = 0x0AC2
 TUP_HHD_CMDID_SYS_MENG_COMMAND_TRIG     = 0x0AC3
 
-# THIS IS ONLY FOR INFO
-TUP_HHD_HLC_MESSAGE_HEADER = {
-    'srcNode':'HUICOBUS_MQTT_NODEID_LOCALHOST',
-    'destNode':'HUICOBUS_MQTT_NODEID_LOCALHOST',
-    'srcId':'HUICOBUS_MQTT_CLIENTID_HCUENTRY',
-    'destId':'HUICOBUS_MQTT_CLIENTID_ UIROUTER',
-    'topicId':'HUICOBUS_MQTT_TOPIC_HCU2UIR',
+# THIS IS ONLY FOR INFO: MQTT HEADER TUP TO UIP
+TUP_HHD_HLC_MESSAGE_HEADER_TUP2UIP = {
+    'srcNode':'HUICOBUS_MQTT_NODEID_TUPSVR',
+    'destNode':'HUICOBUS_MQTT_NODEID_TUPSVR',
+    'srcId':'HUICOBUS_MQTT_CLIENTID_TUPENTRY',
+    'destId':'HUICOBUS_MQTT_CLIENTID_TUPROUTER',
+    'topicId':'HUICOBUS_MQTT_TOPIC_TUP2UIP',
     'cmdId':391,
     'cmdValue':2,
     'hlContent': {
@@ -105,6 +105,27 @@ TUP_HHD_HLC_MESSAGE_HEADER = {
         'cmdTestValue4': 0,
         }
     }
+
+#THIS IS ONLY FOR INFO: MQTT HEADER UIP TO TUP
+TUP_HHD_HLC_MESSAGE_HEADER_UIP2TUP = {
+    'srcNode':'HUICOBUS_MQTT_NODEID_TUPSVR',
+    'destNode':'HUICOBUS_MQTT_NODEID_TUPSVR',
+    'srcId':'HUICOBUS_MQTT_CLIENTID_TUPROUTER',
+    'destId':'HUICOBUS_MQTT_CLIENTID_TUPENTRY',
+    'topicId':'HUICOBUS_MQTT_TOPIC_UIP2TUP',
+    'cmdId':391,
+    'cmdValue':2,
+    'hlContent': {
+        'snrId': 12,
+        'validFlag': 1,
+        'errCode': 0,
+        'cmdTestValue1': 1,
+        'cmdTestValue2': 0,
+        'cmdTestValue3': 0,
+        'cmdTestValue4': 0,
+        }
+    }
+
 
 #HLC的消息格式(hlContent)
 #TUP_HHD_CMDID_SYS_GET_CONFIG_REQ        = 0x0A00
