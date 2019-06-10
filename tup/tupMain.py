@@ -54,7 +54,7 @@ PRJ_SET_CEBS        = 1 #基于PC
 PRJ_SET_CEBS_MK2    = 2 #基于VCD+MDC
 PRJ_SET_MPLYAER     = 3 #演示
 PRJ_SET_FAWS        = 4 #秤项
-PRJ_SET_CUR         = PRJ_SET_CEBS_MK2
+PRJ_SET_CUR         = PRJ_SET_CEBS
 ####################################################
 
 

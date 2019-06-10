@@ -96,14 +96,14 @@ def prj_cebs_main_entry():
     HuicobusTaskInst.msg_send_in(initMsg)
     HuicobusTaskInst.tup_dbg_print("Create HUICOBUS task success!")
     #注册上层应用模块
-    regMsg = {}
-    regMsg['mid'] = TUP_MSGID_HUICOBUS_REG_UP_USER
-    regMsg['src'] = TUP_TASK_ID_TUPCONSL
-    regMsg['dst'] = TUP_TASK_ID_HUICOBUS
-    mbuf = {}
-    mbuf['userTaskId'] = TUP_TASK_ID_CTRL_SCHD
-    regMsg['content'] = mbuf
-    HuicobusTaskInst.msg_send_in(regMsg)
+#     regMsg = {}
+#     regMsg['mid'] = TUP_MSGID_HUICOBUS_REG_UP_USER
+#     regMsg['src'] = TUP_TASK_ID_TUPCONSL
+#     regMsg['dst'] = TUP_TASK_ID_HUICOBUS
+#     mbuf = {}
+#     mbuf['userTaskId'] = TUP_TASK_ID_CTRL_SCHD
+#     regMsg['content'] = mbuf
+#     HuicobusTaskInst.msg_send_in(regMsg)
     
     #UI_MAIN
     MainUiTaskInst = ModCebsUiMain.tupTaskUiMain(TUP_GL_CFG);
