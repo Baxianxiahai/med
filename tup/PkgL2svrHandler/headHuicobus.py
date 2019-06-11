@@ -135,7 +135,6 @@ TUP_HHD_HLC_SYS_GET_CONFIG_REQ = {
         'type':'query',
         'lang':'ch',
         'user':'null',
-        'ts':1559381384274,
         },
     'session_id':1559381384274,
     }
