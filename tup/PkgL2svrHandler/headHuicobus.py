@@ -131,7 +131,6 @@ TUP_HHD_HLC_MESSAGE_HEADER_UIP2TUP = {
 #HLC的消息格式(hlContent)
 #TUP_HHD_CMDID_SYS_GET_CONFIG_REQ        = 0x0A00
 TUP_HHD_HLC_SYS_GET_CONFIG_REQ = {
-    'action':'ZH_Medicine_sys_get_config_req',
     'parameter': {
         'type':'query',
         'lang':'ch',
@@ -142,7 +141,6 @@ TUP_HHD_HLC_SYS_GET_CONFIG_REQ = {
 
 #TUP_HHD_CMDID_SYS_GET_CONFIG_RESP       = 0x0A80
 TUP_HHD_HLC_SYS_GET_CONFIG_RESP = {
-    'action':'ZH_Medicine_sys_get_config_resp',
     'parameter': {
         'groups': [
             {
@@ -208,7 +206,6 @@ TUP_HHD_HLC_SYS_GET_CONFIG_RESP = {
 
 # TUP_HHD_CMDID_SYS_SET_CONFIG_REQ        = 0x0A01
 TUP_HHD_HLC_SYS_SET_CONFIG_REQ = {
-    'action':'ZH_Medicine_sys_set_config_req',
     'parameter': {
         'groups': [
             {
@@ -274,7 +271,6 @@ TUP_HHD_HLC_SYS_SET_CONFIG_REQ = {
 
 # TUP_HHD_CMDID_SYS_SET_CONFIG_RESP       = 0x0A81
 TUP_HHD_HLC_SYS_SET_CONFIG_RESP = {
-    'action':'ZH_Medicine_sys_set_config_resp',
     'parameter': {
         'groups': [
             {
@@ -343,12 +339,11 @@ TUP_HHD_HLC_SYS_SET_CONFIG_RESP = {
 # #UI独立通知TUP
 # TUP_HHD_CMDID_SYS_UI_START_REQ          = 0x0A02
 TUP_HHD_HLC_SYS_UI_START_REQ = {
-    'action':'ZH_Medicine_sys_ui_start_req',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_UI_START_RESP         = 0x0A82
 TUP_HHD_HLC_SYS_UI_START_RESP = {
-    'action':'ZH_Medicine_sys_ui_start_req',
     'parameter': {
         'motor_x_status': 1,   #0:NOK, 1:OK
         'motor_y_status': 1,   #0:NOK, 1:OK
@@ -359,7 +354,6 @@ TUP_HHD_HLC_SYS_UI_START_RESP = {
 #TUP更新状态
 #TUP_HHD_CMDID_SYS_STATUS_TRIG           = 0x0A83
 TUP_HHD_CMDID_SYS_STATUS_TRIG = {
-    'action':'ZH_Medicine_sys_ui_status_trig',
     'parameter': {
         'status': 'I like to say something!',
         }    
@@ -369,7 +363,6 @@ TUP_HHD_CMDID_SYS_STATUS_TRIG = {
 #TUP更新错误
 #TUP_HHD_CMDID_SYS_ERROR_TRIG            = 0x0A84
 TUP_HHD_CMDID_SYS_ERROR_TRIG = {
-    'action':'ZH_Medicine_sys_ui_error_trig',
     'parameter': {
         'error': 'I like to say something!',
         }    
@@ -379,107 +372,106 @@ TUP_HHD_CMDID_SYS_ERROR_TRIG = {
 #强制重启TUP软件
 #TUP_HHD_CMDID_SYS_FRC_RESTART_REQ       = 0x0A05
 TUP_HHD_CMDID_SYS_FRC_RESTART_REQ = {
-    'action':'ZH_Medicine_sys_frc_restart_req',
+    'parameter': {}
     }
 
 
 #TUP_HHD_CMDID_SYS_FRC_RESTART_RESP      = 0x0A85
 TUP_HHD_CMDID_SYS_FRC_RESTART_RESP = {
-    'action':'ZH_Medicine_sys_frc_restart_resp',
+    'parameter': {}
     }
 
 
 # #GPAR
 # TUP_HHD_CMDID_SYS_GPAR_START_REQ        = 0x0A10
 TUP_HHD_HLC_SYS_GPAR_START_REQ = {
-    'action':'ZH_Medicine_sys_gpar_start_req',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_GPAR_START_RESP       = 0x0A90
 TUP_HHD_HLC_SYS_GPAR_START_RESP = {
-    'action':'ZH_Medicine_sys_gpar_start_resp',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_GPAR_SAVE_REQ         = 0x0A11
 TUP_HHD_HLC_SYS_GPAR_SAVE_REQ = {
-    'action':'ZH_Medicine_sys_gpar_save_req',
+    'parameter': {}
     }
 # TUP_HHD_CMDID_SYS_GPAR_SAVE_RESP        = 0x0A91
 TUP_HHD_HLC_SYS_GPAR_SAVE_RESP = {
-    'action':'ZH_Medicine_sys_gpar_save_resp',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_GPAR_EXIT_REQ         = 0x0A12
 TUP_HHD_HLC_SYS_GPAR_EXIT_REQ = {
-    'action':'ZH_Medicine_sys_gpar_exit_req',
+    'parameter': {}
     }
 # TUP_HHD_CMDID_SYS_GPAR_EXIT_RESP        = 0x0A92
 TUP_HHD_HLC_SYS_GPAR_EXIT_RESP = {
-    'action':'ZH_Medicine_sys_gpar_exit_resp',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_GPAR_PIC_TRAIN_REQ    = 0x0A13
 TUP_HHD_CMDID_SYS_GPAR_PIC_TRAIN_REQ = {
-    'action':'ZH_Medicine_sys_gpar_pic_train_req',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_GPAR_PIC_TRAIN_RESP   = 0x0A93
 TUP_HHD_CMDID_SYS_GPAR_PIC_TRAIN_RESP = {
-    'action':'ZH_Medicine_sys_gpar_pic_train_resp',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_GPAR_PIC_FCC_REQ      = 0x0A14
 TUP_HHD_CMDID_SYS_GPAR_PIC_FCC_REQ = {
-    'action':'ZH_Medicine_sys_gpar_pic_fcc_req',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_GPAR_PIC_FCC_RESP     = 0x0A94
 TUP_HHD_CMDID_SYS_GPAR_PIC_FCC_RESP = {
-    'action':'ZH_Medicine_sys_gpar_pic_fcc_resp',
+    'parameter': {}
     }
 
 # #CALIB
 # TUP_HHD_CMDID_SYS_CALI_START_REQ        = 0x0A20
 TUP_HHD_HLC_SYS_CALI_START_REQ = {
-    'action':'ZH_Medicine_sys_cali_start_req',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_CALI_START_RESP       = 0x0AA0
 TUP_HHD_HLC_SYS_CALI_START_RESP = {
-    'action':'ZH_Medicine_sys_cali_start_resp',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_CALI_MOMV_DIR_REQ     = 0x0A21
 TUP_HHD_CMDID_SYS_CALI_MOMV_DIR_REQ = {
-    'action':'ZH_Medicine_sys_cali_momv_dir_req',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_CALI_MOMV_DIR_RESP    = 0x0AA1
 TUP_HHD_CMDID_SYS_CALI_MOMV_DIR_RESP = {
-    'action':'ZH_Medicine_sys_cali_momv_dir_resp',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_CALI_EXIT_REQ         = 0x0A22
 TUP_HHD_HLC_SYS_CALI_EXIT_REQ = {
-    'action':'ZH_Medicine_sys_cali_exit_req',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_CALI_EXIT_RESP        = 0x0AA2
 TUP_HHD_HLC_SYS_CALI_EXIT_RESP = {
-    'action':'ZH_Medicine_sys_cali_exit_resp',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_CALI_MOFM_REQ         = 0x0A23
 TUP_HHD_HLC_SYS_CALI_MOFM_REQ = {
-    'action':'ZH_Medicine_sys_motor_move_force_req',
     'parameter': {
         'expected_delta_x_um': 10,
         'expected_delta_y_um': -10,
@@ -489,7 +481,6 @@ TUP_HHD_HLC_SYS_CALI_MOFM_REQ = {
 
 # TUP_HHD_CMDID_SYS_CALI_MOFM_RESP        = 0x0AA3
 TUP_HHD_HLC_SYS_CALI_MOMV_RESP = {
-    'action':'ZH_Medicine_sys_motor_move_force_resp',
     'parameter': {
         'actual_delta_x_um': 10,
         'actual_delta_y_um': -10,
@@ -508,7 +499,6 @@ TUP_HHD_HLC_SYS_CALI_MOMV_RESP = {
 
 # TUP_HHD_CMDID_SYS_CALI_MOMV_START_REQ        = 0x0A24
 TUP_HHD_HLC_SYS_CALI_MOFM_REQ = {
-    'action':'ZH_Medicine_sys_motor_move_force_req',
     'parameter': {
         'expected_x_um': 10,
         'expected_y_um': -10,
@@ -518,7 +508,6 @@ TUP_HHD_HLC_SYS_CALI_MOFM_REQ = {
 
 # TUP_HHD_CMDID_SYS_CALI_MOMV_START_RESP       = 0x0AA4
 TUP_HHD_HLC_SYS_CALI_MOMV_RESP = {
-    'action':'ZH_Medicine_sys_motor_move_resp',
     'parameter': {
         'actual_delta_x_um': 10,
         'actual_delta_y_um': -10,
@@ -537,7 +526,6 @@ TUP_HHD_HLC_SYS_CALI_MOMV_RESP = {
 
 # TUP_HHD_CMDID_SYS_CALI_MOMV_HOLEN_REQ        = 0x0A25
 TUP_HHD_HLC_SYS_CALI_MOMV_REQ = {
-    'action':'ZH_Medicine_sys_motor_move_holen_req',
     'parameter': {
         'target_hole_n': 1,
         }
@@ -545,7 +533,6 @@ TUP_HHD_HLC_SYS_CALI_MOMV_REQ = {
 
 # TUP_HHD_CMDID_SYS_CALI_MOMV_HOLEN_RESP       = 0x0AA5
 TUP_HHD_HLC_SYS_CALI_MOMV_RESP = {
-    'action':'ZH_Medicine_sys_motor_move_holen_resp',
     'parameter': {
         'target_hole_n': 1,
         'actual_delta_x_um': 10,
@@ -565,64 +552,63 @@ TUP_HHD_HLC_SYS_CALI_MOMV_RESP = {
 
 # TUP_HHD_CMDID_SYS_CALI_PILOT_START_REQ       = 0x0A26
 TUP_HHD_HLC_SYS_CALI_PILOT_START_REQ = {
-    'action':'ZH_Medicine_sys_cali_pilot_start_req',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_CALI_PILOT_START_RESP      = 0x0AA6
 TUP_HHD_HLC_SYS_CALI_PILOT_START_RESP = {
-    'action':'ZH_Medicine_sys_cali_pilot_start_resp',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_CALI_PILOT_STOP_REQ        = 0x0A27
 TUP_HHD_HLC_SYS_CALI_PILOT_STOP_REQ = {
-    'action':'ZH_Medicine_sys_cali_pilot_stop_req',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_CALI_PILOT_STOP_RESP       = 0x0AA7
 TUP_HHD_HLC_SYS_CALI_PILOT_STOP_RESP = {
-    'action':'ZH_Medicine_sys_cali_pilot_stop_resp',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_CALI_RIGHT_UP_SET_REQ      = 0x0A28
 TUP_HHD_HLC_SYS_CALI_RIGHT_UP_SET_REQ = {
-    'action':'ZH_Medicine_sys_cali_right_up_set_req',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_CALI_RIGHT_UP_SET_RESP     = 0x0AA8
 TUP_HHD_HLC_SYS_CALI_RIGHT_UP_SET_RESP = {
-    'action':'ZH_Medicine_sys_cali_right_up_set_resp',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_CALI_LEFT_BOT_SET_REQ      = 0x0A29
 TUP_HHD_HLC_SYS_CALI_LEFT_BOT_SET_REQ = {
-    'action':'ZH_Medicine_sys_cali_left_bot_set_req',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_CALI_LEFT_BOT_SET_RESP     = 0x0AA9
 TUP_HHD_HLC_SYS_CALI_LEFT_BOT_SET_RESP = {
-    'action':'ZH_Medicine_sys_cali_left_bot_set_resp',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_CALI_PIC_CAP_HOLEN_REQ     = 0x0A2A
 TUP_HHD_CMDID_SYS_CALI_PIC_CAP_HOLEN_REQ = {
-    'action':'ZH_Medicine_sys_cali_pic_cap_holen_req',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_CALI_PIC_CAP_HOLEN_RESP    = 0x0AAA
 TUP_HHD_CMDID_SYS_CALI_PIC_CAP_HOLEN_RESP = {
-    'action':'ZH_Medicine_sys_cali_pic_cap_holen_resp',
+    'parameter': {}
     }
 
 
 # #CTRL_SCHD
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CAP_START_REQ    = 0x0A30
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_START_REQ = {
-    'action':'ZH_Medicine_sys_ctrl_schd_pic_cap_start_req',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CAP_START_RESP   = 0x0AB0
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_START_RESP = {
-    'action':'ZH_Medicine_sys_ctrl_schd_pic_cap_start_resp',
     'parameter': {
         'batch_number': 10,
         }
@@ -630,7 +616,6 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_START_RESP = {
     
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CAP_TRIG         = 0x0AB1
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_TRIG = {
-    'action':'ZH_Medicine_sys_ctrl_schd_pic_cap_trig',
     'parameter': {
         'batch_number': 10,
         'hole_index_complete':15,
@@ -641,12 +626,11 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_TRIG = {
     
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CAP_STOP_REQ     = 0x0A32
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_STOP_REQ = {
-    'action':'ZH_Medicine_sys_ctrl_schd_pic_cap_stop_req',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CAP_STOP_RESP    = 0x0AB2
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_STOP_RESP = {
-    'action':'ZH_Medicine_sys_ctrl_schd_pic_cap_stop_resp',
     'parameter': {
         'batch_number': 10,
         'hole_index_complete':15,
@@ -657,7 +641,6 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_STOP_RESP = {
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CFY_START_REQ    = 0x0A33
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_START_REQ = {
-    'action':'ZH_Medicine_sys_ctrl_schd_pic_cfy_start_req',
     'parameter': {
         'capture_or_not': 0, #0:NO, 1:YES
         'batch_number': 10, #when capture=no
@@ -668,7 +651,6 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_START_REQ = {
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CFY_START_RESP   = 0x0AB3
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_START_RESP = {
-    'action':'ZH_Medicine_sys_ctrl_schd_pic_cfy_start_resp',
     'parameter': {
         'capture_or_not': 0, #0:NO, 1:YES        
         'batch_number': 10,
@@ -677,7 +659,6 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_START_RESP = {
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CFY_TRIG         = 0x0AB4
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_TRIG = {
-    'action':'ZH_Medicine_sys_ctrl_schd_pic_cfy_trig',
     'parameter': {
         'batch_number': 10,
         'hole_index_complete':15,
@@ -703,12 +684,11 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_TRIG = {
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CFY_STOP_REQ     = 0x0A35
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_STOP_REQ = {
-    'action':'ZH_Medicine_sys_ctrl_schd_pic_cfy_stop_req',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CFY_STOP_RESP    = 0x0AB5
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_STOP_RESP = {
-    'action':'ZH_Medicine_sys_ctrl_schd_pic_cfy_stop_resp',
     'parameter': {
         'batch_number': 10,
         'hole_index_complete':15,
@@ -719,117 +699,134 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_STOP_RESP = {
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_MV_ZERO_REQ         = 0x0A36
 TUP_HHD_HLC_SYS_CTRL_SCHD_MV_ZERO_REQ = {
-    'action':'ZH_Medicine_sys_ctrl_schd_mv_sero_req',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_MV_ZERO_RESP        = 0x0AB6
 TUP_HHD_HLC_SYS_CTRL_SCHD_MV_ZERO_RESP = {
-    'action':'ZH_Medicine_sys_ctrl_schd_mv_sero_resp',
+    'parameter': {}
     }
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CAP_START_REQ    = 0x0A37
 TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CAP_START_REQ = {
-    'action':'ZH_Medicine_sys_ctrl_schd_flu_cap_start_req',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CAP_START_RESP   = 0x0AB7
 TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CAP_START_RESP = {
-    'action':'ZH_Medicine_sys_ctrl_schd_flu_cap_start_resp',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CAP_TRIG         = 0x0AB8
 TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CAP_TRIG = {
-    'action':'ZH_Medicine_sys_ctrl_schd_flu_cap_trig',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CAP_STOP_REQ     = 0x0A39
 TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CAP_STOP_REQ = {
-    'action':'ZH_Medicine_sys_ctrl_schd_flu_cap_stop_req',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CAP_STOP_RESP    = 0x0AB9
 TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CAP_STOP_RESP = {
-    'action':'ZH_Medicine_sys_ctrl_schd_flu_cap_stop_resp',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CFY_START_REQ    = 0x0A3A
 TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CFY_START_REQ = {
-    'action':'ZH_Medicine_sys_ctrl_schd_flu_cfy_start_req',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CFY_START_RESP   = 0x0ABA
 TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CFY_START_RESP = {
-    'action':'ZH_Medicine_sys_ctrl_schd_flu_cfy_start_resp',
+    'parameter': {}
     }
-
 
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CFY_TRIG         = 0x0ABB
 TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CFY_TRIG = {
-    'action':'ZH_Medicine_sys_ctrl_schd_flu_cfy_trig',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CFY_STOP_REQ     = 0x0A3C
 TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CFY_STOP_REQ = {
-    'action':'ZH_Medicine_sys_ctrl_schd_flu_cfy_stop_req',
+    'parameter': {}
     }
 
 
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CFY_STOP_RESP    = 0x0ABC
 TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CFY_STOP_RESP = {
-    'action':'ZH_Medicine_sys_ctrl_schd_flu_cfy_stop_resp',
+    'parameter': {}
     }
 
 
 # #MENG
 # TUP_HHD_CMDID_SYS_MENG_START_REQ        = 0x0A40
 TUP_HHD_CMDID_SYS_MENG_START_REQ = {
-    'action':'ZH_Medicine_sys_meng_start_req',
+    'parameter': {}
     }
 
 
 
 # TUP_HHD_CMDID_SYS_MENG_START_RESP       = 0x0AC0
 TUP_HHD_CMDID_SYS_MENG_START_RESP = {
-    'action':'ZH_Medicine_sys_meng_start_resp',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_MENG_EXIT_REQ         = 0x0A41
 TUP_HHD_CMDID_SYS_MENG_EXIT_REQ = {
-    'action':'ZH_Medicine_sys_meng_exit_req',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_MENG_EXIT_RESP        = 0x0AC1
 TUP_HHD_CMDID_SYS_MENG_EXIT_RESP = {
-    'action':'ZH_Medicine_sys_meng_exit_resp',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_MENG_COMMAND_REQ      = 0x0A42
 TUP_HHD_CMDID_SYS_MENG_COMMAND_REQ = {
-    'action':'ZH_Medicine_sys_meng_command_req',
+    'parameter': {}
     }
 
 
 # TUP_HHD_CMDID_SYS_MENG_COMMAND_RESP     = 0x0AC2
 TUP_HHD_CMDID_SYS_MENG_COMMAND_RESP = {
-    'action':'ZH_Medicine_sys_meng_command_resp',
+    'parameter': {}
     }
+
 
 # TUP_HHD_CMDID_SYS_MENG_COMMAND_TRIG     = 0x0AC3
 TUP_HHD_CMDID_SYS_MENG_COMMAND_TRIG = {
-    'action':'ZH_Medicine_sys_meng_command_trig',
+    'parameter': {}
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
