@@ -278,8 +278,6 @@ TUP_HST_PCT_ADD_BATCH_NBR_OUT = {
 TUP_HST_PCT_ADD_PIC_CAP_IN = {
     'cmd':'hstAddPicCap',
     'cebs_pvci_eleg': {
-        'sid': 2000,
-        'confid': 10,
         'snbatch': 100,
         'snhole': 96,
         'file_attr':'normal',

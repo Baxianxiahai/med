@@ -5,6 +5,7 @@ Created on 2019年5月31日
 '''
 
 #HUICOBUS CMDID公共定义: HEAD DEFINATION
+#cmdid need to cast from HEX to DEC
 #获取参数=》未来将直接通过HST进行读取
 TUP_HHD_CMDID_SYS_GET_CONFIG_REQ        = 0x0A00
 TUP_HHD_CMDID_SYS_GET_CONFIG_RESP       = 0x0A80
@@ -96,7 +97,7 @@ TUP_HHD_HLC_MESSAGE_HEADER_TUP2UIP = {
     'destId':'HUICOBUS_MQTT_CLIENTID_TUPROUTER',
     'topicId':'HUICOBUS_MQTT_TOPIC_TUP2UIP',
     'cmdId':391,
-    'cmdValue':2,
+    'cmdValue':0,
     'hlContent': {
         'snrId': 12,
         'validFlag': 1,
@@ -116,7 +117,7 @@ TUP_HHD_HLC_MESSAGE_HEADER_UIP2TUP = {
     'destId':'HUICOBUS_MQTT_CLIENTID_TUPENTRY',
     'topicId':'HUICOBUS_MQTT_TOPIC_UIP2TUP',
     'cmdId':391,
-    'cmdValue':2,
+    'cmdValue':0,
     'hlContent': {
         'snrId': 12,
         'validFlag': 1,
