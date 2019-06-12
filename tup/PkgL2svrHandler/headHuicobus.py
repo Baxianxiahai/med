@@ -360,7 +360,6 @@ TUP_HHD_CMDID_SYS_STATUS_TRIG = {
     'parameter': {
         'status': 'I like to say something!',
         },
-    'session_id':1559381384274,
     }
 
 
@@ -370,7 +369,6 @@ TUP_HHD_CMDID_SYS_ERROR_TRIG = {
     'parameter': {
         'error': 'I like to say something!',
         },
-    'session_id':1559381384274,
     }
 
 
@@ -452,48 +450,65 @@ TUP_HHD_CMDID_SYS_GPAR_PIC_FCC_RESP = {
     }
 
 # #CALIB
-# TUP_HHD_CMDID_SYS_CALI_START_REQ        = 0x0A20
+# TUP_HHD_CMDID_SYS_CALI_START_REQ        = 0x0A20, ENTER CALIBRATION GUI
 TUP_HHD_HLC_SYS_CALI_START_REQ = {
     'parameter': {},
     'session_id':1559381384274,
     }
 
 
-# TUP_HHD_CMDID_SYS_CALI_START_RESP       = 0x0AA0
+# TUP_HHD_CMDID_SYS_CALI_START_RESP       = 0x0AA0, ENTER CALIBRATION GUI
 TUP_HHD_HLC_SYS_CALI_START_RESP = {
     'parameter': {},
     'session_id':1559381384274,
     }
 
-# TUP_HHD_CMDID_SYS_CALI_MOMV_DIR_REQ     = 0x0A21
+# TUP_HHD_CMDID_SYS_CALI_MOMV_DIR_REQ     = 0x0A21, MOVE BY DISTANCE
 TUP_HHD_CMDID_SYS_CALI_MOMV_DIR_REQ = {
-    'parameter': {},
+    'parameter': {
+        'expected_delta_x_um': 10,
+        'expected_delta_y_um': -10,
+        'expected_delta_z_um': 0,
+        },
     'session_id':1559381384274,
     }
 
 
-# TUP_HHD_CMDID_SYS_CALI_MOMV_DIR_RESP    = 0x0AA1
+# TUP_HHD_CMDID_SYS_CALI_MOMV_DIR_RESP    = 0x0AA1, MOVE BY DISTANCE
 TUP_HHD_CMDID_SYS_CALI_MOMV_DIR_RESP = {
-    'parameter': {},
+    'parameter': {
+        'actual_delta_x_um': 10,
+        'actual_delta_y_um': -10,
+        'actual_delta_z_um': 0,
+        'actual_absolute_x_um': 10,
+        'actual_absolute_y_um': -10,
+        'actual_absolute_z_um': 0,
+        'out_range_detection_positive_x': 0,
+        'out_range_detection_negative_x': 0,
+        'out_range_detection_positive_y': 0,
+        'out_range_detection_negative_y': 0,
+        'out_range_detection_positive_z': 0,
+        'out_range_detection_negative_z': 0,
+        },
     'session_id':1559381384274,
     }
 
 
-# TUP_HHD_CMDID_SYS_CALI_EXIT_REQ         = 0x0A22
+# TUP_HHD_CMDID_SYS_CALI_EXIT_REQ         = 0x0A22, EXIT CALIBRATION GUI
 TUP_HHD_HLC_SYS_CALI_EXIT_REQ = {
     'parameter': {},
     'session_id':1559381384274,
     }
 
 
-# TUP_HHD_CMDID_SYS_CALI_EXIT_RESP        = 0x0AA2
+# TUP_HHD_CMDID_SYS_CALI_EXIT_RESP        = 0x0AA2, EXIT CALIBRATION GUI
 TUP_HHD_HLC_SYS_CALI_EXIT_RESP = {
     'parameter': {},
     'session_id':1559381384274,
     }
 
 
-# TUP_HHD_CMDID_SYS_CALI_MOFM_REQ         = 0x0A23
+# TUP_HHD_CMDID_SYS_CALI_MOFM_REQ         = 0x0A23, FORCE MOVE BY DISTANCE
 TUP_HHD_HLC_SYS_CALI_MOFM_REQ = {
     'parameter': {
         'expected_delta_x_um': 10,
@@ -503,8 +518,8 @@ TUP_HHD_HLC_SYS_CALI_MOFM_REQ = {
     'session_id':1559381384274,
     }
 
-# TUP_HHD_CMDID_SYS_CALI_MOFM_RESP        = 0x0AA3
-TUP_HHD_HLC_SYS_CALI_MOMV_RESP = {
+# TUP_HHD_CMDID_SYS_CALI_MOFM_RESP        = 0x0AA3, FORCE MOVE BY DISTANCE
+TUP_HHD_HLC_SYS_CALI_MOMF_RESP = {
     'parameter': {
         'actual_delta_x_um': 10,
         'actual_delta_y_um': -10,
@@ -522,18 +537,14 @@ TUP_HHD_HLC_SYS_CALI_MOMV_RESP = {
     'session_id':1559381384274,
     }
 
-# TUP_HHD_CMDID_SYS_CALI_MOMV_START_REQ        = 0x0A24
-TUP_HHD_HLC_SYS_CALI_MOFM_REQ = {
-    'parameter': {
-        'expected_x_um': 10,
-        'expected_y_um': -10,
-        'expected_z_um': 0,
-        },
+# TUP_HHD_CMDID_SYS_CALI_MOMV_START_REQ        = 0x0A24, MOVE TO START POINT
+TUP_HHD_HLC_SYS_CALI_MOMV_START_REQ = {
+    'parameter': {},
     'session_id':1559381384274,
     }
 
-# TUP_HHD_CMDID_SYS_CALI_MOMV_START_RESP       = 0x0AA4
-TUP_HHD_HLC_SYS_CALI_MOMV_RESP = {
+# TUP_HHD_CMDID_SYS_CALI_MOMV_START_RESP       = 0x0AA4, MOVE TO START POINT
+TUP_HHD_HLC_SYS_CALI_MOMV_START_RESP = {
     'parameter': {
         'actual_delta_x_um': 10,
         'actual_delta_y_um': -10,
@@ -551,16 +562,16 @@ TUP_HHD_HLC_SYS_CALI_MOMV_RESP = {
     'session_id':1559381384274,
     }
 
-# TUP_HHD_CMDID_SYS_CALI_MOMV_HOLEN_REQ        = 0x0A25
-TUP_HHD_HLC_SYS_CALI_MOMV_REQ = {
+# TUP_HHD_CMDID_SYS_CALI_MOMV_HOLEN_REQ        = 0x0A25, MOVE TO N-th HOLE
+TUP_HHD_HLC_SYS_CALI_MOMV_HOLEN_REQ = {
     'parameter': {
         'target_hole_n': 1,
         },
     'session_id':1559381384274,
     }
 
-# TUP_HHD_CMDID_SYS_CALI_MOMV_HOLEN_RESP       = 0x0AA5
-TUP_HHD_HLC_SYS_CALI_MOMV_RESP = {
+# TUP_HHD_CMDID_SYS_CALI_MOMV_HOLEN_RESP       = 0x0AA5, MOVE TO N-th HOLE
+TUP_HHD_HLC_SYS_CALI_MOMV_HOLEN_RESP = {
     'parameter': {
         'target_hole_n': 1,
         'actual_delta_x_um': 10,
@@ -579,25 +590,25 @@ TUP_HHD_HLC_SYS_CALI_MOMV_RESP = {
     'session_id':1559381384274,
     }
 
-# TUP_HHD_CMDID_SYS_CALI_PILOT_START_REQ       = 0x0A26
+# TUP_HHD_CMDID_SYS_CALI_PILOT_START_REQ       = 0x0A26, POLIT START
 TUP_HHD_HLC_SYS_CALI_PILOT_START_REQ = {
     'parameter': {},
     'session_id':1559381384274,
     }
 
-# TUP_HHD_CMDID_SYS_CALI_PILOT_START_RESP      = 0x0AA6
+# TUP_HHD_CMDID_SYS_CALI_PILOT_START_RESP      = 0x0AA6, POLIT START
 TUP_HHD_HLC_SYS_CALI_PILOT_START_RESP = {
     'parameter': {},
     'session_id':1559381384274,
     }
 
-# TUP_HHD_CMDID_SYS_CALI_PILOT_STOP_REQ        = 0x0A27
+# TUP_HHD_CMDID_SYS_CALI_PILOT_STOP_REQ        = 0x0A27, POLIT STOP
 TUP_HHD_HLC_SYS_CALI_PILOT_STOP_REQ = {
     'parameter': {},
     'session_id':1559381384274,
     }
 
-# TUP_HHD_CMDID_SYS_CALI_PILOT_STOP_RESP       = 0x0AA7
+# TUP_HHD_CMDID_SYS_CALI_PILOT_STOP_RESP       = 0x0AA7, POLIT STOP
 TUP_HHD_HLC_SYS_CALI_PILOT_STOP_RESP = {
     'parameter': {},
     'session_id':1559381384274,
@@ -663,7 +674,6 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_TRIG = {
         'hole_total_nunber_complete':10,
         'hole_list_complete':['1','2','5','6','7','8','9','10','11','12','13','15'],
         },
-    'session_id':1559381384274,
     }
     
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CAP_STOP_REQ     = 0x0A32
@@ -726,7 +736,6 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_TRIG = {
         'cfy_result_totalsum':300,
         'cfy_result_doneflag':1,
         },
-    'session_id':1559381384274,
     }
 
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CFY_STOP_REQ     = 0x0A35
@@ -775,7 +784,6 @@ TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CAP_START_RESP = {
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CAP_TRIG         = 0x0AB8
 TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CAP_TRIG = {
     'parameter': {},
-    'session_id':1559381384274,
     }
 
 
@@ -810,7 +818,6 @@ TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CFY_START_RESP = {
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CFY_TRIG         = 0x0ABB
 TUP_HHD_CMDID_SYS_CTRL_SCHD_FLU_CFY_TRIG = {
     'parameter': {},
-    'session_id':1559381384274,
     }
 
 
@@ -876,11 +883,7 @@ TUP_HHD_CMDID_SYS_MENG_COMMAND_RESP = {
 # TUP_HHD_CMDID_SYS_MENG_COMMAND_TRIG     = 0x0AC3
 TUP_HHD_CMDID_SYS_MENG_COMMAND_TRIG = {
     'parameter': {},
-    'session_id':1559381384274,
     }
-
-
-
 
 
 
