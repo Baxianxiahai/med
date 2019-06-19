@@ -66,10 +66,11 @@ TUP_HST_PCT_GET_CONFIG_OUT = {
         'platetype': '96_STANDARD',
         'calitime': '2010-05-06 20:00:00',
         'uid': 10,
-        'left_bot_x': 100,
-        'left_bot_y': 200,
-        'right_up_x': 300,
-        'right_up_y': 400,
+        'right_up_x': 100,
+        'right_up_y': 200,
+        'left_bot_x': 300,
+        'left_bot_y': 400,
+
         },
     'cebs_object_profile': {
         'objid': 2000,
@@ -77,8 +78,8 @@ TUP_HST_PCT_GET_CONFIG_OUT = {
         'objname': 'XianChong_001',
         'objtype': 5,
         'uid': 10,
-        'dir_origin': 'origin',
-        'dir_middle': 'middle',
+        'dir_origin': 'c:\origin\\',
+        'dir_middle': 'c:\middle\\',
         'memo': 'This is used for a memo record',        
         },
     'cebs_config_eleg': {
@@ -97,12 +98,12 @@ TUP_HST_PCT_GET_CONFIG_OUT = {
         'smlimit': 200, 
         'mblimit': 300, 
         'blimit': 400, 
-        'accspeed': 10,
-        'decspeed': 20,
-        'movespeed': 30, 
-        'zero_spd': 40,
-        'zero_acc': 50,
-        'back_step': 5,
+        'accspeed': 200,
+        'decspeed': 200,
+        'movespeed': 200, 
+        'zero_spd': 200,
+        'zero_acc': 200,
+        'back_step': 300,
         }
     }
 
@@ -113,25 +114,19 @@ TUP_HST_PCT_SET_CONFIG_IN = {
         'plateoption': ['96_STANDARD','48_STANDARD','24_STANDARD','12_STANDARD','6_STANDARD'],
         'platetype': '96_STANDARD',
         'calitime': '2010-05-06 20:00:00',
-        'uid': 10,
         'left_bot_x': 100,
         'left_bot_y': 200,
         'right_up_x': 300,
         'right_up_y': 400,
         },
     'cebs_object_profile': {
-        'objid': 2000,
-        'defaultflag': 0, #1: default, 0, not default
         'objname': 'XianChong_001',
         'objtype': 5,
-        'uid': 10,
-        'dir_origin': 'origin',
-        'dir_middle': 'middle',
+        'dir_origin': 'c:\origin\\',
+        'dir_middle': 'c:\middle\\',
         'memo': 'This is used for a memo record',        
         },
     'cebs_config_eleg': {
-        'confid': 1234, 
-        'objid': 1234,
         'fixpoint': 1, #bool
         'autovideo': 1, #bool
         'autoclfy': 0, #bool
@@ -173,8 +168,8 @@ TUP_HST_PCT_SET_CONFIG_OUT = {
         'objname': 'XianChong_001',
         'objtype': 5,
         'uid': 10,
-        'dir_origin': 'origin',
-        'dir_middle': 'middle',
+        'dir_origin': 'c:\origin\\',
+        'dir_middle': 'c:\middle\\',
         'memo': 'This is used for a memo record',        
         },
     'cebs_config_eleg': {
@@ -200,7 +195,6 @@ TUP_HST_PCT_SET_CONFIG_OUT = {
         'zero_acc': 50,
         'back_step': 5,
         }
-
     }
 
 #读取未识别图像参数 hstUnclfyPar
@@ -226,7 +220,6 @@ TUP_HST_PCT_UPDATE_CALI_PAR_IN = {
         'plateoption': ['96_STANDARD','48_STANDARD','24_STANDARD','12_STANDARD','6_STANDARD'],
         'platetype': '96_STANDARD',
         'calitime': '2010-05-06 20:00:00',
-        'uid': 10,
         'left_bot_x': 100,
         'left_bot_y': 200,
         'right_up_x': 300,
@@ -340,8 +333,6 @@ TUP_HST_PCT_ADD_FLU_CAP_OUT = {
 TUP_HST_PCT_UPDATE_PIC_CFY_IN = {
     'cmd':'hstUpdatePicCfy',
     'cebs_pvci_eleg': {
-        'sid': 2000,
-        'confid': 10,
         'snbatch': 100,
         'snhole': 96,
         'file_attr':'normal',
@@ -368,8 +359,6 @@ TUP_HST_PCT_UPDATE_PIC_CFY_OUT = {
     'cmd':'hstUpdatePicCfy',
     'error_no': 'no_error',
     'cebs_pvci_eleg': {
-        'sid': 2000,
-        'confid': 10,
         'snbatch': 100,
         'snhole': 96,
         'file_attr':'normal',
@@ -413,8 +402,6 @@ TUP_HST_PCT_READ_PIC_OUT = {
     'cmd':'hstReadPic',
     'error_no': 'no_error',
     'cebs_pvci_eleg': {
-        'sid': 2000,
-        'confid': 10,
         'snbatch': 100,
         'snhole': 96,
         'file_attr':2,

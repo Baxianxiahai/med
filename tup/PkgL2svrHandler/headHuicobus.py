@@ -166,9 +166,12 @@ TUP_HHD_HLC_SYS_GET_CONFIG_RESP = {
                 'groupname': '计划任务设置', 
                 'groupkey': 'ctrs_set', 
                 'list': [
-                    {'paraname': '启动计划任务', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': False, 'note': 'Note info'}, 
-                    {'paraname': '定时自动拍照', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
                     {'paraname': '定点拍照', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
+                    {'paraname': '二次曝光设置', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '100', 'min': '', 'value': True, 'note': 'Note info'},
+                    {'paraname': '拍后自动识别', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
+                    {'paraname': '启动即工作', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': False, 'note': 'Note info'}, 
+                    {'paraname': '模糊度门限', 'parakey': 'blulim', 'type': 'int', 'max': '10000', 'min': '0', 'value': 1, 'note': '单位：无'},
+                    {'paraname': '定时自动拍照', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
                     {'paraname': '定时拍照时间间隔', 'parakey': 'pictti', 'type': 'int', 'max': '100', 'min': '0', 'value': 1, 'note': '单位：秒'}]
             }, 
             {
@@ -211,7 +214,7 @@ TUP_HHD_HLC_SYS_GET_CONFIG_RESP = {
                     {'paraname': '增速加速度', 'parakey': 'acc', 'type': 'int', 'max': '', 'min': '', 'value': 10, 'note': '单位：metre every second square second'}, 
                     {'paraname': '减速加速度', 'parakey': 'deacc', 'type': 'int', 'max': '', 'min': '', 'value': 20, 'note': '单位：metre every second square second'}, 
                     {'paraname': '移动速度', 'parakey': 'spd', 'type': 'int', 'max': '', 'min': '', 'value': 20, 'note': '单位：metre every second square second'}, 
-                    {'paraname': '归零速度', 'parakey': 'zero', 'type': 'int', 'max': '', 'min': '', 'value': 200, 'note': '单位：metre every second'}, 
+                    {'paraname': '归零速度', 'parakey': 'zerospd', 'type': 'int', 'max': '', 'min': '', 'value': 200, 'note': '单位：metre every second'}, 
                     {'paraname': '归零减速度', 'parakey': 'zeroacc', 'type': 'int', 'max': '', 'min': '', 'value': 100, 'note': '单位：metre every second'}, 
                     {'paraname': '回退步数', 'parakey': 'backsteps', 'type': 'int', 'max': '', 'min': '', 'value': 22, 'note': '单位：步'}]
             }]
@@ -239,9 +242,12 @@ TUP_HHD_HLC_SYS_SET_CONFIG_REQ = {
                 'groupname': '计划任务设置', 
                 'groupkey': 'ctrs_set', 
                 'list': [
-                    {'paraname': '启动计划任务', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': False, 'note': 'Note info'}, 
-                    {'paraname': '定时自动拍照', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
                     {'paraname': '定点拍照', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
+                    {'paraname': '二次曝光设置', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '100', 'min': '', 'value': True, 'note': 'Note info'},
+                    {'paraname': '拍后自动识别', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
+                    {'paraname': '启动即工作', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': False, 'note': 'Note info'}, 
+                    {'paraname': '模糊度门限', 'parakey': 'blulim', 'type': 'int', 'max': '10000', 'min': '0', 'value': 1, 'note': '单位：无'},
+                    {'paraname': '定时自动拍照', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
                     {'paraname': '定时拍照时间间隔', 'parakey': 'pictti', 'type': 'int', 'max': '100', 'min': '0', 'value': 1, 'note': '单位：秒'}]
             }, 
             {
@@ -284,7 +290,7 @@ TUP_HHD_HLC_SYS_SET_CONFIG_REQ = {
                     {'paraname': '增速加速度', 'parakey': 'acc', 'type': 'int', 'max': '', 'min': '', 'value': 10, 'note': '单位：metre every second square second'}, 
                     {'paraname': '减速加速度', 'parakey': 'deacc', 'type': 'int', 'max': '', 'min': '', 'value': 20, 'note': '单位：metre every second square second'}, 
                     {'paraname': '移动速度', 'parakey': 'spd', 'type': 'int', 'max': '', 'min': '', 'value': 20, 'note': '单位：metre every second square second'}, 
-                    {'paraname': '归零速度', 'parakey': 'zero', 'type': 'int', 'max': '', 'min': '', 'value': 200, 'note': '单位：metre every second'}, 
+                    {'paraname': '归零速度', 'parakey': 'zerospd', 'type': 'int', 'max': '', 'min': '', 'value': 200, 'note': '单位：metre every second'}, 
                     {'paraname': '归零减速度', 'parakey': 'zeroacc', 'type': 'int', 'max': '', 'min': '', 'value': 100, 'note': '单位：metre every second'}, 
                     {'paraname': '回退步数', 'parakey': 'backsteps', 'type': 'int', 'max': '', 'min': '', 'value': 22, 'note': '单位：步'}]
             }]
@@ -312,9 +318,12 @@ TUP_HHD_HLC_SYS_SET_CONFIG_RESP = {
                 'groupname': '计划任务设置', 
                 'groupkey': 'ctrs_set', 
                 'list': [
-                    {'paraname': '启动计划任务', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': False, 'note': 'Note info'}, 
-                    {'paraname': '定时自动拍照', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
                     {'paraname': '定点拍照', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
+                    {'paraname': '二次曝光设置', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '100', 'min': '', 'value': True, 'note': 'Note info'},
+                    {'paraname': '拍后自动识别', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
+                    {'paraname': '启动即工作', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': False, 'note': 'Note info'}, 
+                    {'paraname': '模糊度门限', 'parakey': 'blulim', 'type': 'int', 'max': '10000', 'min': '0', 'value': 1, 'note': '单位：无'},
+                    {'paraname': '定时自动拍照', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
                     {'paraname': '定时拍照时间间隔', 'parakey': 'pictti', 'type': 'int', 'max': '100', 'min': '0', 'value': 1, 'note': '单位：秒'}]
             }, 
             {
@@ -357,7 +366,7 @@ TUP_HHD_HLC_SYS_SET_CONFIG_RESP = {
                     {'paraname': '增速加速度', 'parakey': 'acc', 'type': 'int', 'max': '', 'min': '', 'value': 10, 'note': '单位：metre every second square second'}, 
                     {'paraname': '减速加速度', 'parakey': 'deacc', 'type': 'int', 'max': '', 'min': '', 'value': 20, 'note': '单位：metre every second square second'}, 
                     {'paraname': '移动速度', 'parakey': 'spd', 'type': 'int', 'max': '', 'min': '', 'value': 20, 'note': '单位：metre every second square second'}, 
-                    {'paraname': '归零速度', 'parakey': 'zero', 'type': 'int', 'max': '', 'min': '', 'value': 200, 'note': '单位：metre every second'}, 
+                    {'paraname': '归零速度', 'parakey': 'zerospd', 'type': 'int', 'max': '', 'min': '', 'value': 200, 'note': '单位：metre every second'}, 
                     {'paraname': '归零减速度', 'parakey': 'zeroacc', 'type': 'int', 'max': '', 'min': '', 'value': 100, 'note': '单位：metre every second'}, 
                     {'paraname': '回退步数', 'parakey': 'backsteps', 'type': 'int', 'max': '', 'min': '', 'value': 22, 'note': '单位：步'}]
             }]
@@ -470,7 +479,9 @@ TUP_HHD_HLC_SYS_GPAR_EXIT_RESP = {
 
 # TUP_HHD_CMDID_SYS_GPAR_PIC_TRAIN_REQ    = 0x0A13
 TUP_HHD_HLC_SYS_GPAR_PIC_TRAIN_REQ = {
-    'parameter': {},
+    'parameter': {
+        'filename':'D:\DD\train.jpg',
+        },
     'session_id':1559381384274,
     }
 
@@ -751,6 +762,7 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_STOP_RESP = {
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_START_REQ = {
     'parameter': {
         'capture_or_not': 0, #0:NO, 1:YES
+        'pic_sel_or_not': 1, #0:NO, 1:YES
         'batch_number': 10, #when capture=no
         'hole_number': 4,
         'hole_list': ['1','2','3','96'],
