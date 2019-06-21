@@ -85,25 +85,26 @@ TUP_HST_PCT_GET_CONFIG_OUT = {
     'cebs_config_eleg': {
         'confid': 1234, 
         'objid': 1234,
-        'fixpoint': 1, #bool
-        'autovideo': 1, #bool
-        'autoclfy': 0, #bool
-        'autowork': 0, #bool
-        'blurylimit':500,
-        'addset': 1, #bool
-        'autocap': 1, #bool
-        'autoperiod': 10, #seconds
-        'videotime': 5, #seconds
-        'slimit': 100,
-        'smlimit': 200, 
-        'mblimit': 300, 
-        'blimit': 400, 
-        'accspeed': 200,
-        'decspeed': 200,
-        'movespeed': 200, 
-        'zero_spd': 200,
-        'zero_acc': 200,
-        'back_step': 300,
+        'fixpoint': 1, #bool，定点拍照
+        'autoexpo': 1, #bool，自动曝光
+        'autoclfy': 0, #bool，拍摄后立即识别
+        'autowork': 0, #bool，设备启动后自动干活
+        'blurylimit':500.1, #FLOAT，模糊门限
+        'autocap': 1, #bool，长定时，自动启动批次干活（比如1个小时自动启动任务）(单位second)
+        'autoperiod': 10.2, #seconds，长定时干活周期
+        'addset': 1, #bool，输出图像是否添加识别标定
+        'autovideo': 1, #bool，自动录像
+        'videotime': 5.0, #seconds，录像长度(单位second)
+        'slimit': 100.1,#FLOAT，
+        'smlimit': 200.1, #FLOAT，
+        'mblimit': 300.1, #FLOAT，
+        'blimit': 400.1, #FLOAT，
+        'accspeed': 200.1,#FLOAT，
+        'decspeed': 200.1,#FLOAT，
+        'movespeed': 200.1, #FLOAT，
+        'zero_spd': 200.1,#FLOAT，
+        'zero_acc': 200.1,#FLOAT，
+        'back_step': 300.1,#FLOAT，
         }
     }
 
@@ -124,28 +125,32 @@ TUP_HST_PCT_SET_CONFIG_IN = {
         'objtype': 5,
         'dir_origin': 'c:\origin\\',
         'dir_middle': 'c:\middle\\',
-        'memo': 'This is used for a memo record',        
+        'defaultflag':1,
+        'memo': 'This is used for a memo record',   
         },
     'cebs_config_eleg': {
-        'fixpoint': 1, #bool
-        'autovideo': 1, #bool
-        'autoclfy': 0, #bool
-        'autowork': 0, #bool
-        'blurylimit':500,
-        'addset': 1, #bool
-        'autocap': 1, #bool
-        'autoperiod': 10, #seconds
-        'videotime': 5, #seconds
-        'slimit': 100,
-        'smlimit': 200, 
-        'mblimit': 300, 
-        'blimit': 400, 
-        'accspeed': 10,
-        'decspeed': 20,
-        'movespeed': 30, 
-        'zero_spd': 40,
-        'zero_acc': 50,
-        'back_step': 5,
+        'confid': 1234, 
+        'objid': 1234,
+        'fixpoint': 1, #bool，定点拍照
+        'autoexpo': 1, #bool，自动曝光
+        'autoclfy': 0, #bool，拍摄后立即识别
+        'autowork': 0, #bool，设备启动后自动干活
+        'blurylimit':500.1, #FLOAT，模糊门限
+        'autocap': 1, #bool，长定时，自动启动批次干活（比如1个小时自动启动任务）(单位second)
+        'autoperiod': 10.2, #seconds，长定时干活周期
+        'addset': 1, #bool，输出图像是否添加识别标定
+        'autovideo': 1, #bool，自动录像
+        'videotime': 5.0, #seconds，录像长度(单位second)
+        'slimit': 100.1,#FLOAT，
+        'smlimit': 200.1, #FLOAT，
+        'mblimit': 300.1, #FLOAT，
+        'blimit': 400.1, #FLOAT，
+        'accspeed': 200.1,#FLOAT，
+        'decspeed': 200.1,#FLOAT，
+        'movespeed': 200.1, #FLOAT，
+        'zero_spd': 200.1,#FLOAT，
+        'zero_acc': 200.1,#FLOAT，
+        'back_step': 300.1,#FLOAT，
         }
     }
 
@@ -175,25 +180,26 @@ TUP_HST_PCT_SET_CONFIG_OUT = {
     'cebs_config_eleg': {
         'confid': 1234, 
         'objid': 1234,
-        'fixpoint': 1, #bool
-        'autovideo': 1, #bool
-        'autoclfy': 0, #bool
-        'autowork': 0, #bool
-        'blurylimit':500,
-        'addset': 1, #bool
-        'autocap': 1, #bool
-        'autoperiod': 10, #seconds
-        'videotime': 5, #seconds
-        'slimit': 100,
-        'smlimit': 200, 
-        'mblimit': 300, 
-        'blimit': 400, 
-        'accspeed': 10,
-        'decspeed': 20,
-        'movespeed': 30, 
-        'zero_spd': 40,
-        'zero_acc': 50,
-        'back_step': 5,
+        'fixpoint': 1, #bool，定点拍照
+        'autoexpo': 1, #bool，自动曝光
+        'autoclfy': 0, #bool，拍摄后立即识别
+        'autowork': 0, #bool，设备启动后自动干活
+        'blurylimit':500.1, #FLOAT，模糊门限
+        'autocap': 1, #bool，长定时，自动启动批次干活（比如1个小时自动启动任务）(单位second)
+        'autoperiod': 10.2, #seconds，长定时干活周期
+        'addset': 1, #bool，输出图像是否添加识别标定
+        'autovideo': 1, #bool，自动录像
+        'videotime': 5.0, #seconds，录像长度(单位second)
+        'slimit': 100.1,#FLOAT，
+        'smlimit': 200.1, #FLOAT，
+        'mblimit': 300.1, #FLOAT，
+        'blimit': 400.1, #FLOAT，
+        'accspeed': 200.1,#FLOAT，
+        'decspeed': 200.1,#FLOAT，
+        'movespeed': 200.1, #FLOAT，
+        'zero_spd': 200.1,#FLOAT，
+        'zero_acc': 200.1,#FLOAT，
+        'back_step': 300.1,#FLOAT，
         }
     }
 

@@ -154,51 +154,51 @@ TUP_HHD_HLC_SYS_GET_CONFIG_RESP = {
                 'groupname': '版型选择', 
                 'groupkey': 'hb_selct', 
                 'list': [
-                    {'paraname': '托盘类型', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': '0', 'items': ['96孔板', '48孔板', '24孔板', '12孔板', '6孔板', '384孔板'], 'note': 'choice info'}]
+                    {'paraname': '托盘类型', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': '96_STANDARD', 'items': ['96_STANDARD', '48_STANDARD', '24_STANDARD', '12_STANDARD', '6_STANDARD', '384_STANDARD'], 'note': 'choice info'}]
             }, 
             {
                 'groupname': '全局参数设置',
                 'groupkey': 'glpar_set', 
                 'list': [
-                    {'paraname': '拍照后自动识别', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
+                    {'paraname': '拍照后自动识别', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
              }, 
             {
                 'groupname': '计划任务设置', 
                 'groupkey': 'ctrs_set', 
                 'list': [
-                    {'paraname': '定点拍照', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': '二次曝光设置', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '100', 'min': '', 'value': True, 'note': 'Note info'},
-                    {'paraname': '拍后自动识别', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
-                    {'paraname': '启动即工作', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': False, 'note': 'Note info'}, 
-                    {'paraname': '模糊度门限', 'parakey': 'blulim', 'type': 'int', 'max': '10000', 'min': '0', 'value': 1, 'note': '单位：无'},
-                    {'paraname': '定时自动拍照', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': '定时拍照时间间隔', 'parakey': 'pictti', 'type': 'int', 'max': '100', 'min': '0', 'value': 1, 'note': '单位：秒'}]
+                    {'paraname': '定点拍照', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '二次曝光设置', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '100', 'min': '', 'value': 'True', 'note': 'Note info'},
+                    {'paraname': '拍后自动识别', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'},
+                    {'paraname': '启动即工作', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'False', 'note': 'Note info'}, 
+                    {'paraname': '定时自动拍照', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '模糊度门限', 'parakey': 'blulim', 'type': 'float', 'max': '10000.1', 'min': '0', 'value': '1.1', 'note': '单位：无'},
+                    {'paraname': '定时拍照时间间隔', 'parakey': 'pictti', 'type': 'float', 'max': '100.1', 'min': '0', 'value': '1.1', 'note': '单位：秒'}]
             }, 
             {
                 'groupname': '坐标系设置', 
                 'groupkey': 'axis_set', 
                 'list': [
-                    {'paraname': '左下X坐标', 'parakey': 'leftdown_x', 'type': 'int', 'max': '37000', 'min': '0', 'value': 100, 'note': '单位：UM'}, 
-                    {'paraname': '左下Y坐标',  'parakey': 'leftdown_y', 'type': 'int', 'max': '37000', 'min': '0', 'value': 30, 'note': '单位：UM'}, 
-                    {'paraname': '右上X坐标', 'parakey': 'rightup_x', 'type': 'int', 'max': '157000', 'min': '120000', 'value': 20, 'note': '单位：UM'}, 
-                    {'paraname': '右上Y坐标',  'parakey': 'rightup_y', 'type': 'int', 'max': '127000', 'min': '90000', 'value': 10, 'note': '单位：UM'}]
+                    {'paraname': '左下X坐标', 'parakey': 'leftdown_x', 'type': 'int', 'max': '37000', 'min': '0', 'value': '100', 'note': '单位：UM'}, 
+                    {'paraname': '左下Y坐标',  'parakey': 'leftdown_y', 'type': 'int', 'max': '37000', 'min': '0', 'value': '30', 'note': '单位：UM'},
+                    {'paraname': '右上X坐标', 'parakey': 'rightup_x', 'type': 'int', 'max': '157000', 'min': '12', 'value': '20', 'note': '单位：UM'}, 
+                    {'paraname': '右上Y坐标',  'parakey': 'rightup_y', 'type': 'int', 'max': '127000', 'min': '9', 'value': '10', 'note': '单位：UM'}]
             }, 
             {
                 'groupname': '图片识别参数设置', 
                 'groupkey': 'piccfy_set', 
                 'list': [
-                    {'paraname': '小尺寸门限', 'parakey': 'smalldown_thd', 'type': 'int', 'max': '', 'min': '', 'value': 100, 'note': '单位：像素'}, 
-                    {'paraname': '小-中尺寸门限', 'parakey': 'smallmid_thd', 'type': 'int', 'max': '', 'min': '', 'value': 200, 'note': '单位：像素'}, 
-                    {'paraname': '中-大尺寸门限', 'parakey': 'midbig_thd', 'type': 'int', 'max': '', 'min': '', 'value': 500, 'note': '单位：像素'}, 
-                    {'paraname': '大尺寸门限', 'parakey': 'bigup_thd', 'type': 'int', 'max': '', 'min': '', 'value': 1000, 'note': '单位：像素'}, 
-                    {'paraname': '输出图像叠加标定', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
+                    {'paraname': '小尺寸门限', 'parakey': 'smalldown_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '单位：无'}, 
+                    {'paraname': '小-中尺寸门限', 'parakey': 'smallmid_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '200.1', 'note': '单位：无'}, 
+                    {'paraname': '中-大尺寸门限', 'parakey': 'midbig_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '500.1', 'note': '单位：无'}, 
+                    {'paraname': '大尺寸门限', 'parakey': 'bigup_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '单位：无'}, 
+                    {'paraname': '输出图像叠加标定', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
             }, 
             {
                 'groupname': '视频参数设置', 
                 'groupkey': 'video_set', 
                 'list': [
-                    {'paraname': '开启视频记录', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': '视频时长', 'parakey': 'videotti', 'type': 'int', 'max': '60', 'min': '0', 'value': 3, 'note': '单位：秒'}]
+                    {'paraname': '开启视频记录', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '视频时长', 'parakey': 'videotti', 'type': 'float', 'max': '60.1', 'min': '0.1', 'value': '3.1', 'note': '单位：秒'}]
             }, 
             {
                 'groupname': '图片存储位置', 
@@ -211,12 +211,12 @@ TUP_HHD_HLC_SYS_GET_CONFIG_RESP = {
                 'groupname': '马达参数', 
                 'groupkey': 'moto_set', 
                 'list': [
-                    {'paraname': '增速加速度', 'parakey': 'acc', 'type': 'int', 'max': '', 'min': '', 'value': 10, 'note': '单位：metre every second square second'}, 
-                    {'paraname': '减速加速度', 'parakey': 'deacc', 'type': 'int', 'max': '', 'min': '', 'value': 20, 'note': '单位：metre every second square second'}, 
-                    {'paraname': '移动速度', 'parakey': 'spd', 'type': 'int', 'max': '', 'min': '', 'value': 20, 'note': '单位：metre every second square second'}, 
-                    {'paraname': '归零速度', 'parakey': 'zerospd', 'type': 'int', 'max': '', 'min': '', 'value': 200, 'note': '单位：metre every second'}, 
-                    {'paraname': '归零减速度', 'parakey': 'zeroacc', 'type': 'int', 'max': '', 'min': '', 'value': 100, 'note': '单位：metre every second'}, 
-                    {'paraname': '回退步数', 'parakey': 'backsteps', 'type': 'int', 'max': '', 'min': '', 'value': 22, 'note': '单位：步'}]
+                    {'paraname': '增速加速度', 'parakey': 'acc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '10.9', 'note': '单位：metre every second square second'}, 
+                    {'paraname': '减速加速度', 'parakey': 'deacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '单位：metre every second square second'}, 
+                    {'paraname': '移动速度', 'parakey': 'spd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '单位：metre every second square second'}, 
+                    {'paraname': '归零速度', 'parakey': 'zerospd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '200.9', 'note': '单位：metre every second'}, 
+                    {'paraname': '归零加速度', 'parakey': 'zeroacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '100.9', 'note': '单位：metre every second'}, 
+                    {'paraname': '回退步数', 'parakey': 'backsteps', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '22.9', 'note': '单位：步'}]
             }]
         },
     'session_id':1559381384274,
@@ -230,51 +230,51 @@ TUP_HHD_HLC_SYS_SET_CONFIG_REQ = {
                 'groupname': '版型选择', 
                 'groupkey': 'hb_selct', 
                 'list': [
-                    {'paraname': '托盘类型', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': '0', 'items': ['96孔板', '48孔板', '24孔板', '12孔板', '6孔板', '384孔板'], 'note': 'choice info'}]
+                    {'paraname': '托盘类型', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': '96_STANDARD', 'items': ['96_STANDARD', '48_STANDARD', '24_STANDARD', '12_STANDARD', '6_STANDARD', '384_STANDARD'], 'note': 'choice info'}]
             }, 
             {
                 'groupname': '全局参数设置',
                 'groupkey': 'glpar_set', 
                 'list': [
-                    {'paraname': '拍照后自动识别', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
+                    {'paraname': '拍照后自动识别', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
              }, 
             {
                 'groupname': '计划任务设置', 
                 'groupkey': 'ctrs_set', 
                 'list': [
-                    {'paraname': '定点拍照', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': '二次曝光设置', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '100', 'min': '', 'value': True, 'note': 'Note info'},
-                    {'paraname': '拍后自动识别', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
-                    {'paraname': '启动即工作', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': False, 'note': 'Note info'}, 
-                    {'paraname': '模糊度门限', 'parakey': 'blulim', 'type': 'int', 'max': '10000', 'min': '0', 'value': 1, 'note': '单位：无'},
-                    {'paraname': '定时自动拍照', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': '定时拍照时间间隔', 'parakey': 'pictti', 'type': 'int', 'max': '100', 'min': '0', 'value': 1, 'note': '单位：秒'}]
+                    {'paraname': '定点拍照', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '二次曝光设置', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '100', 'min': '', 'value': 'True', 'note': 'Note info'},
+                    {'paraname': '拍后自动识别', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'},
+                    {'paraname': '启动即工作', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'False', 'note': 'Note info'}, 
+                    {'paraname': '定时自动拍照', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '模糊度门限', 'parakey': 'blulim', 'type': 'float', 'max': '10000.1', 'min': '0', 'value': '1.1', 'note': '单位：无'},
+                    {'paraname': '定时拍照时间间隔', 'parakey': 'pictti', 'type': 'float', 'max': '100.1', 'min': '0', 'value': '1.1', 'note': '单位：秒'}]
             }, 
             {
                 'groupname': '坐标系设置', 
                 'groupkey': 'axis_set', 
                 'list': [
-                    {'paraname': '左下X坐标', 'parakey': 'leftdown_x', 'type': 'int', 'max': '37000', 'min': '0', 'value': 100, 'note': '单位：UM'}, 
-                    {'paraname': '左下Y坐标',  'parakey': 'leftdown_y', 'type': 'int', 'max': '37000', 'min': '0', 'value': 30, 'note': '单位：UM'}, 
-                    {'paraname': '右上X坐标', 'parakey': 'rightup_x', 'type': 'int', 'max': '157000', 'min': '120000', 'value': 20, 'note': '单位：UM'}, 
-                    {'paraname': '右上Y坐标',  'parakey': 'rightup_y', 'type': 'int', 'max': '127000', 'min': '90000', 'value': 10, 'note': '单位：UM'}]
+                    {'paraname': '左下X坐标', 'parakey': 'leftdown_x', 'type': 'int', 'max': '37000', 'min': '0', 'value': '100', 'note': '单位：UM'}, 
+                    {'paraname': '左下Y坐标',  'parakey': 'leftdown_y', 'type': 'int', 'max': '37000', 'min': '0', 'value': '30', 'note': '单位：UM'},
+                    {'paraname': '右上X坐标', 'parakey': 'rightup_x', 'type': 'int', 'max': '157000', 'min': '12', 'value': '20', 'note': '单位：UM'}, 
+                    {'paraname': '右上Y坐标',  'parakey': 'rightup_y', 'type': 'int', 'max': '127000', 'min': '9', 'value': '10', 'note': '单位：UM'}]
             }, 
             {
                 'groupname': '图片识别参数设置', 
                 'groupkey': 'piccfy_set', 
                 'list': [
-                    {'paraname': '小尺寸门限', 'parakey': 'smalldown_thd', 'type': 'int', 'max': '', 'min': '', 'value': 100, 'note': '单位：像素'}, 
-                    {'paraname': '小-中尺寸门限', 'parakey': 'smallmid_thd', 'type': 'int', 'max': '', 'min': '', 'value': 200, 'note': '单位：像素'}, 
-                    {'paraname': '中-大尺寸门限', 'parakey': 'midbig_thd', 'type': 'int', 'max': '', 'min': '', 'value': 500, 'note': '单位：像素'}, 
-                    {'paraname': '大尺寸门限', 'parakey': 'bigup_thd', 'type': 'int', 'max': '', 'min': '', 'value': 1000, 'note': '单位：像素'}, 
-                    {'paraname': '输出图像叠加标定', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
+                    {'paraname': '小尺寸门限', 'parakey': 'smalldown_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '单位：无'}, 
+                    {'paraname': '小-中尺寸门限', 'parakey': 'smallmid_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '200.1', 'note': '单位：无'}, 
+                    {'paraname': '中-大尺寸门限', 'parakey': 'midbig_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '500.1', 'note': '单位：无'}, 
+                    {'paraname': '大尺寸门限', 'parakey': 'bigup_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '单位：无'}, 
+                    {'paraname': '输出图像叠加标定', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
             }, 
             {
                 'groupname': '视频参数设置', 
                 'groupkey': 'video_set', 
                 'list': [
-                    {'paraname': '开启视频记录', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': '视频时长', 'parakey': 'videotti', 'type': 'int', 'max': '60', 'min': '0', 'value': 3, 'note': '单位：秒'}]
+                    {'paraname': '开启视频记录', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '视频时长', 'parakey': 'videotti', 'type': 'float', 'max': '60.1', 'min': '0.1', 'value': '3.1', 'note': '单位：秒'}]
             }, 
             {
                 'groupname': '图片存储位置', 
@@ -287,12 +287,12 @@ TUP_HHD_HLC_SYS_SET_CONFIG_REQ = {
                 'groupname': '马达参数', 
                 'groupkey': 'moto_set', 
                 'list': [
-                    {'paraname': '增速加速度', 'parakey': 'acc', 'type': 'int', 'max': '', 'min': '', 'value': 10, 'note': '单位：metre every second square second'}, 
-                    {'paraname': '减速加速度', 'parakey': 'deacc', 'type': 'int', 'max': '', 'min': '', 'value': 20, 'note': '单位：metre every second square second'}, 
-                    {'paraname': '移动速度', 'parakey': 'spd', 'type': 'int', 'max': '', 'min': '', 'value': 20, 'note': '单位：metre every second square second'}, 
-                    {'paraname': '归零速度', 'parakey': 'zerospd', 'type': 'int', 'max': '', 'min': '', 'value': 200, 'note': '单位：metre every second'}, 
-                    {'paraname': '归零减速度', 'parakey': 'zeroacc', 'type': 'int', 'max': '', 'min': '', 'value': 100, 'note': '单位：metre every second'}, 
-                    {'paraname': '回退步数', 'parakey': 'backsteps', 'type': 'int', 'max': '', 'min': '', 'value': 22, 'note': '单位：步'}]
+                    {'paraname': '增速加速度', 'parakey': 'acc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '10.9', 'note': '单位：metre every second square second'}, 
+                    {'paraname': '减速加速度', 'parakey': 'deacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '单位：metre every second square second'}, 
+                    {'paraname': '移动速度', 'parakey': 'spd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '单位：metre every second square second'}, 
+                    {'paraname': '归零速度', 'parakey': 'zerospd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '200.9', 'note': '单位：metre every second'}, 
+                    {'paraname': '归零加速度', 'parakey': 'zeroacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '100.9', 'note': '单位：metre every second'}, 
+                    {'paraname': '回退步数', 'parakey': 'backsteps', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '22.9', 'note': '单位：步'}]
             }]
         },
     'session_id':1559381384274,
@@ -306,51 +306,51 @@ TUP_HHD_HLC_SYS_SET_CONFIG_RESP = {
                 'groupname': '版型选择', 
                 'groupkey': 'hb_selct', 
                 'list': [
-                    {'paraname': '托盘类型', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': '0', 'items': ['96孔板', '48孔板', '24孔板', '12孔板', '6孔板', '384孔板'], 'note': 'choice info'}]
+                    {'paraname': '托盘类型', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': '96_STANDARD', 'items': ['96_STANDARD', '48_STANDARD', '24_STANDARD', '12_STANDARD', '6_STANDARD', '384_STANDARD'], 'note': 'choice info'}]
             }, 
             {
                 'groupname': '全局参数设置',
                 'groupkey': 'glpar_set', 
                 'list': [
-                    {'paraname': '拍照后自动识别', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
+                    {'paraname': '拍照后自动识别', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
              }, 
             {
                 'groupname': '计划任务设置', 
                 'groupkey': 'ctrs_set', 
                 'list': [
-                    {'paraname': '定点拍照', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': '二次曝光设置', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '100', 'min': '', 'value': True, 'note': 'Note info'},
-                    {'paraname': '拍后自动识别', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
-                    {'paraname': '启动即工作', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': False, 'note': 'Note info'}, 
-                    {'paraname': '模糊度门限', 'parakey': 'blulim', 'type': 'int', 'max': '10000', 'min': '0', 'value': 1, 'note': '单位：无'},
-                    {'paraname': '定时自动拍照', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': '定时拍照时间间隔', 'parakey': 'pictti', 'type': 'int', 'max': '100', 'min': '0', 'value': 1, 'note': '单位：秒'}]
+                    {'paraname': '定点拍照', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '二次曝光设置', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '100', 'min': '', 'value': 'True', 'note': 'Note info'},
+                    {'paraname': '拍后自动识别', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'},
+                    {'paraname': '启动即工作', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'False', 'note': 'Note info'}, 
+                    {'paraname': '定时自动拍照', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '模糊度门限', 'parakey': 'blulim', 'type': 'float', 'max': '10000.1', 'min': '0', 'value': '1.1', 'note': '单位：无'},
+                    {'paraname': '定时拍照时间间隔', 'parakey': 'pictti', 'type': 'float', 'max': '100.1', 'min': '0', 'value': '1.1', 'note': '单位：秒'}]
             }, 
             {
                 'groupname': '坐标系设置', 
                 'groupkey': 'axis_set', 
                 'list': [
-                    {'paraname': '左下X坐标', 'parakey': 'leftdown_x', 'type': 'int', 'max': '37000', 'min': '0', 'value': 100, 'note': '单位：UM'}, 
-                    {'paraname': '左下Y坐标',  'parakey': 'leftdown_y', 'type': 'int', 'max': '37000', 'min': '0', 'value': 30, 'note': '单位：UM'}, 
-                    {'paraname': '右上X坐标', 'parakey': 'rightup_x', 'type': 'int', 'max': '157000', 'min': '120000', 'value': 20, 'note': '单位：UM'}, 
-                    {'paraname': '右上Y坐标',  'parakey': 'rightup_y', 'type': 'int', 'max': '127000', 'min': '90000', 'value': 10, 'note': '单位：UM'}]
+                    {'paraname': '左下X坐标', 'parakey': 'leftdown_x', 'type': 'int', 'max': '37000', 'min': '0', 'value': '100', 'note': '单位：UM'}, 
+                    {'paraname': '左下Y坐标',  'parakey': 'leftdown_y', 'type': 'int', 'max': '37000', 'min': '0', 'value': '30', 'note': '单位：UM'},
+                    {'paraname': '右上X坐标', 'parakey': 'rightup_x', 'type': 'int', 'max': '157000', 'min': '12', 'value': '20', 'note': '单位：UM'}, 
+                    {'paraname': '右上Y坐标',  'parakey': 'rightup_y', 'type': 'int', 'max': '127000', 'min': '9', 'value': '10', 'note': '单位：UM'}]
             }, 
             {
                 'groupname': '图片识别参数设置', 
                 'groupkey': 'piccfy_set', 
                 'list': [
-                    {'paraname': '小尺寸门限', 'parakey': 'smalldown_thd', 'type': 'int', 'max': '', 'min': '', 'value': 100, 'note': '单位：像素'}, 
-                    {'paraname': '小-中尺寸门限', 'parakey': 'smallmid_thd', 'type': 'int', 'max': '', 'min': '', 'value': 200, 'note': '单位：像素'}, 
-                    {'paraname': '中-大尺寸门限', 'parakey': 'midbig_thd', 'type': 'int', 'max': '', 'min': '', 'value': 500, 'note': '单位：像素'}, 
-                    {'paraname': '大尺寸门限', 'parakey': 'bigup_thd', 'type': 'int', 'max': '', 'min': '', 'value': 1000, 'note': '单位：像素'}, 
-                    {'paraname': '输出图像叠加标定', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
+                    {'paraname': '小尺寸门限', 'parakey': 'smalldown_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '单位：无'}, 
+                    {'paraname': '小-中尺寸门限', 'parakey': 'smallmid_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '200.1', 'note': '单位：无'}, 
+                    {'paraname': '中-大尺寸门限', 'parakey': 'midbig_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '500.1', 'note': '单位：无'}, 
+                    {'paraname': '大尺寸门限', 'parakey': 'bigup_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '单位：无'}, 
+                    {'paraname': '输出图像叠加标定', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
             }, 
             {
                 'groupname': '视频参数设置', 
                 'groupkey': 'video_set', 
                 'list': [
-                    {'paraname': '开启视频记录', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': '视频时长', 'parakey': 'videotti', 'type': 'int', 'max': '60', 'min': '0', 'value': 3, 'note': '单位：秒'}]
+                    {'paraname': '开启视频记录', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '视频时长', 'parakey': 'videotti', 'type': 'float', 'max': '60.1', 'min': '0.1', 'value': '3.1', 'note': '单位：秒'}]
             }, 
             {
                 'groupname': '图片存储位置', 
@@ -363,17 +363,16 @@ TUP_HHD_HLC_SYS_SET_CONFIG_RESP = {
                 'groupname': '马达参数', 
                 'groupkey': 'moto_set', 
                 'list': [
-                    {'paraname': '增速加速度', 'parakey': 'acc', 'type': 'int', 'max': '', 'min': '', 'value': 10, 'note': '单位：metre every second square second'}, 
-                    {'paraname': '减速加速度', 'parakey': 'deacc', 'type': 'int', 'max': '', 'min': '', 'value': 20, 'note': '单位：metre every second square second'}, 
-                    {'paraname': '移动速度', 'parakey': 'spd', 'type': 'int', 'max': '', 'min': '', 'value': 20, 'note': '单位：metre every second square second'}, 
-                    {'paraname': '归零速度', 'parakey': 'zerospd', 'type': 'int', 'max': '', 'min': '', 'value': 200, 'note': '单位：metre every second'}, 
-                    {'paraname': '归零减速度', 'parakey': 'zeroacc', 'type': 'int', 'max': '', 'min': '', 'value': 100, 'note': '单位：metre every second'}, 
-                    {'paraname': '回退步数', 'parakey': 'backsteps', 'type': 'int', 'max': '', 'min': '', 'value': 22, 'note': '单位：步'}]
+                    {'paraname': '增速加速度', 'parakey': 'acc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '10.9', 'note': '单位：metre every second square second'}, 
+                    {'paraname': '减速加速度', 'parakey': 'deacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '单位：metre every second square second'}, 
+                    {'paraname': '移动速度', 'parakey': 'spd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '单位：metre every second square second'}, 
+                    {'paraname': '归零速度', 'parakey': 'zerospd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '200.9', 'note': '单位：metre every second'}, 
+                    {'paraname': '归零加速度', 'parakey': 'zeroacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '100.9', 'note': '单位：metre every second'}, 
+                    {'paraname': '回退步数', 'parakey': 'backsteps', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '22.9', 'note': '单位：步'}]
             }]
         },
     'session_id':1559381384274,
     }
-
 
 
 # #UI独立通知TUP
@@ -386,9 +385,9 @@ TUP_HHD_HLC_SYS_UI_START_REQ = {
 # TUP_HHD_CMDID_SYS_UI_START_RESP         = 0x0A82
 TUP_HHD_HLC_SYS_UI_START_RESP = {
     'parameter': {
-        'motor_x_status': 1,   #0:NOK, 1:OK
-        'motor_y_status': 1,   #0:NOK, 1:OK
-        'camera_status': 1,    #0:NOK, 1:OK
+        'motor_x_status': '1',   #0:NOK, 1:OK
+        'motor_y_status': '1',   #0:NOK, 1:OK
+        'camera_status': '1',    #0:NOK, 1:OK
         },
     'session_id':1559381384274,
     }
@@ -521,9 +520,9 @@ TUP_HHD_HLC_SYS_CALI_START_RESP = {
 # TUP_HHD_CMDID_SYS_CALI_MOMV_DIR_REQ     = 0x0A21, MOVE BY DISTANCE
 TUP_HHD_HLC_SYS_CALI_MOMV_DIR_REQ = {
     'parameter': {
-        'expected_delta_x_um': 10,
-        'expected_delta_y_um': -10,
-        'expected_delta_z_um': 0,
+        'expected_delta_x_um': '10',
+        'expected_delta_y_um': '-10',
+        'expected_delta_z_um': '0',
         },
     'session_id':1559381384274,
     }
@@ -532,18 +531,18 @@ TUP_HHD_HLC_SYS_CALI_MOMV_DIR_REQ = {
 # TUP_HHD_CMDID_SYS_CALI_MOMV_DIR_RESP    = 0x0AA1, MOVE BY DISTANCE
 TUP_HHD_HLC_SYS_CALI_MOMV_DIR_RESP = {
     'parameter': {
-        'actual_delta_x_um': 10,
-        'actual_delta_y_um': -10,
-        'actual_delta_z_um': 0,
-        'actual_absolute_x_um': 10,
-        'actual_absolute_y_um': -10,
-        'actual_absolute_z_um': 0,
-        'out_range_detection_positive_x': 0,
-        'out_range_detection_negative_x': 0,
-        'out_range_detection_positive_y': 0,
-        'out_range_detection_negative_y': 0,
-        'out_range_detection_positive_z': 0,
-        'out_range_detection_negative_z': 0,
+        'actual_delta_x_um': '10',
+        'actual_delta_y_um': '-10',
+        'actual_delta_z_um': '0',
+        'actual_absolute_x_um': '10',
+        'actual_absolute_y_um': '-10',
+        'actual_absolute_z_um': '0',
+        'out_range_detection_positive_x': '0',
+        'out_range_detection_negative_x': '0',
+        'out_range_detection_positive_y': '0',
+        'out_range_detection_negative_y': '0',
+        'out_range_detection_positive_z': '0',
+        'out_range_detection_negative_z': '0',
         },
     'session_id':1559381384274,
     }
@@ -568,9 +567,9 @@ TUP_HHD_HLC_SYS_CALI_EXIT_RESP = {
 # TUP_HHD_CMDID_SYS_CALI_MOFM_REQ         = 0x0A23, FORCE MOVE BY DISTANCE
 TUP_HHD_HLC_SYS_CALI_MOFM_REQ = {
     'parameter': {
-        'expected_delta_x_um': 10,
-        'expected_delta_y_um': -10,
-        'expected_delta_z_um': 0,
+        'expected_delta_x_um': '10',
+        'expected_delta_y_um': '-10',
+        'expected_delta_z_um': '0',
         },
     'session_id':1559381384274,
     }
@@ -578,23 +577,23 @@ TUP_HHD_HLC_SYS_CALI_MOFM_REQ = {
 # TUP_HHD_CMDID_SYS_CALI_MOFM_RESP        = 0x0AA3, FORCE MOVE BY DISTANCE
 TUP_HHD_HLC_SYS_CALI_MOFM_RESP = {
     'parameter': {
-        'actual_delta_x_um': 10,
-        'actual_delta_y_um': -10,
-        'actual_delta_z_um': 0,
-        'actual_absolute_x_um': 10,
-        'actual_absolute_y_um': -10,
-        'actual_absolute_z_um': 0,
-        'out_range_detection_positive_x': 0,
-        'out_range_detection_negative_x': 0,
-        'out_range_detection_positive_y': 0,
-        'out_range_detection_negative_y': 0,
-        'out_range_detection_positive_z': 0,
-        'out_range_detection_negative_z': 0,
+        'actual_delta_x_um': '10',
+        'actual_delta_y_um': '-10',
+        'actual_delta_z_um': '0',
+        'actual_absolute_x_um': '10',
+        'actual_absolute_y_um': '-10',
+        'actual_absolute_z_um': '0',
+        'out_range_detection_positive_x': '0',
+        'out_range_detection_negative_x': '0',
+        'out_range_detection_positive_y': '0',
+        'out_range_detection_negative_y': '0',
+        'out_range_detection_positive_z': '0',
+        'out_range_detection_negative_z': '0',
         },
     'session_id':1559381384274,
     }
 
-# TUP_HHD_CMDID_SYS_CALI_MOMV_START_REQ        = 0x0A24, MOVE TO START POINT
+# TUP_HHD_CMDID_SYS_CALI_MOMV_START_REQ        = '0'x0A24, MOVE TO START POINT
 TUP_HHD_HLC_SYS_CALI_MOMV_START_REQ = {
     'parameter': {},
     'session_id':1559381384274,
@@ -603,23 +602,23 @@ TUP_HHD_HLC_SYS_CALI_MOMV_START_REQ = {
 # TUP_HHD_CMDID_SYS_CALI_MOMV_START_RESP       = 0x0AA4, MOVE TO START POINT
 TUP_HHD_HLC_SYS_CALI_MOMV_START_RESP = {
     'parameter': {
-        'actual_delta_x_um': 10,
-        'actual_delta_y_um': -10,
-        'actual_delta_z_um': 0,
-        'actual_absolute_x_um': 10,
-        'actual_absolute_y_um': -10,
-        'actual_absolute_z_um': 0,
-        'out_range_detection_positive_x': 0,
-        'out_range_detection_negative_x': 0,
-        'out_range_detection_positive_y': 0,
-        'out_range_detection_negative_y': 0,
-        'out_range_detection_positive_z': 0,
-        'out_range_detection_negative_z': 0,
+        'actual_delta_x_um': '10',
+        'actual_delta_y_um': '-10',
+        'actual_delta_z_um': '0',
+        'actual_absolute_x_um': '10',
+        'actual_absolute_y_um': '-10',
+        'actual_absolute_z_um': '0',
+        'out_range_detection_positive_x': '0',
+        'out_range_detection_negative_x': '0',
+        'out_range_detection_positive_y': '0',
+        'out_range_detection_negative_y': '0',
+        'out_range_detection_positive_z': '0',
+        'out_range_detection_negative_z': '0',
         },
     'session_id':1559381384274,
     }
 
-# TUP_HHD_CMDID_SYS_CALI_MOMV_HOLEN_REQ        = 0x0A25, MOVE TO N-th HOLE
+# TUP_HHD_CMDID_SYS_CALI_MOMV_HOLEN_REQ'0'       = 0x0A25, MOVE TO N-th HOLE
 TUP_HHD_HLC_SYS_CALI_MOMV_HOLEN_REQ = {
     'parameter': {
         'target_hole_n': 1,
@@ -630,19 +629,19 @@ TUP_HHD_HLC_SYS_CALI_MOMV_HOLEN_REQ = {
 # TUP_HHD_CMDID_SYS_CALI_MOMV_HOLEN_RESP       = 0x0AA5, MOVE TO N-th HOLE
 TUP_HHD_HLC_SYS_CALI_MOMV_HOLEN_RESP = {
     'parameter': {
-        'target_hole_n': 1,
-        'actual_delta_x_um': 10,
-        'actual_delta_y_um': -10,
-        'actual_delta_z_um': 0,
-        'actual_absolute_x_um': 10,
-        'actual_absolute_y_um': -10,
-        'actual_absolute_z_um': 0,        
-        'out_range_detection_positive_x': 0,
-        'out_range_detection_negative_x': 0,
-        'out_range_detection_positive_y': 0,
-        'out_range_detection_negative_y': 0,
-        'out_range_detection_positive_z': 0,
-        'out_range_detection_negative_z': 0,
+        'target_hole_n': '1',
+        'actual_delta_x_um': '10',
+        'actual_delta_y_um': '-10',
+        'actual_delta_z_um': '0',
+        'actual_absolute_x_um': '10',
+        'actual_absolute_y_um': '-10',
+        'actual_absolute_z_um': '0',        
+        'out_range_detection_positive_x': '0',
+        'out_range_detection_negative_x': '0',
+        'out_range_detection_positive_y': '0',
+        'out_range_detection_negative_y': '0',
+        'out_range_detection_positive_z': '0',
+        'out_range_detection_negative_z': '0',
         },
     'session_id':1559381384274,
     }
@@ -726,7 +725,7 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_START_REQ = {
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CAP_START_RESP   = 0x0AB0
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_START_RESP = {
     'parameter': {
-        'batch_number': 10,
+        'batch_number': '10',
         },
     'session_id':1559381384274,
     }
@@ -734,9 +733,9 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_START_RESP = {
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CAP_TRIG         = 0x0AB1
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_TRIG = {
     'parameter': {
-        'batch_number': 10,
-        'hole_index_complete':15,
-        'hole_total_nunber_complete':10,
+        'batch_number': '10',
+        'hole_index_complete':'15',
+        'hole_total_nunber_complete':'10',
         'hole_list_complete':['1','2','5','6','7','8','9','10','11','12','13','15'],
         },
     }
@@ -750,9 +749,9 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_STOP_REQ = {
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CAP_STOP_RESP    = 0x0AB2
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_STOP_RESP = {
     'parameter': {
-        'batch_number': 10,
-        'hole_index_complete':15,
-        'hole_total_nunber_complete':10,
+        'batch_number': '10',
+        'hole_index_complete':'15',
+        'hole_total_nunber_complete':'10',
         'hole_list_complete':['1','2','5','6','7','8','9','10','11','12','13','15'],
         },
     'session_id':1559381384274,
@@ -761,10 +760,10 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CAP_STOP_RESP = {
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CFY_START_REQ    = 0x0A33
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_START_REQ = {
     'parameter': {
-        'capture_or_not': 0, #0:NO, 1:YES
-        'pic_sel_or_not': 1, #0:NO, 1:YES
-        'batch_number': 10, #when capture=no
-        'hole_number': 4,
+        'capture_or_not': '0', #0:NO, 1:YES
+        'pic_sel_or_not': '1', #0:NO, 1:YES
+        'batch_number': '10', #when capture=no
+        'hole_number': '4',
         'hole_list': ['1','2','3','96'],
         },
     'session_id':1559381384274,
@@ -773,8 +772,8 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_START_REQ = {
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CFY_START_RESP   = 0x0AB3
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_START_RESP = {
     'parameter': {
-        'capture_or_not': 0, #0:NO, 1:YES        
-        'batch_number': 10,
+        'capture_or_not': '0', #0:NO, 1:YES        
+        'batch_number': '10',
         },
     'session_id':1559381384274,
     }
@@ -782,25 +781,25 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_START_RESP = {
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CFY_TRIG         = 0x0AB4
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_TRIG = {
     'parameter': {
-        'batch_number': 10,
-        'hole_index_complete':15,
-        'hole_total_nunber_complete':10,
+        'batch_number': '10',
+        'hole_index_complete':'15',
+        'hole_total_nunber_complete':'10',
         'hole_list_complete':['1','2','5','6','7','8','9','10','11','12','13','15'],
-        'cfy_result_file_attr':2,
+        'cfy_result_file_attr':'2',
         'cfy_result_name_before':'batch_20_hole_10_org.jpg',
         'cfy_result_cap_time':'2019-06-05 20:00:00',
         'cfy_result_name_after':'batch_20_hole_10_cfy.jpg',
         'cfy_result_rec_time':'2019-06-05 20:00:00',
-        'cfy_result_bigalive':20,
-        'cfy_result_bigdead':30,
-        'cfy_result_midalive':40,
-        'cfy_result_middead':20,
-        'cfy_result_smalive':10,
-        'cfy_result_smdead':5,
-        'cfy_result_totalalive':100,
-        'cfy_result_totaldead':50,
-        'cfy_result_totalsum':300,
-        'cfy_result_doneflag':1,
+        'cfy_result_bigalive':'20',
+        'cfy_result_bigdead':'30',
+        'cfy_result_midalive':'40',
+        'cfy_result_middead':'20',
+        'cfy_result_smalive':'10',
+        'cfy_result_smdead':'4',
+        'cfy_result_totalalive':'100',
+        'cfy_result_totaldead':'50',
+        'cfy_result_totalsum':'300',
+        'cfy_result_doneflag':'1',
         },
     }
 
@@ -813,9 +812,9 @@ TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_STOP_REQ = {
 # TUP_HHD_CMDID_SYS_CTRL_SCHD_PIC_CFY_STOP_RESP    = 0x0AB5
 TUP_HHD_HLC_SYS_CTRL_SCHD_PIC_CFY_STOP_RESP = {
     'parameter': {
-        'batch_number': 10,
-        'hole_index_complete':15,
-        'hole_total_nunber_complete':10,
+        'batch_number': '10',
+        'hole_index_complete':'15',
+        'hole_total_nunber_complete':'10',
         'hole_list_complete':['1','2','5','6','7','8','9','10','11','12','13','15'],
         },
     'session_id':1559381384274,
@@ -935,15 +934,22 @@ TUP_HHD_HLC_SYS_MENG_EXIT_RESP = {
 # TUP_HHD_CMDID_SYS_MENG_COMMAND_REQ      = 0x0A42
 TUP_HHD_HLC_SYS_MENG_COMMAND_REQ = {
     'parameter': {
-        'cmdid': 1,   # TUP_HHD_HLC_SYS_MENG_COMMAND_REQ cmdid definition
-        'par1': 10,
-        'par2': 0,
-        'par3': 0,
-        'par4': 0,
+        'cmdid': '1',   # TUP_HHD_HLC_SYS_MENG_COMMAND_REQ cmdid definition
+        'par1': '10.1',
+        'par2': '10.1',
+        'par3': '10.1',
+        'par4': '10.1',
         },
     'session_id':1559381384274,
     }
-	
+
+
+
+
+
+
+
+
 # TUP_HHD_HLC_SYS_MENG_COMMAND_REQ cmdid definition
 #    'SPS_SHK_HAND(设备握手)' : 32,
 #    'SPS_SET_WK_MODE(设置工作模式)' : 33,
@@ -970,7 +976,7 @@ TUP_HHD_HLC_SYS_MENG_COMMAND_REQ = {
 # TUP_HHD_CMDID_SYS_MENG_COMMAND_RESP     = 0x0AC2
 TUP_HHD_HLC_SYS_MENG_COMMAND_RESP = {
     'parameter': {
-        'result': 1,
+        'result': '1',
         },
     'session_id':1559381384274,
     }
