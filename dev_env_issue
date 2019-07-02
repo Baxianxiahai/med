@@ -1,0 +1,24 @@
+4-18 
+No module named 'serial.tools'
+su pip3 install pyserial
+mqtt broker 
+wget http://www.emqtt.com/downloads/2318/ubuntu16_04
+    unzip ubuntu16_04
+    cd emqttd/
+    ./bin/emqttd start
+106 path /home/hitpony/emqttd
+
+
+redis install 
+ wget http://download.redis.io/releases/redis-5.0.4.tar.gz
+   88  tar -zxvf redis-5.0.4.tar.gz
+   89  cd redis-5.0.4
+   92  make &&  make install
+   93  cd utils/
+   95  ./install_server.sh 
+  101  redis-cli
+  102  history
+
+
+
+
