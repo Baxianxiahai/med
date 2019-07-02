@@ -1,30 +1,30 @@
 '''
-Created on 2019年5月31日
+Created on 2019骞�5鏈�31鏃�
 
 @author: Administrator
 '''
 
-#HUICOBUS CMDID公共定义: HEAD DEFINATION
+#HUICOBUS CMDID鍏叡瀹氫箟: HEAD DEFINATION
 #cmdid need to cast from HEX to DEC
-#获取参数=》未来将直接通过HST进行读取
+#鑾峰彇鍙傛暟=銆嬫湭鏉ュ皢鐩存帴閫氳繃HST杩涜璇诲彇
 TUP_HHD_CMDID_SYS_GET_CONFIG_REQ        = 0x0A00    #2560
 TUP_HHD_CMDID_SYS_GET_CONFIG_RESP       = 0x0A80    #2688
-#设置参数
+#璁剧疆鍙傛暟
 TUP_HHD_CMDID_SYS_SET_CONFIG_REQ        = 0x0A01    #2561
 TUP_HHD_CMDID_SYS_SET_CONFIG_RESP       = 0x0A81    #2689
-#UI独立通知TUP
+#UI鐙珛閫氱煡TUP
 TUP_HHD_CMDID_SYS_UI_START_REQ          = 0x0A02    #2562
 TUP_HHD_CMDID_SYS_UI_START_RESP         = 0x0A82    #2690
-#TUP更新状态
+#TUP鏇存柊鐘舵��
 TUP_HHD_CMDID_SYS_STATUS_TRIG           = 0x0A83    #2691
-#TUP更新错误
+#TUP鏇存柊閿欒
 TUP_HHD_CMDID_SYS_ERROR_TRIG            = 0x0A84    #2692
-#TUP重启指示
-TUP_HHD_CMDID_SYS_TUP_START_TRIG        = 0x0A85    #2693
-#强制重启TUP软件
+#TUP閲嶅惎鎸囩ず
+TUP_HHD_CMDID_SYS_TUP_START_TRIG        = 0x0A87    #2695
+#寮哄埗閲嶅惎TUP杞欢
 TUP_HHD_CMDID_SYS_FRC_RESTART_REQ       = 0x0A05    #2565
 TUP_HHD_CMDID_SYS_FRC_RESTART_RESP      = 0x0A85    #2693
-#获取TUP系统状态
+#鑾峰彇TUP绯荤粺鐘舵��
 TUP_HHD_CMDID_SYS_TUP_STATUS_REQ        = 0x0A06    #2566
 TUP_HHD_CMDID_SYS_TUP_STATUS_RESP       = 0x0A86    #2694
 
@@ -137,7 +137,7 @@ TUP_HHD_HLC_MESSAGE_HEADER_UIP2TUP = {
         }
     }
 
-#HLC的消息格式(hlContent)
+#HLC鐨勬秷鎭牸寮�(hlContent)
 #TUP_HHD_CMDID_SYS_GET_CONFIG_REQ        = 0x0A00
 TUP_HHD_HLC_SYS_GET_CONFIG_REQ = {
     'parameter': {
@@ -153,72 +153,72 @@ TUP_HHD_HLC_SYS_GET_CONFIG_RESP = {
     'parameter': {
         'groups': [
             {
-                'groupname': '版型选择', 
+                'groupname': '鐗堝瀷閫夋嫨', 
                 'groupkey': 'hb_selct', 
                 'list': [
-                    {'paraname': '托盘类型', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': '96_STANDARD', 'items': ['96_STANDARD', '48_STANDARD', '24_STANDARD', '12_STANDARD', '6_STANDARD', '384_STANDARD'], 'note': 'choice info'}]
+                    {'paraname': '鎵樼洏绫诲瀷', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': '96_STANDARD', 'items': ['96_STANDARD', '48_STANDARD', '24_STANDARD', '12_STANDARD', '6_STANDARD', '384_STANDARD'], 'note': 'choice info'}]
             }, 
             {
-                'groupname': '全局参数设置',
+                'groupname': '鍏ㄥ眬鍙傛暟璁剧疆',
                 'groupkey': 'glpar_set', 
                 'list': [
-                    {'paraname': '拍照后自动识别', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
+                    {'paraname': '鎷嶇収鍚庤嚜鍔ㄨ瘑鍒�', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
              }, 
             {
-                'groupname': '计划任务设置', 
+                'groupname': '璁″垝浠诲姟璁剧疆', 
                 'groupkey': 'ctrs_set', 
                 'list': [
-                    {'paraname': '定点拍照', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
-                    {'paraname': '二次曝光设置', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '100', 'min': '', 'value': 'True', 'note': 'Note info'},
-                    {'paraname': '拍后自动识别', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'},
-                    {'paraname': '启动即工作', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'False', 'note': 'Note info'}, 
-                    {'paraname': '定时自动拍照', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
-                    {'paraname': '模糊度门限', 'parakey': 'blulim', 'type': 'float', 'max': '10000.1', 'min': '0', 'value': '1.1', 'note': '单位：无'},
-                    {'paraname': '定时拍照时间间隔', 'parakey': 'pictti', 'type': 'float', 'max': '100.1', 'min': '0', 'value': '1.1', 'note': '单位：秒'}]
+                    {'paraname': '瀹氱偣鎷嶇収', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '浜屾鏇濆厜璁剧疆', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '100', 'min': '', 'value': 'True', 'note': 'Note info'},
+                    {'paraname': '鎷嶅悗鑷姩璇嗗埆', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'},
+                    {'paraname': '鍚姩鍗冲伐浣�', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'False', 'note': 'Note info'}, 
+                    {'paraname': '瀹氭椂鑷姩鎷嶇収', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '妯＄硦搴﹂棬闄�', 'parakey': 'blulim', 'type': 'float', 'max': '10000.1', 'min': '0', 'value': '1.1', 'note': '鍗曚綅锛氭棤'},
+                    {'paraname': '瀹氭椂鎷嶇収鏃堕棿闂撮殧', 'parakey': 'pictti', 'type': 'float', 'max': '100.1', 'min': '0', 'value': '1.1', 'note': '鍗曚綅锛氱'}]
             }, 
             {
-                'groupname': '坐标系设置', 
+                'groupname': '鍧愭爣绯昏缃�', 
                 'groupkey': 'axis_set', 
                 'list': [
-                    {'paraname': '左下X坐标', 'parakey': 'leftdown_x', 'type': 'int', 'max': '37000', 'min': '0', 'value': '100', 'note': '单位：UM'}, 
-                    {'paraname': '左下Y坐标',  'parakey': 'leftdown_y', 'type': 'int', 'max': '37000', 'min': '0', 'value': '30', 'note': '单位：UM'},
-                    {'paraname': '右上X坐标', 'parakey': 'rightup_x', 'type': 'int', 'max': '157000', 'min': '12', 'value': '20', 'note': '单位：UM'}, 
-                    {'paraname': '右上Y坐标',  'parakey': 'rightup_y', 'type': 'int', 'max': '127000', 'min': '9', 'value': '10', 'note': '单位：UM'}]
+                    {'paraname': '宸︿笅X鍧愭爣', 'parakey': 'leftdown_x', 'type': 'int', 'max': '37000', 'min': '0', 'value': '100', 'note': '鍗曚綅锛歎M'}, 
+                    {'paraname': '宸︿笅Y鍧愭爣',  'parakey': 'leftdown_y', 'type': 'int', 'max': '37000', 'min': '0', 'value': '30', 'note': '鍗曚綅锛歎M'},
+                    {'paraname': '鍙充笂X鍧愭爣', 'parakey': 'rightup_x', 'type': 'int', 'max': '157000', 'min': '12', 'value': '20', 'note': '鍗曚綅锛歎M'}, 
+                    {'paraname': '鍙充笂Y鍧愭爣',  'parakey': 'rightup_y', 'type': 'int', 'max': '127000', 'min': '9', 'value': '10', 'note': '鍗曚綅锛歎M'}]
             }, 
             {
-                'groupname': '图片识别参数设置', 
+                'groupname': '鍥剧墖璇嗗埆鍙傛暟璁剧疆', 
                 'groupkey': 'piccfy_set', 
                 'list': [
-                    {'paraname': '小尺寸门限', 'parakey': 'smalldown_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '单位：无'}, 
-                    {'paraname': '小-中尺寸门限', 'parakey': 'smallmid_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '200.1', 'note': '单位：无'}, 
-                    {'paraname': '中-大尺寸门限', 'parakey': 'midbig_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '500.1', 'note': '单位：无'}, 
-                    {'paraname': '大尺寸门限', 'parakey': 'bigup_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '单位：无'}, 
-                    {'paraname': '输出图像叠加标定', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
+                    {'paraname': '灏忓昂瀵搁棬闄�', 'parakey': 'smalldown_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '鍗曚綅锛氭棤'}, 
+                    {'paraname': '灏�-涓昂瀵搁棬闄�', 'parakey': 'smallmid_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '200.1', 'note': '鍗曚綅锛氭棤'}, 
+                    {'paraname': '涓�-澶у昂瀵搁棬闄�', 'parakey': 'midbig_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '500.1', 'note': '鍗曚綅锛氭棤'}, 
+                    {'paraname': '澶у昂瀵搁棬闄�', 'parakey': 'bigup_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '鍗曚綅锛氭棤'}, 
+                    {'paraname': '杈撳嚭鍥惧儚鍙犲姞鏍囧畾', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
             }, 
             {
-                'groupname': '视频参数设置', 
+                'groupname': '瑙嗛鍙傛暟璁剧疆', 
                 'groupkey': 'video_set', 
                 'list': [
-                    {'paraname': '开启视频记录', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
-                    {'paraname': '视频时长', 'parakey': 'videotti', 'type': 'float', 'max': '60.1', 'min': '0.1', 'value': '3.1', 'note': '单位：秒'}]
+                    {'paraname': '寮�鍚棰戣褰�', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '瑙嗛鏃堕暱', 'parakey': 'videotti', 'type': 'float', 'max': '60.1', 'min': '0.1', 'value': '3.1', 'note': '鍗曚綅锛氱'}]
             }, 
             {
-                'groupname': '图片存储位置', 
+                'groupname': '鍥剧墖瀛樺偍浣嶇疆', 
                 'groupkey': 'picsave_set', 
                 'list': [
-                    {'paraname': '未识别照片目录', 'parakey': 'uncfy', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_origin/', 'note': 'Note info'}, 
-                    {'paraname': '已识别照片目录', 'parakey': 'cfied', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_middle/', 'note': 'Note info'}]
+                    {'paraname': '鏈瘑鍒収鐗囩洰褰�', 'parakey': 'uncfy', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_origin/', 'note': 'Note info'}, 
+                    {'paraname': '宸茶瘑鍒収鐗囩洰褰�', 'parakey': 'cfied', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_middle/', 'note': 'Note info'}]
             },
             {
-                'groupname': '马达参数', 
+                'groupname': '椹揪鍙傛暟', 
                 'groupkey': 'moto_set', 
                 'list': [
-                    {'paraname': '增速加速度', 'parakey': 'acc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '10.9', 'note': '单位：metre every second square second'}, 
-                    {'paraname': '减速加速度', 'parakey': 'deacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '单位：metre every second square second'}, 
-                    {'paraname': '移动速度', 'parakey': 'spd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '单位：metre every second square second'}, 
-                    {'paraname': '归零速度', 'parakey': 'zerospd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '200.9', 'note': '单位：metre every second'}, 
-                    {'paraname': '归零加速度', 'parakey': 'zeroacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '100.9', 'note': '单位：metre every second'}, 
-                    {'paraname': '回退步数', 'parakey': 'backsteps', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '22.9', 'note': '单位：步'}]
+                    {'paraname': '澧為�熷姞閫熷害', 'parakey': 'acc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '10.9', 'note': '鍗曚綅锛歮etre every second square second'}, 
+                    {'paraname': '鍑忛�熷姞閫熷害', 'parakey': 'deacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '鍗曚綅锛歮etre every second square second'}, 
+                    {'paraname': '绉诲姩閫熷害', 'parakey': 'spd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '鍗曚綅锛歮etre every second square second'}, 
+                    {'paraname': '褰掗浂閫熷害', 'parakey': 'zerospd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '200.9', 'note': '鍗曚綅锛歮etre every second'}, 
+                    {'paraname': '褰掗浂鍔犻�熷害', 'parakey': 'zeroacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '100.9', 'note': '鍗曚綅锛歮etre every second'}, 
+                    {'paraname': '鍥為��姝ユ暟', 'parakey': 'backsteps', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '22.9', 'note': '鍗曚綅锛氭'}]
             }]
         },
     'session_id':1559381384274,
@@ -229,72 +229,72 @@ TUP_HHD_HLC_SYS_SET_CONFIG_REQ = {
     'parameter': {
         'groups': [
             {
-                'groupname': '版型选择', 
+                'groupname': '鐗堝瀷閫夋嫨', 
                 'groupkey': 'hb_selct', 
                 'list': [
-                    {'paraname': '托盘类型', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': '96_STANDARD', 'items': ['96_STANDARD', '48_STANDARD', '24_STANDARD', '12_STANDARD', '6_STANDARD', '384_STANDARD'], 'note': 'choice info'}]
+                    {'paraname': '鎵樼洏绫诲瀷', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': '96_STANDARD', 'items': ['96_STANDARD', '48_STANDARD', '24_STANDARD', '12_STANDARD', '6_STANDARD', '384_STANDARD'], 'note': 'choice info'}]
             }, 
             {
-                'groupname': '全局参数设置',
+                'groupname': '鍏ㄥ眬鍙傛暟璁剧疆',
                 'groupkey': 'glpar_set', 
                 'list': [
-                    {'paraname': '拍照后自动识别', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
+                    {'paraname': '鎷嶇収鍚庤嚜鍔ㄨ瘑鍒�', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
              }, 
             {
-                'groupname': '计划任务设置', 
+                'groupname': '璁″垝浠诲姟璁剧疆', 
                 'groupkey': 'ctrs_set', 
                 'list': [
-                    {'paraname': '定点拍照', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
-                    {'paraname': '二次曝光设置', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '100', 'min': '', 'value': 'True', 'note': 'Note info'},
-                    {'paraname': '拍后自动识别', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'},
-                    {'paraname': '启动即工作', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'False', 'note': 'Note info'}, 
-                    {'paraname': '定时自动拍照', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
-                    {'paraname': '模糊度门限', 'parakey': 'blulim', 'type': 'float', 'max': '10000.1', 'min': '0', 'value': '1.1', 'note': '单位：无'},
-                    {'paraname': '定时拍照时间间隔', 'parakey': 'pictti', 'type': 'float', 'max': '100.1', 'min': '0', 'value': '1.1', 'note': '单位：秒'}]
+                    {'paraname': '瀹氱偣鎷嶇収', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '浜屾鏇濆厜璁剧疆', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '100', 'min': '', 'value': 'True', 'note': 'Note info'},
+                    {'paraname': '鎷嶅悗鑷姩璇嗗埆', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'},
+                    {'paraname': '鍚姩鍗冲伐浣�', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'False', 'note': 'Note info'}, 
+                    {'paraname': '瀹氭椂鑷姩鎷嶇収', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '妯＄硦搴﹂棬闄�', 'parakey': 'blulim', 'type': 'float', 'max': '10000.1', 'min': '0', 'value': '1.1', 'note': '鍗曚綅锛氭棤'},
+                    {'paraname': '瀹氭椂鎷嶇収鏃堕棿闂撮殧', 'parakey': 'pictti', 'type': 'float', 'max': '100.1', 'min': '0', 'value': '1.1', 'note': '鍗曚綅锛氱'}]
             }, 
             {
-                'groupname': '坐标系设置', 
+                'groupname': '鍧愭爣绯昏缃�', 
                 'groupkey': 'axis_set', 
                 'list': [
-                    {'paraname': '左下X坐标', 'parakey': 'leftdown_x', 'type': 'int', 'max': '37000', 'min': '0', 'value': '100', 'note': '单位：UM'}, 
-                    {'paraname': '左下Y坐标',  'parakey': 'leftdown_y', 'type': 'int', 'max': '37000', 'min': '0', 'value': '30', 'note': '单位：UM'},
-                    {'paraname': '右上X坐标', 'parakey': 'rightup_x', 'type': 'int', 'max': '157000', 'min': '12', 'value': '20', 'note': '单位：UM'}, 
-                    {'paraname': '右上Y坐标',  'parakey': 'rightup_y', 'type': 'int', 'max': '127000', 'min': '9', 'value': '10', 'note': '单位：UM'}]
+                    {'paraname': '宸︿笅X鍧愭爣', 'parakey': 'leftdown_x', 'type': 'int', 'max': '37000', 'min': '0', 'value': '100', 'note': '鍗曚綅锛歎M'}, 
+                    {'paraname': '宸︿笅Y鍧愭爣',  'parakey': 'leftdown_y', 'type': 'int', 'max': '37000', 'min': '0', 'value': '30', 'note': '鍗曚綅锛歎M'},
+                    {'paraname': '鍙充笂X鍧愭爣', 'parakey': 'rightup_x', 'type': 'int', 'max': '157000', 'min': '12', 'value': '20', 'note': '鍗曚綅锛歎M'}, 
+                    {'paraname': '鍙充笂Y鍧愭爣',  'parakey': 'rightup_y', 'type': 'int', 'max': '127000', 'min': '9', 'value': '10', 'note': '鍗曚綅锛歎M'}]
             }, 
             {
-                'groupname': '图片识别参数设置', 
+                'groupname': '鍥剧墖璇嗗埆鍙傛暟璁剧疆', 
                 'groupkey': 'piccfy_set', 
                 'list': [
-                    {'paraname': '小尺寸门限', 'parakey': 'smalldown_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '单位：无'}, 
-                    {'paraname': '小-中尺寸门限', 'parakey': 'smallmid_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '200.1', 'note': '单位：无'}, 
-                    {'paraname': '中-大尺寸门限', 'parakey': 'midbig_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '500.1', 'note': '单位：无'}, 
-                    {'paraname': '大尺寸门限', 'parakey': 'bigup_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '单位：无'}, 
-                    {'paraname': '输出图像叠加标定', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
+                    {'paraname': '灏忓昂瀵搁棬闄�', 'parakey': 'smalldown_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '鍗曚綅锛氭棤'}, 
+                    {'paraname': '灏�-涓昂瀵搁棬闄�', 'parakey': 'smallmid_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '200.1', 'note': '鍗曚綅锛氭棤'}, 
+                    {'paraname': '涓�-澶у昂瀵搁棬闄�', 'parakey': 'midbig_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '500.1', 'note': '鍗曚綅锛氭棤'}, 
+                    {'paraname': '澶у昂瀵搁棬闄�', 'parakey': 'bigup_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '鍗曚綅锛氭棤'}, 
+                    {'paraname': '杈撳嚭鍥惧儚鍙犲姞鏍囧畾', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
             }, 
             {
-                'groupname': '视频参数设置', 
+                'groupname': '瑙嗛鍙傛暟璁剧疆', 
                 'groupkey': 'video_set', 
                 'list': [
-                    {'paraname': '开启视频记录', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
-                    {'paraname': '视频时长', 'parakey': 'videotti', 'type': 'float', 'max': '60.1', 'min': '0.1', 'value': '3.1', 'note': '单位：秒'}]
+                    {'paraname': '寮�鍚棰戣褰�', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '瑙嗛鏃堕暱', 'parakey': 'videotti', 'type': 'float', 'max': '60.1', 'min': '0.1', 'value': '3.1', 'note': '鍗曚綅锛氱'}]
             }, 
             {
-                'groupname': '图片存储位置', 
+                'groupname': '鍥剧墖瀛樺偍浣嶇疆', 
                 'groupkey': 'picsave_set', 
                 'list': [
-                    {'paraname': '未识别照片目录', 'parakey': 'uncfy', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_origin/', 'note': 'Note info'}, 
-                    {'paraname': '已识别照片目录', 'parakey': 'cfied', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_middle/', 'note': 'Note info'}]
+                    {'paraname': '鏈瘑鍒収鐗囩洰褰�', 'parakey': 'uncfy', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_origin/', 'note': 'Note info'}, 
+                    {'paraname': '宸茶瘑鍒収鐗囩洰褰�', 'parakey': 'cfied', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_middle/', 'note': 'Note info'}]
             },
             {
-                'groupname': '马达参数', 
+                'groupname': '椹揪鍙傛暟', 
                 'groupkey': 'moto_set', 
                 'list': [
-                    {'paraname': '增速加速度', 'parakey': 'acc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '10.9', 'note': '单位：metre every second square second'}, 
-                    {'paraname': '减速加速度', 'parakey': 'deacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '单位：metre every second square second'}, 
-                    {'paraname': '移动速度', 'parakey': 'spd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '单位：metre every second square second'}, 
-                    {'paraname': '归零速度', 'parakey': 'zerospd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '200.9', 'note': '单位：metre every second'}, 
-                    {'paraname': '归零加速度', 'parakey': 'zeroacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '100.9', 'note': '单位：metre every second'}, 
-                    {'paraname': '回退步数', 'parakey': 'backsteps', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '22.9', 'note': '单位：步'}]
+                    {'paraname': '澧為�熷姞閫熷害', 'parakey': 'acc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '10.9', 'note': '鍗曚綅锛歮etre every second square second'}, 
+                    {'paraname': '鍑忛�熷姞閫熷害', 'parakey': 'deacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '鍗曚綅锛歮etre every second square second'}, 
+                    {'paraname': '绉诲姩閫熷害', 'parakey': 'spd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '鍗曚綅锛歮etre every second square second'}, 
+                    {'paraname': '褰掗浂閫熷害', 'parakey': 'zerospd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '200.9', 'note': '鍗曚綅锛歮etre every second'}, 
+                    {'paraname': '褰掗浂鍔犻�熷害', 'parakey': 'zeroacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '100.9', 'note': '鍗曚綅锛歮etre every second'}, 
+                    {'paraname': '鍥為��姝ユ暟', 'parakey': 'backsteps', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '22.9', 'note': '鍗曚綅锛氭'}]
             }]
         },
     'session_id':1559381384274,
@@ -305,79 +305,79 @@ TUP_HHD_HLC_SYS_SET_CONFIG_RESP = {
     'parameter': {
         'groups': [
             {
-                'groupname': '版型选择', 
+                'groupname': '鐗堝瀷閫夋嫨', 
                 'groupkey': 'hb_selct', 
                 'list': [
-                    {'paraname': '托盘类型', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': '96_STANDARD', 'items': ['96_STANDARD', '48_STANDARD', '24_STANDARD', '12_STANDARD', '6_STANDARD', '384_STANDARD'], 'note': 'choice info'}]
+                    {'paraname': '鎵樼洏绫诲瀷', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': '96_STANDARD', 'items': ['96_STANDARD', '48_STANDARD', '24_STANDARD', '12_STANDARD', '6_STANDARD', '384_STANDARD'], 'note': 'choice info'}]
             }, 
             {
-                'groupname': '全局参数设置',
+                'groupname': '鍏ㄥ眬鍙傛暟璁剧疆',
                 'groupkey': 'glpar_set', 
                 'list': [
-                    {'paraname': '拍照后自动识别', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
+                    {'paraname': '鎷嶇収鍚庤嚜鍔ㄨ瘑鍒�', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
              }, 
             {
-                'groupname': '计划任务设置', 
+                'groupname': '璁″垝浠诲姟璁剧疆', 
                 'groupkey': 'ctrs_set', 
                 'list': [
-                    {'paraname': '定点拍照', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
-                    {'paraname': '二次曝光设置', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '100', 'min': '', 'value': 'True', 'note': 'Note info'},
-                    {'paraname': '拍后自动识别', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'},
-                    {'paraname': '启动即工作', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'False', 'note': 'Note info'}, 
-                    {'paraname': '定时自动拍照', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
-                    {'paraname': '模糊度门限', 'parakey': 'blulim', 'type': 'float', 'max': '10000.1', 'min': '0', 'value': '1.1', 'note': '单位：无'},
-                    {'paraname': '定时拍照时间间隔', 'parakey': 'pictti', 'type': 'float', 'max': '100.1', 'min': '0', 'value': '1.1', 'note': '单位：秒'}]
+                    {'paraname': '瀹氱偣鎷嶇収', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '浜屾鏇濆厜璁剧疆', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '100', 'min': '', 'value': 'True', 'note': 'Note info'},
+                    {'paraname': '鎷嶅悗鑷姩璇嗗埆', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'},
+                    {'paraname': '鍚姩鍗冲伐浣�', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'False', 'note': 'Note info'}, 
+                    {'paraname': '瀹氭椂鑷姩鎷嶇収', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '妯＄硦搴﹂棬闄�', 'parakey': 'blulim', 'type': 'float', 'max': '10000.1', 'min': '0', 'value': '1.1', 'note': '鍗曚綅锛氭棤'},
+                    {'paraname': '瀹氭椂鎷嶇収鏃堕棿闂撮殧', 'parakey': 'pictti', 'type': 'float', 'max': '100.1', 'min': '0', 'value': '1.1', 'note': '鍗曚綅锛氱'}]
             }, 
             {
-                'groupname': '坐标系设置', 
+                'groupname': '鍧愭爣绯昏缃�', 
                 'groupkey': 'axis_set', 
                 'list': [
-                    {'paraname': '左下X坐标', 'parakey': 'leftdown_x', 'type': 'int', 'max': '37000', 'min': '0', 'value': '100', 'note': '单位：UM'}, 
-                    {'paraname': '左下Y坐标',  'parakey': 'leftdown_y', 'type': 'int', 'max': '37000', 'min': '0', 'value': '30', 'note': '单位：UM'},
-                    {'paraname': '右上X坐标', 'parakey': 'rightup_x', 'type': 'int', 'max': '157000', 'min': '12', 'value': '20', 'note': '单位：UM'}, 
-                    {'paraname': '右上Y坐标',  'parakey': 'rightup_y', 'type': 'int', 'max': '127000', 'min': '9', 'value': '10', 'note': '单位：UM'}]
+                    {'paraname': '宸︿笅X鍧愭爣', 'parakey': 'leftdown_x', 'type': 'int', 'max': '37000', 'min': '0', 'value': '100', 'note': '鍗曚綅锛歎M'}, 
+                    {'paraname': '宸︿笅Y鍧愭爣',  'parakey': 'leftdown_y', 'type': 'int', 'max': '37000', 'min': '0', 'value': '30', 'note': '鍗曚綅锛歎M'},
+                    {'paraname': '鍙充笂X鍧愭爣', 'parakey': 'rightup_x', 'type': 'int', 'max': '157000', 'min': '12', 'value': '20', 'note': '鍗曚綅锛歎M'}, 
+                    {'paraname': '鍙充笂Y鍧愭爣',  'parakey': 'rightup_y', 'type': 'int', 'max': '127000', 'min': '9', 'value': '10', 'note': '鍗曚綅锛歎M'}]
             }, 
             {
-                'groupname': '图片识别参数设置', 
+                'groupname': '鍥剧墖璇嗗埆鍙傛暟璁剧疆', 
                 'groupkey': 'piccfy_set', 
                 'list': [
-                    {'paraname': '小尺寸门限', 'parakey': 'smalldown_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '单位：无'}, 
-                    {'paraname': '小-中尺寸门限', 'parakey': 'smallmid_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '200.1', 'note': '单位：无'}, 
-                    {'paraname': '中-大尺寸门限', 'parakey': 'midbig_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '500.1', 'note': '单位：无'}, 
-                    {'paraname': '大尺寸门限', 'parakey': 'bigup_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '单位：无'}, 
-                    {'paraname': '输出图像叠加标定', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
+                    {'paraname': '灏忓昂瀵搁棬闄�', 'parakey': 'smalldown_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '鍗曚綅锛氭棤'}, 
+                    {'paraname': '灏�-涓昂瀵搁棬闄�', 'parakey': 'smallmid_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '200.1', 'note': '鍗曚綅锛氭棤'}, 
+                    {'paraname': '涓�-澶у昂瀵搁棬闄�', 'parakey': 'midbig_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '500.1', 'note': '鍗曚綅锛氭棤'}, 
+                    {'paraname': '澶у昂瀵搁棬闄�', 'parakey': 'bigup_thd', 'type': 'float', 'max': '999.9', 'min': '0.1', 'value': '100.1', 'note': '鍗曚綅锛氭棤'}, 
+                    {'paraname': '杈撳嚭鍥惧儚鍙犲姞鏍囧畾', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}]
             }, 
             {
-                'groupname': '视频参数设置', 
+                'groupname': '瑙嗛鍙傛暟璁剧疆', 
                 'groupkey': 'video_set', 
                 'list': [
-                    {'paraname': '开启视频记录', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
-                    {'paraname': '视频时长', 'parakey': 'videotti', 'type': 'float', 'max': '60.1', 'min': '0.1', 'value': '3.1', 'note': '单位：秒'}]
+                    {'paraname': '寮�鍚棰戣褰�', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': 'True', 'note': 'Note info'}, 
+                    {'paraname': '瑙嗛鏃堕暱', 'parakey': 'videotti', 'type': 'float', 'max': '60.1', 'min': '0.1', 'value': '3.1', 'note': '鍗曚綅锛氱'}]
             }, 
             {
-                'groupname': '图片存储位置', 
+                'groupname': '鍥剧墖瀛樺偍浣嶇疆', 
                 'groupkey': 'picsave_set', 
                 'list': [
-                    {'paraname': '未识别照片目录', 'parakey': 'uncfy', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_origin/', 'note': 'Note info'}, 
-                    {'paraname': '已识别照片目录', 'parakey': 'cfied', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_middle/', 'note': 'Note info'}]
+                    {'paraname': '鏈瘑鍒収鐗囩洰褰�', 'parakey': 'uncfy', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_origin/', 'note': 'Note info'}, 
+                    {'paraname': '宸茶瘑鍒収鐗囩洰褰�', 'parakey': 'cfied', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_middle/', 'note': 'Note info'}]
             },
             {
-                'groupname': '马达参数', 
+                'groupname': '椹揪鍙傛暟', 
                 'groupkey': 'moto_set', 
                 'list': [
-                    {'paraname': '增速加速度', 'parakey': 'acc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '10.9', 'note': '单位：metre every second square second'}, 
-                    {'paraname': '减速加速度', 'parakey': 'deacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '单位：metre every second square second'}, 
-                    {'paraname': '移动速度', 'parakey': 'spd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '单位：metre every second square second'}, 
-                    {'paraname': '归零速度', 'parakey': 'zerospd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '200.9', 'note': '单位：metre every second'}, 
-                    {'paraname': '归零加速度', 'parakey': 'zeroacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '100.9', 'note': '单位：metre every second'}, 
-                    {'paraname': '回退步数', 'parakey': 'backsteps', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '22.9', 'note': '单位：步'}]
+                    {'paraname': '澧為�熷姞閫熷害', 'parakey': 'acc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '10.9', 'note': '鍗曚綅锛歮etre every second square second'}, 
+                    {'paraname': '鍑忛�熷姞閫熷害', 'parakey': 'deacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '鍗曚綅锛歮etre every second square second'}, 
+                    {'paraname': '绉诲姩閫熷害', 'parakey': 'spd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '20.9', 'note': '鍗曚綅锛歮etre every second square second'}, 
+                    {'paraname': '褰掗浂閫熷害', 'parakey': 'zerospd', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '200.9', 'note': '鍗曚綅锛歮etre every second'}, 
+                    {'paraname': '褰掗浂鍔犻�熷害', 'parakey': 'zeroacc', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '100.9', 'note': '鍗曚綅锛歮etre every second'}, 
+                    {'paraname': '鍥為��姝ユ暟', 'parakey': 'backsteps', 'type': 'float', 'max': '999.9', 'min': '0', 'value': '22.9', 'note': '鍗曚綅锛氭'}]
             }]
         },
     'session_id':1559381384274,
     }
 
 
-# #UI独立通知TUP
+# #UI鐙珛閫氱煡TUP
 # TUP_HHD_CMDID_SYS_UI_START_REQ          = 0x0A02
 TUP_HHD_HLC_SYS_UI_START_REQ = {
     'parameter': {},
@@ -394,7 +394,7 @@ TUP_HHD_HLC_SYS_UI_START_RESP = {
     'session_id':1559381384274,
     }
 
-#TUP更新状态
+#TUP鏇存柊鐘舵��
 #TUP_HHD_CMDID_SYS_STATUS_TRIG           = 0x0A83
 TUP_HHD_HLC_SYS_STATUS_TRIG = {
     'parameter': {
@@ -403,7 +403,7 @@ TUP_HHD_HLC_SYS_STATUS_TRIG = {
     }
 
 
-#TUP更新错误
+#TUP鏇存柊閿欒
 #TUP_HHD_CMDID_SYS_ERROR_TRIG            = 0x0A84
 TUP_HHD_HLC_SYS_ERROR_TRIG = {
     'parameter': {
@@ -412,7 +412,16 @@ TUP_HHD_HLC_SYS_ERROR_TRIG = {
     }
 
 
-#强制重启TUP软件
+#TUP启动指示
+#TUP_HHD_CMDID_SYS_TUP_START_TRIG        = 0x0A87
+TUP_HHD_HLC_SYS_TUP_START_TRIG = {
+    'parameter': {
+        'error': 'I like to say something!',
+        },
+    }
+
+
+#寮哄埗閲嶅惎TUP杞欢
 #TUP_HHD_CMDID_SYS_FRC_RESTART_REQ       = 0x0A05
 TUP_HHD_HLC_SYS_FRC_RESTART_REQ = {
     'parameter': {},
@@ -953,25 +962,25 @@ TUP_HHD_HLC_SYS_MENG_COMMAND_REQ = {
 
 
 # TUP_HHD_HLC_SYS_MENG_COMMAND_REQ cmdid definition
-#    'SPS_SHK_HAND(设备握手)' : 32,
-#    'SPS_SET_WK_MODE(设置工作模式)' : 33,
-#    'SPS_SET_ACC(设置加速度)' : 34,
-#    'SPS_SET_DEACC(设置减速度)' : 35,
-#    'SPS_SET_PPC(设置一圈步伐)' : 36,
-#    'SPS_SET_MV_SPD(设置移动速度)' : 37,
-#    'SPS_SET_ZO_SPD(设置归零速度)' : 38,
-#    'SPS_SET_ZO_ACC(设置归零加速度)' : 39,
-#    'SPS_SET_INT_SP(设置靠边后退步伐)' : 40,
-#    'SPS_MV_PULS(移动步伐)' : 48,
-#    'SPS_MV_SPD(移动速度)' : 49,
-#    'SPS_MV_ZERO(归零)' : 50,
-#    'SPS_STP_IMD(立即停止)' : 51,
-#    'SPS_STP_NOR(缓慢停止)' : 52,
-#    'SPS_INQ_EN(查询激活状态)' : 53,
-#    'SPS_INQ_RUN(查询运行状态)' : 54,
-#    'SPS_INQ_STATUS(查询一般状态)' : 55,
-#    'SPS_TEST_PULES(测试脉冲数)' : 56,
-#    'SPS_SET_EXTI_DELAY_TIME(设置限位器触发迟滞)' : 57,
+#    'SPS_SHK_HAND(璁惧鎻℃墜)' : 32,
+#    'SPS_SET_WK_MODE(璁剧疆宸ヤ綔妯″紡)' : 33,
+#    'SPS_SET_ACC(璁剧疆鍔犻�熷害)' : 34,
+#    'SPS_SET_DEACC(璁剧疆鍑忛�熷害)' : 35,
+#    'SPS_SET_PPC(璁剧疆涓�鍦堟浼�)' : 36,
+#    'SPS_SET_MV_SPD(璁剧疆绉诲姩閫熷害)' : 37,
+#    'SPS_SET_ZO_SPD(璁剧疆褰掗浂閫熷害)' : 38,
+#    'SPS_SET_ZO_ACC(璁剧疆褰掗浂鍔犻�熷害)' : 39,
+#    'SPS_SET_INT_SP(璁剧疆闈犺竟鍚庨��姝ヤ紣)' : 40,
+#    'SPS_MV_PULS(绉诲姩姝ヤ紣)' : 48,
+#    'SPS_MV_SPD(绉诲姩閫熷害)' : 49,
+#    'SPS_MV_ZERO(褰掗浂)' : 50,
+#    'SPS_STP_IMD(绔嬪嵆鍋滄)' : 51,
+#    'SPS_STP_NOR(缂撴參鍋滄)' : 52,
+#    'SPS_INQ_EN(鏌ヨ婵�娲荤姸鎬�)' : 53,
+#    'SPS_INQ_RUN(鏌ヨ杩愯鐘舵��)' : 54,
+#    'SPS_INQ_STATUS(鏌ヨ涓�鑸姸鎬�)' : 55,
+#    'SPS_TEST_PULES(娴嬭瘯鑴夊啿鏁�)' : 56,
+#    'SPS_SET_EXTI_DELAY_TIME(璁剧疆闄愪綅鍣ㄨЕ鍙戣繜婊�)' : 57,
 
 
 

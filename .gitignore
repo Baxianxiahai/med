@@ -4,5 +4,11 @@
 ./.project
 ./.pydevproject
 *.ini
-*/Pipfile.lock
-*/.metadata
+*/.metadata/
+cebsErrLog.txt
+cebsCmdLog.txt
+www/*
+nodewww/*
+sftp-config.json
+*/node_modules/*
+

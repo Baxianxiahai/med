@@ -250,8 +250,15 @@ class clsL1_ConfigOpr():
     *
     '''   
     #初始化读取全局图像
+    def func_read_global_par_from_database(self):
+        cls = ModCebsDba.TupClsCebsDbaItf()
+        initDict = cls.cebs_result_init_conf_Read({'cmd': 'read'})
+        print(initDict[1])
+
+
+
     def func_read_global_par_from_cfg_file(self):
-        self.CReader=configparser.ConfigParser()
+        self.CReader=configparser.ConfigParser() 
         self.CReader.read(ModCebsCom.GLCFG_PAR_OFC.CFG_FILE_NAME, encoding='utf8')
         self.tup_sec_par_refresh_com2list()
         for i in range(0, len(_TUP_CEBS_CFG_SEC_SET)):        
@@ -303,6 +310,7 @@ class clsL1_ConfigOpr():
             delta = res - ModCebsCom.GLCFG_PAR_OFC.PIC_FLU_REMAIN_CNT
             self.updateBatCntWithIniFileSyned(False, 0, delta)
             self.updateStaticSectionEnvPar()
+        print(_TUP_CEBS_CFG_SEC_LIST)
             
     def getSection(self):
         return self.CReader.sections()

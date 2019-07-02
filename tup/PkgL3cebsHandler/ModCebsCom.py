@@ -17,6 +17,9 @@ import urllib
 import http
 import socket
 import threading
+from PkgL2svrUniv import ModCebsDba
+from builtins import getattr
+# from jinja2.nodes import Getattr
 
 
 '''
@@ -32,6 +35,62 @@ PART0: 全局定义的变量，不需要封装
 #STATIC CONFIGURATION AND CAN NOT MODIFY BY HAND
 GL_CEBS_ERR_LOG_FILE_NAME_SET = r"cebsErrLog.txt"
 GL_CEBS_CMD_LOG_FILE_NAME_SET = r"cebsCmdLog.txt"
+
+
+
+
+
+_ATTR_MAP_DATAFILED={
+        "ModCebsCom": {
+            "GLCFG_PAR_OFC": {
+                "PIC_ABS_ORIGIN_PATH": "dir_origin",
+                "PIC_ABS_MIDDLE_PATH": "dir_middle"
+            },
+            "GLPLT_PAR_OFC": {
+                "HB_TARGET_TYPE": "platetype",
+                "HB_POS_IN_UM[0]": "left_bot_x",
+                "HB_POS_IN_UM[1]": "left_bot_y",
+                "HB_POS_IN_UM[2]": "right_up_x",
+                "HB_POS_IN_UM[3]": "right_up_y"
+            },
+            "GLVIS_PAR_OFC": {
+                "PIC_TAKING_FIX_POINT_SET": "fixpoint",
+                "PIC_CLASSIFIED_AFTER_TAKE_SET": "autodist",
+                "PIC_AUTO_WORKING_AFTER_START_SET": "autocap",
+                "PIC_AUTO_WORKING_TTI_IN_MIN": "autoperiod",
+                "SMALL_LOW_LIMIT": "slimit",
+                "SMALL_MID_LIMIT": "smlimit",
+                "MID_BIG_LIMIT": "mblimit",
+                "BIG_UPPER_LIMIT": "blimit",
+                "CLAS_RES_ADDUP_SET": "addset",
+                "CAPTURE_ENABLE": "autovideo",
+                "CAPTURE_DUR_IN_SEC": "videotime"
+            },
+            "GLSPS_PAR_OFC": {
+                "MOTOR_MAX_SPD": "accspeed",
+                "MOTOR_MAX_ACC": "decspeed",
+                "MOTOR_MAX_DEACC": "decspeed",
+                "MOTOR_ZERO_SPD": "zero_spd",
+                "MOTOR_ZERO_ACC": "zero_dec",
+                "MOTOR_BACK_STEP": "back_step"
+            },
+            "GLFSPC_PAR_OFC":{
+
+            }
+        }
+    }
+
+
+cls = ModCebsDba.TupClsCebsDbaItf()
+initDictFromDatabase = cls.cebs_result_init_conf_Read({'cmd': 'read'})[1]
+def fun_set_conf_from_databse(cnfTypeName,objectObj):
+    print(object)
+    # map=json.load(_ATTR_MAP_DATAFILED)
+    print(_ATTR_MAP_DATAFILED['ModCebsCom'][cnfTypeName])
+    for i in _ATTR_MAP_DATAFILED['ModCebsCom'][cnfTypeName]:
+        print(i, initDictFromDatabase[_ATTR_MAP_DATAFILED['ModCebsCom'][cnfTypeName][i]])
+        setattr(objectObj,i,initDictFromDatabase[_ATTR_MAP_DATAFILED['ModCebsCom'][cnfTypeName][i]])
+
 
 
 '''
@@ -75,11 +134,15 @@ class clsL0_MedComCfgPar():
     
     #初始化
     def __init__(self):    
-        super(clsL0_MedComCfgPar, self).__init__()  
+        super(clsL0_MedComCfgPar, self).__init__()
+#         fun_set_conf_from_databse("GLCFG_PAR_OFC",self)
         pass
     
     def funcTest(self):
         pass
+    
+    def init_sys_config(self):
+        fun_set_conf_from_databse("GLCFG_PAR_OFC",self)
     
 GLCFG_PAR_OFC = clsL0_MedComCfgPar()
 
@@ -180,8 +243,12 @@ class clsL0_MedComPlatePar():
     
     #初始化
     def __init__(self):    
-        super(clsL0_MedComPlatePar, self).__init__()  
+        super(clsL0_MedComPlatePar, self).__init__()
+#         fun_set_conf_from_databse("GLPLT_PAR_OFC",self)
         pass
+    
+    def init_sys_config(self):
+        fun_set_conf_from_databse("GLPLT_PAR_OFC",self)
 
     def med_cfl_add(self, a, b):
         return a+b
@@ -391,7 +458,11 @@ class clsL0_MedComPicPar():
     
     def __init__(self):    
         super(clsL0_MedComPicPar, self).__init__()  
+#         fun_set_conf_from_databse("GLVIS_PAR_OFC",self)
         pass
+    
+    def init_sys_config(self):
+        fun_set_conf_from_databse("GLVIS_PAR_OFC",self)
     
     def saveLowLimit(self, par):
         self.SMALL_LOW_LIMIT = par
@@ -490,7 +561,7 @@ class clsL0_MedSpsPar():
     SPS_MENGPAR_ADDR  = 0x77
     SPS_MENGPAR_CMD_LEN = 18
     
-    MOTOR_STEPS_PER_ROUND = 12800   #NF0
+    MOTOR_STEPS_PER_ROUND = 3200   #NF0
     MOTOR_MAX_SPD = 20  #NF1 rad/s
     MOTOR_MAX_ACC = 20  #NF1 rad/s2
     MOTOR_MAX_DEACC = 20  #NF1 rad/s2
@@ -516,11 +587,15 @@ class clsL0_MedSpsPar():
     #
     
     def __init__(self):    
-        super(clsL0_MedSpsPar, self).__init__()  
+        super(clsL0_MedSpsPar, self).__init__()
+#         fun_set_conf_from_databse("GLSPS_PAR_OFC",self)
         pass
     
     def funcTest(self, par):
         pass
+    
+    def init_sys_config(self):
+        fun_set_conf_from_databse("GLSPS_PAR_OFC",self)
                 
 #定义全局变量以及操作函数
 GLSPS_PAR_OFC = clsL0_MedSpsPar()
@@ -565,11 +640,16 @@ class clsL0_MedFspcPar():
     #
     
     def __init__(self):    
-        super(clsL0_MedFspcPar, self).__init__()  
+        super(clsL0_MedFspcPar, self).__init__()
+#         fun_set_conf_from_databse("GLFSPC_PAR_OFC",self)
+
         pass
     
     def funcTest(self, par):
         pass
+    
+    def init_sys_config(self):
+        fun_set_conf_from_databse("GLFSPC_PAR_OFC",self)
                 
 #定义全局变量以及操作函数
 GLFSPC_PAR_OFC = clsL0_MedFspcPar()

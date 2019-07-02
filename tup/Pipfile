@@ -14,7 +14,7 @@ opencv-python = "*"
 matplotlib = "*"
 pyserial = "*"
 pyqt5 = "==5.10.*"
-pywin32 = "*"
+tkinter = "*"
 
 [requires]
-python_version = "3.6.8"
+python_version = "3.6.*"

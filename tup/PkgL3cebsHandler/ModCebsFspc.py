@@ -31,7 +31,6 @@ from ctypes import *
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import pyqtSlot
 from multiprocessing import Queue, Process
-#from _overlapped import NULL
 
 from multiprocessing import Queue, Process
 

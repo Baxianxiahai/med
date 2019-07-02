@@ -1014,7 +1014,7 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
             errStr = "L2VISCFY: File %s not exist!" % (fileName)
             self.medErrorLog(errStr);
             print("L2VISCFY: File %s not exist!" % (fileName))
-            return -1,fileName,str(NULL);
+            return -1,fileName,str(" ");
         try:
             #inputImg = cv.imread(fileName)
             inputImg = cv.imdecode(np.fromfile(fileName, dtype=np.uint8), cv.IMREAD_COLOR)
@@ -1088,13 +1088,13 @@ class tupTaskVision(tupTaskTemplate, clsL1_ConfigOpr, TupClsPicProc):
         
         #Searching out-form shape: 找到轮廓
         #LC：windows下调用这个
-        #_, contours, hierarchy = cv.findContours(nfImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
+        if sys.platform.startswith('win32'):
+            _, contours, hierarchy = cv.findContours(nfImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
         
         #LC：ubuntu下调用这个
-        contours, hierarchy = cv.findContours(nfImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
-        
-        
-        
+        if sys.platform.startswith('linux'):
+            _,contours, hierarchy = cv.findContours(nfImg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #RETR_TREE, RETR_CCOMP
+       
         #contours = contours[0] if imutils.is_cv() else contours[1]
         
         #Output graphic: 输出图形
@@ -1447,7 +1447,31 @@ class clsCamDevHdl():
         f.close()
 
 
+if __name__ == '__main__':
+    #创建并初始化
+    TUP_GL_CFG = tupGlbCfg()
+    VisionTaskInst = tupTaskVision(TUP_GL_CFG);
 
+    VisionTaskInst.WORM_CLASSIFY_base = 100;
+    VisionTaskInst.WORM_CLASSIFY_small2mid = 200;
+    VisionTaskInst.WORM_CLASSIFY_mid2big = 500;
+    VisionTaskInst.WORM_CLASSIFY_big2top = 1000;
+    VisionTaskInst.WORM_CLASSIFY_addupSet = False;
+    VisionTaskInst.FLU_CELL_COUNT_genr_par1 = 5
+    VisionTaskInst.FLU_CELL_COUNT_genr_par2 = 11
+    VisionTaskInst.FLU_CELL_COUNT_genr_par3 = 22
+    VisionTaskInst.FLU_CELL_COUNT_genr_par4 = 33    
+    
+    fileName = r"../../../med/tup/ref.jpg"
+    fileNukeName = "calibInitWorm_out.jpg"
+    ctrl = False
+    addupSet = False
+    for i in range (10):
+    #i = 0;
+    	res, outputFn, outText= VisionTaskInst.func_vision_worm_clasification(fileName, fileNukeName, ctrl, addupSet)
+    	#print("Round" + str(i+1) + "result: ", res, outputFn, outText)
+    	print(str(datetime.datetime.now()) + " Round " + str(i) + " result: ", res, outputFn, outText)\
+	
 
 
 
