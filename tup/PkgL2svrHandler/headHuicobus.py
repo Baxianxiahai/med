@@ -1,30 +1,30 @@
 '''
-Created on 2019Äê5ÔÂ31ÈÕ
+Created on 2019å¹´5æœˆ31æ—¥
 
 @author: Administrator
 '''
-
-#HUICOBUS CMDID¹«¹²¶¨Òå: HEAD DEFINATION
+# -*- coding: utf-8 -*-
+#HUICOBUS CMDIDå…¬å…±å®šä¹‰: HEAD DEFINATION
 #cmdid need to cast from HEX to DEC
-#»ñÈ¡²ÎÊı=¡·Î´À´½«Ö±½ÓÍ¨¹ıHST½øĞĞ¶ÁÈ¡
+#è·å–å‚æ•°=ã€‹æœªæ¥å°†ç›´æ¥é€šè¿‡HSTè¿›è¡Œè¯»å–
 TUP_HHD_CMDID_SYS_GET_CONFIG_REQ        = 0x0A00    #2560
 TUP_HHD_CMDID_SYS_GET_CONFIG_RESP       = 0x0A80    #2688
-#ÉèÖÃ²ÎÊı
+#è®¾ç½®å‚æ•°
 TUP_HHD_CMDID_SYS_SET_CONFIG_REQ        = 0x0A01    #2561
 TUP_HHD_CMDID_SYS_SET_CONFIG_RESP       = 0x0A81    #2689
-#UI¶ÀÁ¢Í¨ÖªTUP
+#UIç‹¬ç«‹é€šçŸ¥TUP
 TUP_HHD_CMDID_SYS_UI_START_REQ          = 0x0A02    #2562
 TUP_HHD_CMDID_SYS_UI_START_RESP         = 0x0A82    #2690
-#TUP¸üĞÂ×´Ì¬
+#TUPæ›´æ–°çŠ¶æ€
 TUP_HHD_CMDID_SYS_STATUS_TRIG           = 0x0A83    #2691
-#TUP¸üĞÂ´íÎó
+#TUPæ›´æ–°é”™è¯¯
 TUP_HHD_CMDID_SYS_ERROR_TRIG            = 0x0A84    #2692
-#TUPÆô¶¯Ö¸Ê¾
+#TUPå¯åŠ¨æŒ‡ç¤º
 TUP_HHD_CMDID_SYS_TUP_START_TRIG        = 0x0A87    #2695
-#Ç¿ÖÆÖØÆôTUPÈí¼ş
+#å¼ºåˆ¶é‡å¯TUPè½¯ä»¶
 TUP_HHD_CMDID_SYS_FRC_RESTART_REQ       = 0x0A05    #2565
 TUP_HHD_CMDID_SYS_FRC_RESTART_RESP      = 0x0A85    #2693
-#»ñÈ¡TUPÏµÍ³×´Ì¬
+#è·å–TUPç³»ç»ŸçŠ¶æ€
 TUP_HHD_CMDID_SYS_TUP_STATUS_REQ        = 0x0A06    #2566
 TUP_HHD_CMDID_SYS_TUP_STATUS_RESP       = 0x0A86    #2694
 
@@ -137,7 +137,7 @@ TUP_HHD_HLC_MESSAGE_HEADER_UIP2TUP = {
         }
     }
 
-#HLCµÄÏûÏ¢¸ñÊ½(hlContent)
+#HLCçš„æ¶ˆæ¯æ ¼å¼(hlContent)
 #TUP_HHD_CMDID_SYS_GET_CONFIG_REQ        = 0x0A00
 TUP_HHD_HLC_SYS_GET_CONFIG_REQ = {
     'parameter': {
@@ -153,72 +153,72 @@ TUP_HHD_HLC_SYS_GET_CONFIG_RESP = {
     'parameter': {
         'groups': [
             {
-                'groupname': '°æĞÍÑ¡Ôñ', 
+                'groupname': 'ç‰ˆå‹é€‰æ‹©', 
                 'groupkey': 'hb_selct', 
                 'list': [
-                    {'paraname': 'ÍĞÅÌÀàĞÍ', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': 0, 'items': ['96_STANDARD', '48_STANDARD', '24_STANDARD', '12_STANDARD', '6_STANDARD', '384_STANDARD'], 'note': 'choice info'}]
+                    {'paraname': 'æ‰˜ç›˜ç±»å‹', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': 0, 'items': ['96_STANDARD', '48_STANDARD', '24_STANDARD', '12_STANDARD', '6_STANDARD', '384_STANDARD'], 'note': 'choice info'}]
             }, 
             {
-                'groupname': 'È«¾Ö²ÎÊıÉèÖÃ',
+                'groupname': 'å…¨å±€å‚æ•°è®¾ç½®',
                 'groupkey': 'glpar_set', 
                 'list': [
-                    {'paraname': 'ÅÄÕÕºó×Ô¶¯Ê¶±ğ', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
+                    {'paraname': 'æ‹ç…§åè‡ªåŠ¨è¯†åˆ«', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
              }, 
             {
-                'groupname': '¼Æ»®ÈÎÎñÉèÖÃ', 
+                'groupname': 'è®¡åˆ’ä»»åŠ¡è®¾ç½®', 
                 'groupkey': 'ctrs_set', 
                 'list': [
-                    {'paraname': '¶¨µãÅÄÕÕ', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': '¶ş´ÎÆØ¹âÉèÖÃ', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
-                    {'paraname': 'ÅÄºó×Ô¶¯Ê¶±ğ', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
-                    {'paraname': 'Æô¶¯¼´¹¤×÷', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': False, 'note': 'Note info'}, 
-                    {'paraname': '¶¨Ê±×Ô¶¯ÅÄÕÕ', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': 'Ä£ºı¶ÈÃÅÏŞ', 'parakey': 'blulim', 'type': 'float', 'max': 10000.1, 'min': 0, 'value': 1.1, 'note': 'µ¥Î»£ºÎŞ'},
-                    {'paraname': '¶¨Ê±ÅÄÕÕÊ±¼ä¼ä¸ô', 'parakey': 'pictti', 'type': 'float', 'max': 100.1, 'min': 0, 'value': 1.1, 'note': 'µ¥Î»£ºÃë'}]
+                    {'paraname': 'å®šç‚¹æ‹ç…§', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
+                    {'paraname': 'äºŒæ¬¡æ›å…‰è®¾ç½®', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
+                    {'paraname': 'æ‹åè‡ªåŠ¨è¯†åˆ«', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
+                    {'paraname': 'å¯åŠ¨å³å·¥ä½œ', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': False, 'note': 'Note info'}, 
+                    {'paraname': 'å®šæ—¶è‡ªåŠ¨æ‹ç…§', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
+                    {'paraname': 'æ¨¡ç³Šåº¦é—¨é™', 'parakey': 'blulim', 'type': 'float', 'max': 10000.1, 'min': 0, 'value': 1.1, 'note': 'å•ä½ï¼šæ— '},
+                    {'paraname': 'å®šæ—¶æ‹ç…§æ—¶é—´é—´éš”', 'parakey': 'pictti', 'type': 'float', 'max': 100.1, 'min': 0, 'value': 1.1, 'note': 'å•ä½ï¼šç§’'}]
             }, 
             {
-                'groupname': '×ø±êÏµÉèÖÃ', 
+                'groupname': 'åæ ‡ç³»è®¾ç½®', 
                 'groupkey': 'axis_set', 
                 'list': [
-                    {'paraname': '×óÏÂX×ø±ê', 'parakey': 'leftdown_x', 'type': 'int', 'max': 37000, 'min': 0, 'value': 100, 'note': 'µ¥Î»£ºUM'}, 
-                    {'paraname': '×óÏÂY×ø±ê',  'parakey': 'leftdown_y', 'type': 'int', 'max': 37000, 'min': 0, 'value': 30, 'note': 'µ¥Î»£ºUM'},
-                    {'paraname': 'ÓÒÉÏX×ø±ê', 'parakey': 'rightup_x', 'type': 'int', 'max': 157000, 'min': 12, 'value': 20, 'note': 'µ¥Î»£ºUM'}, 
-                    {'paraname': 'ÓÒÉÏY×ø±ê',  'parakey': 'rightup_y', 'type': 'int', 'max': 127000, 'min': 9, 'value': 10, 'note': 'µ¥Î»£ºUM'}]
+                    {'paraname': 'å·¦ä¸‹Xåæ ‡', 'parakey': 'leftdown_x', 'type': 'int', 'max': 37000, 'min': 0, 'value': 100, 'note': 'å•ä½ï¼šUM'}, 
+                    {'paraname': 'å·¦ä¸‹Yåæ ‡',  'parakey': 'leftdown_y', 'type': 'int', 'max': 37000, 'min': 0, 'value': 30, 'note': 'å•ä½ï¼šUM'},
+                    {'paraname': 'å³ä¸ŠXåæ ‡', 'parakey': 'rightup_x', 'type': 'int', 'max': 157000, 'min': 12, 'value': 20, 'note': 'å•ä½ï¼šUM'}, 
+                    {'paraname': 'å³ä¸ŠYåæ ‡',  'parakey': 'rightup_y', 'type': 'int', 'max': 127000, 'min': 9, 'value': 10, 'note': 'å•ä½ï¼šUM'}]
             }, 
             {
-                'groupname': 'Í¼Æ¬Ê¶±ğ²ÎÊıÉèÖÃ', 
+                'groupname': 'å›¾ç‰‡è¯†åˆ«å‚æ•°è®¾ç½®', 
                 'groupkey': 'piccfy_set', 
                 'list': [
-                    {'paraname': 'Ğ¡³ß´çÃÅÏŞ', 'parakey': 'smalldown_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 100.1, 'note': 'µ¥Î»£ºÎŞ'}, 
-                    {'paraname': 'Ğ¡-ÖĞ³ß´çÃÅÏŞ', 'parakey': 'smallmid_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 200.1, 'note': 'µ¥Î»£ºÎŞ'}, 
-                    {'paraname': 'ÖĞ-´ó³ß´çÃÅÏŞ', 'parakey': 'midbig_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 500.1, 'note': 'µ¥Î»£ºÎŞ'}, 
-                    {'paraname': '´ó³ß´çÃÅÏŞ', 'parakey': 'bigup_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 100.1, 'note': 'µ¥Î»£ºÎŞ'}, 
-                    {'paraname': 'Êä³öÍ¼Ïñµş¼Ó±ê¶¨', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
+                    {'paraname': 'å°å°ºå¯¸é—¨é™', 'parakey': 'smalldown_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 100.1, 'note': 'å•ä½ï¼šæ— '}, 
+                    {'paraname': 'å°-ä¸­å°ºå¯¸é—¨é™', 'parakey': 'smallmid_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 200.1, 'note': 'å•ä½ï¼šæ— '}, 
+                    {'paraname': 'ä¸­-å¤§å°ºå¯¸é—¨é™', 'parakey': 'midbig_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 500.1, 'note': 'å•ä½ï¼šæ— '}, 
+                    {'paraname': 'å¤§å°ºå¯¸é—¨é™', 'parakey': 'bigup_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 100.1, 'note': 'å•ä½ï¼šæ— '}, 
+                    {'paraname': 'è¾“å‡ºå›¾åƒå åŠ æ ‡å®š', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
             }, 
             {
-                'groupname': 'ÊÓÆµ²ÎÊıÉèÖÃ',
+                'groupname': 'è§†é¢‘å‚æ•°è®¾ç½®',
                 'groupkey': 'video_set',
                 'list': [
-                    {'paraname': '¿ªÆôÊÓÆµ¼ÇÂ¼', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': 'ÊÓÆµÊ±³¤', 'parakey': 'videotti', 'type': 'float', 'max': 60.1, 'min': 0.1, 'value': 3.1, 'note': 'µ¥Î»£ºÃë'}]
+                    {'paraname': 'å¼€å¯è§†é¢‘è®°å½•', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
+                    {'paraname': 'è§†é¢‘æ—¶é•¿', 'parakey': 'videotti', 'type': 'float', 'max': 60.1, 'min': 0.1, 'value': 3.1, 'note': 'å•ä½ï¼šç§’'}]
             }, 
             {
-                'groupname': 'Í¼Æ¬´æ´¢Î»ÖÃ', 
+                'groupname': 'å›¾ç‰‡å­˜å‚¨ä½ç½®', 
                 'groupkey': 'picsave_set', 
                 'list': [
-                    {'paraname': 'Î´Ê¶±ğÕÕÆ¬Ä¿Â¼', 'parakey': 'uncfy', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_origin/', 'note': 'Note info'}, 
-                    {'paraname': 'ÒÑÊ¶±ğÕÕÆ¬Ä¿Â¼', 'parakey': 'cfied', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_middle/', 'note': 'Note info'}]
+                    {'paraname': 'æœªè¯†åˆ«ç…§ç‰‡ç›®å½•', 'parakey': 'uncfy', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_origin/', 'note': 'Note info'}, 
+                    {'paraname': 'å·²è¯†åˆ«ç…§ç‰‡ç›®å½•', 'parakey': 'cfied', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_middle/', 'note': 'Note info'}]
             },
             {
-                'groupname': 'Âí´ï²ÎÊı',
+                'groupname': 'é©¬è¾¾å‚æ•°',
                 'groupkey': 'moto_set',
                 'list': [
-                    {'paraname': 'ÔöËÙ¼ÓËÙ¶È', 'parakey': 'acc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 10.9, 'note': 'µ¥Î»£ºmetre every second square second'}, 
-                    {'paraname': '¼õËÙ¼ÓËÙ¶È', 'parakey': 'deacc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 20.9, 'note': 'µ¥Î»£ºmetre every second square second'}, 
-                    {'paraname': 'ÒÆ¶¯ËÙ¶È', 'parakey': 'spd', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 20.9, 'note': 'µ¥Î»£ºmetre every second square second'}, 
-                    {'paraname': '¹éÁãËÙ¶È', 'parakey': 'zerospd', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 200.9, 'note': 'µ¥Î»£ºmetre every second'}, 
-                    {'paraname': '¹éÁã¼ÓËÙ¶È', 'parakey': 'zeroacc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 100.9, 'note': 'µ¥Î»£ºmetre every second'}, 
-                    {'paraname': '»ØÍË²½Êı', 'parakey': 'backsteps', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 22.9, 'note': 'µ¥Î»£º²½'}]
+                    {'paraname': 'å¢é€ŸåŠ é€Ÿåº¦', 'parakey': 'acc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 10.9, 'note': 'å•ä½ï¼šmetre every second square second'}, 
+                    {'paraname': 'å‡é€ŸåŠ é€Ÿåº¦', 'parakey': 'deacc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 20.9, 'note': 'å•ä½ï¼šmetre every second square second'}, 
+                    {'paraname': 'ç§»åŠ¨é€Ÿåº¦', 'parakey': 'spd', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 20.9, 'note': 'å•ä½ï¼šmetre every second square second'}, 
+                    {'paraname': 'å½’é›¶é€Ÿåº¦', 'parakey': 'zerospd', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 200.9, 'note': 'å•ä½ï¼šmetre every second'}, 
+                    {'paraname': 'å½’é›¶åŠ é€Ÿåº¦', 'parakey': 'zeroacc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 100.9, 'note': 'å•ä½ï¼šmetre every second'}, 
+                    {'paraname': 'å›é€€æ­¥æ•°', 'parakey': 'backsteps', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 22.9, 'note': 'å•ä½ï¼šæ­¥'}]
             }]
         },
     'session_id':1559381384274,
@@ -229,72 +229,72 @@ TUP_HHD_HLC_SYS_SET_CONFIG_REQ = {
     'parameter': {
         'groups': [
             {
-                'groupname': '°æĞÍÑ¡Ôñ', 
+                'groupname': 'ç‰ˆå‹é€‰æ‹©', 
                 'groupkey': 'hb_selct', 
                 'list': [
-                    {'paraname': 'ÍĞÅÌÀàĞÍ', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': 0, 'items': ['96_STANDARD', '48_STANDARD', '24_STANDARD', '12_STANDARD', '6_STANDARD', '384_STANDARD'], 'note': 'choice info'}]
+                    {'paraname': 'æ‰˜ç›˜ç±»å‹', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': 0, 'items': ['96_STANDARD', '48_STANDARD', '24_STANDARD', '12_STANDARD', '6_STANDARD', '384_STANDARD'], 'note': 'choice info'}]
             }, 
             {
-                'groupname': 'È«¾Ö²ÎÊıÉèÖÃ',
+                'groupname': 'å…¨å±€å‚æ•°è®¾ç½®',
                 'groupkey': 'glpar_set', 
                 'list': [
-                    {'paraname': 'ÅÄÕÕºó×Ô¶¯Ê¶±ğ', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
+                    {'paraname': 'æ‹ç…§åè‡ªåŠ¨è¯†åˆ«', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
              }, 
             {
-                'groupname': '¼Æ»®ÈÎÎñÉèÖÃ', 
+                'groupname': 'è®¡åˆ’ä»»åŠ¡è®¾ç½®', 
                 'groupkey': 'ctrs_set', 
                 'list': [
-                    {'paraname': '¶¨µãÅÄÕÕ', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': '¶ş´ÎÆØ¹âÉèÖÃ', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
-                    {'paraname': 'ÅÄºó×Ô¶¯Ê¶±ğ', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
-                    {'paraname': 'Æô¶¯¼´¹¤×÷', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': False, 'note': 'Note info'}, 
-                    {'paraname': '¶¨Ê±×Ô¶¯ÅÄÕÕ', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': 'Ä£ºı¶ÈÃÅÏŞ', 'parakey': 'blulim', 'type': 'float', 'max': 10000.1, 'min': 0, 'value': 1.1, 'note': 'µ¥Î»£ºÎŞ'},
-                    {'paraname': '¶¨Ê±ÅÄÕÕÊ±¼ä¼ä¸ô', 'parakey': 'pictti', 'type': 'float', 'max': 100.1, 'min': 0, 'value': 1.1, 'note': 'µ¥Î»£ºÃë'}]
+                    {'paraname': 'å®šç‚¹æ‹ç…§', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
+                    {'paraname': 'äºŒæ¬¡æ›å…‰è®¾ç½®', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
+                    {'paraname': 'æ‹åè‡ªåŠ¨è¯†åˆ«', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
+                    {'paraname': 'å¯åŠ¨å³å·¥ä½œ', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': False, 'note': 'Note info'}, 
+                    {'paraname': 'å®šæ—¶è‡ªåŠ¨æ‹ç…§', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
+                    {'paraname': 'æ¨¡ç³Šåº¦é—¨é™', 'parakey': 'blulim', 'type': 'float', 'max': 10000.1, 'min': 0, 'value': 1.1, 'note': 'å•ä½ï¼šæ— '},
+                    {'paraname': 'å®šæ—¶æ‹ç…§æ—¶é—´é—´éš”', 'parakey': 'pictti', 'type': 'float', 'max': 100.1, 'min': 0, 'value': 1.1, 'note': 'å•ä½ï¼šç§’'}]
             }, 
             {
-                'groupname': '×ø±êÏµÉèÖÃ', 
+                'groupname': 'åæ ‡ç³»è®¾ç½®', 
                 'groupkey': 'axis_set', 
                 'list': [
-                    {'paraname': '×óÏÂX×ø±ê', 'parakey': 'leftdown_x', 'type': 'int', 'max': 37000, 'min': 0, 'value': 100, 'note': 'µ¥Î»£ºUM'}, 
-                    {'paraname': '×óÏÂY×ø±ê',  'parakey': 'leftdown_y', 'type': 'int', 'max': 37000, 'min': 0, 'value': 30, 'note': 'µ¥Î»£ºUM'},
-                    {'paraname': 'ÓÒÉÏX×ø±ê', 'parakey': 'rightup_x', 'type': 'int', 'max': 157000, 'min': 12, 'value': 20, 'note': 'µ¥Î»£ºUM'}, 
-                    {'paraname': 'ÓÒÉÏY×ø±ê',  'parakey': 'rightup_y', 'type': 'int', 'max': 127000, 'min': 9, 'value': 10, 'note': 'µ¥Î»£ºUM'}]
+                    {'paraname': 'å·¦ä¸‹Xåæ ‡', 'parakey': 'leftdown_x', 'type': 'int', 'max': 37000, 'min': 0, 'value': 100, 'note': 'å•ä½ï¼šUM'}, 
+                    {'paraname': 'å·¦ä¸‹Yåæ ‡',  'parakey': 'leftdown_y', 'type': 'int', 'max': 37000, 'min': 0, 'value': 30, 'note': 'å•ä½ï¼šUM'},
+                    {'paraname': 'å³ä¸ŠXåæ ‡', 'parakey': 'rightup_x', 'type': 'int', 'max': 157000, 'min': 12, 'value': 20, 'note': 'å•ä½ï¼šUM'}, 
+                    {'paraname': 'å³ä¸ŠYåæ ‡',  'parakey': 'rightup_y', 'type': 'int', 'max': 127000, 'min': 9, 'value': 10, 'note': 'å•ä½ï¼šUM'}]
             }, 
             {
-                'groupname': 'Í¼Æ¬Ê¶±ğ²ÎÊıÉèÖÃ', 
+                'groupname': 'å›¾ç‰‡è¯†åˆ«å‚æ•°è®¾ç½®', 
                 'groupkey': 'piccfy_set', 
                 'list': [
-                    {'paraname': 'Ğ¡³ß´çÃÅÏŞ', 'parakey': 'smalldown_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 100.1, 'note': 'µ¥Î»£ºÎŞ'}, 
-                    {'paraname': 'Ğ¡-ÖĞ³ß´çÃÅÏŞ', 'parakey': 'smallmid_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 200.1, 'note': 'µ¥Î»£ºÎŞ'}, 
-                    {'paraname': 'ÖĞ-´ó³ß´çÃÅÏŞ', 'parakey': 'midbig_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 500.1, 'note': 'µ¥Î»£ºÎŞ'}, 
-                    {'paraname': '´ó³ß´çÃÅÏŞ', 'parakey': 'bigup_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 100.1, 'note': 'µ¥Î»£ºÎŞ'}, 
-                    {'paraname': 'Êä³öÍ¼Ïñµş¼Ó±ê¶¨', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
+                    {'paraname': 'å°å°ºå¯¸é—¨é™', 'parakey': 'smalldown_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 100.1, 'note': 'å•ä½ï¼šæ— '}, 
+                    {'paraname': 'å°-ä¸­å°ºå¯¸é—¨é™', 'parakey': 'smallmid_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 200.1, 'note': 'å•ä½ï¼šæ— '}, 
+                    {'paraname': 'ä¸­-å¤§å°ºå¯¸é—¨é™', 'parakey': 'midbig_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 500.1, 'note': 'å•ä½ï¼šæ— '}, 
+                    {'paraname': 'å¤§å°ºå¯¸é—¨é™', 'parakey': 'bigup_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 100.1, 'note': 'å•ä½ï¼šæ— '}, 
+                    {'paraname': 'è¾“å‡ºå›¾åƒå åŠ æ ‡å®š', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
             }, 
             {
-                'groupname': 'ÊÓÆµ²ÎÊıÉèÖÃ', 
+                'groupname': 'è§†é¢‘å‚æ•°è®¾ç½®', 
                 'groupkey': 'video_set', 
                 'list': [
-                    {'paraname': '¿ªÆôÊÓÆµ¼ÇÂ¼', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': 'ÊÓÆµÊ±³¤', 'parakey': 'videotti', 'type': 'float', 'max': 60.1, 'min': 0.1, 'value': 3.1, 'note': 'µ¥Î»£ºÃë'}]
+                    {'paraname': 'å¼€å¯è§†é¢‘è®°å½•', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
+                    {'paraname': 'è§†é¢‘æ—¶é•¿', 'parakey': 'videotti', 'type': 'float', 'max': 60.1, 'min': 0.1, 'value': 3.1, 'note': 'å•ä½ï¼šç§’'}]
             }, 
             {
-                'groupname': 'Í¼Æ¬´æ´¢Î»ÖÃ', 
+                'groupname': 'å›¾ç‰‡å­˜å‚¨ä½ç½®', 
                 'groupkey': 'picsave_set', 
                 'list': [
-                    {'paraname': 'Î´Ê¶±ğÕÕÆ¬Ä¿Â¼', 'parakey': 'uncfy', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_origin/', 'note': 'Note info'}, 
-                    {'paraname': 'ÒÑÊ¶±ğÕÕÆ¬Ä¿Â¼', 'parakey': 'cfied', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_middle/', 'note': 'Note info'}]
+                    {'paraname': 'æœªè¯†åˆ«ç…§ç‰‡ç›®å½•', 'parakey': 'uncfy', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_origin/', 'note': 'Note info'}, 
+                    {'paraname': 'å·²è¯†åˆ«ç…§ç‰‡ç›®å½•', 'parakey': 'cfied', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_middle/', 'note': 'Note info'}]
             },
             {
-                'groupname': 'Âí´ï²ÎÊı', 
+                'groupname': 'é©¬è¾¾å‚æ•°', 
                 'groupkey': 'moto_set', 
                 'list': [
-                    {'paraname': 'ÔöËÙ¼ÓËÙ¶È', 'parakey': 'acc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 10.9, 'note': 'µ¥Î»£ºmetre every second square second'}, 
-                    {'paraname': '¼õËÙ¼ÓËÙ¶È', 'parakey': 'deacc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 20.9, 'note': 'µ¥Î»£ºmetre every second square second'}, 
-                    {'paraname': 'ÒÆ¶¯ËÙ¶È', 'parakey': 'spd', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 20.9, 'note': 'µ¥Î»£ºmetre every second square second'}, 
-                    {'paraname': '¹éÁãËÙ¶È', 'parakey': 'zerospd', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 200.9, 'note': 'µ¥Î»£ºmetre every second'}, 
-                    {'paraname': '¹éÁã¼ÓËÙ¶È', 'parakey': 'zeroacc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 100.9, 'note': 'µ¥Î»£ºmetre every second'}, 
-                    {'paraname': '»ØÍË²½Êı', 'parakey': 'backsteps', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 22.9, 'note': 'µ¥Î»£º²½'}]
+                    {'paraname': 'å¢é€ŸåŠ é€Ÿåº¦', 'parakey': 'acc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 10.9, 'note': 'å•ä½ï¼šmetre every second square second'}, 
+                    {'paraname': 'å‡é€ŸåŠ é€Ÿåº¦', 'parakey': 'deacc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 20.9, 'note': 'å•ä½ï¼šmetre every second square second'}, 
+                    {'paraname': 'ç§»åŠ¨é€Ÿåº¦', 'parakey': 'spd', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 20.9, 'note': 'å•ä½ï¼šmetre every second square second'}, 
+                    {'paraname': 'å½’é›¶é€Ÿåº¦', 'parakey': 'zerospd', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 200.9, 'note': 'å•ä½ï¼šmetre every second'}, 
+                    {'paraname': 'å½’é›¶åŠ é€Ÿåº¦', 'parakey': 'zeroacc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 100.9, 'note': 'å•ä½ï¼šmetre every second'}, 
+                    {'paraname': 'å›é€€æ­¥æ•°', 'parakey': 'backsteps', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 22.9, 'note': 'å•ä½ï¼šæ­¥'}]
             }]
         },
     'session_id':1559381384274,
@@ -305,79 +305,79 @@ TUP_HHD_HLC_SYS_SET_CONFIG_RESP = {
     'parameter': {
         'groups': [
             {
-                'groupname': '°æĞÍÑ¡Ôñ', 
+                'groupname': 'ç‰ˆå‹é€‰æ‹©', 
                 'groupkey': 'hb_selct', 
                 'list': [
-                    {'paraname': 'ÍĞÅÌÀàĞÍ', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': 0, 'items': ['96_STANDARD', '48_STANDARD', '24_STANDARD', '12_STANDARD', '6_STANDARD', '384_STANDARD'], 'note': 'choice info'}]
+                    {'paraname': 'æ‰˜ç›˜ç±»å‹', 'parakey': 'hb_type', 'type': 'choice', 'max': '', 'min': '', 'value': 0, 'items': ['96_STANDARD', '48_STANDARD', '24_STANDARD', '12_STANDARD', '6_STANDARD', '384_STANDARD'], 'note': 'choice info'}]
             }, 
             {
-                'groupname': 'È«¾Ö²ÎÊıÉèÖÃ',
+                'groupname': 'å…¨å±€å‚æ•°è®¾ç½®',
                 'groupkey': 'glpar_set', 
                 'list': [
-                    {'paraname': 'ÅÄÕÕºó×Ô¶¯Ê¶±ğ', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
+                    {'paraname': 'æ‹ç…§åè‡ªåŠ¨è¯†åˆ«', 'parakey': 'autocfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
              }, 
             {
-                'groupname': '¼Æ»®ÈÎÎñÉèÖÃ', 
+                'groupname': 'è®¡åˆ’ä»»åŠ¡è®¾ç½®', 
                 'groupkey': 'ctrs_set', 
                 'list': [
-                    {'paraname': '¶¨µãÅÄÕÕ', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': '¶ş´ÎÆØ¹âÉèÖÃ', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
-                    {'paraname': 'ÅÄºó×Ô¶¯Ê¶±ğ', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
-                    {'paraname': 'Æô¶¯¼´¹¤×÷', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': False, 'note': 'Note info'}, 
-                    {'paraname': '¶¨Ê±×Ô¶¯ÅÄÕÕ', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': 'Ä£ºı¶ÈÃÅÏŞ', 'parakey': 'blulim', 'type': 'float', 'max': 10000.1, 'min': 0, 'value': 1.1, 'note': 'µ¥Î»£ºÎŞ'},
-                    {'paraname': '¶¨Ê±ÅÄÕÕÊ±¼ä¼ä¸ô', 'parakey': 'pictti', 'type': 'float', 'max': 100.1, 'min': 0, 'value': 1.1, 'note': 'µ¥Î»£ºÃë'}]
+                    {'paraname': 'å®šç‚¹æ‹ç…§', 'parakey': 'fixpoint', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
+                    {'paraname': 'äºŒæ¬¡æ›å…‰è®¾ç½®', 'parakey': 'autoexpo', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
+                    {'paraname': 'æ‹åè‡ªåŠ¨è¯†åˆ«', 'parakey': 'pic2cfy', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'},
+                    {'paraname': 'å¯åŠ¨å³å·¥ä½œ', 'parakey': 'startauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': False, 'note': 'Note info'}, 
+                    {'paraname': 'å®šæ—¶è‡ªåŠ¨æ‹ç…§', 'parakey': 'timeauto', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
+                    {'paraname': 'æ¨¡ç³Šåº¦é—¨é™', 'parakey': 'blulim', 'type': 'float', 'max': 10000.1, 'min': 0, 'value': 1.1, 'note': 'å•ä½ï¼šæ— '},
+                    {'paraname': 'å®šæ—¶æ‹ç…§æ—¶é—´é—´éš”', 'parakey': 'pictti', 'type': 'float', 'max': 100.1, 'min': 0, 'value': 1.1, 'note': 'å•ä½ï¼šç§’'}]
             }, 
             {
-                'groupname': '×ø±êÏµÉèÖÃ', 
+                'groupname': 'åæ ‡ç³»è®¾ç½®', 
                 'groupkey': 'axis_set', 
                 'list': [
-                    {'paraname': '×óÏÂX×ø±ê', 'parakey': 'leftdown_x', 'type': 'int', 'max': 37000, 'min': 0, 'value': 100, 'note': 'µ¥Î»£ºUM'}, 
-                    {'paraname': '×óÏÂY×ø±ê',  'parakey': 'leftdown_y', 'type': 'int', 'max': 37000, 'min': 0, 'value': 30, 'note': 'µ¥Î»£ºUM'},
-                    {'paraname': 'ÓÒÉÏX×ø±ê', 'parakey': 'rightup_x', 'type': 'int', 'max': 157000, 'min': 12, 'value': 20, 'note': 'µ¥Î»£ºUM'}, 
-                    {'paraname': 'ÓÒÉÏY×ø±ê',  'parakey': 'rightup_y', 'type': 'int', 'max': 127000, 'min': 9, 'value': 10, 'note': 'µ¥Î»£ºUM'}]
+                    {'paraname': 'å·¦ä¸‹Xåæ ‡', 'parakey': 'leftdown_x', 'type': 'int', 'max': 37000, 'min': 0, 'value': 100, 'note': 'å•ä½ï¼šUM'}, 
+                    {'paraname': 'å·¦ä¸‹Yåæ ‡',  'parakey': 'leftdown_y', 'type': 'int', 'max': 37000, 'min': 0, 'value': 30, 'note': 'å•ä½ï¼šUM'},
+                    {'paraname': 'å³ä¸ŠXåæ ‡', 'parakey': 'rightup_x', 'type': 'int', 'max': 157000, 'min': 12, 'value': 20, 'note': 'å•ä½ï¼šUM'}, 
+                    {'paraname': 'å³ä¸ŠYåæ ‡',  'parakey': 'rightup_y', 'type': 'int', 'max': 127000, 'min': 9, 'value': 10, 'note': 'å•ä½ï¼šUM'}]
             }, 
             {
-                'groupname': 'Í¼Æ¬Ê¶±ğ²ÎÊıÉèÖÃ', 
+                'groupname': 'å›¾ç‰‡è¯†åˆ«å‚æ•°è®¾ç½®', 
                 'groupkey': 'piccfy_set', 
                 'list': [
-                    {'paraname': 'Ğ¡³ß´çÃÅÏŞ', 'parakey': 'smalldown_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 100.1, 'note': 'µ¥Î»£ºÎŞ'}, 
-                    {'paraname': 'Ğ¡-ÖĞ³ß´çÃÅÏŞ', 'parakey': 'smallmid_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 200.1, 'note': 'µ¥Î»£ºÎŞ'}, 
-                    {'paraname': 'ÖĞ-´ó³ß´çÃÅÏŞ', 'parakey': 'midbig_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 500.1, 'note': 'µ¥Î»£ºÎŞ'}, 
-                    {'paraname': '´ó³ß´çÃÅÏŞ', 'parakey': 'bigup_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 100.1, 'note': 'µ¥Î»£ºÎŞ'}, 
-                    {'paraname': 'Êä³öÍ¼Ïñµş¼Ó±ê¶¨', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
+                    {'paraname': 'å°å°ºå¯¸é—¨é™', 'parakey': 'smalldown_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 100.1, 'note': 'å•ä½ï¼šæ— '}, 
+                    {'paraname': 'å°-ä¸­å°ºå¯¸é—¨é™', 'parakey': 'smallmid_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 200.1, 'note': 'å•ä½ï¼šæ— '}, 
+                    {'paraname': 'ä¸­-å¤§å°ºå¯¸é—¨é™', 'parakey': 'midbig_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 500.1, 'note': 'å•ä½ï¼šæ— '}, 
+                    {'paraname': 'å¤§å°ºå¯¸é—¨é™', 'parakey': 'bigup_thd', 'type': 'float', 'max': 999.9, 'min': 0.1, 'value': 100.1, 'note': 'å•ä½ï¼šæ— '}, 
+                    {'paraname': 'è¾“å‡ºå›¾åƒå åŠ æ ‡å®š', 'parakey': 'addup', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}]
             }, 
             {
-                'groupname': 'ÊÓÆµ²ÎÊıÉèÖÃ', 
+                'groupname': 'è§†é¢‘å‚æ•°è®¾ç½®', 
                 'groupkey': 'video_set', 
                 'list': [
-                    {'paraname': '¿ªÆôÊÓÆµ¼ÇÂ¼', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
-                    {'paraname': 'ÊÓÆµÊ±³¤', 'parakey': 'videotti', 'type': 'float', 'max': 60.1, 'min': 0.1, 'value': 3.1, 'note': 'µ¥Î»£ºÃë'}]
+                    {'paraname': 'å¼€å¯è§†é¢‘è®°å½•', 'parakey': 'openvideo', 'type': 'checkbox', 'max': '', 'min': '', 'value': True, 'note': 'Note info'}, 
+                    {'paraname': 'è§†é¢‘æ—¶é•¿', 'parakey': 'videotti', 'type': 'float', 'max': 60.1, 'min': 0.1, 'value': 3.1, 'note': 'å•ä½ï¼šç§’'}]
             }, 
             {
-                'groupname': 'Í¼Æ¬´æ´¢Î»ÖÃ', 
+                'groupname': 'å›¾ç‰‡å­˜å‚¨ä½ç½®', 
                 'groupkey': 'picsave_set', 
                 'list': [
-                    {'paraname': 'Î´Ê¶±ğÕÕÆ¬Ä¿Â¼', 'parakey': 'uncfy', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_origin/', 'note': 'Note info'}, 
-                    {'paraname': 'ÒÑÊ¶±ğÕÕÆ¬Ä¿Â¼', 'parakey': 'cfied', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_middle/', 'note': 'Note info'}]
+                    {'paraname': 'æœªè¯†åˆ«ç…§ç‰‡ç›®å½•', 'parakey': 'uncfy', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_origin/', 'note': 'Note info'}, 
+                    {'paraname': 'å·²è¯†åˆ«ç…§ç‰‡ç›®å½•', 'parakey': 'cfied', 'type': 'string', 'max': '', 'min': '', 'value': '/code/tup/pic_middle/', 'note': 'Note info'}]
             },
             {
-                'groupname': 'Âí´ï²ÎÊı', 
+                'groupname': 'é©¬è¾¾å‚æ•°', 
                 'groupkey': 'moto_set', 
                 'list': [
-                    {'paraname': 'ÔöËÙ¼ÓËÙ¶È', 'parakey': 'acc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 10.9, 'note': 'µ¥Î»£ºmetre every second square second'}, 
-                    {'paraname': '¼õËÙ¼ÓËÙ¶È', 'parakey': 'deacc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 20.9, 'note': 'µ¥Î»£ºmetre every second square second'}, 
-                    {'paraname': 'ÒÆ¶¯ËÙ¶È', 'parakey': 'spd', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 20.9, 'note': 'µ¥Î»£ºmetre every second square second'}, 
-                    {'paraname': '¹éÁãËÙ¶È', 'parakey': 'zerospd', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 200.9, 'note': 'µ¥Î»£ºmetre every second'}, 
-                    {'paraname': '¹éÁã¼ÓËÙ¶È', 'parakey': 'zeroacc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 100.9, 'note': 'µ¥Î»£ºmetre every second'}, 
-                    {'paraname': '»ØÍË²½Êı', 'parakey': 'backsteps', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 22.9, 'note': 'µ¥Î»£º²½'}]
+                    {'paraname': 'å¢é€ŸåŠ é€Ÿåº¦', 'parakey': 'acc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 10.9, 'note': 'å•ä½ï¼šmetre every second square second'}, 
+                    {'paraname': 'å‡é€ŸåŠ é€Ÿåº¦', 'parakey': 'deacc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 20.9, 'note': 'å•ä½ï¼šmetre every second square second'}, 
+                    {'paraname': 'ç§»åŠ¨é€Ÿåº¦', 'parakey': 'spd', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 20.9, 'note': 'å•ä½ï¼šmetre every second square second'}, 
+                    {'paraname': 'å½’é›¶é€Ÿåº¦', 'parakey': 'zerospd', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 200.9, 'note': 'å•ä½ï¼šmetre every second'}, 
+                    {'paraname': 'å½’é›¶åŠ é€Ÿåº¦', 'parakey': 'zeroacc', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 100.9, 'note': 'å•ä½ï¼šmetre every second'}, 
+                    {'paraname': 'å›é€€æ­¥æ•°', 'parakey': 'backsteps', 'type': 'float', 'max': 999.9, 'min': 0, 'value': 22.9, 'note': 'å•ä½ï¼šæ­¥'}]
             }]
         },
     'session_id':1559381384274,
     }
 
 
-# #UI¶ÀÁ¢Í¨ÖªTUP
+# #UIç‹¬ç«‹é€šçŸ¥TUP
 # TUP_HHD_CMDID_SYS_UI_START_REQ          = 0x0A02
 TUP_HHD_HLC_SYS_UI_START_REQ = {
     'parameter': {},
@@ -394,7 +394,7 @@ TUP_HHD_HLC_SYS_UI_START_RESP = {
     'session_id':1559381384274,
     }
 
-#TUP¸üĞÂ×´Ì¬
+#TUPæ›´æ–°çŠ¶æ€
 #TUP_HHD_CMDID_SYS_STATUS_TRIG           = 0x0A83
 TUP_HHD_HLC_SYS_STATUS_TRIG = {
     'parameter': {
@@ -403,7 +403,7 @@ TUP_HHD_HLC_SYS_STATUS_TRIG = {
     }
 
 
-#TUP¸üĞÂ´íÎó
+#TUPæ›´æ–°é”™è¯¯
 #TUP_HHD_CMDID_SYS_ERROR_TRIG            = 0x0A84
 TUP_HHD_HLC_SYS_ERROR_TRIG = {
     'parameter': {
@@ -412,7 +412,7 @@ TUP_HHD_HLC_SYS_ERROR_TRIG = {
     }
 
 
-#TUPÆô¶¯Ö¸Ê¾
+#TUPå¯åŠ¨æŒ‡ç¤º
 #TUP_HHD_CMDID_SYS_TUP_START_TRIG        = 0x0A87
 TUP_HHD_HLC_SYS_TUP_START_TRIG = {
     'parameter': {
@@ -421,7 +421,7 @@ TUP_HHD_HLC_SYS_TUP_START_TRIG = {
     }
 
 
-#Ç¿ÖÆÖØÆôTUPÈí¼ş
+#å¼ºåˆ¶é‡å¯TUPè½¯ä»¶
 #TUP_HHD_CMDID_SYS_FRC_RESTART_REQ       = 0x0A05
 TUP_HHD_HLC_SYS_FRC_RESTART_REQ = {
     'parameter': {},
@@ -965,25 +965,25 @@ TUP_HHD_HLC_SYS_MENG_COMMAND_REQ = {
 
 
 # TUP_HHD_HLC_SYS_MENG_COMMAND_REQ cmdid definition
-#    'SPS_SHK_HAND(Éè±¸ÎÕÊÖ)' : 32,
-#    'SPS_SET_WK_MODE(ÉèÖÃ¹¤×÷Ä£Ê½)' : 33,
-#    'SPS_SET_ACC(ÉèÖÃ¼ÓËÙ¶È)' : 34,
-#    'SPS_SET_DEACC(ÉèÖÃ¼õËÙ¶È)' : 35,
-#    'SPS_SET_PPC(ÉèÖÃÒ»È¦²½·¥)' : 36,
-#    'SPS_SET_MV_SPD(ÉèÖÃÒÆ¶¯ËÙ¶È)' : 37,
-#    'SPS_SET_ZO_SPD(ÉèÖÃ¹éÁãËÙ¶È)' : 38,
-#    'SPS_SET_ZO_ACC(ÉèÖÃ¹éÁã¼ÓËÙ¶È)' : 39,
-#    'SPS_SET_INT_SP(ÉèÖÃ¿¿±ßºóÍË²½·¥)' : 40,
-#    'SPS_MV_PULS(ÒÆ¶¯²½·¥)' : 48,
-#    'SPS_MV_SPD(ÒÆ¶¯ËÙ¶È)' : 49,
-#    'SPS_MV_ZERO(¹éÁã)' : 50,
-#    'SPS_STP_IMD(Á¢¼´Í£Ö¹)' : 51,
-#    'SPS_STP_NOR(»ºÂıÍ£Ö¹)' : 52,
-#    'SPS_INQ_EN(²éÑ¯¼¤»î×´Ì¬)' : 53,
-#    'SPS_INQ_RUN(²éÑ¯ÔËĞĞ×´Ì¬)' : 54,
-#    'SPS_INQ_STATUS(²éÑ¯Ò»°ã×´Ì¬)' : 55,
-#    'SPS_TEST_PULES(²âÊÔÂö³åÊı)' : 56,
-#    'SPS_SET_EXTI_DELAY_TIME(ÉèÖÃÏŞÎ»Æ÷´¥·¢³ÙÖÍ)' : 57,
+#    'SPS_SHK_HAND(è®¾å¤‡æ¡æ‰‹)' : 32,
+#    'SPS_SET_WK_MODE(è®¾ç½®å·¥ä½œæ¨¡å¼)' : 33,
+#    'SPS_SET_ACC(è®¾ç½®åŠ é€Ÿåº¦)' : 34,
+#    'SPS_SET_DEACC(è®¾ç½®å‡é€Ÿåº¦)' : 35,
+#    'SPS_SET_PPC(è®¾ç½®ä¸€åœˆæ­¥ä¼)' : 36,
+#    'SPS_SET_MV_SPD(è®¾ç½®ç§»åŠ¨é€Ÿåº¦)' : 37,
+#    'SPS_SET_ZO_SPD(è®¾ç½®å½’é›¶é€Ÿåº¦)' : 38,
+#    'SPS_SET_ZO_ACC(è®¾ç½®å½’é›¶åŠ é€Ÿåº¦)' : 39,
+#    'SPS_SET_INT_SP(è®¾ç½®é è¾¹åé€€æ­¥ä¼)' : 40,
+#    'SPS_MV_PULS(ç§»åŠ¨æ­¥ä¼)' : 48,
+#    'SPS_MV_SPD(ç§»åŠ¨é€Ÿåº¦)' : 49,
+#    'SPS_MV_ZERO(å½’é›¶)' : 50,
+#    'SPS_STP_IMD(ç«‹å³åœæ­¢)' : 51,
+#    'SPS_STP_NOR(ç¼“æ…¢åœæ­¢)' : 52,
+#    'SPS_INQ_EN(æŸ¥è¯¢æ¿€æ´»çŠ¶æ€)' : 53,
+#    'SPS_INQ_RUN(æŸ¥è¯¢è¿è¡ŒçŠ¶æ€)' : 54,
+#    'SPS_INQ_STATUS(æŸ¥è¯¢ä¸€èˆ¬çŠ¶æ€)' : 55,
+#    'SPS_TEST_PULES(æµ‹è¯•è„‰å†²æ•°)' : 56,
+#    'SPS_SET_EXTI_DELAY_TIME(è®¾ç½®é™ä½å™¨è§¦å‘è¿Ÿæ»)' : 57,
 
 
 
