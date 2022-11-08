@@ -14,7 +14,7 @@
     "mosca": "^2.5.2"
   },
   "dependencies": {
-    "file-loader": "^0.9.0",
+    "file-loader": "^6.2.0",
     "natives": "^1.1.6"
   }
 }
